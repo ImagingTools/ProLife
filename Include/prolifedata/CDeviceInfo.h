@@ -34,6 +34,12 @@ public:
 	virtual void SetDeviceProductionStatus(DeviceProductionStatus status) override;
 	virtual QByteArray GetProject() const override;
 	virtual void SetProject(const QByteArray& project) override;
+	virtual QByteArray GetEndCustomerId() const override;
+	virtual void SetEndCustomerId(const QByteArray& endCustomerId) override;
+	virtual QString GetStation() const override;
+	virtual void SetStation(const QString& station) override;
+	virtual QString GetArea() const override;
+	virtual void SetArea(const QString& area) override;
 	virtual bool IsInternalUse() const override;
 	virtual void SetInternalUse(bool internalUse) override;
 
@@ -56,6 +62,9 @@ private:
 	QByteArray m_configurationType;
 	QString m_description;
 	QByteArray m_project;
+	QByteArray m_endCustomerId;
+	QString m_station;
+	QString m_area;
 	DeviceProductionStatus m_status;
 	bool m_internalUse;
 };
@@ -66,5 +75,4 @@ typedef prolifedata::TOrderedWrap<CIdentifiableDeviceInfo> COrderedIdentifiableD
 
 
 } // namespace prolifedata
-
 

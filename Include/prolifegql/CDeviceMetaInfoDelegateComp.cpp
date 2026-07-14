@@ -32,6 +32,15 @@ bool CDeviceMetaInfoDelegateComp::FillRepresentation(QJsonObject& representation
 	
 		QByteArray project = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_PROJECT).toByteArray();
 		representation["Project"] = QString(project);
+
+		QByteArray endCustomerId = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_END_CUSTOMER_ID).toByteArray();
+		representation["EndCustomerId"] = QString(endCustomerId);
+
+		QString endCustomerName = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_END_CUSTOMER_NAME).toString();
+		representation["EndCustomerName"] = endCustomerName;
+
+		representation["Station"] = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_STATION).toString();
+		representation["Area"] = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_AREA).toString();
 	
 		int status = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_STATUS).toInt();
 		representation["Status"] = status;
@@ -113,6 +122,22 @@ bool CDeviceMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo
 		if (representation.contains("Project")){
 			metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_PROJECT, representation.value("Project"));
 		}
+
+		if (representation.contains("EndCustomerId")){
+			metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_END_CUSTOMER_ID, representation.value("EndCustomerId"));
+		}
+
+		if (representation.contains("EndCustomerName")){
+			metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_END_CUSTOMER_NAME, representation.value("EndCustomerName"));
+		}
+
+		if (representation.contains("Station")){
+			metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_STATION, representation.value("Station"));
+		}
+
+		if (representation.contains("Area")){
+			metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_AREA, representation.value("Area"));
+		}
 	
 		if (representation.contains("Status")){
 			metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_DEVICE_STATUS, representation.value("Status"));
@@ -189,5 +214,4 @@ bool CDeviceMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo
 
 
 } // namespace prolifegql
-
 

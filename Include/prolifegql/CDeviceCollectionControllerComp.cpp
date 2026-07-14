@@ -492,6 +492,10 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	QByteArray project = deviceInfoPtr->GetProject();
 	representationPayload.project = (project);
 
+	representationPayload.endCustomerId = deviceInfoPtr->GetEndCustomerId();
+	representationPayload.station = deviceInfoPtr->GetStation();
+	representationPayload.area = deviceInfoPtr->GetArea();
+
 	QByteArray configurationType = deviceInfoPtr->GetConfigurationType();
 	representationPayload.licenseName = (configurationType);
 
@@ -675,6 +679,18 @@ bool CDeviceCollectionControllerComp::FillObjectFromRepresentation(
 	if (representation.project){
 		project = *representation.project;
 		deviceInfoPtr->SetProject(project.toUtf8());
+	}
+
+	if (representation.endCustomerId){
+		deviceInfoPtr->SetEndCustomerId(*representation.endCustomerId);
+	}
+
+	if (representation.station){
+		deviceInfoPtr->SetStation(*representation.station);
+	}
+
+	if (representation.area){
+		deviceInfoPtr->SetArea(*representation.area);
 	}
 
 	QString orderId;
@@ -923,5 +939,4 @@ bool CDeviceCollectionControllerComp::GetSoftwareInfo(const QByteArray& software
 
 
 } // namespace prolifegql
-
 

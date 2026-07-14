@@ -139,6 +139,54 @@ void CDeviceInfo::SetProject(const QByteArray& project)
 }
 
 
+QByteArray CDeviceInfo::GetEndCustomerId() const
+{
+	return m_endCustomerId;
+}
+
+
+void CDeviceInfo::SetEndCustomerId(const QByteArray& endCustomerId)
+{
+	if (m_endCustomerId != endCustomerId){
+		istd::CChangeNotifier changeNotifier(this);
+
+		m_endCustomerId = endCustomerId;
+	}
+}
+
+
+QString CDeviceInfo::GetStation() const
+{
+	return m_station;
+}
+
+
+void CDeviceInfo::SetStation(const QString& station)
+{
+	if (m_station != station){
+		istd::CChangeNotifier changeNotifier(this);
+
+		m_station = station;
+	}
+}
+
+
+QString CDeviceInfo::GetArea() const
+{
+	return m_area;
+}
+
+
+void CDeviceInfo::SetArea(const QString& area)
+{
+	if (m_area != area){
+		istd::CChangeNotifier changeNotifier(this);
+
+		m_area = area;
+	}
+}
+
+
 bool CDeviceInfo::IsInternalUse() const
 {
 	return m_internalUse;
@@ -221,6 +269,53 @@ bool CDeviceInfo::Serialize(iser::IArchive& archive)
 		retVal = retVal && archive.EndTag(internalUseTag);
 	}
 
+	iser::CArchiveTag endCustomerDataTag("EndCustomerData", "End customer data", iser::CArchiveTag::TT_GROUP);
+	if (archive.IsStoring()){
+		retVal = retVal && archive.BeginTag(endCustomerDataTag);
+
+		iser::CArchiveTag endCustomerIdTag("EndCustomerId", "End customer ID", iser::CArchiveTag::TT_LEAF);
+		retVal = retVal && archive.BeginTag(endCustomerIdTag);
+		retVal = retVal && archive.Process(m_endCustomerId);
+		retVal = retVal && archive.EndTag(endCustomerIdTag);
+
+		iser::CArchiveTag stationTag("Station", "Station", iser::CArchiveTag::TT_LEAF);
+		retVal = retVal && archive.BeginTag(stationTag);
+		retVal = retVal && archive.Process(m_station);
+		retVal = retVal && archive.EndTag(stationTag);
+
+		iser::CArchiveTag areaTag("Area", "Area", iser::CArchiveTag::TT_LEAF);
+		retVal = retVal && archive.BeginTag(areaTag);
+		retVal = retVal && archive.Process(m_area);
+		retVal = retVal && archive.EndTag(areaTag);
+
+		retVal = retVal && archive.EndTag(endCustomerDataTag);
+	}
+	else if (archive.BeginTag(endCustomerDataTag)){
+		iser::CArchiveTag endCustomerIdTag("EndCustomerId", "End customer ID", iser::CArchiveTag::TT_LEAF);
+		bool endCustomerDataReadOk = archive.BeginTag(endCustomerIdTag)
+			&& archive.Process(m_endCustomerId)
+			&& archive.EndTag(endCustomerIdTag);
+
+		iser::CArchiveTag stationTag("Station", "Station", iser::CArchiveTag::TT_LEAF);
+		endCustomerDataReadOk = endCustomerDataReadOk
+			&& archive.BeginTag(stationTag)
+			&& archive.Process(m_station)
+			&& archive.EndTag(stationTag);
+
+		iser::CArchiveTag areaTag("Area", "Area", iser::CArchiveTag::TT_LEAF);
+		endCustomerDataReadOk = endCustomerDataReadOk
+			&& archive.BeginTag(areaTag)
+			&& archive.Process(m_area)
+			&& archive.EndTag(areaTag);
+
+		archive.EndTag(endCustomerDataTag);
+		if (!endCustomerDataReadOk){
+			m_endCustomerId.clear();
+			m_station.clear();
+			m_area.clear();
+		}
+	}
+
 	return retVal;
 }
 
@@ -247,6 +342,9 @@ bool CDeviceInfo::CopyFrom(const IChangeable& object, CompatibilityMode /*mode*/
 		m_configurationType = sourcePtr->m_configurationType;
 		m_description = sourcePtr->m_description;
 		m_project = sourcePtr->m_project;
+		m_endCustomerId = sourcePtr->m_endCustomerId;
+		m_station = sourcePtr->m_station;
+		m_area = sourcePtr->m_area;
 		m_status = sourcePtr->m_status;
 		m_internalUse = sourcePtr->m_internalUse;
 
@@ -278,6 +376,9 @@ bool CDeviceInfo::ResetData(CompatibilityMode /*mode*/)
 	m_configurationType.clear();
 	m_description.clear();
 	m_project.clear();
+	m_endCustomerId.clear();
+	m_station.clear();
+	m_area.clear();
 	m_internalUse = false;
 	m_status = DPS_NONE;
 
@@ -286,5 +387,3 @@ bool CDeviceInfo::ResetData(CompatibilityMode /*mode*/)
 
 
 } // namespace prolifedata
-
-

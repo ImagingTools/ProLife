@@ -97,11 +97,17 @@ test.describe('Hardware / editor', () => {
       await gui.clickButton(page, ['NoButton']);
     });
 
-    test('additional information group - order / status / project / internal use', async () => {
+    test('additional information group - customer / status / location / internal use', async () => {
+      await editor.setEndCustomerByIndex(0);
+      await editor.expectFieldVisible('EndCustomerCombo');
       await editor.setProductionStatusByIndex(2); // "In Progress" (DeviceProductionStatus.qml)
       await gui.checkScreenshot(page, 'device-editor-status');
       await editor.setProject('ProLifeGui Project');
       await gui.checkScreenshot(page, 'device-editor-project');
+      await editor.setStation('Assembly 1');
+      await editor.setArea('Body Shop');
+      await editor.station.waitForValue('Assembly 1');
+      await editor.area.waitForValue('Body Shop');
       await editor.toggleInternalUse();
       await gui.checkScreenshot(page, 'device-editor-internal-use');
     });

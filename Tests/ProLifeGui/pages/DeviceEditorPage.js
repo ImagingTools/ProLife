@@ -36,8 +36,11 @@ class DeviceEditorPage extends BasePage {
 
     // Additional Information group
     this.order = new ComboBox(page, ['OrderCombo']);
+    this.endCustomer = new ComboBox(page, ['EndCustomerCombo']);
     this.productionStatus = new ComboBox(page, ['ProductionStatusCombo']);
     this.project = new TextInput(page, ['ProjectInput']);
+    this.station = new TextInput(page, ['StationInput']);
+    this.area = new TextInput(page, ['AreaInput']);
     this.internalUse = new Switch(page, ['InternalUseSwitch']);
   }
 
@@ -93,6 +96,18 @@ class DeviceEditorPage extends BasePage {
   }
   async setProject(text) {
     await this.project.fill(text);
+    return this;
+  }
+  async setEndCustomerByIndex(index = 0) {
+    await this.endCustomer.selectIndex(index);
+    return this;
+  }
+  async setStation(text) {
+    await this.station.fill(text);
+    return this;
+  }
+  async setArea(text) {
+    await this.area.fill(text);
     return this;
   }
   // ProductionStatusCombo is a static enum (DeviceProductionStatus.qml): None/Accepted/InProgress(2)/

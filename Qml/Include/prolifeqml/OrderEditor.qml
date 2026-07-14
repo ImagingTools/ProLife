@@ -22,6 +22,7 @@ ViewBase {
 	
 	property OrderData orderData: model
 	property bool isNew: false
+	property bool updatingEndCustomer: false
 
 	Component.onCompleted: {
 		if (!CachedAccountCollection.completed){
@@ -40,8 +41,8 @@ ViewBase {
 		productsView.readOnly = readOnly;
 		
 		customerCB.changeable = !readOnly;
+		endCustomerCB.changeable = !readOnly;
 		orderStatusCB.changeable = !readOnly;
-		additionalRolesView.readOnly = readOnly;
 	}
 	
 	function checkPermissions(){
@@ -56,11 +57,10 @@ ViewBase {
 			purchaseIdInput.readOnly = false;
 			descriptionInput.readOnly = false;
 			customerCB.changeable = true;
+			endCustomerCB.changeable = true;
 			orderStatusCB.changeable = true;
 			addProduct.visible = true;
 			productsView.readOnly = false;
-			addRoleButton.visible = true;
-			additionalRolesView.readOnly = false;
 		}
 		else{
 			let canChangeDeliveryId = PermissionsController.checkPermission("ChangeDeliveryId");
@@ -74,8 +74,7 @@ ViewBase {
 			
 			let canChangeCustomer = PermissionsController.checkPermission("ChangeCustomer");
 			customerCB.changeable = canChangeCustomer;
-			additionalRolesView.readOnly = !canChangeCustomer;
-			addRoleButton.visible = canChangeCustomer;
+			endCustomerCB.changeable = canChangeCustomer;
 			
 			let canChangeOrderStatus = PermissionsController.checkPermission("ChangeOrderStatus");
 			orderStatusCB.changeable = canChangeOrderStatus;
@@ -145,6 +144,49 @@ ViewBase {
 					additionalRolesModel.setData("customerId", roleItem.m_customerId || "", idx);
 				}
 			}
+		}
+
+		let endCustomerId = getCustomerIdForRole("EndCustomer");
+		updatingEndCustomer = true;
+		endCustomerCB.currentIndex = -1;
+		if (endCustomerCB.model){
+			for (let i = 0; i < endCustomerCB.model.getItemsCount(); i++){
+				if (endCustomerCB.model.getData("id", i) === endCustomerId){
+					endCustomerCB.currentIndex = i;
+					break;
+				}
+			}
+		}
+		updatingEndCustomer = false;
+	}
+
+	function getCustomerIdForRole(roleType){
+		for (let i = 0; i < additionalRolesModel.getItemsCount(); i++){
+			if (additionalRolesModel.getData("roleType", i) === roleType){
+				return additionalRolesModel.getData("customerId", i);
+			}
+		}
+
+		return "";
+	}
+
+	function setCustomerIdForRole(roleType, customerId){
+		for (let i = 0; i < additionalRolesModel.getItemsCount(); i++){
+			if (additionalRolesModel.getData("roleType", i) === roleType){
+				if (customerId === ""){
+					additionalRolesModel.removeItem(i);
+				}
+				else{
+					additionalRolesModel.setData("customerId", customerId, i);
+				}
+				return;
+			}
+		}
+
+		if (customerId !== ""){
+			let index = additionalRolesModel.insertNewItem();
+			additionalRolesModel.setData("roleType", roleType, index);
+			additionalRolesModel.setData("customerId", customerId, index);
 		}
 	}
 	
@@ -225,33 +267,6 @@ ViewBase {
 		id: additionalRolesModel;
 	}
 
-	// Role-type labels for the dropdown
-	TreeItemModel {
-		id: roleTypesModel;
-
-		Component.onCompleted: {
-			let index = roleTypesModel.insertNewItem();
-			roleTypesModel.setData("id", "EndCustomer", index);
-			roleTypesModel.setData("name", qsTr("End Customer"), index);
-
-			index = roleTypesModel.insertNewItem();
-			roleTypesModel.setData("id", "InvoiceRecipient", index);
-			roleTypesModel.setData("name", qsTr("Invoice Recipient"), index);
-
-			index = roleTypesModel.insertNewItem();
-			roleTypesModel.setData("id", "DeliveryRecipient", index);
-			roleTypesModel.setData("name", qsTr("Delivery Recipient"), index);
-
-			index = roleTypesModel.insertNewItem();
-			roleTypesModel.setData("id", "Reseller", index);
-			roleTypesModel.setData("name", qsTr("Reseller"), index);
-
-			index = roleTypesModel.insertNewItem();
-			roleTypesModel.setData("id", "Referrer", index);
-			roleTypesModel.setData("name", qsTr("Referrer"), index);
-		}
-	}
-	
 	Rectangle {
 		anchors.fill: parent;
 		
@@ -475,6 +490,45 @@ ViewBase {
 					KeyNavigation.backtab: customerCB;
 				}
 
+			}
+
+			GroupHeaderView {
+				objectName: "EndCustomerInformationHeader";
+				title: qsTr("End Customer");
+				width: content.width;
+				groupView: endCustomerGroup;
+			}
+
+			GroupElementView {
+				id: endCustomerGroup;
+				objectName: "EndCustomerInformationGroup";
+
+				width: content.width;
+
+				ComboBoxElementView {
+					id: endCustomerCB;
+					objectName: "EndCustomerCombo";
+
+					name: qsTr("End Customer");
+					model: orderEditorContainer.accountsModel;
+
+					onCurrentIndexChanged: {
+						if (orderEditorContainer.updatingEndCustomer){
+							return;
+						}
+
+						let customerId = "";
+						if (currentIndex >= 0 && model){
+							customerId = model.getData("id", currentIndex);
+						}
+						orderEditorContainer.setCustomerIdForRole("EndCustomer", customerId);
+						orderEditorContainer.doUpdateModel();
+					}
+
+					onModelChanged: {
+						orderEditorContainer.doUpdateGui();
+					}
+				}
 			}
 
 			// Additional customer roles section
@@ -816,5 +870,3 @@ ViewBase {
 		}
 	}
 }//Container
-
-

@@ -31,7 +31,11 @@ public:
 		MIT_LICENSE_NAME,
 		MIT_LICENSE_ID,
 		MIT_IN_USE,
-		MIT_INTERNAL_USE
+		MIT_INTERNAL_USE,
+		MIT_END_CUSTOMER_ID,
+		MIT_END_CUSTOMER_NAME,
+		MIT_STATION,
+		MIT_AREA
 	};
 
 	enum DeviceProductionStatus
@@ -119,6 +123,15 @@ public:
 	*/
 	virtual void SetProject(const QByteArray& project) = 0;
 
+	virtual QByteArray GetEndCustomerId() const = 0;
+	virtual void SetEndCustomerId(const QByteArray& endCustomerId) = 0;
+
+	virtual QString GetStation() const = 0;
+	virtual void SetStation(const QString& station) = 0;
+
+	virtual QString GetArea() const = 0;
+	virtual void SetArea(const QString& area) = 0;
+
 	/**
 		Checks whether this product instance is marked for internal use only.
 	*/
@@ -132,5 +145,4 @@ public:
 
 
 } // namespace prolifedata
-
 

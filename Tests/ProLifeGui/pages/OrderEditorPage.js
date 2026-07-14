@@ -14,6 +14,7 @@ class OrderEditorPage extends BasePage {
     this.purchaseOrderId = new TextInput(page, ['PurchaseOrderIdInput']);
     this.description = new TextInput(page, ['DescriptionInput']);
     this.customer = new ComboBox(page, ['CustomerCombo']);
+    this.endCustomer = new ComboBox(page, ['EndCustomerCombo']);
     this.orderStatus = new ComboBox(page, ['OrderStatusCombo']);
   }
 
@@ -35,6 +36,10 @@ class OrderEditorPage extends BasePage {
   }
   async setCustomer(text) {
     await this.customer.select(text);
+    return this;
+  }
+  async setEndCustomerByIndex(index = 0) {
+    await this.endCustomer.selectIndex(index);
     return this;
   }
   async setOrderStatus(text) {

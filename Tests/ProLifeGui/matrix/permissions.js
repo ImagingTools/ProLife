@@ -117,8 +117,11 @@ const DEVICE_FIELD_PERMISSIONS = {
   SerialNumberInput: ['ChangeSerialNumberForSensor'],
   MacAddressInput: ['ChangeMacAddress'],
   OrderCombo: ['ChangeOrderForSensor'],
+  EndCustomerCombo: ['ChangeOrderForSensor'],
   ProductionStatusCombo: ['ChangeProductionStatus'],
   ProjectInput: ['ChangeProjectForSensor'],
+  StationInput: ['ChangeProjectForSensor'],
+  AreaInput: ['ChangeProjectForSensor'],
   DeviceTypeCombo: ['ChangeHardwareConfiguration', 'ChangeDeviceType'],
   HardwareConfigurationCombo: ['ChangeHardwareConfiguration', 'ChangeDeviceType'],
 };
@@ -196,6 +199,7 @@ const ORDER_FIELD_PERMISSIONS = {
   PurchaseOrderIdInput: ['ChangePurchaseOrderId'],
   DescriptionInput: ['ChangeDescriptionForOrder'],
   CustomerCombo: ['ChangeCustomer'],
+  EndCustomerCombo: ['ChangeCustomer'],
   OrderStatusCombo: ['ChangeOrderStatus'],
 };
 

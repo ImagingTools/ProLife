@@ -101,6 +101,27 @@ bool CDeviceChangeGeneratorComp::CompareDocuments(const istd::IChangeable& oldDo
 		InsertOperationDescription(documentChangeCollection, "", "Project", keyName, oldProject, newProject);
 	}
 
+	QByteArray oldEndCustomerId = oldDeviceInfoPtr->GetEndCustomerId();
+	QByteArray newEndCustomerId = newDeviceInfoPtr->GetEndCustomerId();
+	if (oldEndCustomerId != newEndCustomerId){
+		QString keyName = QT_TRANSLATE_NOOP("Attribute", "End Customer");
+		InsertOperationDescription(documentChangeCollection, "", "EndCustomerId", keyName, oldEndCustomerId, newEndCustomerId);
+	}
+
+	QString oldStation = oldDeviceInfoPtr->GetStation();
+	QString newStation = newDeviceInfoPtr->GetStation();
+	if (oldStation != newStation){
+		QString keyName = QT_TRANSLATE_NOOP("Attribute", "Station");
+		InsertOperationDescription(documentChangeCollection, "", "Station", keyName, oldStation.toUtf8(), newStation.toUtf8());
+	}
+
+	QString oldArea = oldDeviceInfoPtr->GetArea();
+	QString newArea = newDeviceInfoPtr->GetArea();
+	if (oldArea != newArea){
+		QString keyName = QT_TRANSLATE_NOOP("Attribute", "Area");
+		InsertOperationDescription(documentChangeCollection, "", "Area", keyName, oldArea.toUtf8(), newArea.toUtf8());
+	}
+
 	QByteArray oldSerialNumber = oldDeviceInfoPtr->GetSerialNumber();
 	QByteArray newSerialNumber = newDeviceInfoPtr->GetSerialNumber();
 	if (oldSerialNumber != newSerialNumber){
@@ -358,5 +379,4 @@ QString CDeviceChangeGeneratorComp::GetDeviceName(const QByteArray& deviceId) co
 
 
 } // namespace prolifegql
-
 

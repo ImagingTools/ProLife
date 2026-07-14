@@ -64,6 +64,11 @@ test.describe('Orders / editor', () => {
       await gui.checkScreenshot(page, 'orders-editor-new-filled');
     });
 
+    test('assign end customer', async () => {
+      await editor.setEndCustomerByIndex(0);
+      await editor.expectFieldVisible('EndCustomerCombo');
+    });
+
     // Group-collapse/undo-redo/dirty-close-confirm are generic Document/UI mechanics with no
     // per-entity logic - covered once for the whole suite in devices.editor.multiuser.test.js.
   });

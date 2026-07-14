@@ -19,7 +19,7 @@ DocumentViewBase {
 	
 	anchors.fill: parent;
 	
-	property TreeItemModel accountsModel: TreeItemModel {}
+	property TreeItemModel accountsModel: CachedAccountCollection.collectionModel
 	property TreeItemModel productsModel: TreeItemModel {}
 	
 	property alias orderComboBoxEnabled: orderCB.enabled;
@@ -32,6 +32,7 @@ DocumentViewBase {
 	
 	property DeviceData deviceData: model ? model : null;
 	property bool isNew: false
+	property bool updatingEndCustomer: false
 
 	Component.onCompleted: {
 		if (!CachedProductCollection.completed){
@@ -41,6 +42,11 @@ DocumentViewBase {
 		if (!CachedOrderCollection.completed){
 			CachedOrderCollection.updateModel();
 		}
+
+		if (!CachedAccountCollection.completed){
+			CachedAccountCollection.updateModel();
+		}
+
 	}
 
 	Connections {
@@ -82,6 +88,9 @@ DocumentViewBase {
 			serialNumberInput.readOnly = false;
 			macAddressInput.readOnly = false;
 			projectInput.readOnly = false;
+			endCustomerCB.changeable = true;
+			stationInput.readOnly = false;
+			areaInput.readOnly = false;
 			statusCB.changeable = true;
 			productCB.changeable = true;
 			orderCB.changeable = true;
@@ -99,12 +108,15 @@ DocumentViewBase {
 			
 			let canChangeOrder = PermissionsController.checkPermission("ChangeOrderForSensor");
 			orderCB.changeable = canChangeOrder;
+			endCustomerCB.changeable = canChangeOrder;
 			
 			let canChangeProductionStatus = PermissionsController.checkPermission("ChangeProductionStatus");
 			statusCB.changeable = canChangeProductionStatus;
 			
 			let canChangeProject = PermissionsController.checkPermission("ChangeProjectForSensor");
 			projectInput.readOnly = !canChangeProject;
+			stationInput.readOnly = !canChangeProject;
+			areaInput.readOnly = !canChangeProject;
 			
 			let canChangeConfiguration = PermissionsController.checkPermission("ChangeHardwareConfiguration");
 			let canChangeDevice = PermissionsController.checkPermission("ChangeDeviceType");
@@ -185,6 +197,10 @@ DocumentViewBase {
 		productCB.changeable = !readOnly;
 		orderCB.changeable = !readOnly;
 		configurationCB.changeable = !readOnly;
+		endCustomerCB.changeable = !readOnly;
+		projectInput.readOnly = readOnly;
+		stationInput.readOnly = readOnly;
+		areaInput.readOnly = readOnly;
 	}
 	
 	function updateGui(){
@@ -196,6 +212,8 @@ DocumentViewBase {
 		serialNumberInput.text = deviceData.m_serialNumber;
 		macAddressInput.text = deviceData.m_macAddress;
 		projectInput.text = deviceData.m_project;
+		stationInput.text = deviceData.m_station;
+		areaInput.text = deviceData.m_area;
 		
 		statusCB.currentIndex = -1;
 		
@@ -252,6 +270,20 @@ DocumentViewBase {
 			}
 		}
 
+		let endCustomerId = deviceData.m_endCustomerId;
+		let accountModel = endCustomerCB.model;
+		updatingEndCustomer = true;
+		endCustomerCB.currentIndex = -1;
+		if (accountModel){
+			for (let i = 0; i < accountModel.getItemsCount(); i++){
+				if (accountModel.getData("id", i) === endCustomerId){
+					endCustomerCB.currentIndex = i;
+					break;
+				}
+			}
+		}
+		updatingEndCustomer = false;
+
 		internalUseSwitchElementView.checked = deviceData.m_internalUse
 	}
 	
@@ -296,6 +328,17 @@ DocumentViewBase {
 		deviceData.m_serialNumber = serialNumberInput.text;
 		deviceData.m_macAddress = macAddressInput.text;
 		deviceData.m_project = projectInput.text;
+		deviceData.m_station = stationInput.text;
+		deviceData.m_area = areaInput.text;
+
+		if (canChangeOrder){
+			if (endCustomerCB.currentIndex >= 0 && endCustomerCB.model){
+				deviceData.m_endCustomerId = endCustomerCB.model.getData("id", endCustomerCB.currentIndex);
+			}
+			else{
+				deviceData.m_endCustomerId = "";
+			}
+		}
 		
 		if (statusCB.currentIndex >= 0 && statusCB.model){
 			deviceData.m_productionStatus = productionStatus.getStatusId(statusCB.currentIndex);
@@ -553,7 +596,7 @@ DocumentViewBase {
 					
 					sourceModel: CachedOrderCollection.collectionModel;
 					
-					KeyNavigation.tab: statusCB;
+					KeyNavigation.tab: endCustomerCB;
 					KeyNavigation.backtab: macAddressInput;
 					
 					delegate: Component {
@@ -573,6 +616,28 @@ DocumentViewBase {
 						deviceEditorContainer.doUpdateGui();
 					}
 				}
+
+				ComboBoxElementView {
+					id: endCustomerCB;
+					objectName: "EndCustomerCombo";
+
+					name: qsTr("End Customer");
+					model: deviceEditorContainer.accountsModel;
+
+					KeyNavigation.tab: statusCB;
+					KeyNavigation.backtab: orderCB;
+
+					onCurrentIndexChanged: {
+						if (deviceEditorContainer.updatingEndCustomer){
+							return;
+						}
+						deviceEditorContainer.doUpdateModel();
+					}
+
+					onModelChanged: {
+						deviceEditorContainer.doUpdateGui();
+					}
+				}
 				
 				ClearableComboBoxElementView {
 					id: statusCB;
@@ -585,7 +650,7 @@ DocumentViewBase {
 					property bool blockingIndexChanged: false;
 					
 					KeyNavigation.tab: projectInput;
-					KeyNavigation.backtab: orderCB;
+					KeyNavigation.backtab: endCustomerCB;
 					
 					onCurrentIndexChanged: {
 						deviceEditorContainer.doUpdateModel();
@@ -607,9 +672,39 @@ DocumentViewBase {
 					
 					readOnly: deviceEditorContainer.readOnly;
 					
-					KeyNavigation.tab: productCB;
+					KeyNavigation.tab: stationInput;
 					KeyNavigation.backtab: statusCB;
 					
+					onEditingFinished: {
+						deviceEditorContainer.doUpdateModel();
+					}
+				}
+
+				TextInputElementView {
+					id: stationInput;
+					objectName: "StationInput";
+
+					name: qsTr("Station");
+					placeHolderText: qsTr("Enter the station");
+
+					KeyNavigation.tab: areaInput;
+					KeyNavigation.backtab: projectInput;
+
+					onEditingFinished: {
+						deviceEditorContainer.doUpdateModel();
+					}
+				}
+
+				TextInputElementView {
+					id: areaInput;
+					objectName: "AreaInput";
+
+					name: qsTr("Area");
+					placeHolderText: qsTr("Enter the area");
+
+					KeyNavigation.tab: productCB;
+					KeyNavigation.backtab: stationInput;
+
 					onEditingFinished: {
 						deviceEditorContainer.doUpdateModel();
 					}
@@ -696,5 +791,3 @@ DocumentViewBase {
 		}
 	}
 }
-
-

@@ -47,6 +47,9 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 		metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DEVICE_SERIAL_NUMBER, deviceInfoPtr->GetSerialNumber());
 		metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DEVICE_STATUS, deviceInfoPtr->GetDeviceProductionStatus());
 		metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DEVICE_PROJECT, deviceInfoPtr->GetProject());
+		metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_END_CUSTOMER_ID, deviceInfoPtr->GetEndCustomerId());
+		metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_STATION, deviceInfoPtr->GetStation());
+		metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_AREA, deviceInfoPtr->GetArea());
 		metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_ORDER_ID, orderId);
 		metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_INTERNAL_USE, deviceInfoPtr->IsInternalUse());
 	
@@ -77,6 +80,14 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 					
 					QString customerName = customerInfoPtr->GetName();
 					metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_CUSTOMER_NAME, customerName);
+				}
+			}
+
+			imtbase::IObjectCollection::DataPtr endCustomerDataPtr;
+			if (m_accountCollectionCompPtr->GetObjectData(deviceInfoPtr->GetEndCustomerId(), endCustomerDataPtr)){
+				const ICustomerInfo* endCustomerInfoPtr = dynamic_cast<const ICustomerInfo*>(endCustomerDataPtr.GetPtr());
+				if (endCustomerInfoPtr != nullptr){
+					metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_END_CUSTOMER_NAME, endCustomerInfoPtr->GetName());
 				}
 			}
 		}
@@ -154,6 +165,4 @@ QString CDeviceMetaInfoCreatorComp::MetaInfo::GetMetaInfoName(int /*metaInfoType
 
 
 } // namespace imtauth
-
-
 
