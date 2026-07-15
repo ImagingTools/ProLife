@@ -439,7 +439,7 @@ istd::IChangeableUniquePtr CDeviceCollectionControllerComp::CreateObjectFromRepr
 	}
 
 	istd::IChangeableUniquePtr retVal;
-	retVal.MoveCastedPtr<prolifedata::IDeviceInfo>(deviceInstancePtr);
+	retVal.MoveCastedPtr<prolifedata::IDeviceInfo>(std::move(deviceInstancePtr));
 
 	return retVal;
 }

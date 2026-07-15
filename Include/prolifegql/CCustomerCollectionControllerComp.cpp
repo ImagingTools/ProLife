@@ -184,7 +184,7 @@ istd::IChangeableUniquePtr CCustomerCollectionControllerComp::CreateObjectFromRe
 	}
 
 	istd::IChangeableUniquePtr retVal;
-	retVal.MoveCastedPtr<imtauth::ICompanyInfo>(companyInstancePtr);
+	retVal.MoveCastedPtr<imtauth::ICompanyInfo>(std::move(companyInstancePtr));
 
 	return retVal;
 }
