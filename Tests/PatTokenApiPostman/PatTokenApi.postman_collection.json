@@ -1218,7 +1218,7 @@
           ]
         },
         {
-          "name": "GetTokenList - unknown userId returns empty list (not an error)",
+          "name": "GetTokenList - unrelated userId is rejected (ownership enforced)",
           "request": {
             "method": "POST",
             "header": [],
@@ -1239,17 +1239,11 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "pm.test('GetTokenList for unknown user has no errors', function () {",
-                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "pm.test('GetTokenList for an unrelated userId has no data key', function () {",
+                  "  pm.expect(Object.prototype.hasOwnProperty.call(json, 'data')).to.eql(false);",
                   "});",
-                  "pm.test('Response has correct structure for GetTokenList (empty case)', function () {",
-                  "  pm.expect(json).to.be.an('object');",
-                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
-                  "  pm.expect(json.data).to.have.property('GetTokenList').that.is.an('object');",
-                  "  pm.expect(json.data.GetTokenList).to.have.property('tokens').that.is.an('array');",
-                  "});",
-                  "pm.test('GetTokenList for unknown user returns empty tokens array', function () {",
-                  "  pm.expect(json.data.GetTokenList.tokens).to.have.length(0);",
+                  "pm.test('GetTokenList for an unrelated userId is rejected as not authorized', function () {",
+                  "  pm.expect(json.errors[0].message).to.eql('Not authorized to list personal access tokens for this user');",
                   "});"
                 ]
               }
@@ -1746,7 +1740,7 @@
                   "  pm.expect(Object.prototype.hasOwnProperty.call(json, 'data')).to.eql(false);",
                   "});",
                   "pm.test('RevokeToken not-found message includes the requested id', function () {",
-                  "  pm.expect(json.errors[0].message).to.eql(`Failed to revoke token with id '${expectedId}'`);",
+                  "  pm.expect(json.errors[0].message).to.eql(`Token with id '${expectedId}' not found`);",
                   "});"
                 ]
               }
@@ -1922,7 +1916,7 @@
           ]
         },
         {
-          "name": "DeleteToken - double-delete succeeds (idempotent)",
+          "name": "DeleteToken - double-delete now reports not-found (ownership lookup precondition)",
           "request": {
             "method": "POST",
             "header": [],
@@ -1943,15 +1937,12 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "pm.test('Response has correct structure for DeleteToken', function () {",
-                  "  pm.expect(json).to.be.an('object');",
-                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
-                  "  pm.expect(json.data).to.have.property('DeleteToken').that.is.an('object');",
-                  "  pm.expect(json.data.DeleteToken).to.have.property('success');",
+                  "const expectedId = pm.environment.get('primaryTokenId');",
+                  "pm.test('Double-delete has no data key', function () {",
+                  "  pm.expect(Object.prototype.hasOwnProperty.call(json, 'data')).to.eql(false);",
                   "});",
-                  "const payload = json.data.DeleteToken;",
-                  "pm.test('Double-delete still succeeds (idempotent)', function () {",
-                  "  pm.expect(payload.success, 'Unexpected response: ' + JSON.stringify(json)).to.eql(true);",
+                  "pm.test('Double-delete is rejected: token no longer exists to check ownership against', function () {",
+                  "  pm.expect(json.errors[0].message).to.eql(`Token with id '${expectedId}' not found`);",
                   "});"
                 ]
               }
@@ -2043,7 +2034,7 @@
           ]
         },
         {
-          "name": "DeleteToken - nonexistent id succeeds (idempotent)",
+          "name": "DeleteToken - nonexistent id is rejected (not found)",
           "request": {
             "method": "POST",
             "header": [],
@@ -2064,15 +2055,12 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "pm.test('Response has correct structure for DeleteToken', function () {",
-                  "  pm.expect(json).to.be.an('object');",
-                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
-                  "  pm.expect(json.data).to.have.property('DeleteToken').that.is.an('object');",
-                  "  pm.expect(json.data.DeleteToken).to.have.property('success');",
+                  "const expectedId = pm.environment.get('randomUuid');",
+                  "pm.test('DeleteToken for a never-existed id has no data key', function () {",
+                  "  pm.expect(Object.prototype.hasOwnProperty.call(json, 'data')).to.eql(false);",
                   "});",
-                  "const payload = json.data.DeleteToken;",
-                  "pm.test('DeleteToken for a never-existed id still succeeds (idempotent)', function () {",
-                  "  pm.expect(payload.success, 'Unexpected response: ' + JSON.stringify(json)).to.eql(true);",
+                  "pm.test('DeleteToken for a never-existed id is rejected: nothing to check ownership against', function () {",
+                  "  pm.expect(json.errors[0].message).to.eql(`Token with id '${expectedId}' not found`);",
                   "});"
                 ]
               }
@@ -2770,7 +2758,7 @@
       ]
     },
     {
-      "name": "07 Ownership and Cross-User Access (no enforcement, source-confirmed)",
+      "name": "07 Ownership and Cross-User Access (enforced, source-confirmed)",
       "item": [
         {
           "name": "Re-auth as Other User",
@@ -2814,7 +2802,7 @@
           ]
         },
         {
-          "name": "GetTokenList - Other User reads Token Owner's tokens (no ownership check)",
+          "name": "GetTokenList - Other User reading Token Owner's tokens is rejected",
           "request": {
             "method": "POST",
             "header": [],
@@ -2835,15 +2823,11 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "pm.test('Response has correct structure for GetTokenList', function () {",
-                  "  pm.expect(json).to.be.an('object');",
-                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
-                  "  pm.expect(json.data).to.have.property('GetTokenList').that.is.an('object');",
-                  "  pm.expect(json.data.GetTokenList).to.have.property('tokens').that.is.an('array');",
+                  "pm.test('GetTokenList for another user has no data key', function () {",
+                  "  pm.expect(Object.prototype.hasOwnProperty.call(json, 'data')).to.eql(false);",
                   "});",
-                  "const tokens = json.data.GetTokenList.tokens;",
-                  "pm.test('Other User can list Token Owner\\'s tokens', function () {",
-                  "  pm.expect(tokens.some(t => t.id === pm.environment.get('intersectionFullMatchTokenId'))).to.eql(true);",
+                  "pm.test('Other User cannot list Token Owner\\'s tokens', function () {",
+                  "  pm.expect(json.errors[0].message).to.eql('Not authorized to list personal access tokens for this user');",
                   "});"
                 ]
               }
@@ -2872,17 +2856,12 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "pm.test('Response has correct structure for GetToken', function () {",
-                  "  pm.expect(json).to.be.an('object');",
-                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
-                  "  pm.expect(json.data).to.have.property('GetToken').that.is.an('object');",
-                  "  pm.expect(json.data.GetToken).to.have.property('id');",
+                  "const expectedId = pm.environment.get('intersectionFullMatchTokenId');",
+                  "pm.test('GetToken for a token owned by another user has no data key', function () {",
+                  "  pm.expect(Object.prototype.hasOwnProperty.call(json, 'data')).to.eql(false);",
                   "});",
-                  "const t = json.data.GetToken;",
-                  "pm.test('Other User can read Token Owner\\'s token record, incl. tokenHash', function () {",
-                  "  pm.expect(t.id).to.eql(pm.environment.get('intersectionFullMatchTokenId'));",
-                  "  pm.expect(t.userId).to.eql(pm.environment.get('tokenOwnerUserId'));",
-                  "  pm.expect(t.tokenHash).to.be.a('string').and.not.empty;",
+                  "pm.test('Other User cannot read Token Owner\\'s token record; reported identically to a truly unknown id', function () {",
+                  "  pm.expect(json.errors[0].message).to.eql(`Token with id '${expectedId}' not found`);",
                   "});"
                 ]
               }
@@ -2890,7 +2869,7 @@
           ]
         },
         {
-          "name": "CreateToken - Other User mints a new PAT for Token Owner's userId",
+          "name": "CreateToken - Other User minting a PAT for Token Owner's userId is rejected",
           "request": {
             "method": "POST",
             "header": [],
@@ -2911,26 +2890,12 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "pm.test('Response has correct structure for CreateToken', function () {",
-                  "  pm.expect(json).to.be.an('object');",
-                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
-                  "  pm.expect(json.data).to.have.property('CreateToken').that.is.an('object');",
-                  "  pm.expect(json.data.CreateToken).to.have.property('success');",
+                  "pm.test('Cross-user CreateToken has no data key', function () {",
+                  "  pm.expect(Object.prototype.hasOwnProperty.call(json, 'data')).to.eql(false);",
                   "});",
-                  "const p = json.data.CreateToken;",
-                  "pm.test('Other User successfully creates a token impersonating Token Owner\\'s userId', function () {",
-                  "  pm.expect(p.success, 'Unexpected response: ' + JSON.stringify(json)).to.eql(true);",
-                  "  pm.expect(p.token).to.match(/^imt_pat_/);",
-                  "});",
-                  "const __extracted_crossUserCreatedTokenId = p.id;",
-                  "pm.test('Cross-user CreateToken returns id', function () {",
-                  "  pm.expect(__extracted_crossUserCreatedTokenId, 'Unexpected response: ' + JSON.stringify(json)).to.be.a('string').and.not.empty;",
-                  "});",
-                  "if (typeof __extracted_crossUserCreatedTokenId === 'string' && __extracted_crossUserCreatedTokenId) {",
-                  "  pm.environment.set('crossUserCreatedTokenId', __extracted_crossUserCreatedTokenId);",
-                  "} else {",
-                  "  console.log('Cross-user CreateToken returns id - FAILED, full response was:', JSON.stringify(json));",
-                  "}"
+                  "pm.test('Other User cannot create a token for Token Owner\\'s userId', function () {",
+                  "  pm.expect(json.errors[0].message).to.eql('Not authorized to create a personal access token for this user');",
+                  "});"
                 ]
               }
             }
@@ -2958,8 +2923,12 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "pm.test('Other User can revoke Token Owner\\'s token', function () {",
-                  "  pm.expect(json.data.RevokeToken.success).to.eql(true);",
+                  "const expectedId = pm.environment.get('intersectionFullMatchTokenId');",
+                  "pm.test('Cross-user RevokeToken has no data key', function () {",
+                  "  pm.expect(Object.prototype.hasOwnProperty.call(json, 'data')).to.eql(false);",
+                  "});",
+                  "pm.test('Other User cannot revoke Token Owner\\'s token; reported identically to a truly unknown id', function () {",
+                  "  pm.expect(json.errors[0].message).to.eql(`Token with id '${expectedId}' not found`);",
                   "});"
                 ]
               }
@@ -2967,7 +2936,7 @@
           ]
         },
         {
-          "name": "DeleteToken - Other User deletes the now-revoked, not-their-own token",
+          "name": "DeleteToken - Other User deletes a token they do not own",
           "request": {
             "method": "POST",
             "header": [],
@@ -2988,38 +2957,12 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "pm.test('Other User can delete Token Owner\\'s token', function () {",
-                  "  pm.expect(json.data.DeleteToken.success).to.eql(true);",
-                  "});"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "DeleteToken - cleanup cross-user-created token",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": "{{baseUrl}}/graphql",
-            "description": "Self-contained cleanup of the throwaway token minted two requests ago.",
-            "body": {
-              "mode": "graphql",
-              "graphql": {
-                "query": "mutation DeleteToken { DeleteToken(input: { id: \"{{crossUserCreatedTokenId}}\" }) { success message } }",
-                "variables": ""
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "const json = pm.response.json();",
-                  "pm.test('Cross-user-created token cleanup succeeds', function () {",
-                  "  pm.expect(json.data.DeleteToken.success).to.eql(true);",
+                  "const expectedId = pm.environment.get('intersectionFullMatchTokenId');",
+                  "pm.test('Cross-user DeleteToken has no data key', function () {",
+                  "  pm.expect(Object.prototype.hasOwnProperty.call(json, 'data')).to.eql(false);",
+                  "});",
+                  "pm.test('Other User cannot delete Token Owner\\'s token; reported identically to a truly unknown id', function () {",
+                  "  pm.expect(json.errors[0].message).to.eql(`Token with id '${expectedId}' not found`);",
                   "});"
                 ]
               }
@@ -4985,6 +4928,23 @@
               }
             }
           ]
+        },
+        {
+          "name": "Cleanup: DeleteToken (intersectionFullMatchTokenId)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation DeleteToken { DeleteToken(input: { id: \"{{intersectionFullMatchTokenId}}\" }) { success message } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": []
         },
         {
           "name": "Cleanup: RemoveElements (Users)",
