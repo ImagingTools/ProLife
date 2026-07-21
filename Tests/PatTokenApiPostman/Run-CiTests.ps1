@@ -339,7 +339,7 @@ function Invoke-NewmanSuite {
         "04 RevokeToken",
         "05 DeleteToken",
         "06 Scope Intersection - User Permissions $([char]0x2229) Token Scopes",
-        "07 Ownership and Cross-User Access (no enforcement, source-confirmed)",
+        "07 Ownership and Cross-User Access (enforced, source-confirmed)",
         "08 Comma-in-Scope Storage Edge Case",
         "09 ProductId Cross-Product Storage",
         "10 Omitted Input - required input argument (rejected at dispatch)",
