@@ -446,7 +446,7 @@ istd::IChangeableUniquePtr CSoftwareProductCollectionControllerComp::CreateObjec
 	}
 
 	istd::IChangeableUniquePtr retVal;
-	retVal.MoveCastedPtr<imtlic::IProductInstanceInfo>(softwareInstancePtr);
+	retVal.MoveCastedPtr<imtlic::IProductInstanceInfo>(std::move(softwareInstancePtr));
 
 	return retVal;
 }

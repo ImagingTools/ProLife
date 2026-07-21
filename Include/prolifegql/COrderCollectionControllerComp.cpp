@@ -414,7 +414,7 @@ istd::IChangeableUniquePtr COrderCollectionControllerComp::CreateObjectFromRepre
 	}
 
 	istd::IChangeableUniquePtr retVal;
-	retVal.MoveCastedPtr<prolifedata::IOrderInfo>(orderInfoPtr);
+	retVal.MoveCastedPtr<prolifedata::IOrderInfo>(std::move(orderInfoPtr));
 
 	return retVal;
 }
