@@ -68,6 +68,22 @@ test.describe('Hardware / editor', () => {
       await gui.checkScreenshot(page, 'device-editor-new-empty');
     });
 
+    // DeviceValidator.qml blocks Save until Device Type AND Configuration are both selected (checked in
+    // that order - Device Type first) - documents that this validation actually runs and surfaces as a
+    // real error dialog (ModalDialogManager.showErrorDialog, the same generic "Dialog" every other
+    // confirm/error dialog in this suite uses), not just a silently-ignored click.
+    test('save blocked - missing required fields', async () => {
+      // A truly untouched document isn't dirty yet, and Save silently no-ops on it (confirmed live -
+      // no dialog, no error, nothing) rather than running validation at all. Touch a field the
+      // validator does NOT check (Description) first so Save actually attempts to submit, while
+      // Device Type/Configuration stay unset.
+      await editor.setDescription('Touch to dirty');
+      await editor.save();
+      await gui.expectVisible(page, ['Dialog'], 'Save on an empty document must raise a validation error dialog');
+      await gui.checkScreenshot(page, 'device-editor-save-blocked-empty');
+      await gui.dismissDialog(page);
+    });
+
     test('fill device information group', async () => {
       // Both combos are populated from the live product catalogue (seeded/DB data, not a source-level
       // enum), so there's no stable caption to assert on - pick the first entry by position instead.
@@ -97,7 +113,7 @@ test.describe('Hardware / editor', () => {
       await gui.clickButton(page, ['NoButton']);
     });
 
-    test('additional information group - order / status / project / internal use', async () => {
+    test('production page - order / status / project / internal use', async () => {
       await editor.setProductionStatusByIndex(2); // "In Progress" (DeviceProductionStatus.qml)
       await gui.checkScreenshot(page, 'device-editor-status');
       await editor.setProject('ProLifeGui Project');
@@ -110,9 +126,21 @@ test.describe('Hardware / editor', () => {
       await editor.toggleGroup('device');
       await gui.checkScreenshot(page, 'device-editor-device-group-collapsed');
       await editor.toggleGroup('device');
-      await editor.toggleGroup('additional');
+      await editor.toggleGroup('production');
       await gui.checkScreenshot(page, 'device-editor-additional-group-collapsed');
-      await editor.toggleGroup('additional'); // leave groups expanded for the remaining steps
+      await editor.toggleGroup('production'); // leave groups expanded for the remaining steps
+    });
+
+    // DocumentHistoryPanel.qml is embedded identically in every document editor (only visible with
+    // ViewRevisions - PermissionsController.checkPermission at Component.onCompleted) - a generic
+    // mechanic with no per-entity logic, covered once here for the whole suite (same reasoning as
+    // group-collapse/undo-redo/dirty-close-confirm above).
+    test('document history panel toggles open and closed', async () => {
+      test.skip(!user.can('ViewRevisions'), 'no ViewRevisions permission - panel is not rendered at all');
+      await gui.clickButton(page, ['HistoryPanelToggle']);
+      await gui.checkScreenshot(page, 'device-editor-history-panel-open');
+      await gui.clickButton(page, ['HistoryPanelToggle']);
+      await gui.checkScreenshot(page, 'device-editor-history-panel-closed');
     });
 
     test('undo / redo', async () => {
@@ -199,10 +227,26 @@ test.describe('Hardware / editor', () => {
       // parent EditSensor is not enough to make the Project field writable, so gate strictly on
       // ChangeProjectForSensor (otherwise the fill verify fails on a read-only field).
       test.skip(!user.can('ChangeProjectForSensor'), 'cannot change the sensor project field');
-      await editor.setProject('Edited by ProLifeGui');
+      const edited = `Edited by ProLifeGui ${Date.now()}`;
+      await editor.setProject(edited);
       await gui.checkScreenshot(page, 'device-editor-edit-changed');
+
+      // (Previously also spied on the "UpdateDeviceFromRepresentation" GraphQL call here to confirm
+      // the server accepted the mutation - removed: it never matched a real request within the
+      // timeout, so either the operation name assumption or the request shape was wrong. The reopen
+      // check below is the reliable persistence signal already - it fails loudly on its own if Save
+      // didn't really commit.)
       await editor.save();
       await gui.checkScreenshot(page, 'device-editor-edit-saved');
+
+      // Persistence check: a Save that only LOOKS successful in the client's own state (but never
+      // actually round-tripped/committed server-side) would still pass every assertion above - closing
+      // and reopening the SAME document from a clean collection reload proves the new value was really
+      // written, not just held in this still-open document's in-memory representation.
+      await editor.closeDocument();
+      editor = await openEditEditor(page);
+      await editor.project.waitForValue(edited);
+      await gui.checkScreenshot(page, 'device-editor-edit-reopened');
     });
   });
 });

@@ -136,6 +136,20 @@
 .EXAMPLE
     powershell -ExecutionPolicy Bypass -File Run-CiTests.ps1 `
         -BuildConfig "Release_Qt6_VC17_x64" -DbPassword "%db.password%"
+
+.EXAMPLE
+    Sharding a -AllUsers run across two CI agents. -PlaywrightArgs is passed straight through to
+    "npx playwright test" on BOTH phases (see Invoke-PlaywrightSuite), so Playwright's own --shard
+    flag already works today with no script changes - this only matters once `workers` in
+    playwright.config.js is raised above 1 again (currently 1, so a single agent has no
+    within-process parallelism to speed up; splitting the PROJECT list across agents is what actually
+    cuts wall-clock time for the full permission matrix). Each agent needs its own -JUnitReportPath
+    (and its own db/port set if run against the SAME Postgres instance) so the two runs' artifacts
+    don't collide.
+        Agent 1: powershell -ExecutionPolicy Bypass -File Run-CiTests.ps1 -AllUsers `
+            -PlaywrightArgs "--shard=1/2" -JUnitReportPath ".\junit-report-shard1.xml"
+        Agent 2: powershell -ExecutionPolicy Bypass -File Run-CiTests.ps1 -AllUsers `
+            -PlaywrightArgs "--shard=2/2" -JUnitReportPath ".\junit-report-shard2.xml"
 #>
 
 [CmdletBinding()]
@@ -483,8 +497,39 @@ function Install-PlaywrightIfNeeded {
     }
 }
 
+function Sync-GuiTestKit {
+    # imtcore-gui-testkit is consumed as a "file:" devDependency (package.json), which npm on this
+    # machine resolves by COPYING the kit into node_modules rather than symlinking it (confirmed live:
+    # node_modules/imtcore-gui-testkit is a real directory, not a reparse point) - so an edit to
+    # ImtCore/Tests/GuiTestKit/** is invisible to this suite until something re-copies it. `npm install`
+    # only re-copies when package.json's dependency line itself changes, not on every run, so a kit edit
+    # without a version bump would otherwise run against a STALE copy with no error or warning - exactly
+    # the class of bug that bit the ProductEditor.qml objectName fix earlier (had to be synced by hand).
+    # Robocopy /MIR before every run so the copy is always byte-identical to the source, cheaply (only
+    # touches files that actually changed).
+    $kitSource = Join-Path $RepoRoot "..\ImtCore\Tests\GuiTestKit"
+    if (-not (Test-Path $kitSource)) {
+        # Sibling-checkout convention doesn't hold on this agent (or ImtCore isn't checked out) - fall
+        # back to whatever npm already resolved, same as a normal `npm install` would leave in place.
+        Write-Host "Sync-GuiTestKit: source not found at $kitSource - skipping (using node_modules copy as-is)"
+        return
+    }
+    $kitDest = Join-Path $ScriptDir "node_modules\imtcore-gui-testkit"
+
+    Write-Step "Syncing imtcore-gui-testkit into node_modules (file: dependency is copied, not symlinked)"
+    & robocopy $kitSource $kitDest /MIR /NFL /NDL /NJH /NJS /XD node_modules | Out-Host
+    # Robocopy's exit codes are a bitmask where 0-7 are all "success" (0 = nothing to copy, 1 = files
+    # copied, 2 = extra files removed, 4 = mismatched files, any combination thereof); only >=8 is a real
+    # failure. $LASTEXITCODE must be captured immediately after the call, before any other command runs.
+    $robocopyExit = $LASTEXITCODE
+    if ($robocopyExit -ge 8) {
+        throw "Sync-GuiTestKit: robocopy failed copying $kitSource -> $kitDest (exit code $robocopyExit)"
+    }
+}
+
 function Invoke-PlaywrightSuite {
     Install-PlaywrightIfNeeded
+    Sync-GuiTestKit
 
     Write-Step "Running Playwright suite"
     Push-Location $ScriptDir
@@ -519,15 +564,25 @@ function Invoke-PlaywrightSuite {
             # with an empty test-results/ and a junit report showing only the all-green phase 2.
             $env:PLAYWRIGHT_OUTPUT_DIR = Join-Path $ScriptDir "test-results-phase1-readonly"
             $env:PLAYWRIGHT_JUNIT_OUTPUT = $JUnitReportPath -replace '\.xml$', '-phase1-readonly.xml'
+            $env:PLAYWRIGHT_HTML_OUTPUT_DIR = Join-Path $ScriptDir "playwright-report-phase1-readonly"
             Write-Step "Playwright phase 1/2: read-only tests (parallel, workers from config)"
             & npx playwright test @PlaywrightArgs --grep-invert '@mutating' | Out-Host
             $phase1 = $LASTEXITCODE
 
             $env:PLAYWRIGHT_OUTPUT_DIR = Join-Path $ScriptDir "test-results-phase2-mutating"
             $env:PLAYWRIGHT_JUNIT_OUTPUT = $JUnitReportPath -replace '\.xml$', '-phase2-mutating.xml'
+            $env:PLAYWRIGHT_HTML_OUTPUT_DIR = Join-Path $ScriptDir "playwright-report-phase2-mutating"
             Write-Step "Playwright phase 2/2: @mutating tests (serial, --workers=1)"
+            # global-setup runs again on this second "npx playwright test" invocation (Playwright has no
+            # memory across separate CLI invocations); PROLIFE_GUI_REUSE_AUTH tells it to skip re-logging
+            # in users whose storageState phase 1 already produced moments ago against this SAME running
+            # server - a full UI login per active user was a large share of phase 2's wall-clock
+            # (measured live). Phase 1 always logs in fresh (this var is unset there) so a broken login
+            # still fails loudly instead of being silently skipped.
+            $env:PROLIFE_GUI_REUSE_AUTH = "1"
             & npx playwright test @PlaywrightArgs --grep '@mutating' --workers=1 | Out-Host
             $phase2 = $LASTEXITCODE
+            Remove-Item Env:\PROLIFE_GUI_REUSE_AUTH -ErrorAction SilentlyContinue
 
             if ($phase1 -ne 0) { return $phase1 }
             return $phase2
@@ -538,6 +593,7 @@ function Invoke-PlaywrightSuite {
             Remove-Item Env:\PROLIFE_GUI_ALL_USERS -ErrorAction SilentlyContinue
             Remove-Item Env:\PLAYWRIGHT_OUTPUT_DIR -ErrorAction SilentlyContinue
             Remove-Item Env:\PLAYWRIGHT_JUNIT_OUTPUT -ErrorAction SilentlyContinue
+            Remove-Item Env:\PLAYWRIGHT_HTML_OUTPUT_DIR -ErrorAction SilentlyContinue
         }
     }
     finally {

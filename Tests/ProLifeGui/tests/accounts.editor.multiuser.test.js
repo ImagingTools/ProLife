@@ -126,10 +126,29 @@ test.describe('Accounts / editor', () => {
       // a NEW document, so it must NOT gate this edit-save path (a user with AddAccount but not
       // ChangeAccountName would otherwise reach a read-only field and fail on the fill verify).
       test.skip(!user.can('ChangeAccountName'), 'cannot change the account name field');
-      await editor.setAccountName('Edited by ProLifeGui');
+      const edited = `Edited by ProLifeGui ${Date.now()}`;
+      await editor.setAccountName(edited);
       await gui.checkScreenshot(page, 'accounts-editor-edit-changed');
       await editor.save();
       await gui.checkScreenshot(page, 'accounts-editor-edit-saved');
+
+      // Persistence check: a Save that only LOOKS successful in the client's own state (but never
+      // actually round-tripped/committed server-side) would still pass every assertion above - closing
+      // and reopening the SAME document from a clean collection reload proves the new value was really
+      // written, not just held in this still-open document's in-memory representation. Accounts has no
+      // immutable "added" column to sort by for a stable row 0 (unlike devices/orders/software - see
+      // this file's own header note), so relocate the SAME account by searching for the just-written
+      // (unique, timestamped) name instead of assuming row-order stability.
+      await editor.closeDocument();
+      const accounts = new AccountCollectionPage(page);
+      await accounts.reload();
+      await accounts.open();
+      await accounts.search(edited);
+      await accounts.selectRow(0);
+      await accounts.editItem();
+      editor = new AccountEditorPage(page);
+      await editor.accountName.waitForValue(edited);
+      await gui.checkScreenshot(page, 'accounts-editor-edit-reopened');
     });
   });
 });

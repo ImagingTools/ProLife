@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.15
 import Acf 1.0
 import com.imtcore.imtqml 1.0
 import imtgui 1.0
@@ -7,434 +7,241 @@ import imtcontrols 1.0
 import prolifeOrdersSdl 1.0
 import prolifeSensorsSdl 1.0
 
-ViewBase {
-	id: root;
-	height: mainElementView.contentHeight
-	
-	property var productLicensesModel: TreeItemModel{}
-	property TreeItemModel devicesModel: TreeItemModel{}
-	property alias deviceIndex: deviceCB.currentIndex;
-	property bool isNewDevice: switchNewSensor.checked;
-	property int productIndex: -1;
-	property OrderedProduct productItem: model ? model : null;
+/**
+ * HardwareProductEditor — stage body for order Hardware products.
+ *
+ * createMode=true  → DeviceEditor (editable)
+ * createMode=false → DeviceEditor (read-only) after a device is selected;
+ *                    empty prompt until selection (link picker is in ProductEditor).
+ */
+Item {
+	id: root
+
+	property TreeItemModel devicesModel: TreeItemModel {}
 	property BaseModel orderProductsModel: BaseModel {}
-	property int instanceCount: 1//spinBoxElementView.value
+	property var model: null
+	property OrderedProduct productItem: model
 
-	function updateGui(){
-		let isNew = productItem.m_isNew;
-		if (isNew){
-			switchNewSensor.setChecked(true)
-			
-			macAddressInput.text = productItem.m_macAddress;
-			serialNumberInput.text = productItem.m_serialNumber;
-			
-			typesCB.currentIndex = -1;
-			
-			let licenseUuid = productItem.m_licenseUuid;
-			if (typesCB.sourceModel){
-				for (let i = 0; i < typesCB.sourceModel.getItemsCount(); i++){
-					let id = typesCB.sourceModel.getData(DeviceItemTypeMetaInfo.s_id, i);
-					if (id === licenseUuid){
-						typesCB.currentIndex = i;
-						break;
-					}
-				}
+	property string orderUuid: ""
+	property int productIndex: -1
+	property bool readOnly: false
+
+	property bool createMode: false
+	property int batchQuantity: 1
+	property bool chromeLocked: false
+	property bool hasLinkedSelection: false
+
+	property int instanceCount: root.createMode ? root.batchQuantity : 1
+
+	readonly property bool showEditor: root.createMode || root.hasLinkedSelection || root.chromeLocked
+	readonly property bool showEmptyLinkState: !root.createMode && !root.hasLinkedSelection && !root.chromeLocked
+
+	DeviceData {
+		id: deviceData
+	}
+
+	function doUpdateGui() {
+		updateGui()
+	}
+
+	function updateGui() {
+		if (!productItem)
+			return
+
+		let forceReadOnly = !root.createMode || root.readOnly
+		deviceEditor.readOnly = forceReadOnly
+		if (forceReadOnly)
+			deviceEditor.setReadOnly(true)
+
+		if (!root.showEditor)
+			return
+
+		deviceEditor.loadFromOrderedProduct(productItem)
+		if (forceReadOnly)
+			deviceEditor.setReadOnly(true)
+	}
+
+	function updateModel() {
+		if (!productItem)
+			return
+
+		productItem.m_isNew = root.createMode
+		productItem.m_categoryId = "Hardware"
+
+		if (root.createMode) {
+			deviceEditor.applyToOrderedProduct(productItem)
+			if (root.batchQuantity > 1) {
+				productItem.m_macAddress = ""
+				productItem.m_serialNumber = ""
 			}
+			return
 		}
-		else{
-			switchNewSensor.setChecked(false)
-			
-			deviceCB.currentIndex = -1;
-			let deviceId = productItem.m_id;
-			
-			if (deviceCB.sourceModel){
-				for (let i = 0; i < deviceCB.sourceModel.getItemsCount(); i++){
-					let id = deviceCB.sourceModel.getData(DeviceItemTypeMetaInfo.s_id, i);
-					if (id === deviceId){
-						deviceCB.currentIndex = i;
-						break;
-					}
-				}
+
+		productItem.m_isNew = false
+	}
+
+	function clearLinkedSelection() {
+		root.hasLinkedSelection = false
+	}
+
+	function selectLinkedIndex(index) {
+		if (index < 0 || !root.devicesModel)
+			return
+
+		let src = root.devicesModel
+		let idx = index
+
+		productItem.m_isNew = false
+		productItem.m_categoryId = "Hardware"
+		productItem.m_id = src.getData(DeviceItemTypeMetaInfo.s_id, idx)
+
+		if (src.containsKey(DeviceItemTypeMetaInfo.s_licenseUuid, idx))
+			productItem.m_licenseUuid = src.getData(DeviceItemTypeMetaInfo.s_licenseUuid, idx)
+		else if (src.containsKey(DeviceItemTypeMetaInfo.s_licenseName, idx))
+			productItem.m_licenseUuid = src.getData(DeviceItemTypeMetaInfo.s_licenseName, idx)
+		else
+			productItem.m_licenseUuid = ""
+
+		if (src.containsKey(DeviceItemTypeMetaInfo.s_licenseId, idx))
+			productItem.m_licenseId = src.getData(DeviceItemTypeMetaInfo.s_licenseId, idx)
+		else
+			productItem.m_licenseId = ""
+
+		if (src.containsKey(DeviceItemTypeMetaInfo.s_licenseName, idx))
+			productItem.m_licenseName = src.getData(DeviceItemTypeMetaInfo.s_licenseName, idx)
+		else
+			productItem.m_licenseName = ""
+
+		if (src.containsKey(DeviceItemTypeMetaInfo.s_macAddress, idx))
+			productItem.m_macAddress = src.getData(DeviceItemTypeMetaInfo.s_macAddress, idx)
+		else
+			productItem.m_macAddress = ""
+
+		if (src.containsKey(DeviceItemTypeMetaInfo.s_serialNumber, idx))
+			productItem.m_serialNumber = src.getData(DeviceItemTypeMetaInfo.s_serialNumber, idx)
+		else
+			productItem.m_serialNumber = ""
+
+		if (src.containsKey(DeviceItemTypeMetaInfo.s_deviceType, idx))
+			productItem.m_productUuid = src.getData(DeviceItemTypeMetaInfo.s_deviceType, idx)
+		else if (src.containsKey(DeviceItemTypeMetaInfo.s_productUuid, idx))
+			productItem.m_productUuid = src.getData(DeviceItemTypeMetaInfo.s_productUuid, idx)
+		else
+			productItem.m_productUuid = ""
+
+		if (src.containsKey(DeviceItemTypeMetaInfo.s_productName, idx))
+			productItem.m_productName = src.getData(DeviceItemTypeMetaInfo.s_productName, idx)
+		else
+			productItem.m_productName = ""
+
+		productItem.m_expiration = ""
+		productItem.m_isMultiple = false
+		productItem.m_productCount = 0
+
+		deviceData.m_id = productItem.m_id
+		deviceData.m_deviceType = productItem.m_productUuid
+		deviceData.m_licenseName = productItem.m_licenseUuid !== "" ? productItem.m_licenseUuid : productItem.m_licenseName
+		deviceData.m_serialNumber = productItem.m_serialNumber
+		deviceData.m_macAddress = productItem.m_macAddress
+		deviceData.m_description = productItem.m_productName
+		if (root.orderUuid !== "")
+			deviceData.m_orderId = root.orderUuid
+
+		root.hasLinkedSelection = true
+		deviceEditor.readOnly = true
+		deviceEditor.doUpdateGui()
+		deviceEditor.setReadOnly(true)
+
+		if (root.productItem)
+			root.productItem.modelChanged([])
+	}
+
+	onCreateModeChanged: {
+		if (productItem) {
+			productItem.m_isNew = root.createMode
+			if (root.createMode)
+				root.hasLinkedSelection = false
+			root.updateGui()
+		}
+	}
+
+	onBatchQuantityChanged: {
+		if (root.createMode && productItem)
+			root.updateModel()
+	}
+
+	Item {
+		id: emptyLinkState
+		anchors.fill: parent
+		visible: root.showEmptyLinkState
+
+		Column {
+			anchors.centerIn: parent
+			width: Math.min(parent.width - Style.marginXL * 2, 420)
+			spacing: Style.marginM
+
+			Text {
+				width: parent.width
+				horizontalAlignment: Text.AlignHCenter
+				text: qsTr("Select a device to link")
+				color: Style.textColor
+				font.family: Style.fontFamilyBold
+				font.pixelSize: Style.fontSizeL
+				font.bold: true
+				wrapMode: Text.WordWrap
+			}
+
+			Text {
+				width: parent.width
+				horizontalAlignment: Text.AlignHCenter
+				text: qsTr("Use the search field on the top panel to find an existing device by product name or MAC address.")
+				color: Style.inactiveTextColor
+				font.family: Style.fontFamily
+				font.pixelSize: Style.fontSizeM
+				wrapMode: Text.WordWrap
 			}
 		}
 	}
-	
-	function updateModel(){
-		productItem.m_isNew = isNewDevice;
-		
-		if (isNewDevice){
-			if (typesCB.currentIndex >= 0){
-				productItem.m_licenseUuid = root.productLicensesModel.getData(DeviceItemTypeMetaInfo.s_id, typesCB.currentIndex);
-				productItem.m_licenseId = root.productLicensesModel.getData(DeviceItemTypeMetaInfo.s_licenseId, typesCB.currentIndex);
-				productItem.m_licenseName = root.productLicensesModel.getData(DeviceItemTypeMetaInfo.s_licenseName, typesCB.currentIndex);
-			}
-			else{
-				productItem.m_licenseUuid = "";
-				productItem.m_licenseId = "";
-				productItem.m_licenseName = "";
-			}
-			
-			productItem.m_macAddress = macAddressInput.text;
-			productItem.m_serialNumber = serialNumberInput.text;
+
+	// Pages of DeviceEditor scroll with their own Flickable + CustomScrollbar.
+	DeviceEditor {
+		id: deviceEditor
+		anchors.fill: parent
+		visible: root.showEditor
+		embedded: true
+		isNew: root.createMode
+		model: deviceData
+		forcedOrderId: root.orderUuid
+		readOnly: !root.createMode || root.readOnly
+		clip: true
+
+		Component.onCompleted: {
+			if (root.productItem && root.showEditor)
+				root.updateGui()
 		}
-		else{
-			if (deviceCB.currentIndex >= 0){
-				let deviceId = deviceCB.sourceModel.getData(DeviceItemTypeMetaInfo.s_id, deviceCB.currentIndex);
-				
-				productItem.m_id = deviceId;
-				
-				if (deviceCB.sourceModel.containsKey(DeviceItemTypeMetaInfo.s_licenseUuid, deviceCB.currentIndex)){
-					let configurationType = deviceCB.sourceModel.getData(DeviceItemTypeMetaInfo.s_licenseUuid, deviceCB.currentIndex);
-					productItem.m_licenseUuid = configurationType;
-				}
-				else{
-					productItem.m_licenseUuid = "";
-				}
-				
-				if (deviceCB.sourceModel.containsKey(DeviceItemTypeMetaInfo.s_licenseId, deviceCB.currentIndex)){
-					let licenseId = deviceCB.sourceModel.getData(DeviceItemTypeMetaInfo.s_licenseId, deviceCB.currentIndex);
-					productItem.m_licenseId = licenseId;
-				}
-				else{
-					productItem.m_licenseId = "";
-				}
-				
-				if (deviceCB.sourceModel.containsKey(DeviceItemTypeMetaInfo.s_licenseName, deviceCB.currentIndex)){
-					let licenseName = deviceCB.sourceModel.getData(DeviceItemTypeMetaInfo.s_licenseName, deviceCB.currentIndex);
-					productItem.m_licenseName = licenseName;
-				}
-				else{
-					productItem.m_licenseName = "";
-				}
-				
-				if (deviceCB.sourceModel.containsKey(DeviceItemTypeMetaInfo.s_macAddress, deviceCB.currentIndex)){
-					let macAddress = deviceCB.sourceModel.getData(DeviceItemTypeMetaInfo.s_macAddress, deviceCB.currentIndex);
-					productItem.m_macAddress = macAddress;
-				}
-				else{
-					productItem.m_macAddress = "";
-				}
-				
-				if (deviceCB.sourceModel.containsKey(DeviceItemTypeMetaInfo.s_serialNumber, deviceCB.currentIndex)){
-					let serialNumber = deviceCB.sourceModel.getData(DeviceItemTypeMetaInfo.s_serialNumber, deviceCB.currentIndex);
-					productItem.m_serialNumber = serialNumber;
-				}
-				else{
-					productItem.m_serialNumber = "";
-				}
-			}
-			else{
-				productItem.m_licenseUuid = "";
-				productItem.m_licenseId = "";
-				productItem.m_licenseName = "";
-				productItem.m_macAddress = "";
-				productItem.m_serialNumber = "";
+
+		onReadOnlyChanged: {
+			if (readOnly)
+				deviceEditor.setReadOnly(true)
+		}
+	}
+
+	Timer {
+		id: syncTimer
+		interval: 0
+		onTriggered: {
+			if (root.createMode && root.productItem) {
+				deviceEditor.applyToOrderedProduct(root.productItem)
+				root.productItem.modelChanged([])
 			}
 		}
 	}
 
-	GroupElementView {
-		id: mainElementView
-		width: parent.width
-		
-		SwitchElementView {
-			id: switchNewSensor;
-			width: parent.width;
-			name: qsTr("New Sensor");
-			visible: root.productIndex == -1 || root.isNewDevice;
-			
-			onCheckedChanged: {
-				deviceCB.visible = !checked;
-				
-				root.doUpdateModel();
-			}
-			
-			Component.onCompleted: {
-				let canAddSensor = PermissionsController.checkPermission("AddSensor");
-				if (!canAddSensor){
-					switchNewSensor.visible = false;
-				}
-			}
-			
-			bottomComp: root.productIndex === -1 && checked ? spinBoxComp : undefined
-			
-			Component {
-				id: spinBoxComp
-				Item {
-					height: spinBox.height
-					Row {
-						spacing: Style.marginM
-						BaseText {
-							anchors.verticalCenter: parent.verticalCenter
-							text: qsTr("Number: ")
-						}
-
-						SpinBox {
-							id: spinBox
-							anchors.verticalCenter: parent.verticalCenter
-							from: 1
-							to: 10
-							stepSize: 1
-							startValue: from
-							onValueChanged: {
-								if (value > 1){
-									macAddressInput.text = ""
-									serialNumberInput.text = ""
-								}
-
-								root.instanceCount = value
-								root.doUpdateModel()
-							}
-						}
-					}
-				}
-			}
-		}
-		
-		FilterableComboBoxElementView {
-			id: deviceCB;
-			width: parent.width;
-			controlWidth: 500;
-			sourceModel: root.devicesModel;
-			name: qsTr("Hardware-ID");
-			nameId: DeviceItemTypeMetaInfo.s_productName;
-			bottomComp: currentIndex < 0 ? sensorErrorComp : undefined;
-			
-			// SMacAddress1 - sxxxxxxxxxxxx
-			// SMacAddress2 - s:xxxxxxxxxxxx
-			// SMacAddress3 - s:xx:xx:xx:xx:xx:xx
-			// SMacAddress4 - sxx:xx:xx:xx:xx:xx
-			
-			filteringFields: ["SMacAddress1", "SMacAddress2", "SMacAddress3", "SMacAddress4", "productName", "macAddress"];
-			
-			delegate: Component {
-				FilterableComboBoxDelegate {
-					width: comboBoxRef ? comboBoxRef.width : 0;
-					comboBoxRef: deviceCB.cbRef;
-					description: model[DeviceItemTypeMetaInfo.s_macAddress] === "" ? qsTr("MAC Address") + ": " + qsTr("not specified"): qsTr("MAC Address") + ": " + model[DeviceItemTypeMetaInfo.s_macAddress];
-					text: model[DeviceItemTypeMetaInfo.s_productName];
-				}
-			}
-			
-			onCurrentIndexChanged: {
-				if (deviceCB.currentIndex >= 0 && deviceCB.sourceModel){
-					if (deviceCB.sourceModel.containsKey(DeviceItemTypeMetaInfo.s_licenseName, deviceCB.currentIndex)){
-						let licenseName = deviceCB.sourceModel.getData(DeviceItemTypeMetaInfo.s_licenseName, deviceCB.currentIndex)
-						
-						deviceTypeText.text = licenseName;
-					}
-					
-					if (deviceCB.sourceModel.containsKey(DeviceItemTypeMetaInfo.s_macAddress, deviceCB.currentIndex)){
-						let macAddress = deviceCB.sourceModel.getData(DeviceItemTypeMetaInfo.s_macAddress, deviceCB.currentIndex)
-						
-						macAddressText.text = macAddress;
-					}
-					
-					if (deviceCB.sourceModel.containsKey(DeviceItemTypeMetaInfo.s_serialNumber, deviceCB.currentIndex)){
-						let serialNumber = deviceCB.sourceModel.getData(DeviceItemTypeMetaInfo.s_serialNumber, deviceCB.currentIndex)
-						
-						serialNumberText.text = serialNumber;
-					}
-					
-					if (deviceCB.sourceModel.containsKey(DeviceItemTypeMetaInfo.s_licenseId, deviceCB.currentIndex)){
-						let licenseId = deviceCB.sourceModel.getData(DeviceItemTypeMetaInfo.s_licenseId, deviceCB.currentIndex)
-						
-						articulText.text = licenseId;
-					}
-				}
-				
-				root.doUpdateModel();
-			}
-			
-			Component {
-				id: sensorErrorComp;
-				
-				Text {
-					id: selectSensorText;
-					text: qsTr("Please select a sensor");
-					color: Style.errorTextColor;
-					font.family: Style.fontFamily;
-					font.pixelSize: Style.fontSizeM;
-				}
-			}
-		}
-
-		GroupElementView {
-			width: parent.width;
-			visible: switchNewSensor.checked;
-			
-			FilterableComboBoxElementView {
-				id: typesCB;
-				width: parent.width;
-				controlWidth: 500;
-				sourceModel: root.productLicensesModel;
-				name: qsTr("Types");
-				nameId: DeviceItemTypeMetaInfo.s_licenseName;
-				bottomComp: currentIndex < 0 ? typeSensorErrorComp : undefined;
-				filteringFields: [DeviceItemTypeMetaInfo.s_licenseName, DeviceItemTypeMetaInfo.s_licenseId];
-				
-				onCurrentIndexChanged: {
-					if (currentIndex >= 0){
-						if (typesCB.sourceModel.containsKey(DeviceItemTypeMetaInfo.s_licenseId, currentIndex)){
-							let licenseId = typesCB.sourceModel.getData(DeviceItemTypeMetaInfo.s_licenseId, currentIndex)
-							newArticulText.text = licenseId;
-						}
-					}
-					
-					root.doUpdateModel();
-				}
-				
-				delegate: Component {
-					FilterableComboBoxDelegate {
-						width: comboBoxRef ? comboBoxRef.width : 0;
-						comboBoxRef: typesCB.cbRef;
-						text: model[DeviceItemTypeMetaInfo.s_licenseName];
-						description: model[DeviceItemTypeMetaInfo.s_licenseId];
-					}
-				}
-				
-				Component {
-					id: typeSensorErrorComp;
-					
-					Text {
-						id: selectTypeText;
-						text: qsTr("Please select a type sensor");
-						color: Style.errorTextColor;
-						font.family: Style.fontFamily;
-						font.pixelSize: Style.fontSizeM;
-					}
-				}
-			}
-			
-			// SpinBoxElementView { 
-			// 	id: spinBoxElementView
-			// 	name: qsTr("Instance Count")
-			// 	description: qsTr("Max: ") + to
-			// 	from: 1
-			// 	to: 10
-			// 	startValue: 1
-			// 	visible: root.productIndex == -1
-			// }
-			
-			MacAddressElementView {
-				id: macAddressInput;
-				width: parent.width;
-				controlWidth: 500;
-				readOnly: root.readOnly;
-				visible: parent.visible && typesCB.currentIndex >= 0 && root.instanceCount === 1
-				
-				onEditingFinished: {
-					if (acceptableInput){
-						macAddressInput.bottomComp = undefined
-						if (root.orderProductsModel){
-							for (let i = 0; i < root.orderProductsModel.count; i++){
-								let productItem = root.orderProductsModel.get(i).item
-								if (productItem.m_id !== root.productItem.m_id &&
-									productItem.m_categoryId === "Hardware" &&
-									productItem.m_macAddress === text){
-									macAddressInput.bottomComp = macAddressErrorComp
-									break
-								}
-							}
-						}
-					}
-
-					root.doUpdateModel();
-				}
-				
-				Component {
-					id: macAddressErrorComp;
-					
-					Text {
-						id: selectSensorText;
-						text: qsTr("MAC Address already exists");
-						color: Style.errorTextColor;
-						font.family: Style.fontFamily;
-						font.pixelSize: Style.fontSizeM;
-					}
-				}
-			}
-			
-			TextInputElementView {
-				id: serialNumberInput;
-				width: parent.width;
-				controlWidth: 500;
-				name: qsTr("Serial Number");
-				placeHolderText: qsTr("Enter the serial number");
-				readOnly: root.readOnly;
-				visible: parent.visible && typesCB.currentIndex >= 0 && root.instanceCount === 1
-				
-				onEditingFinished: {
-					serialNumberInput.bottomComp = undefined
-					if (root.orderProductsModel){
-						for (let i = 0; i < root.orderProductsModel.count; i++){
-							let productItem = root.orderProductsModel.get(i).item
-							if (productItem.m_id !== root.productItem.m_id &&
-								productItem.m_categoryId === "Hardware" &&
-								productItem.m_serialNumber === text){
-								serialNumberInput.bottomComp = serialNumberErrorComp
-								break
-							}
-						}
-					}
-
-					root.doUpdateModel();
-				}
-				
-				Component {
-					id: serialNumberErrorComp;
-					
-					Text {
-						id: selectSensorText;
-						text: qsTr("Serial Number already exists");
-						color: Style.errorTextColor;
-						font.family: Style.fontFamily;
-						font.pixelSize: Style.fontSizeM;
-					}
-				}
-			}
-			
-			TextElementView {
-				id: newArticulText;
-				width: parent.width;
-				visible: parent.visible && typesCB.currentIndex >= 0;
-				name: qsTr("Article Number");
-			}
-		}
-
-		GroupElementView {
-			width: parent.width;
-			visible: !switchNewSensor.checked && deviceCB.currentIndex >= 0;
-			
-			TextElementView {
-				id: deviceTypeText;
-				width: parent.width;
-				name: qsTr("Type");
-				visible: parent.visible && deviceCB.currentIndex >= 0;
-			}
-			
-			TextElementView {
-				id: macAddressText;
-				width: parent.width;
-				name: qsTr("MAC Address");
-				visible: parent.visible && deviceCB.currentIndex >= 0;
-			}
-			
-			TextElementView {
-				id: serialNumberText;
-				width: parent.width;
-				name: qsTr("Serial Number");
-				visible: parent.visible && deviceCB.currentIndex >= 0;
-			}
-			
-			TextElementView {
-				id: articulText;
-				width: parent.width;
-				name: qsTr("Article Number");
-				visible: parent.visible && deviceCB.currentIndex >= 0;
-			}
+	Connections {
+		target: deviceData
+		function onModelChanged() {
+			if (root.createMode)
+				syncTimer.start()
 		}
 	}
-}//Container
-
-
+}

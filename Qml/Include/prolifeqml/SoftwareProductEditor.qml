@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.15
 import Acf 1.0
 import com.imtcore.imtqml 1.0
 import imtgui 1.0
@@ -8,543 +8,227 @@ import imtcontrols 1.0
 import prolifeOrdersSdl 1.0
 import prolifeLicensesSdl 1.0
 
-ViewBase {
-	id: root;
-	
-	height: mainElementView.contentHeight
-	
-	property var productLicensesModel: TreeItemModel{}
+/**
+ * SoftwareProductEditor — stage body for order Software products.
+ *
+ * createMode=true  → SoftwareEditor (editable)
+ * createMode=false → SoftwareEditor (read-only) after a license is selected;
+ *                    empty prompt until selection (link picker is in ProductEditor).
+ */
+Item {
+	id: root
+
+	property TreeItemModel softwaresModel: TreeItemModel {}
 	property BaseModel orderProductsModel: BaseModel {}
-	
-	property TreeItemModel softwaresModel: TreeItemModel{}
-	
-	//    property alias tableElements: licensesTable.elements;
-	property alias tableElements: licenseCB.sourceModel;
-	property bool readOnly: false;
-	
-	property bool isNewSoftware: switchNewLicense.checked;
-	property int productIndex: -1;
-	
-	property OrderedProduct productItem: model ? model : null;
-	property int instanceCount: isMultipleLicenseSwitch.checked ? 1 : spinBoxElementView.value
+	property var model: null
+	property OrderedProduct productItem: model
 
-	function setReadOnly(readOnly){
-		serialNumberInput.readOnly = readOnly;
-		expirationElementView.datePicker.readOnly = readOnly;
-		licenseCB.changeable = !readOnly
+	property string orderUuid: ""
+	property int productIndex: -1
+	property bool readOnly: false
+
+	property bool createMode: false
+	property int batchQuantity: 1
+	property bool chromeLocked: false
+	property bool hasLinkedSelection: false
+
+	property int instanceCount: {
+		if (!root.createMode)
+			return 1
+		if (softwareEditor.softwareProductData && softwareEditor.softwareProductData.m_isMultiple)
+			return 1
+		return root.batchQuantity
 	}
 
-	function updateGui(){
-		if (productItem.m_isNew){
-			switchNewLicense.setChecked(true)
-			
-			licenseCB.currentIndex = -1;
-			if (licenseCB.sourceModel){
-				
-				for (let i = 0; i < licenseCB.sourceModel.getItemsCount(); i++){
-					let id = licenseCB.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_id, i);
-					if (id === productItem.m_licenseUuid){
-						licenseCB.currentIndex = i;
-						
-						break;
-					}
-				}
-			}
-			
-			serialNumberInput.text = productItem.m_serialNumber;
-			
-			let expiration = productItem.m_expiration;
-			
-			if (expiration && expiration !== "" ){
-				expirationElementView.checkBox.checkState = Qt.Checked;
-			}
-			else{
-				expirationElementView.checkBox.checkState = Qt.Unchecked;
-			}
-			
-			if (expiration){
-				let currentDate = expirationElementView.datePicker.getDateAsString();
-				
-				if (expiration !== "" && expiration !== currentDate){
-					let date = expiration;
-					let data = date.split("-");
-					expirationElementView.datePicker.setDate(Number(data[0]), Number(data[1]) - 1, Number(data[2]));
-				}
-			}
+	readonly property bool showEditor: root.createMode || root.hasLinkedSelection || root.chromeLocked
+	readonly property bool showEmptyLinkState: !root.createMode && !root.hasLinkedSelection && !root.chromeLocked
 
-			isMultipleLicenseSwitch.setChecked(productItem.m_isMultiple)
-			if (productItem.m_isMultiple){
-				spinBoxElementView.value = productItem.m_productCount
+	SoftwareProductData {
+		id: softwareData
+	}
+
+	function doUpdateGui() {
+		updateGui()
+	}
+
+	function updateGui() {
+		if (!productItem)
+			return
+
+		let forceReadOnly = !root.createMode || root.readOnly
+		softwareEditor.readOnly = forceReadOnly
+		if (forceReadOnly)
+			softwareEditor.setReadOnly(true)
+
+		if (!root.showEditor)
+			return
+
+		softwareEditor.loadFromOrderedProduct(productItem)
+		if (forceReadOnly)
+			softwareEditor.setReadOnly(true)
+	}
+
+	function updateModel() {
+		if (!productItem)
+			return
+
+		productItem.m_isNew = root.createMode
+		productItem.m_categoryId = "Software"
+
+		if (root.createMode) {
+			softwareEditor.applyToOrderedProduct(productItem)
+			if (!productItem.m_isMultiple && root.batchQuantity > 1) {
+				productItem.m_serialNumber = ""
+				productItem.m_expiration = ""
 			}
+			return
 		}
-		else{
-			switchNewLicense.setChecked(false)
-			
-			createdLicenseCb.currentIndex = -1;
-			
-			let licenseUuid = productItem.m_id;
-			
-			if (createdLicenseCb.sourceModel){
-				for (let i = 0; i < createdLicenseCb.sourceModel.getItemsCount(); i++){
-					let id = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_id, i);
-					
-					if (id === licenseUuid){
-						createdLicenseCb.currentIndex = i;
-						
-						break;
-					}
-				}
-			}
-			
-			softwareValue.text = productItem.m_serialNumber;
+
+		productItem.m_isNew = false
+	}
+
+	function clearLinkedSelection() {
+		root.hasLinkedSelection = false
+	}
+
+	function selectLinkedIndex(index) {
+		if (index < 0 || !root.softwaresModel)
+			return
+
+		let src = root.softwaresModel
+		let idx = index
+
+		productItem.m_isNew = false
+		productItem.m_categoryId = "Software"
+		productItem.m_id = src.getData(SoftwareProductItemTypeMetaInfo.s_id, idx)
+		productItem.m_licenseUuid = src.containsKey(SoftwareProductItemTypeMetaInfo.s_licenseUuid, idx)
+			? src.getData(SoftwareProductItemTypeMetaInfo.s_licenseUuid, idx) : ""
+		productItem.m_licenseId = src.containsKey(SoftwareProductItemTypeMetaInfo.s_licenseId, idx)
+			? src.getData(SoftwareProductItemTypeMetaInfo.s_licenseId, idx) : ""
+		productItem.m_licenseName = src.containsKey(SoftwareProductItemTypeMetaInfo.s_licenseName, idx)
+			? src.getData(SoftwareProductItemTypeMetaInfo.s_licenseName, idx) : ""
+		productItem.m_serialNumber = src.containsKey(SoftwareProductItemTypeMetaInfo.s_serialNumber, idx)
+			? src.getData(SoftwareProductItemTypeMetaInfo.s_serialNumber, idx) : ""
+		productItem.m_expiration = src.containsKey(SoftwareProductItemTypeMetaInfo.s_expiration, idx)
+			? src.getData(SoftwareProductItemTypeMetaInfo.s_expiration, idx) : ""
+		productItem.m_inUse = src.containsKey(SoftwareProductItemTypeMetaInfo.s_inUse, idx)
+			? src.getData(SoftwareProductItemTypeMetaInfo.s_inUse, idx) : false
+		productItem.m_productUuid = src.containsKey(SoftwareProductItemTypeMetaInfo.s_productUuid, idx)
+			? src.getData(SoftwareProductItemTypeMetaInfo.s_productUuid, idx) : ""
+		productItem.m_productName = src.containsKey(SoftwareProductItemTypeMetaInfo.s_productName, idx)
+			? src.getData(SoftwareProductItemTypeMetaInfo.s_productName, idx) : ""
+		productItem.m_isMultiple = false
+		productItem.m_productCount = 1
+		productItem.m_macAddress = ""
+
+		softwareData.m_id = productItem.m_id
+		softwareData.m_productId = productItem.m_productUuid
+		softwareData.m_licenseUuid = productItem.m_licenseUuid
+		softwareData.m_serialNumber = productItem.m_serialNumber
+		softwareData.m_expiration = productItem.m_expiration
+		softwareData.m_isMultiple = false
+		softwareData.m_productCount = 0
+		softwareData.m_inUse = productItem.m_inUse
+		softwareData.m_categoryId = "Software"
+		if (root.orderUuid !== "")
+			softwareData.m_orderUuid = root.orderUuid
+
+		root.hasLinkedSelection = true
+		softwareEditor.readOnly = true
+		softwareEditor.doUpdateGui()
+		softwareEditor.setReadOnly(true)
+
+		if (root.productItem)
+			root.productItem.modelChanged([])
+	}
+
+	onCreateModeChanged: {
+		if (productItem) {
+			productItem.m_isNew = root.createMode
+			if (root.createMode)
+				root.hasLinkedSelection = false
+			root.updateGui()
 		}
 	}
-	
-	function updateModel(){
-		productItem.m_isNew = isNewSoftware;
-		
-		if (isNewSoftware){
-			if (licenseCB.currentIndex >= 0 && licenseCB.sourceModel){
-				let selectedId = licenseCB.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_id, licenseCB.currentIndex);
-				productItem.m_licenseUuid = selectedId;
-				
-				let licenseId = licenseCB.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseId, licenseCB.currentIndex);
-				productItem.m_licenseId = licenseId;
-				
-				let licenseName = licenseCB.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseName, licenseCB.currentIndex);
-				productItem.m_licenseName = licenseName;
-			}
-			else{
-				productItem.m_licenseUuid = "";
-				productItem.m_licenseId = "";
-				productItem.m_licenseName = "";
-			}
-			
-			productItem.m_serialNumber = serialNumberInput.text;
-			
-			if (expirationElementView.checkBox.checkState == Qt.Checked){
-				productItem.m_expiration = expirationElementView.datePicker.getDateAsString();
-			}
-			else{
-				productItem.m_expiration = "";
-			}
 
-			productItem.m_isMultiple = isMultipleLicenseSwitch.checked
-			if (productItem.m_isMultiple){
-				productItem.m_productCount = spinBoxElementView.value
-			}
-			else{
-				productItem.m_productCount = 1
-			}
-		}
-		else{
-			productItem.m_isMultiple = false
-			productItem.m_licenseUuid = "";
-			productItem.m_licenseId = "";
-			productItem.m_licenseName = "";
-			productItem.m_serialNumber = "";
-			productItem.m_expiration = "";
-			
-			if (createdLicenseCb.currentIndex >= 0){
-				let id = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_id, createdLicenseCb.currentIndex);
-				productItem.m_id = id;
-				
-				let licenseUuid = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseUuid, createdLicenseCb.currentIndex);
-				productItem.m_licenseUuid = licenseUuid;
-				
-				let licenseID = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseId, createdLicenseCb.currentIndex);
-				productItem.m_licenseId = licenseID;
-				
-				let licenseName = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseName, createdLicenseCb.currentIndex);
-				productItem.m_licenseName = licenseName;
-				
-				let serialNumber = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_serialNumber, createdLicenseCb.currentIndex);
-				productItem.m_serialNumber = serialNumber;
-				
-				let expiration = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_expiration, createdLicenseCb.currentIndex);
-				productItem.m_expiration = expiration;
-				
-				productItem.m_inUse = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_inUse, createdLicenseCb.currentIndex);
-			}
-		}
+	onBatchQuantityChanged: {
+		if (root.createMode && productItem)
+			root.updateModel()
 	}
-	
-	GroupElementView {
-		id: mainElementView
-		width: parent.width
-		
-		SwitchElementView {
-			id: switchNewLicense;
-			
-			width: parent.width;
-			
-			name: qsTr("New License");
-			
-			visible: root.productIndex == -1 || root.isNewSoftware;
-			
-			onCheckedChanged: {
-				createdLicenseCb.visible = !checked;
-				
-				root.doUpdateModel();
-			}
-			
-			Component.onCompleted: {
-				let canAddLicense = PermissionsController.checkPermission("AddLicense");
-				if (!canAddLicense){
-					switchNewLicense.visible = false;
-				}
-			}
-		}
-		
-		FilterableComboBoxElementView {
-			id: createdLicenseCb;
-			
-			width: parent.width;
-			controlWidth: 500;
-			
-			sourceModel: root.softwaresModel;
-			
-			changeable: !root.readOnly;
-			
-			name: qsTr("License")
-			
-			filteringFields: [
-				SoftwareProductItemTypeMetaInfo.s_serialNumber,
-				SoftwareProductItemTypeMetaInfo.s_productName,
-				SoftwareProductItemTypeMetaInfo.s_licenseId,
-				SoftwareProductItemTypeMetaInfo.s_licenseName
-			];
-			
-			bottomComp: currentIndex < 0 ? licenseTypeErrorComp : undefined;
-			
-			delegate: Component {
-				FilterableComboBoxDelegate {
-					width: comboBoxRef ? comboBoxRef.width : 0;
-					comboBoxRef: createdLicenseCb.cbRef;
-					
-					text: model[SoftwareProductItemTypeMetaInfo.s_serialNumber] === "" ? model[SoftwareProductItemTypeMetaInfo.s_productName] +
-																						 " (" + qsTr("No software-ID") + ")" : model[SoftwareProductItemTypeMetaInfo.s_productName] +
-																						 " (" + model[SoftwareProductItemTypeMetaInfo.s_serialNumber]+ ")";
-					
-					property string article: qsTr("Article");
-					property string notSpecified: qsTr("not specified");
-					
-					description: model[SoftwareProductItemTypeMetaInfo.s_licenseId] !== "" ? article +
-																							 ": " + model[SoftwareProductItemTypeMetaInfo.s_licenseName] +
-																							 " (" + model[SoftwareProductItemTypeMetaInfo.s_licenseId] + ")": article + ": " + notSpecified;
-				}
-			}
-			
-			onCurrentIndexChanged: {
-				if (currentIndex >= 0){
-					if (createdLicenseCb.sourceModel.containsKey(SoftwareProductItemTypeMetaInfo.s_licenseName, currentIndex)){
-						let licenseName = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseName, currentIndex)
-						typeValue.text = licenseName;
-					}
-					
-					if (createdLicenseCb.sourceModel.containsKey(SoftwareProductItemTypeMetaInfo.s_licenseId, currentIndex)){
-						let licenseId = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseId, currentIndex)
-						articleValue.text = licenseId;
-					}
-					
-					if (createdLicenseCb.sourceModel.containsKey(SoftwareProductItemTypeMetaInfo.s_expiration, currentIndex)){
-						let expiration = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_expiration, currentIndex)
-						if (expiration === ""){
-							expirationValue.text = qsTr("Unlimited");
-						}
-						else{
-							expirationValue.text = expiration;
-						}
-					}
-					
-					if (createdLicenseCb.sourceModel.containsKey(SoftwareProductItemTypeMetaInfo.s_serialNumber, currentIndex)){
-						let serialNumber = createdLicenseCb.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_serialNumber, currentIndex)
-						softwareValue.text = serialNumber;
-					}
-				}
-				
-				root.doUpdateModel();
-			}
-		}
-		
-		GroupElementView {
-			width: parent.width;
-			visible: !root.isNewSoftware && createdLicenseCb.currentIndex >= 0;
-			
-			TextElementView {
-				id: typeValue;
-				width: parent.width;
-				name: qsTr("License Type");
-			}
-			
-			TextElementView {
-				id: articleValue;
-				width: parent.width;
-				name: qsTr("Article Number");
-			}
-			
-			TextElementView {
-				id: softwareValue;
-				width: parent.width;
-				name: qsTr("Software-ID");
-			}
-			
-			TextElementView {
-				id: expirationValue;
-				width: parent.width;
-				name: qsTr("Expiration");
-			}
-		}
-		
-		GroupElementView {
-			width: parent.width;
-			visible: root.isNewSoftware;
 
-			SwitchElementView {
-				id: isMultipleLicenseSwitch
-				width: parent.width;
-				name: qsTr("Is Multiple");
-				visible: root.productIndex == -1 || root.isNewSoftware
-				
-				onCheckedChanged: {
-					root.doUpdateModel()
-				}
-				
-				Component.onCompleted: {
-					let canAddLicense = PermissionsController.checkPermission("AddLicense")
-					if (!canAddLicense){
-						isMultipleLicenseSwitch.visible = false
-					}
-				}
+	// Empty state before a license is chosen
+	Item {
+		id: emptyLinkState
+		anchors.fill: parent
+		visible: root.showEmptyLinkState
+
+		Column {
+			anchors.centerIn: parent
+			width: Math.min(parent.width - Style.marginXL * 2, 420)
+			spacing: Style.marginM
+
+			Text {
+				width: parent.width
+				horizontalAlignment: Text.AlignHCenter
+				text: qsTr("Select a license to link")
+				color: Style.textColor
+				font.family: Style.fontFamilyBold
+				font.pixelSize: Style.fontSizeL
+				font.bold: true
+				wrapMode: Text.WordWrap
 			}
 
-			SpinBoxElementView {
-				id: spinBoxElementView
-				name: qsTr("Number")
-				description: isMultipleLicenseSwitch.checked ? qsTr("Count of items in this product instance") : qsTr("Max: ") + to
-				from: 1
-				to: isMultipleLicenseSwitch.checked ? 999999: 10
-				startValue: from
-				visible: root.productIndex == -1
-				onValueChanged: {
-					if (value > 1){
-						serialNumberInput.text = ""
-						if (expirationElementView.checkBox){
-							expirationElementView.checkBox.checkState = Qt.Unchecked
-						}
-						
-						root.doUpdateModel()
-					}
-				}
-			}
-			
-			FilterableComboBoxElementView {
-				id: licenseCB;
-				
-				width: parent.width;
-				controlWidth: 500;
-				
-				name: qsTr("License Types");
-				nameId: SoftwareProductItemTypeMetaInfo.s_licenseName;
-				
-				sourceModel: root.productLicensesModel;
-				
-				changeable: !root.readOnly;
-				
-				bottomComp: currentIndex < 0 ? licenseTypeErrorComp : undefined;
-				filteringFields: [SoftwareProductItemTypeMetaInfo.s_licenseName, SoftwareProductItemTypeMetaInfo.s_licenseId];
-				
-				delegate: Component {
-					FilterableComboBoxDelegate {
-						width: licenseCB.width;
-						comboBoxRef: licenseCB.cbRef;
-						
-						text: model[SoftwareProductItemTypeMetaInfo.s_licenseName];
-						description: model[SoftwareProductItemTypeMetaInfo.s_licenseId];
-					}
-				}
-				
-				onCurrentIndexChanged: {
-					if (currentIndex >= 0){
-						if (licenseCB.sourceModel.containsKey(SoftwareProductItemTypeMetaInfo.s_licenseId, currentIndex)){
-							let licenseId = licenseCB.sourceModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseId, currentIndex)
-							
-							newArticleValue.text = licenseId
-						}
-					}
-					
-					root.doUpdateModel();
-				}
-				
-				Component {
-					id: licenseTypeErrorComp;
-					
-					Text {
-						id: selectSensorText;
-						
-						text: qsTr("Please select a license");
-						color: Style.errorTextColor;
-						font.family: Style.fontFamily;
-						font.pixelSize: Style.fontSizeM;
-					}
-				}
-			}
-
-			TextInputElementView {
-				id: serialNumberInput;
-				
-				width: parent.width;
-				controlWidth: 500;
-				
-				name: qsTr("Software-ID");
-				placeHolderText: qsTr("Enter the software-ID");
-				
-				readOnly: root.readOnly;
-				
-				visible: licenseCB.currentIndex >= 0 && spinBoxElementView.value === 1
-				
-				onEditingFinished: {
-					serialNumberInput.bottomComp = undefined
-					if (root.orderProductsModel){
-						for (let i = 0; i < root.orderProductsModel.count; i++){
-							let productItem = root.orderProductsModel.get(i).item
-							if (productItem.m_id !== root.productItem.m_id &&
-								productItem.m_categoryId === "Software" &&
-								productItem.m_serialNumber === text){
-								serialNumberInput.bottomComp = serialNumberErrorComp
-								break
-							}
-						}
-					}
-					root.doUpdateModel();
-				}
-				
-				Component {
-					id: serialNumberErrorComp;
-					
-					Text {
-						id: selectSensorText;
-						text: qsTr("Serial Number already exists");
-						color: Style.errorTextColor;
-						font.family: Style.fontFamily;
-						font.pixelSize: Style.fontSizeM;
-					}
-				}
-			}
-			
-			ElementView {
-				id: expirationElementView;
-				
-				width: parent.width;
-				
-				name: qsTr("Expiration");
-				
-				visible: licenseCB.currentIndex >= 0 && spinBoxElementView.value === 1
-				
-				property CheckBox checkBox;
-				property DatePicker datePicker;
-				
-				controlComp: Component {
-					Item {
-						objectName: "ExpirationControl"
-						width: 300;
-						height: 30;
-						
-						CheckBox {
-							id: checkBox;
-							
-							anchors.verticalCenter: parent.verticalCenter;
-							anchors.left: parent.left;
-							
-							isActive: licenseCB.currentIndex >= 0 && licenseCB.changeable && !root.readOnly;
-							
-							onCheckStateChanged: {
-								root.doUpdateModel();
-							}
-							
-							Component.onCompleted: {
-								expirationElementView.checkBox = checkBox;
-							}
-						}
-						
-						Text {
-							id: textUnlimited;
-							
-							anchors.verticalCenter: parent.verticalCenter;
-							anchors.left: checkBox.right;
-							anchors.leftMargin: Style.marginM;
-							
-							visible: checkBox.checkState === Qt.Unchecked;
-							
-							font.family: Style.fontFamily;
-							font.pixelSize: Style.fontSizeM;
-							color: Style.textColor;
-							
-							text: qsTr("Unlimited");
-						}
-						
-						DatePicker {
-							id: datePicker_;
-							
-							anchors.verticalCenter: parent.verticalCenter;
-							anchors.left: checkBox.right;
-							anchors.leftMargin: Style.marginM;
-							
-							visible: checkBox.checkState === Qt.Checked;
-							
-							width: 100;
-							height: parent.height;
-							
-							currentDayButtonVisible: false;
-							startWithCurrentDay: true;
-							
-							readOnly: root.readOnly;
-							
-							hasDayCombo: false;
-							hasMonthCombo: false;
-							hasYearCombo: false;
-							
-							textFieldWidthDay: 30;
-							textFieldWidthYear: 45;
-							textFieldWidthMonth: 90;
-							
-							textFieldHeight: height;
-							
-							textFieldBorderColor: Style.borderColor;
-							mainMargin: Style.marginM;
-							
-							Component.onCompleted: {
-								expirationElementView.datePicker = datePicker_;
-							}
-							
-							onDateChanged: {
-								root.doUpdateModel()
-							}
-							
-							onCompletedChanged: {
-								if (completed){
-									var date_ = new Date();
-									
-									let day = date_.getDay();
-									let year = date_.getFullYear() + 1;
-									let month = date_.getMonth();
-									
-									datePicker_.setDate(year, month, day)
-								}
-							}
-						}
-					}
-				}
-			}
-			
-			TextElementView {
-				id: newArticleValue;
-				width: parent.width;
-				name: qsTr("Article Number");
-				visible: parent.visible && licenseCB.currentIndex >= 0;
+			Text {
+				width: parent.width
+				horizontalAlignment: Text.AlignHCenter
+				text: qsTr("Use the search field on the top panel to find an existing software license by name, software-ID or article.")
+				color: Style.inactiveTextColor
+				font.family: Style.fontFamily
+				font.pixelSize: Style.fontSizeM
+				wrapMode: Text.WordWrap
 			}
 		}
 	}
-}//Container
 
+	// Pages of SoftwareEditor scroll with their own Flickable + CustomScrollbar.
+	SoftwareEditor {
+		id: softwareEditor
+		anchors.fill: parent
+		visible: root.showEditor
+		embedded: true
+		isNew: root.createMode
+		model: softwareData
+		forcedOrderUuid: root.orderUuid
+		readOnly: !root.createMode || root.readOnly
+		clip: true
 
+		Component.onCompleted: {
+			if (root.productItem && root.showEditor)
+				root.updateGui()
+		}
+
+		onReadOnlyChanged: {
+			if (readOnly)
+				softwareEditor.setReadOnly(true)
+		}
+	}
+
+	Timer {
+		id: syncTimer
+		interval: 0
+		onTriggered: {
+			if (root.createMode && root.productItem) {
+				softwareEditor.applyToOrderedProduct(root.productItem)
+				root.productItem.modelChanged([])
+			}
+		}
+	}
+
+	Connections {
+		target: softwareData
+		function onModelChanged() {
+			if (root.createMode)
+				syncTimer.start()
+		}
+	}
+}

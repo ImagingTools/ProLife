@@ -48,8 +48,9 @@ const PAGE_PERMISSIONS = {
   ],
   SoftwareProducts: ['ViewLicenses'],
   Tenants: ['ViewOrganizations'], // "Organizations" page (TenantsPage, IsVisible=true in ProLife)
-  Administration: ['ViewUsers', 'ViewRoles', 'ViewGroups', 'ChangeUser', 'ChangeRole', 'ChangeGroups'],
+  Administration: ['ViewUsers', 'ViewRoles', 'ViewGroups', 'ChangeUser', 'ChangeRole', 'ChangeGroup'],
   Search: ['*'], // universal
+  Tickets: ['*'], // universal, same as Search - "Support" menu entry, imtdeskgui/TicketCollectionView.qml
 };
 
 /**
@@ -88,7 +89,6 @@ const DEVICE_COMMAND_PERMISSIONS = {
   CreateLicenseFile: ['CreateLicenseFile'],
   TransferLicenses: ['TransferLicenses'],
   ResetTransferCounter: ['ResetTransferCounter'],
-  Support: ['*'],
 };
 
 function canRunDeviceCommand(user, commandId) {
@@ -142,8 +142,6 @@ const SOFTWARE_COMMAND_PERMISSIONS = {
   CreateLicenseFile: ['CreateLicenseFile'],
   Split: ['SplitLicense'],
   Revoke: ['RevokeLicense'],
-  // Support is universal like in devices if present
-  Support: ['*'],
 };
 
 function canRunSoftwareCommand(user, commandId) {
@@ -243,7 +241,7 @@ function canEditAccountField(user, fieldObjectName, isNew = false) {
 // confirmed for Roles via ImtAuthVoce.arp/RoleCollectionDocumentService.acc's CommandPermissions
 // (UpdateRoleFromRepresentation -> ChangeRole; GetRoleRepresentation -> ViewRoles). Users/Groups
 // mirror the same one-permission-per-entity shape (PAGE_PERMISSIONS.Administration already lists
-// exactly ChangeUser/ChangeRole/ChangeGroups, no separate Add*/Remove* ids).
+// exactly ChangeUser/ChangeRole/ChangeGroup, no separate Add*/Remove* ids).
 const ROLE_COMMAND_PERMISSIONS = {
   New: ['ChangeRole'],
   Edit: ['ChangeRole'],
@@ -288,9 +286,9 @@ function canEditUserField(user, fieldObjectName) {
 }
 
 const GROUP_COMMAND_PERMISSIONS = {
-  New: ['ChangeGroups'],
-  Edit: ['ChangeGroups'],
-  Remove: ['ChangeGroups'],
+  New: ['ChangeGroup'],
+  Edit: ['ChangeGroup'],
+  Remove: ['ChangeGroup'],
 };
 
 function canRunGroupCommand(user, commandId) {
@@ -299,8 +297,8 @@ function canRunGroupCommand(user, commandId) {
 }
 
 const GROUP_FIELD_PERMISSIONS = {
-  GroupNameInput: ['ChangeGroups'],
-  GroupDescriptionInput: ['ChangeGroups'],
+  GroupNameInput: ['ChangeGroup'],
+  GroupDescriptionInput: ['ChangeGroup'],
 };
 
 function canEditGroupField(user, fieldObjectName) {
