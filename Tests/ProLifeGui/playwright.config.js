@@ -24,12 +24,23 @@ module.exports = defineConfig({
   // the flakiness risk from raising this is confined to same-user test files running concurrently.
   // Set higher for throughput (e.g. full-suite/all-users runs where occasional reruns are acceptable);
   // drop back to 1 for a trustworthy single-pass verification run.
-  workers: 1,
+  workers: 10,
   // Every test runs exactly once, everywhere - no retries, so a flaky/broken test reports red
   // immediately instead of being masked by a re-run.
   retries: 0,
+  // The HTML report bundles each failure's screenshot/diff/trace into one browsable page - reading
+  // failures off the CI agent's disk (or the raw junit XML) means digging through
+  // test-results-phase*/**/*.png by hand; `open: 'never'` keeps this from popping a browser window on
+  // a headless CI agent (it's meant to be published as a build artifact and opened later, not shown
+  // live). Each phase gets its own report dir via PLAYWRIGHT_HTML_OUTPUT_DIR (set by Run-CiTests.ps1,
+  // same reasoning as PLAYWRIGHT_OUTPUT_DIR below - the second phase would otherwise silently overwrite
+  // the first's).
   reporter: process.env.CI
-    ? [['list'], ['junit', { outputFile: process.env.PLAYWRIGHT_JUNIT_OUTPUT || 'junit-report.xml' }]]
+    ? [
+        ['list'],
+        ['junit', { outputFile: process.env.PLAYWRIGHT_JUNIT_OUTPUT || 'junit-report.xml' }],
+        ['html', { outputFolder: process.env.PLAYWRIGHT_HTML_OUTPUT_DIR || 'playwright-report', open: 'never' }],
+      ]
     : 'list',
   globalSetup: require.resolve('./global-setup.js'),
 
@@ -53,6 +64,9 @@ module.exports = defineConfig({
     baseURL: BASE_URL,
     screenshot: 'only-on-failure',
     trace: 'off',
+    // The PAT "copy token" button calls the browser clipboard API directly; Chromium denies
+    // clipboard-write by default for automated contexts unless the permission is granted up front.
+    permissions: ['clipboard-read', 'clipboard-write'],
   },
 
   projects: buildProjects({ users: activeUsers(), guest: GUEST, authFile }),

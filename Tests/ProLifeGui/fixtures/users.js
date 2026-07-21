@@ -140,6 +140,112 @@ const USERS = [
     roleId: 'ProLifeGuiOrderManager',
     permissions: [...ORDER_FULL, 'ViewAccounts', 'ViewRevisions'],
   },
+  // --- Editor-isolation users --------------------------------------------------------------------
+  //
+  // The Collection Document Service keys a user's OPEN-DOCUMENTS workspace by userId ONLY (server-side;
+  // see CCollectionDocumentServiceControllerComp.cpp - GetOpenedDocumentList(userId), and the
+  // On<Collection>DocumentChanged subscription that fans every open/close out to ALL of that user's
+  // live sessions). So two DIFFERENT editor spec files driving document tabs as the SAME user at the
+  // same time (Playwright runs different files on different workers in parallel) corrupt one shared
+  // workspace: one file's navigation/closeAllDocumentTabs closes a tab another file is mid-test on, and
+  // the victim's fields vanish from the DOM ("DescriptionInput ... no element with this objectName
+  // path exists"). Intra-file blocks don't collide (fullyParallel is off -> one file = one worker,
+  // sequential), so the fix is purely: give each document-editor spec its OWN dedicated user, so no two
+  // of them ever share a server workspace. `isolatedSpec` pins the user to exactly one spec file (see
+  // buildProjects.js): that user runs ONLY that file, and every OTHER project testIgnores it. Each
+  // carries the full domain edit rights its editor needs to exercise create/edit/save (a superset of
+  // the matching domain-manager role) - the per-user permission MATRIX for these editors is
+  // deliberately traded away for determinism (collection specs still cover per-user gating).
+  {
+    key: 'devEditor',
+    title: 'Device Editor (isolated)',
+    login: 'prolifegui_deveditor',
+    password: PASSWORD,
+    seed: true,
+    roleName: 'ProLifeGui Device Editor',
+    roleId: 'ProLifeGuiDeviceEditor',
+    permissions: [...SENSOR_FULL, 'ViewAccounts', 'ViewRevisions'],
+    isolatedSpec: 'devices.editor.multiuser.test.js',
+  },
+  // ordEditor (the isolated Order Editor fixture user) used to own orders.editor.multiuser.test.js
+  // exclusively via isolatedSpec, like its siblings below. By explicit request that spec now runs as
+  // `su` (and `fullAccess`) instead, so it's covered by the default `su` validation pass rather than
+  // needing a separate --project=ordEditor invocation - accepting the cross-file document-tab-
+  // collision risk described in the block comment above, on the basis that no OTHER spec currently
+  // opens a document tab as `su`/`fullAccess` in the same phase (su/fullAccess run collection-level
+  // specs only, plus Support's own tab-opening tests are all @mutating/phase-2-serial, so there's no
+  // actual concurrent pair right now). Revisit this if a future spec starts opening document tabs
+  // under su/fullAccess too - see the isolation rationale above for what breaks.
+
+  {
+    key: 'accEditor',
+    title: 'Account Editor (isolated)',
+    login: 'prolifegui_acceditor',
+    password: PASSWORD,
+    seed: true,
+    roleName: 'ProLifeGui Account Editor',
+    roleId: 'ProLifeGuiAccountEditor',
+    permissions: [...ACCOUNT_FULL, 'ViewRevisions'],
+    isolatedSpec: 'accounts.editor.multiuser.test.js',
+  },
+  {
+    key: 'swEditor',
+    title: 'Software Editor (isolated)',
+    login: 'prolifegui_sweditor',
+    password: PASSWORD,
+    seed: true,
+    roleName: 'ProLifeGui Software Editor',
+    roleId: 'ProLifeGuiSoftwareEditor',
+    permissions: [...LICENSE_FULL, 'ViewAccounts', 'ViewRevisions'],
+    isolatedSpec: 'software.editor.multiuser.test.js',
+  },
+  {
+    // Drives concurrent-session-banner.multiuser.test.js - opens TWO simultaneous sessions of this
+    // SAME user on purpose (that's the whole point of the test: observe RemoteCollectionView.qml's
+    // "modified from another computer" banner, which only fires when a SECOND session of the SAME user
+    // changes a row the FIRST session is looking at). Still needs its own isolated user so it doesn't
+    // collide with some OTHER spec file's own document-tab activity under a shared matrix user.
+    key: 'bannerEditor',
+    title: 'Concurrent Session Banner (isolated)',
+    login: 'prolifegui_bannereditor',
+    password: PASSWORD,
+    seed: true,
+    roleName: 'ProLifeGui Concurrent Session Banner',
+    roleId: 'ProLifeGuiConcurrentSessionBanner',
+    permissions: [...SENSOR_FULL],
+    isolatedSpec: 'concurrent-session-banner.multiuser.test.js',
+  },
+  {
+    // Drives document-tabs.multiuser.test.js - the GENERIC multi-tab document workspace mechanism
+    // (MultiDocumentCollectionView.qml/TabDelegate.qml), exercised via Devices purely as a convenient,
+    // already-well-instrumented vehicle - the behavior under test isn't Devices-specific. Same
+    // cross-file workspace-collision class as the other isolated editor users (opens document tabs).
+    key: 'tabsEditor',
+    title: 'Document Tabs (isolated)',
+    login: 'prolifegui_tabseditor',
+    password: PASSWORD,
+    seed: true,
+    roleName: 'ProLifeGui Document Tabs',
+    roleId: 'ProLifeGuiDocumentTabs',
+    permissions: [...SENSOR_FULL],
+    isolatedSpec: 'document-tabs.multiuser.test.js',
+  },
+  {
+    // Same cross-file workspace-collision class as devEditor/accEditor/swEditor above, but for
+    // administration.editor.multiuser.test.js's Role/User/Group "New document" blocks - those also open
+    // document tabs via the SAME server-side Collection Document Service, and administration.multiuser
+    // .test.js's own collection-navigation tests (run under su/fullAccess/adminManager) call
+    // closeAllDocumentTabs() on every openPage(), which can close a tab this spec is mid-test on.
+    key: 'admEditor',
+    title: 'Administration Editor (isolated)',
+    login: 'prolifegui_admeditor',
+    password: PASSWORD,
+    seed: true,
+    roleName: 'ProLifeGui Administration Editor',
+    roleId: 'ProLifeGuiAdministrationEditor',
+    permissions: [...ADMIN_FULL],
+    isolatedSpec: 'administration.editor.multiuser.test.js',
+  },
   {
     // Administration user: sees ONLY the Administration page (+ the universal Search). Validates that
     // the Admin area is reachable/gated and that no domain page leaks in for an admin-only role.
@@ -208,8 +314,20 @@ const can = (user, permission) => !!user && (user.permissions.includes('*') || u
 const DEFAULT_USER_KEYS = ['su', 'fullAccess'];
 const useAllUsers = () => process.env.PROLIFE_GUI_ALL_USERS === '1' || process.env.PROLIFE_GUI_ALL_USERS === 'true';
 
-/** The users that should actually get a Playwright project / storageState this run. */
-const activeUsers = () => (useAllUsers() ? USERS : USERS.filter((u) => DEFAULT_USER_KEYS.includes(u.key)));
+/**
+ * The users that should actually get a Playwright project / storageState this run.
+ *
+ * `isolatedSpec` users (the editor-isolation users) are ALWAYS active, in both the fast default subset
+ * and the full matrix: their whole point is that their dedicated editor spec runs under them and NO
+ * other user - so if they weren't active, that editor spec would run under nobody at all (every other
+ * project testIgnores it - see buildProjects.js). They add no matrix breadth (one user, one spec), so
+ * including them by default costs one extra project per editor file, not a full re-run of everything.
+ */
+const activeUsers = () => {
+  const matrix = useAllUsers() ? USERS : USERS.filter((u) => DEFAULT_USER_KEYS.includes(u.key));
+  const isolated = USERS.filter((u) => u.isolatedSpec && !matrix.includes(u));
+  return [...matrix, ...isolated];
+};
 
 module.exports = {
   USERS,

@@ -221,7 +221,7 @@ ViewBase {
 				objectName: "AccountInformationGroup";
 				
 				width: parent.width;
-				
+			
 				TextInputElementView {
 					id: accountNameInput;
 					objectName: "AccountNameInput";

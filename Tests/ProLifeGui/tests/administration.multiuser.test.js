@@ -10,11 +10,8 @@ const { test, newUserPage } = require('../fixtures/test');
 const {
   AdministrationPage,
   RoleCollectionPage,
-  RoleEditorPage,
   UserCollectionPage,
-  UserEditorPage,
   GroupCollectionPage,
-  GroupEditorPage,
 } = require('../pages');
 const {
   canSeePage,
@@ -47,19 +44,40 @@ test.describe('Administration', () => {
   });
 
   // --- Subpages: navigate to each + command bar gating -------------------------------------------
-  test.describe('subpages', () => {
-    test.beforeEach(async ({ page, user }) => {
-      test.skip(!canSeePage(user, PAGE), 'user cannot see Administration');
-      await new AdministrationPage(page).open();
+  // One shared page/session for the whole block (see fixtures/test.js's newUserPage) instead of a
+  // fresh boot per test - every test here is pure navigation (openSubPage) with no filter/tab state
+  // that could leak between tests, so there's nothing to reset beyond landing on Administration once
+  // in beforeAll; each test explicitly navigates to its OWN target subpage first thing anyway. Same
+  // pattern already used by devices.collection.multiuser.test.js's 'interactions' block.
+  test.describe.serial('subpages', () => {
+    let page, user;
+
+    test.beforeAll(async ({ browser }, testInfo) => {
+      ({ page, user } = await newUserPage(browser, testInfo));
+      // newUserPage() only opens a blank page - unlike the page fixture, nothing has navigated to the
+      // app yet, so load it once here before the very first interaction (see the identical note in
+      // devices.collection.multiuser.test.js's own 'interactions' beforeAll).
+      await new AdministrationPage(page).reload();
+      if (canSeePage(user, PAGE)) {
+        await new AdministrationPage(page).open();
+      }
     });
 
-    test('Roles subpage opens', async ({ page, gui, user }) => {
+    test.afterAll(async () => {
+      if (page) await page.close();
+    });
+
+    test.beforeEach(() => {
+      test.skip(!canSeePage(user, PAGE), 'user cannot see Administration');
+    });
+
+    test('Roles subpage opens', async () => {
       test.skip(!user.can('ViewRoles'), 'no ViewRoles permission');
       await new AdministrationPage(page).openSubPage('Roles');
       await gui.checkScreenshot(page, 'administration-roles-subpage');
     });
 
-    test('Roles command bar reflects permissions', async ({ page, user }) => {
+    test('Roles command bar reflects permissions', async () => {
       test.skip(!user.can('ViewRoles'), 'no ViewRoles permission');
       await new AdministrationPage(page).openSubPage('Roles');
       const roles = new RoleCollectionPage(page);
@@ -69,13 +87,13 @@ test.describe('Administration', () => {
       }
     });
 
-    test('Users subpage opens', async ({ page, gui, user }) => {
+    test('Users subpage opens', async () => {
       test.skip(!user.can('ViewUsers'), 'no ViewUsers permission');
       await new AdministrationPage(page).openSubPage('Users');
       await gui.checkScreenshot(page, 'administration-users-subpage');
     });
 
-    test('Users command bar reflects permissions', async ({ page, user }) => {
+    test('Users command bar reflects permissions', async () => {
       test.skip(!user.can('ViewUsers'), 'no ViewUsers permission');
       await new AdministrationPage(page).openSubPage('Users');
       const users = new UserCollectionPage(page);
@@ -85,13 +103,13 @@ test.describe('Administration', () => {
       }
     });
 
-    test('Groups subpage opens', async ({ page, gui, user }) => {
+    test('Groups subpage opens', async () => {
       test.skip(!user.can('ViewGroups'), 'no ViewGroups permission');
       await new AdministrationPage(page).openSubPage('Groups');
       await gui.checkScreenshot(page, 'administration-groups-subpage');
     });
 
-    test('Groups command bar reflects permissions', async ({ page, user }) => {
+    test('Groups command bar reflects permissions', async () => {
       test.skip(!user.can('ViewGroups'), 'no ViewGroups permission');
       await new AdministrationPage(page).openSubPage('Groups');
       const groups = new GroupCollectionPage(page);
@@ -102,127 +120,9 @@ test.describe('Administration', () => {
     });
   });
 
-  // --- Role editor: one continuous new document ---------------------------------------------------
-  test.describe.serial('Role editor', () => {
-    let page, user, editor;
-
-    test.beforeAll(async ({ browser }, testInfo) => {
-      ({ page, user } = await newUserPage(browser, testInfo));
-      if (canRunRoleCommand(user, 'New')) {
-        const admin = new AdministrationPage(page);
-        await admin.reload();
-        await admin.open();
-        await admin.openSubPage('Roles');
-        await new RoleCollectionPage(page).newItem();
-        editor = new RoleEditorPage(page);
-      }
-    });
-
-    test.afterAll(async () => {
-      if (page) await page.close();
-    });
-
-    test.beforeEach(() => {
-      test.skip(!canRunRoleCommand(user, 'New'), 'cannot create a role (ChangeRole)');
-    });
-
-    test('empty new editor', async () => {
-      await gui.checkScreenshot(page, 'role-editor-new-empty');
-    });
-
-    // Role Name and Description are both plain TextInput fields - one combined screenshot documents
-    // both, matching the same-mechanism consolidation used across the other editor suites.
-    test('fill fields and save', { tag: '@mutating' }, async () => {
-      await editor.setRoleName('ProLifeGui Test Role');
-      await editor.setDescription('Test role description');
-      await gui.checkScreenshot(page, 'role-editor-new-filled');
-      await editor.save();
-      await gui.checkScreenshot(page, 'role-editor-new-saved');
-    });
-  });
-
-  // --- User editor: one continuous new document ---------------------------------------------------
-  test.describe.serial('User editor', () => {
-    let page, user, editor;
-
-    test.beforeAll(async ({ browser }, testInfo) => {
-      ({ page, user } = await newUserPage(browser, testInfo));
-      if (canRunUserCommand(user, 'New')) {
-        const admin = new AdministrationPage(page);
-        await admin.reload();
-        await admin.open();
-        await admin.openSubPage('Users');
-        await new UserCollectionPage(page).newItem();
-        editor = new UserEditorPage(page);
-      }
-    });
-
-    test.afterAll(async () => {
-      if (page) await page.close();
-    });
-
-    test.beforeEach(() => {
-      test.skip(!canRunUserCommand(user, 'New'), 'cannot create a user (ChangeUser)');
-    });
-
-    test('empty new editor', async () => {
-      await gui.checkScreenshot(page, 'user-editor-new-empty');
-    });
-
-    // Username/Name/Email are all plain TextInput fields (same fill/verify mechanism) - one combined
-    // screenshot documents the general block. Password/Confirm are their own step: a NEW user requires
-    // a password (UserCollectionView.qml's documentValidator), and mismatched confirm is genuinely
-    // distinct, worth its own visual check.
-    test('fill general information', async () => {
-      await editor.setUsername('prolifegui_test_user');
-      await editor.setName('ProLifeGui Test User');
-      await editor.setEmail('prolifegui_test_user@example.com');
-      await gui.checkScreenshot(page, 'user-editor-new-general-filled');
-    });
-
-    test('set password and confirm, then save', { tag: '@mutating' }, async () => {
-      await editor.setPassword('ProLifeGuiTest_2026!');
-      await editor.setConfirmPassword('ProLifeGuiTest_2026!');
-      await gui.checkScreenshot(page, 'user-editor-new-password-set');
-      await editor.save();
-      await gui.checkScreenshot(page, 'user-editor-new-saved');
-    });
-  });
-
-  // --- Group editor: one continuous new document --------------------------------------------------
-  test.describe.serial('Group editor', () => {
-    let page, user, editor;
-
-    test.beforeAll(async ({ browser }, testInfo) => {
-      ({ page, user } = await newUserPage(browser, testInfo));
-      if (canRunGroupCommand(user, 'New')) {
-        const admin = new AdministrationPage(page);
-        await admin.reload();
-        await admin.open();
-        await admin.openSubPage('Groups');
-        await new GroupCollectionPage(page).newItem();
-        editor = new GroupEditorPage(page);
-      }
-    });
-
-    test.afterAll(async () => {
-      if (page) await page.close();
-    });
-
-    test.beforeEach(() => {
-      test.skip(!canRunGroupCommand(user, 'New'), 'cannot create a group (ChangeGroups)');
-    });
-
-    test('empty new editor', async () => {
-      await gui.checkScreenshot(page, 'group-editor-new-empty');
-    });
-
-    test('fill fields and save', { tag: '@mutating' }, async () => {
-      await editor.setName('ProLifeGui Test Group');
-      await editor.setDescription('Test group description');
-      await gui.checkScreenshot(page, 'group-editor-new-filled');
-      await editor.save();
-      await gui.checkScreenshot(page, 'group-editor-new-saved');
-    });
-  });
+  // Role/User/Group EDITOR coverage ("New document" flows) lives in its own isolated spec -
+  // administration.editor.multiuser.test.js, pinned to the dedicated `admEditor` user - because opening
+  // a document tab here shares the same server-side per-user Collection Document Service workspace that
+  // this file's own collection-navigation tests (run under su/fullAccess/adminManager) would otherwise
+  // race against. See fixtures/users.js's admEditor comment.
 });

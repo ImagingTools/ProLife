@@ -37,6 +37,14 @@ class OrderEditorPage extends BasePage {
     await this.customer.select(text);
     return this;
   }
+  /**
+   * Position-based Customer selection - CustomerCombo is populated from live seeded Accounts data
+   * with no stable caption to assert on, same convention as the product catalogue combos below.
+   */
+  async setCustomerByIndex(index) {
+    await gui.selectIndex(this.page, ['CustomerCombo'], index);
+    return this;
+  }
   async setOrderStatus(text) {
     await this.orderStatus.select(text);
     return this;
@@ -58,10 +66,11 @@ class OrderEditorPage extends BasePage {
   // --- Products (ProductEditorDialog + OrderProductDelegate rows) -------------------------------
   //
   // ProductEditorDialog reuses the generic "Dialog" objectName (no dialog-specific one) and its
-  // fields: category toggle SoftwareButton/HardwareButton, catalogue picker "ComboBox" (only one
-  // combo in this dialog), confirm OKButton, cancel CancelButton. Removing a row raises a Yes/No
-  // MessageDialog (YesButton/NoButton) - callers handle that confirm step themselves so they can
-  // screenshot the confirm state before deciding.
+  // fields: category toggle SoftwareButton/HardwareButton, catalogue picker "ProductCatalogueCombo"
+  // (NOT the bare "ComboBox" fallback every combo box's inner control carries by default - see
+  // ProductEditor.qml's own comment), confirm OKButton, cancel CancelButton. Removing a row raises a
+  // Yes/No MessageDialog (YesButton/NoButton) - callers handle that confirm step themselves so they
+  // can screenshot the confirm state before deciding.
 
   /**
    * Row locator for the Nth product line (OrderProductDelegate). Rows are NOT index-addressable by
@@ -84,15 +93,57 @@ class OrderEditorPage extends BasePage {
    * the Nth catalogue entry, and confirms. Position-based selection (not by caption): the combo is
    * populated from live seeded catalogue data with no stable text to assert on - same convention as
    * DeviceEditorPage's setDeviceTypeByIndex.
+   *
+   * Selecting a Software product loads a nested sub-form (SoftwareProductEditor.qml) requiring a
+   * SECOND selection - an existing license to link (ProductLicenseCombo) - before OK enables; this is
+   * unchecked ("link an existing license", not "create a new one") by default for a freshly-added
+   * product (confirmed live: OK stays disabled and a "Please select a license" error shows otherwise).
+   * Selecting a Hardware product is the exact same shape via HardwareProductEditor.qml's own
+   * "ProductDeviceCombo" (link an EXISTING device; switchNewSensor unchecked by default) - previously
+   * UNHANDLED here (this method used to skip straight to OK for 'hardware', which would have silently
+   * no-opped on a disabled OK button the same way the software gap once did, just never exercised by
+   * any test). Not every catalogue product has a linkable license/device in the seeded test data
+   * (confirmed live for software: the combo simply has nothing to open) - same data-adaptive reasoning
+   * as DeviceCollectionPage's filterFinishedSensorsWithLicense. `index` can also simply exceed the
+   * catalogue's real size (it's live seeded data with no stable count) - confirmed live: addAnyProduct's
+   * retry loop can walk past the last real entry, throwing "combo item not found ... at index N" from
+   * the CATALOGUE combo itself rather than the license/device one. All these cases return `false`
+   * (dialog cancelled, nothing added) rather than throwing, so the caller can `test.skip()` instead of
+   * failing on a data state.
    * @param {'software'|'hardware'} category
    * @param {number} index
+   * @returns {Promise<boolean>} true if a product was actually added
    */
   async addProduct(category, index) {
     await gui.clickButton(this.page, ['AddProductButton']);
     await gui.clickButton(this.page, [category === 'hardware' ? 'HardwareButton' : 'SoftwareButton']);
-    await gui.selectIndex(this.page, ['ComboBox'], index);
+    try {
+      await gui.selectIndex(this.page, ['ProductCatalogueCombo'], index);
+      await gui.selectIndex(this.page, [category === 'hardware' ? 'ProductDeviceCombo' : 'ProductLicenseCombo'], 0);
+    } catch (_) {
+      await gui.clickButton(this.page, ['CancelButton']);
+      return false;
+    }
     await gui.clickButton(this.page, ['OKButton']);
-    return this;
+    return true;
+  }
+
+  /**
+   * Like addProduct(), but tries catalogue entries 0, 1, 2, ... in turn until one actually has a
+   * linkable license (see addProduct's own comment on why not every entry does), instead of
+   * potentially skipping on the very first one tried. Later tests in the same describe.serial chain
+   * (e.g. "open existing product row") depend on a row genuinely having been added, so silently giving
+   * up after one attempt would cascade into failures there too.
+   * @param {'software'|'hardware'} category
+   * @param {number} [maxAttempts]
+   * @returns {Promise<boolean>} true if a product was actually added
+   */
+  async addAnyProduct(category, maxAttempts = 5) {
+    for (let index = 0; index < maxAttempts; index++) {
+      // eslint-disable-next-line no-await-in-loop
+      if (await this.addProduct(category, index)) return true;
+    }
+    return false;
   }
 
   /** Open the Nth product row's editor (ProductEditorDialog, pre-filled) via its row Edit command. */

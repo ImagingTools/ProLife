@@ -24,4 +24,9 @@ module.exports = createGlobalSetup({
   authFile,
   rootDir: __dirname,
   baseUrl: process.env.PROLIFE_BASE_URL || 'http://localhost:17778',
+  // Run-CiTests.ps1 invokes "npx playwright test" twice per run (read-only phase, then @mutating
+  // phase) against the SAME still-running server - set for the second invocation only, once the first
+  // has already produced fresh storageState for every active user moments ago (see
+  // createGlobalSetup's own comment on why this is trusted rather than verified here).
+  reuseExistingAuth: process.env.PROLIFE_GUI_REUSE_AUTH === '1',
 });

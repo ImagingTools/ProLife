@@ -69,9 +69,22 @@ test.describe('Software / editor', () => {
       await gui.checkScreenshot(page, 'software-editor-new-empty');
     });
 
-    // Project (Software Information group) and Serial Number (License Information group) are both
-    // plain TextInput fields with the identical fill/verify mechanism - one combined screenshot
-    // documents both without paying for two separate fill+screenshot passes.
+    // Product/License/Software-ID live on the General MultiPageView page and each validate INLINE
+    // (isSelectionRequired-style checks) - confirmed live this is NOT a Save-triggered modal dialog
+    // (LicenseValidator.qml's documentValidator/showErrorDialog path never actually fires here): each
+    // missing required field shows its own red error message right under it and keeps the Save command
+    // disabled the whole time, so clicking a disabled Save silently does nothing. The error Text itself
+    // carries no objectName, so this asserts on visible TEXT (Playwright's own text locator) for all
+    // three, rather than a structural path.
+    test('save blocked - missing required fields', async () => {
+      await editor.openEditorPage('General');
+      await page.getByText('Please select a product').waitFor({ state: 'visible', timeout: 10000 });
+      await page.getByText('Please select a license').waitFor({ state: 'visible', timeout: 10000 });
+      await page.getByText('Please enter the software-ID').waitFor({ state: 'visible', timeout: 10000 });
+      await gui.checkScreenshot(page, 'software-editor-save-blocked-empty');
+    });
+
+    // Project (Additional page) and Serial Number (General page).
     test('fill software and license information', async () => {
       await editor.setProject('ProLifeGui test project');
       await editor.setSerialNumber('SW-PROLIFEGUI-1');
@@ -152,10 +165,22 @@ test.describe('Software / editor', () => {
       // fields on a NEW document, so it must NOT gate this edit-save path (a user with AddLicense but
       // not ChangeProjectForLicense would otherwise reach a read-only field and fail on the fill verify).
       test.skip(!user.can('ChangeProjectForLicense'), 'cannot change the license project field');
-      await editor.setProject('Edited by ProLifeGui');
+      const edited = `Edited by ProLifeGui ${Date.now()}`;
+      await editor.setProject(edited);
       await gui.checkScreenshot(page, 'software-editor-edit-changed');
       await editor.save();
       await gui.checkScreenshot(page, 'software-editor-edit-saved');
+
+      // Persistence check: a Save that only LOOKS successful in the client's own state (but never
+      // actually round-tripped/committed server-side) would still pass every assertion above - closing
+      // and reopening the SAME document from a clean collection reload proves the new value was really
+      // written, not just held in this still-open document's in-memory representation. openEditEditor's
+      // own sortBy('added') keeps this the SAME license as before (immutable creation date, unaffected
+      // by this Save's Last Modified bump).
+      await editor.closeDocument();
+      editor = await openEditEditor(page);
+      await editor.project.waitForValue(edited);
+      await gui.checkScreenshot(page, 'software-editor-edit-reopened');
     });
   });
 });
