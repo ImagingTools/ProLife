@@ -1,0 +1,15 @@
+{
+ "Name": "Name",
+ "Status": "Status",
+ "Backup": "Backup",
+ "Server": "Server",
+ "Please select a configuration": "Bitte eine Konfiguration auswählen",
+ "Hardware-ID": "Hardware-ID",
+ "Please select a customer": "Bitte einen Kunden auswählen",
+ "Currently selected: ": "Aktuell ausgewählt: ",
+ "Software": "Software",
+ "Hardware": "Hardware",
+ "OK": "OK",
+ "Software Information": "Software-Information",
+ "Unlimited": "Unbegrenzt"
+}

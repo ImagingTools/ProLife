@@ -4,5 +4,6 @@
 		<file alias="ProLife_de_DE">Translations/ProLife_de_DE.qm</file>
 		<file alias="ProLife_ru_RU">Translations/ProLife_ru_RU.qm</file>
 		<file alias="ProLife_pl_PL">Translations/ProLife_pl_PL.qm</file>
+		<file alias="ProLife_sv_SE">Translations/ProLife_sv_SE.qm</file>
  </qresource>
 </RCC>
