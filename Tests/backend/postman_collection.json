@@ -41749,66 +41749,6 @@
               "name": "Auth",
               "item": [
                 {
-                  "name": "GetUserMode",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "// Ожидаемая схема ответа\r",
-                          "const responseSchema = {\r",
-                          "    \"data\": {\r",
-                          "        \"GetUserMode\": {\r",
-                          "            \"__typename\": \"UserManagementPayload\",\r",
-                          "            \"userMode\": \"STRONG_USER_MANAGEMENT\"\r",
-                          "        }\r",
-                          "    }\r",
-                          "}\r",
-                          "\r",
-                          "pm.test('Query is successful', function () {\r",
-                          "    pm.response.to.be.ok;\r",
-                          "});\r",
-                          "\r",
-                          "// Сравнение всего ответа с ожидаемой схемой\r",
-                          "pm.test(\"Response matches expected schema\", () => {\r",
-                          "    pm.expect(pm.response.json()).to.eql(responseSchema);\r",
-                          "});"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {},
-                        "requests": {}
-                      }
-                    }
-                  ],
-                  "request": {
-                    "auth": {
-                      "type": "noauth"
-                    },
-                    "method": "POST",
-                    "header": [],
-                    "body": {
-                      "mode": "graphql",
-                      "graphql": {
-                        "query": "query GetUserMode {GetUserMode(input: {}) {userMode}}",
-                        "variables": ""
-                      }
-                    },
-                    "url": {
-                      "raw": "http://localhost:7778/ProLife/graphql",
-                      "protocol": "http",
-                      "host": [
-                        "localhost"
-                      ],
-                      "port": "7778",
-                      "path": [
-                        "ProLife",
-                        "graphql"
-                      ]
-                    }
-                  },
-                  "response": []
-                },
-                {
                   "name": "Authorization",
                   "event": [
                     {
