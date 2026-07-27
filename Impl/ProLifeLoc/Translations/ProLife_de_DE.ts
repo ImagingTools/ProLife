@@ -816,7 +816,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-24"/>
         <location line="+118"/>
         <source>Name</source>
-        <translation type="unfinished">Name</translation>
+        <translation>Name</translation>
     </message>
     <message>
         <location filename="../../../Include/prolifegql/CLicenseChangeGeneratorComp.cpp" line="-12"/>
@@ -929,7 +929,7 @@
         <location line="+48"/>
         <location line="+70"/>
         <source>Status</source>
-        <translation type="unfinished">Status</translation>
+        <translation>Status</translation>
     </message>
     <message>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeClient/CProLifeClient.cpp" line="-52"/>
@@ -1528,7 +1528,7 @@
         <location line="+128"/>
         <location line="+96"/>
         <source>Backup</source>
-        <translation type="unfinished">Backup</translation>
+        <translation>Backup</translation>
     </message>
     <message>
         <location line="-376"/>
@@ -1586,7 +1586,7 @@
         <location line="+124"/>
         <location line="+94"/>
         <source>Server</source>
-        <translation type="unfinished">Server</translation>
+        <translation>Server</translation>
     </message>
     <message>
         <location line="-376"/>
@@ -2051,7 +2051,7 @@
     <message>
         <location line="+5"/>
         <source>Please select a configuration</source>
-        <translation type="unfinished">Please select a configuration</translation>
+        <translation>Bitte eine Konfiguration auswählen</translation>
     </message>
     <message>
         <location line="+21"/>
@@ -2255,7 +2255,7 @@
     <message>
         <location line="+106"/>
         <source>Name</source>
-        <translation type="unfinished">Name</translation>
+        <translation>Name</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -2313,7 +2313,7 @@
     <message>
         <location line="+48"/>
         <source>Name</source>
-        <translation type="unfinished">Name</translation>
+        <translation>Name</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -2389,7 +2389,7 @@
     <message>
         <location line="+30"/>
         <source>Hardware-ID</source>
-        <translation type="unfinished">Hardware-ID</translation>
+        <translation>Hardware-ID</translation>
     </message>
     <message>
         <location line="+15"/>
@@ -2631,7 +2631,7 @@
     <message>
         <location line="+5"/>
         <source>Please select a customer</source>
-        <translation type="unfinished">Please select a customer</translation>
+        <translation>Bitte einen Kunden auswählen</translation>
     </message>
     <message>
         <location line="+17"/>
@@ -2746,17 +2746,17 @@
     <message>
         <location line="+15"/>
         <source>Currently selected: </source>
-        <translation type="unfinished">Currently selected: </translation>
+        <translation>Aktuell ausgewählt: </translation>
     </message>
     <message>
         <location line="+33"/>
         <source>Software</source>
-        <translation type="unfinished">Software</translation>
+        <translation>Software</translation>
     </message>
     <message>
         <location line="+17"/>
         <source>Hardware</source>
-        <translation type="unfinished">Hardware</translation>
+        <translation>Hardware</translation>
     </message>
     <message>
         <location line="+16"/>
@@ -2774,7 +2774,7 @@
     <message>
         <location filename="../../../Qml/Include/prolifeqml/ProductEditorDialog.qml" line="+21"/>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -2870,7 +2870,7 @@
     <message>
         <location line="+253"/>
         <source>Software Information</source>
-        <translation type="unfinished">Software Information</translation>
+        <translation>Software-Information</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -2960,7 +2960,7 @@
     <message>
         <location line="+12"/>
         <source>Unlimited</source>
-        <translation type="unfinished">Unlimited</translation>
+        <translation>Unbegrenzt</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -3003,7 +3003,7 @@
     <message>
         <location line="+3"/>
         <source>Unlimited</source>
-        <translation type="unfinished">Unlimited</translation>
+        <translation>Unbegrenzt</translation>
     </message>
     <message>
         <location line="+19"/>

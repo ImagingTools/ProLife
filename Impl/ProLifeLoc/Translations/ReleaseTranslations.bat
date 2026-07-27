@@ -6,3 +6,4 @@
 %QTDIR%\bin\lrelease.exe ProLife_zh_ZH.ts
 %QTDIR%\bin\lrelease.exe ProLife_jp_JP.ts
 %QTDIR%\bin\lrelease.exe ProLife_it_IT.ts
+%QTDIR%\bin\lrelease.exe ProLife_sv_SE.ts

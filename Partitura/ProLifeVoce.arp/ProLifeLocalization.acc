@@ -24,7 +24,13 @@
                             <Values>
                                 <Value>en_US</Value>
                                 <Value>de_DE</Value>
+                                <Value>fr_FR</Value>
+                                <Value>it_IT</Value>
+                                <Value>jp_JP</Value>
+                                <Value>zh_ZH</Value>
                                 <Value>ru_RU</Value>
+                                <Value>pl_PL</Value>
+                                <Value>sv_SE</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -63,7 +69,13 @@
                             <Values>
                                 <Value>en_US</Value>
                                 <Value>de_DE</Value>
+                                <Value>fr_FR</Value>
+                                <Value>it_IT</Value>
+                                <Value>jp_JP</Value>
+                                <Value>zh_ZH</Value>
                                 <Value>ru_RU</Value>
+                                <Value>pl_PL</Value>
+                                <Value>sv_SE</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
