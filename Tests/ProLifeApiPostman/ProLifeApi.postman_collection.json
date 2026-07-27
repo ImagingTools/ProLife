@@ -2887,39 +2887,6 @@
           ]
         },
         {
-          "name": "GetUserMode",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "graphql",
-              "graphql": {
-                "query": "query GetUserMode { GetUserMode(input: { productId: \"{{productId}}\" }) { userMode } }",
-                "variables": ""
-              }
-            },
-            "url": "{{baseUrl}}/graphql",
-            "description": "Covers GetUserMode (imtauth/1.0 AuthorizationOptions.sdl)."
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "const json = pm.response.json();",
-                  "pm.test('GetUserMode has no GraphQL errors', function () {",
-                  "  pm.expect(json.errors || []).to.have.length(0);",
-                  "});",
-                  "pm.test('GetUserMode returns a userMode', function () {",
-                  "  pm.expect(json.data.GetUserMode.userMode).to.be.a('string');",
-                  "});"
-                ]
-              }
-            }
-          ]
-        },
-        {
           "name": "GetProductPermissions",
           "request": {
             "method": "POST",

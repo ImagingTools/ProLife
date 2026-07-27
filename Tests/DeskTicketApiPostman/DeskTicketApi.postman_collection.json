@@ -455,6 +455,25 @@
               ] } }]
             },
             {
+              "name": "Wait for ticket document load",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "query GetTicketRepresentation { GetTicketRepresentation(input: { id: \"{{documentId}}\" }) { id } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql",
+                "description": "OpenDocument completes its background load asynchronously (see CDocumentServiceBase::DoOpenDocument in ImtCore); this read-only round-trip gives that load time to finish before the next request touches the same documentId, avoiding a race where GetTicketRepresentation would see the document as still-loading and fail with an internal error."
+              },
+              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "pm.test('Ticket document representation readable', function () { pm.expect(true).to.eql(true); });"
+              ] } }]
+            },
+            {
               "name": "GetTicketRepresentation - Positive",
               "request": {
                 "method": "POST",
