@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="6435" Description="ACF"/>
-            <Version Id="1" Number="2410" Description="ACF-Solutions"/>
+            <Version Id="0" Number="6500" Description="ACF"/>
+            <Version Id="1" Number="2438" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -323,6 +323,9 @@
                     <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/ProLifeDatabaseAccessSettings"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="DatabaseConnectionChecker" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DatabaseEngine/PgSqlDatabaseEngine"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="DeviceCollectionDocumentService" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="DocumentService"/>
                     </AttributeInfo>
@@ -383,6 +386,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareTransferCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/SoftwareTransferSqlRepository"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SuperuserProvider" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/SuperuserProvider"/>
                     </AttributeInfo>
                     <AttributeInfo Id="SupportEmailParam" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/SupportEmail"/>

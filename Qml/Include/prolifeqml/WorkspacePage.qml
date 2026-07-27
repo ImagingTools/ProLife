@@ -13,6 +13,7 @@ import com.imtcore.imtqml 1.0
 ViewBase {
 	id: root
 	anchors.fill: parent
+	contentColor: Style.baseColor
 	commandsControllerComp: Component {
 		GqlBasedCommandsController {
 			typeId: "Workspace"
