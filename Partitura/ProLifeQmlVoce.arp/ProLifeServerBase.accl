@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="6435" Description="ACF"/>
-            <Version Id="1" Number="2410" Description="ACF-Solutions"/>
+            <Version Id="0" Number="6500" Description="ACF"/>
+            <Version Id="1" Number="2438" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
@@ -65,20 +65,6 @@
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
-        <EmbededRegistry Id="Migrations">
-            <PositionMap>
-                <Element ComponentName="CompositeMigrationController" X="575" Y="100" Note=""/>
-                <Element ComponentName="DatabaseConverterComp" X="225" Y="250" Note=""/>
-                <Element ComponentName="MigrationController0_13" X="550" Y="250" Note=""/>
-                <Element ComponentName="MigrationController14" X="250" Y="525" Note=""/>
-                <Element ComponentName="MigrationController15" X="1025" Y="325" Note=""/>
-                <Element ComponentName="MigrationController16" X="1050" Y="525" Note=""/>
-                <Element ComponentName="MigrationController17_19" X="1050" Y="625" Note=""/>
-                <Element ComponentName="MigrationFilePath" X="800" Y="475" Note=""/>
-                <Element ComponentName="SystemLocation" X="800" Y="625" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="Repositories">
             <PositionMap>
                 <Element ComponentName="AccountSqlRepository" X="1000" Y="75" Note=""/>
@@ -92,6 +78,20 @@
                 <Element ComponentName="PersonalAccessTokenSqlRepository" X="225" Y="525" Note=""/>
                 <Element ComponentName="SoftwareSqlRepository" X="200" Y="175" Note=""/>
                 <Element ComponentName="SoftwareTransferSqlRepository" X="1000" Y="375" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="Migrations">
+            <PositionMap>
+                <Element ComponentName="CompositeMigrationController" X="575" Y="100" Note=""/>
+                <Element ComponentName="DatabaseConverterComp" X="225" Y="250" Note=""/>
+                <Element ComponentName="MigrationController0_13" X="550" Y="250" Note=""/>
+                <Element ComponentName="MigrationController14" X="250" Y="525" Note=""/>
+                <Element ComponentName="MigrationController15" X="1025" Y="325" Note=""/>
+                <Element ComponentName="MigrationController16" X="1050" Y="525" Note=""/>
+                <Element ComponentName="MigrationController17_19" X="1050" Y="625" Note=""/>
+                <Element ComponentName="MigrationFilePath" X="800" Y="475" Note=""/>
+                <Element ComponentName="SystemLocation" X="800" Y="625" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>
