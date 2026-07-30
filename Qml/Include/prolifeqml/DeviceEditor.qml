@@ -8,6 +8,7 @@ import imtdocgui 1.0
 import imtcolgui 1.0
 import imtcontrols 1.0
 import imtguigql 1.0
+import imtdeskgui 1.0
 import prolifeqml 1.0
 import prolifeSensorsSdl 1.0
 import prolifeOrdersSdl 1.0
@@ -17,7 +18,8 @@ import imtlicLicensesSdl 1.0
 /**
  * DeviceEditor
  *
- * MultiPageView: Device / Production / Licenses.
+ * MultiPageView: Device / Production / Licenses / Support / History.
+ * Support and History are hidden in embedded mode.
  *
  * Embedded mode (Order product dialog): set embedded=true, optionally forcedOrderId.
  * Use loadFromOrderedProduct() / applyToOrderedProduct() to map OrderedProduct.
@@ -358,32 +360,9 @@ DocumentViewBase {
 		return deviceData.m_deviceType !== "" && deviceData.m_licenseName !== ""
 	}
 
-	// History panel is not used in embedded (Order product dialog) mode: it sits on the
-	// right with z+1 and covers page CustomScrollbar / steals wheel input even when a
-	// Binding tries to hide it (race with its Component.onCompleted visibility check).
-	Loader {
-		id: historyPanelLoader
-		active: !deviceEditorContainer.embedded
-		anchors.top: parent.top
-		anchors.right: parent.right
-		anchors.bottom: parent.bottom
-		width: item ? item.width : 0
-
-		sourceComponent: Component {
-			DocumentHistoryPanel {
-				documentId: deviceEditorContainer.deviceData ? deviceEditorContainer.deviceData.m_id : ""
-				collectionId: "Devices"
-				editorFlickable: null
-			}
-		}
-	}
-
 	MultiPageView {
 		id: multiPageView
 		anchors.fill: parent
-		anchors.rightMargin: historyPanelLoader.active && historyPanelLoader.item && historyPanelLoader.item.visible
-			? historyPanelLoader.width
-			: 0
 		clip: true
 		panelWidth: Style.sizeHintXXS
 
@@ -404,6 +383,12 @@ DocumentViewBase {
 			if (deviceEditorContainer.licensePageVisible && !deviceEditorContainer.embedded) {
 				multiPageView.addPage("Licenses", qsTr("Licenses"), licensesPageComp, "Icons/Key")
 			}
+			if (!deviceEditorContainer.embedded) {
+				multiPageView.addPage("Support", qsTr("Support"), supportPageComp, "Icons/SupportDesk")
+				if (PermissionsController.checkPermission("ViewRevisions")) {
+					multiPageView.addPage("History", qsTr("History"), historyPageComp, "Icons/History")
+				}
+			}
 
 			let targetIndex = multiPageView.getIndexById(currentId)
 			multiPageView.currentIndex = targetIndex >= 0 ? targetIndex : 0
@@ -421,6 +406,79 @@ DocumentViewBase {
 			}
 			if (deviceEditorContainer.readOnly)
 				deviceEditorContainer.setReadOnly(true)
+		}
+	}
+
+	Component {
+		id: supportPageComp
+
+		Item {
+			id: supportPage
+			anchors.fill: parent
+
+			EntityContextTicketsPanel {
+				id: supportWorkspace
+				anchors.top: parent.top
+				anchors.bottom: parent.bottom
+				x: Math.max(0, (supportPage.width - width) / 2)
+				width: Math.max(0, Math.min(deviceEditorContainer.contentMaxWidth, supportPage.width))
+				entityType: "Devices"
+				entityId: deviceEditorContainer.deviceData ? deviceEditorContainer.deviceData.m_id : ""
+				entityDisplayName: deviceEditorContainer.deviceData ? deviceEditorContainer.deviceData.m_macAddress : ""
+			}
+		}
+	}
+
+	Component {
+		id: historyPageComp
+
+		Item {
+			id: historyPage
+			anchors.fill: parent
+
+			Item {
+				id: historyPageHeader
+				anchors.top: parent.top
+				anchors.topMargin: Style.marginL
+				x: Math.max(0, (historyPage.width - width) / 2)
+				width: Math.max(0, Math.min(deviceEditorContainer.contentMaxWidth, historyPage.width))
+				height: historyTitleRow.height
+
+				Row {
+					id: historyTitleRow
+					anchors.left: parent.left
+					anchors.verticalCenter: parent.verticalCenter
+					spacing: Style.spacingS
+
+					Text {
+						text: qsTr("History")
+						font.pixelSize: Style.fontSizeXL
+						font.family: Style.fontFamilyBold
+						color: Style.textColor
+						anchors.verticalCenter: parent.verticalCenter
+					}
+
+					Text {
+						visible: historyWorkspace.revisionsCount > 0
+						text: "(" + historyWorkspace.revisionsCount + ")"
+						font.pixelSize: Style.fontSizeXL
+						font.family: Style.fontFamilyBold
+						color: Style.imaginToolsAccentColor
+						anchors.verticalCenter: parent.verticalCenter
+					}
+				}
+			}
+
+			DocumentHistoryView {
+				id: historyWorkspace
+				anchors.top: historyPageHeader.bottom
+				anchors.topMargin: Style.marginM
+				anchors.bottom: parent.bottom
+				x: Math.max(0, (historyPage.width - width) / 2)
+				width: Math.max(0, Math.min(deviceEditorContainer.contentMaxWidth, historyPage.width))
+				documentId: deviceEditorContainer.deviceData ? deviceEditorContainer.deviceData.m_id : ""
+				collectionId: "Devices"
+			}
 		}
 	}
 

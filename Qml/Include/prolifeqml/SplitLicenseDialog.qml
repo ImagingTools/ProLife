@@ -229,6 +229,6 @@ Dialog {
 		id: loading
 		anchors.fill: splitLicenseDialog
 		visible: splitLicenseRequest.state === "Loading" || childLicensesRequest.state === "Loading"
-		background.color: Style.backgroundColor2;
+		background.color: Style.baseColor;
 	}
 }

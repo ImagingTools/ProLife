@@ -222,17 +222,9 @@ ViewBase {
 		orderEditorContainer.refreshProductsPageTitle()
 	}
 
-	DocumentHistoryPanel {
-		id: historyPanel
-		documentId: orderEditorContainer.orderData ? orderEditorContainer.orderData.m_id : ""
-		collectionId: "Orders"
-		editorFlickable: null
-	}
-
 	MultiPageView {
 		id: multiPageView
 		anchors.fill: parent
-		anchors.rightMargin: historyPanel.visible ? historyPanel.width : 0
 		clip: true
 		panelWidth: Style.sizeHintXXS
 
@@ -250,6 +242,9 @@ ViewBase {
 				productsPageComp,
 				"Icons/Product"
 			)
+			if (PermissionsController.checkPermission("ViewRevisions")) {
+				multiPageView.addPage("History", qsTr("History"), historyPageComp, "Icons/History")
+			}
 
 			let targetIndex = multiPageView.getIndexById(currentId)
 			multiPageView.currentIndex = targetIndex >= 0 ? targetIndex : 0
@@ -264,6 +259,15 @@ ViewBase {
 
 		Component.onCompleted: {
 			multiPageView.updatePages()
+		}
+	}
+
+	Component {
+		id: historyPageComp
+
+		DocumentHistoryPanel {
+			documentId: orderEditorContainer.orderData ? orderEditorContainer.orderData.m_id : ""
+			collectionId: "Orders"
 		}
 	}
 

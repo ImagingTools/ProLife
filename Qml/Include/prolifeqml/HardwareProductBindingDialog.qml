@@ -452,7 +452,7 @@ Dialog {
 	Loading {
 		id: loading
 		anchors.fill: productEditorDialog
-		background.color: Style.backgroundColor2;
+		background.color: Style.baseColor;
 	}
 	
 	GqlSdlRequestSender {

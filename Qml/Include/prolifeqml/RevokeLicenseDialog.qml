@@ -186,6 +186,6 @@ Dialog {
 		id: loading
 		anchors.fill: revokeLicenseDialog
 		visible: childLicensesRequest.state === "Loading" || revokeLicenseRequest.state === "Loading"
-		background.color: Style.backgroundColor2;
+		background.color: Style.baseColor;
 	}
 }

@@ -59,6 +59,7 @@ ViewBase {
 			groupIds = accountData.m_groups.split(';');
 		}
 
+		tableConn.enabled = false;
 		groupsElement.table.uncheckAll();
 		if (groupsElement.table.elements){
 			for (let i = 0; i < groupsElement.table.elements.getItemsCount(); i++){
@@ -68,6 +69,7 @@ ViewBase {
 				}
 			}
 		}
+		tableConn.enabled = true;
 	}
 	
 	function updateModel(){
@@ -101,7 +103,6 @@ ViewBase {
 		id: historyPanel;
 		documentId: accountEditorContainer.accountData ? accountEditorContainer.accountData.m_id : "";
 		collectionId: "Accounts";
-		editorFlickable: flickable;
 	}
 	
 	CustomScrollbar {
@@ -137,8 +138,10 @@ ViewBase {
 		id: groupCollectionDataProvider;
 		onCollectionModelChanged: {
 			if (groupsElement.table){
+				tableConn.enabled = false;
 				groupsElement.table.elements = groupCollectionDataProvider.collectionModel;
-				
+				tableConn.enabled = true;
+
 				accountEditorContainer.doUpdateGui();
 			}
 		}
@@ -446,8 +449,11 @@ ViewBase {
 				onTableChanged: {
 					if (groupsElement.table){
 						groupsElement.table.checkable = true;
+
+						tableConn.enabled = false;
 						groupsElement.table.elements = groupCollectionDataProvider.collectionModel;
-						
+						tableConn.enabled = true;
+
 						let ok = PermissionsController.checkPermission("ChangeAccountGroups");
 						groupsElement.table.readOnly = !ok;
 					}
