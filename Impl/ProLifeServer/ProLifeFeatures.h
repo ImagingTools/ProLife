@@ -64,6 +64,15 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 
 	sensorManagementFeatureInfo->InsertSubFeature(createLicenseFileFeatureInfo.PopPtr());
 
+	istd::TDelPtr<imtlic::CFeatureInfo> manageActivationKeysFeatureInfo;
+	manageActivationKeysFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	manageActivationKeysFeatureInfo->SetFeatureId("ManageActivationKeys");
+	manageActivationKeysFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Manage Activation Keys"));
+	manageActivationKeysFeatureInfo->SetOptional(false);
+	manageActivationKeysFeatureInfo->SetIsPermission(true);
+
+	sensorManagementFeatureInfo->InsertSubFeature(manageActivationKeysFeatureInfo.PopPtr());
+
 	istd::TDelPtr<imtlic::CFeatureInfo> viewAllSensorsFeatureInfo;
 	viewAllSensorsFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
 	viewAllSensorsFeatureInfo->SetFeatureId("ViewAllSensors");

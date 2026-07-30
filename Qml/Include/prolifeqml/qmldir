@@ -20,3 +20,7 @@ GqlBarchartView 1.0 GqlBarchartView.qml
 StatisticsPage 1.0 StatisticsPage.qml
 IotDeviceEditor 1.0 IotDeviceEditor.qml
 
+OnlineLicenseController 1.0 OnlineLicenseController.qml
+OnlineLicenseActivationDialog 1.0 OnlineLicenseActivationDialog.qml
+ActivationKeyManagement 1.0 ActivationKeyManagement.qml
+

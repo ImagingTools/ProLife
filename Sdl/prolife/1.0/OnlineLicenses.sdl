@@ -1,0 +1,157 @@
+
+schema {
+	query: Query
+	mutation: Mutation
+	subscription: Subscription
+	namespace: prolife
+	version: 1.0
+}
+
+import {
+	"../../../../ImtCore/Sdl/imtbase/1.0/ImtCollection.sdl"
+}
+
+# Online License Activation Types
+
+type ActivationFeatureItem {
+	featureId: ID!
+	featureName: String
+}
+
+input ActivateLicenseInput {
+	activationKey: String!
+	machineFingerprint: String!
+	machineName: String
+}
+
+type ActivateLicensePayload {
+	token: String
+	expiresAt: String
+	features: [ActivationFeatureItem]
+	success: Boolean!
+	message: String
+}
+
+input ValidateLicenseInput {
+	token: String!
+	machineFingerprint: String!
+}
+
+type ValidateLicensePayload {
+	valid: Boolean!
+	expiresAt: String
+	features: [ActivationFeatureItem]
+	message: String
+}
+
+input DeactivateLicenseInput {
+	token: String!
+}
+
+type DeactivateLicensePayload {
+	success: Boolean!
+	message: String
+}
+
+input HeartbeatInput {
+	token: String!
+	machineFingerprint: String!
+}
+
+type HeartbeatPayload {
+	valid: Boolean!
+	expiresAt: String
+	message: String
+}
+
+# Admin: Activation Key Management
+
+input ActivationKeysListInput {
+	viewParams: CollectionViewParams
+}
+
+type ActivationKeyItem {
+	id: ID!
+	activationKey: String!
+	productId: ID
+	productName: String
+	licenseId: ID
+	licenseName: String
+	maxActivations: Integer
+	currentActivations: Integer
+	createdAt: String
+	expiresAt: String
+	isActive: Bool
+}
+
+type ActivationKeysListPayload {
+	items: [ActivationKeyItem]
+	notification: NotificationItem
+}
+
+type OnlineActivationItem {
+	id: ID!
+	activationKeyId: ID!
+	machineFingerprint: String
+	machineName: String
+	token: String
+	activatedAt: String
+	lastHeartbeat: String
+	expiresAt: String
+	isActive: Bool
+}
+
+type OnlineActivationsListPayload {
+	items: [OnlineActivationItem]
+}
+
+input CreateActivationKeyInput {
+	productId: ID!
+	licenseId: ID!
+	maxActivations: Integer
+	expiresAt: String
+}
+
+type CreateActivationKeyPayload {
+	activationKey: String
+	success: Boolean!
+	message: String
+}
+
+input RevokeActivationKeyInput {
+	activationKeyId: ID!
+}
+
+type RevokeActivationKeyPayload {
+	success: Boolean!
+	message: String
+}
+
+input DeactivateOnlineActivationInput {
+	activationId: ID!
+}
+
+type DeactivateOnlineActivationPayload {
+	success: Boolean!
+	message: String
+}
+
+input GetOnlineActivationsInput {
+	activationKeyId: ID!
+}
+
+type Query {
+	ActivationKeysList (input: ActivationKeysListInput): ActivationKeysListPayload!
+	OnlineActivationsList (input: GetOnlineActivationsInput): OnlineActivationsListPayload!
+}
+
+type Mutation {
+	ActivateLicense (input: ActivateLicenseInput): ActivateLicensePayload!
+	ValidateLicense (input: ValidateLicenseInput): ValidateLicensePayload!
+	DeactivateLicense (input: DeactivateLicenseInput): DeactivateLicensePayload!
+	Heartbeat (input: HeartbeatInput): HeartbeatPayload!
+	CreateActivationKey (input: CreateActivationKeyInput): CreateActivationKeyPayload!
+	RevokeActivationKey (input: RevokeActivationKeyInput): RevokeActivationKeyPayload!
+	DeactivateOnlineActivation (input: DeactivateOnlineActivationInput): DeactivateOnlineActivationPayload!
+}
+
