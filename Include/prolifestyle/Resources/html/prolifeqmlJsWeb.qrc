@@ -11,6 +11,7 @@
         <file alias="ProLife_ru_RU.ts">Translations/ProLife_ru_RU.ts</file>
         <file alias="ProLife_de_DE.ts">Translations/ProLife_de_DE.ts</file>
         <file alias="ProLife_en_US.ts">Translations/ProLife_en_US.ts</file>
+        <file alias="ProLife_sv_SE.ts">Translations/ProLife_sv_SE.ts</file>
 
 	<file alias="ImtCore_ru_RU.ts">Translations/ImtCore_ru_RU.ts</file>
         <file alias="ImtCore_de_DE.ts">Translations/ImtCore_de_DE.ts</file>

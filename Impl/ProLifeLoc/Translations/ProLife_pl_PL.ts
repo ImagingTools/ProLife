@@ -7,25 +7,25 @@
         <location filename="../../../Bin/web/src/AccountCollectionView.qml" line="+38"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountCollectionView.qml" line="+38"/>
         <source>Edit</source>
-        <translation type="unfinished">Edit</translation>
+        <translation>Edytuj</translation>
     </message>
     <message>
         <location line="+8"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountCollectionView.qml" line="+8"/>
         <source>Remove</source>
-        <translation type="unfinished">Remove</translation>
+        <translation>Usuń</translation>
     </message>
     <message>
         <location line="+9"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountCollectionView.qml" line="+9"/>
         <source>Set Description</source>
-        <translation type="unfinished">Set Description</translation>
+        <translation>Ustaw opis</translation>
     </message>
     <message>
         <location line="+37"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountCollectionView.qml" line="+37"/>
         <source>Account name cannot be empty</source>
-        <translation type="unfinished">Account name cannot be empty</translation>
+        <translation>Nazwa konta nie może być pusta</translation>
     </message>
 </context>
 <context>
@@ -34,13 +34,13 @@
         <location filename="../../../Bin/web/src/AccountCollectionViewCommandsDelegate.qml" line="+10"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountCollectionViewCommandsDelegate.qml" line="+10"/>
         <source>Deleting an account</source>
-        <translation type="unfinished">Deleting an account</translation>
+        <translation>Usuwanie konta</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountCollectionViewCommandsDelegate.qml" line="+1"/>
         <source>Delete the selected account ?</source>
-        <translation type="unfinished">Delete the selected account ?</translation>
+        <translation>Usunąć wybrane konto?</translation>
     </message>
 </context>
 <context>
@@ -49,13 +49,13 @@
         <location filename="../../../Bin/web/src/AccountEditor.qml" line="+217"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="+217"/>
         <source>Enter the account name</source>
-        <translation type="unfinished">Enter the account name</translation>
+        <translation>Wprowadź nazwę konta</translation>
     </message>
     <message>
         <location line="+28"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="+28"/>
         <source>Enter the account description</source>
-        <translation type="unfinished">Enter the account description</translation>
+        <translation>Wprowadź opis konta</translation>
     </message>
     <message>
         <location line="+21"/>
@@ -73,115 +73,115 @@
         <location line="-96"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="-96"/>
         <source>Customer Information</source>
-        <translation type="unfinished">Customer Information</translation>
+        <translation>Informacje o kliencie</translation>
     </message>
     <message>
         <location line="+12"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="+12"/>
         <source>Customer-ID</source>
-        <translation type="unfinished">Customer-ID</translation>
+        <translation>ID klienta</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="+1"/>
         <source>Enter the customer-ID</source>
-        <translation type="unfinished">Enter the customer-ID</translation>
+        <translation>Wprowadź ID klienta</translation>
     </message>
     <message>
         <location line="+20"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="+20"/>
         <source>Account Information</source>
-        <translation type="unfinished">Account Information</translation>
+        <translation>Informacje o koncie</translation>
     </message>
     <message>
         <location line="+12"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="+12"/>
         <source>Account Name</source>
-        <translation type="unfinished">Account Name</translation>
+        <translation>Nazwa konta</translation>
     </message>
     <message>
         <location line="+4"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="+4"/>
         <source>Please enter the account name</source>
-        <translation type="unfinished">Please enter the account name</translation>
+        <translation>Wprowadź nazwę konta</translation>
     </message>
     <message>
         <location line="+24"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="+24"/>
         <source>Account Description</source>
-        <translation type="unfinished">Account Description</translation>
+        <translation>Opis konta</translation>
     </message>
     <message>
         <location line="+51"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="+51"/>
         <source>Company Address</source>
-        <translation type="unfinished">Company Address</translation>
+        <translation>Adres firmy</translation>
     </message>
     <message>
         <location line="+12"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="+12"/>
         <source>Country</source>
-        <translation type="unfinished">Country</translation>
+        <translation>Kraj</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="+1"/>
         <source>Enter the country</source>
-        <translation type="unfinished">Enter the country</translation>
+        <translation>Wprowadź kraj</translation>
     </message>
     <message>
         <location line="+19"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="+19"/>
         <source>City</source>
-        <translation type="unfinished">City</translation>
+        <translation>Miasto</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="+1"/>
         <source>Enter the city</source>
-        <translation type="unfinished">Enter the city</translation>
+        <translation>Wprowadź miasto</translation>
     </message>
     <message>
         <location line="+19"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="+19"/>
         <source>Postal Code</source>
-        <translation type="unfinished">Postal Code</translation>
+        <translation>Kod pocztowy</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="+1"/>
         <source>Enter the postal code</source>
-        <translation type="unfinished">Enter the postal code</translation>
+        <translation>Wprowadź kod pocztowy</translation>
     </message>
     <message>
         <location line="+19"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="+19"/>
         <source>Street</source>
-        <translation type="unfinished">Street</translation>
+        <translation>Ulica</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="+1"/>
         <source>Enter the street</source>
-        <translation type="unfinished">Enter the street</translation>
+        <translation>Wprowadź ulicę</translation>
     </message>
     <message>
         <location line="+31"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="+31"/>
         <source>Group Name</source>
-        <translation type="unfinished">Group Name</translation>
+        <translation>Nazwa grupy</translation>
     </message>
     <message>
         <location line="+12"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="+12"/>
         <source>Group Information</source>
-        <translation type="unfinished">Group Information</translation>
+        <translation>Informacje o grupie</translation>
     </message>
     <message>
         <location line="+8"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountEditor.qml" line="+8"/>
         <source>Groups</source>
-        <translation type="unfinished">Groups</translation>
+        <translation>Grupy</translation>
     </message>
 </context>
 <context>
@@ -190,7 +190,7 @@
         <location filename="../../../Bin/web/src/AccountFilterComboBox.qml" line="+42"/>
         <location filename="../../../Qml/Include/prolifeqml/AccountFilterComboBox.qml" line="+42"/>
         <source>All customers</source>
-        <translation type="unfinished">All customers</translation>
+        <translation>Wszyscy klienci</translation>
     </message>
 </context>
 <context>
@@ -198,7 +198,7 @@
     <message>
         <location filename="../../../Bin/web/src/imtauthgui/AdministrationUi.qml" line="+12"/>
         <source>Administration</source>
-        <translation type="unfinished">Administration</translation>
+        <translation>Administracja</translation>
     </message>
 </context>
 <context>
@@ -207,19 +207,19 @@
         <location filename="../../../Bin/web/src/imtauthgui/AdministrationView.qml" line="+44"/>
         <location line="+99"/>
         <source>Roles</source>
-        <translation type="unfinished">Roles</translation>
+        <translation>Role</translation>
     </message>
     <message>
         <location line="-94"/>
         <location line="+102"/>
         <source>Users</source>
-        <translation type="unfinished">Users</translation>
+        <translation>Użytkownicy</translation>
     </message>
     <message>
         <location line="-97"/>
         <location line="+105"/>
         <source>Groups</source>
-        <translation type="unfinished">Groups</translation>
+        <translation>Grupy</translation>
     </message>
 </context>
 <context>
@@ -227,42 +227,42 @@
     <message>
         <location filename="../../../Bin/web/src/imtgui/Application/ApplicationMain.qml" line="+84"/>
         <source>Try connecting to authorization server ...</source>
-        <translation type="unfinished">Try connecting to authorization server ...</translation>
+        <translation>Próba połączenia z serwerem autoryzacji ...</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Authorization server connection error</source>
-        <translation type="unfinished">Authorization server connection error</translation>
+        <translation>Błąd połączenia z serwerem autoryzacji</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Try connecting to </source>
-        <translation type="unfinished">Try connecting to </translation>
+        <translation>Próba połączenia z </translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Server connection error</source>
-        <translation type="unfinished">Server connection error</translation>
+        <translation>Błąd połączenia z serwerem</translation>
     </message>
     <message>
         <location line="+229"/>
         <source>Network</source>
-        <translation type="unfinished">Network</translation>
+        <translation>Sieć</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>General</source>
-        <translation type="unfinished">General</translation>
+        <translation>Ogólne</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>About</source>
-        <translation type="unfinished">About</translation>
+        <translation>O programie</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>PAT Tokens</source>
-        <translation type="unfinished">PAT Tokens</translation>
+        <translation>Tokeny PAT</translation>
     </message>
 </context>
 <context>
@@ -308,7 +308,7 @@
         <location line="+242"/>
         <location line="+130"/>
         <source>Server</source>
-        <translation type="unfinished">Server</translation>
+        <translation>Serwer</translation>
     </message>
     <message>
         <location line="-418"/>
@@ -337,7 +337,7 @@
         <location line="+152"/>
         <location line="+66"/>
         <source>Settings</source>
-        <translation type="unfinished">Settings</translation>
+        <translation>Ustawienia</translation>
     </message>
     <message>
         <location line="-336"/>
@@ -361,7 +361,7 @@
         <location line="+242"/>
         <location line="+134"/>
         <source>Backup</source>
-        <translation type="unfinished">Backup</translation>
+        <translation>Kopia zapasowa</translation>
     </message>
     <message>
         <location line="-374"/>
@@ -385,7 +385,7 @@
         <location line="+242"/>
         <location line="+134"/>
         <source>Database</source>
-        <translation type="unfinished">Database</translation>
+        <translation>Baza danych</translation>
     </message>
     <message>
         <location line="-346"/>
@@ -409,7 +409,7 @@
         <location line="+242"/>
         <location line="+132"/>
         <source>Backup Folder</source>
-        <translation type="unfinished">Backup Folder</translation>
+        <translation>Folder kopii zapasowych</translation>
     </message>
     <message>
         <location line="-376"/>
@@ -433,7 +433,7 @@
         <location line="+242"/>
         <location line="+134"/>
         <source>Scheduler</source>
-        <translation type="unfinished">Scheduler</translation>
+        <translation>Harmonogram</translation>
     </message>
     <message>
         <location line="-46"/>
@@ -470,7 +470,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-300"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+84"/>
         <source>Language</source>
-        <translation type="unfinished">Language</translation>
+        <translation>Język</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -479,7 +479,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-2"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-2"/>
         <source>General</source>
-        <translation type="unfinished">General</translation>
+        <translation>Ogólne</translation>
     </message>
     <message>
         <location line="-128"/>
@@ -488,7 +488,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-120"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-10"/>
         <source>Light</source>
-        <translation type="unfinished">Light</translation>
+        <translation>Jasny</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -497,7 +497,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>Dark</source>
-        <translation type="unfinished">Dark</translation>
+        <translation>Ciemny</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -520,7 +520,7 @@
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <location line="+158"/>
         <source>Products</source>
-        <translation type="unfinished">Products</translation>
+        <translation>Produkty</translation>
     </message>
     <message>
         <location line="-162"/>
@@ -529,7 +529,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-48"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-156"/>
         <source>Accounts</source>
-        <translation type="unfinished">Accounts</translation>
+        <translation>Konta</translation>
     </message>
     <message>
         <location line="-6"/>
@@ -547,7 +547,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+110"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+212"/>
         <source>Account Name</source>
-        <translation type="unfinished">Account Name</translation>
+        <translation>Nazwa konta</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -566,7 +566,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>Account Description</source>
-        <translation type="unfinished">Account Description</translation>
+        <translation>Opis konta</translation>
     </message>
     <message>
         <location line="+38"/>
@@ -629,7 +629,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-2"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+8"/>
         <source>Software</source>
-        <translation type="unfinished">Software</translation>
+        <translation>Oprogramowanie</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -661,7 +661,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+16"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+8"/>
         <source>Hardware</source>
-        <translation type="unfinished">Hardware</translation>
+        <translation>Sprzęt</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -911,7 +911,7 @@
         <location line="+36"/>
         <location line="+6"/>
         <source>Remove</source>
-        <translation type="unfinished">Remove</translation>
+        <translation>Usuń</translation>
     </message>
     <message>
         <location line="+54"/>
@@ -946,7 +946,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+4"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+4"/>
         <source>Order</source>
-        <translation type="unfinished">Order</translation>
+        <translation>Zamówienie</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -1079,7 +1079,7 @@
         <location line="+20"/>
         <location line="+10"/>
         <source>New</source>
-        <translation type="unfinished">New</translation>
+        <translation>Nowy</translation>
     </message>
     <message>
         <location line="-90"/>
@@ -1123,7 +1123,7 @@
         <location line="+22"/>
         <location line="+52"/>
         <source>Edit</source>
-        <translation type="unfinished">Edit</translation>
+        <translation>Edytuj</translation>
     </message>
     <message>
         <location line="-122"/>
@@ -1147,7 +1147,7 @@
         <location line="+20"/>
         <location line="+10"/>
         <source>Close</source>
-        <translation type="unfinished">Close</translation>
+        <translation>Zamknij</translation>
     </message>
     <message>
         <location line="-44"/>
@@ -1171,34 +1171,34 @@
         <location line="+20"/>
         <location line="+10"/>
         <source>Save</source>
-        <translation type="unfinished">Save</translation>
+        <translation>Zapisz</translation>
     </message>
     <message>
         <location filename="../../../Include/prolifegql/CDeviceChangeGeneratorComp.cpp" line="+149"/>
         <source>Production Status</source>
-        <translation type="unfinished">Production Status</translation>
+        <translation>Status produkcji</translation>
     </message>
     <message>
         <location line="-28"/>
         <source>Device Type</source>
-        <translation type="unfinished">Device Type</translation>
+        <translation>Typ urządzenia</translation>
     </message>
     <message>
         <location line="-7"/>
         <source>MAC-Address</source>
-        <translation type="unfinished">MAC-Address</translation>
+        <translation>Adres MAC</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Hardware Configuration</source>
-        <translation type="unfinished">Hardware Configuration</translation>
+        <translation>Konfiguracja sprzętu</translation>
     </message>
     <message>
         <location line="+7"/>
         <location filename="../../../Include/prolifegql/CLicenseChangeGeneratorComp.cpp" line="+6"/>
         <location filename="../../../Include/prolifegql/COrderChangeGeneratorComp.cpp" line="+44"/>
         <source>Order-ID</source>
-        <translation type="unfinished">Order-ID</translation>
+        <translation>ID zamówienia</translation>
     </message>
     <message>
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeClient/CProLifeClient.cpp" line="-238"/>
@@ -1225,7 +1225,7 @@
         <location line="+42"/>
         <location line="+110"/>
         <source>Description</source>
-        <translation type="unfinished">Description</translation>
+        <translation>Opis</translation>
     </message>
     <message>
         <location line="-342"/>
@@ -1259,7 +1259,7 @@
         <location line="+38"/>
         <location line="+82"/>
         <source>Added</source>
-        <translation type="unfinished">Added</translation>
+        <translation>Dodano</translation>
     </message>
     <message>
         <location line="-378"/>
@@ -1301,7 +1301,7 @@
         <location filename="../../../Include/prolifegql/CCustomerChangeGeneratorComp.cpp" line="-12"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-160"/>
         <source>Customer-ID</source>
-        <translation type="unfinished">Customer-ID</translation>
+        <translation>ID klienta</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -1324,7 +1324,7 @@
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+10"/>
         <location line="+120"/>
         <source>Article</source>
-        <translation type="unfinished">Article</translation>
+        <translation>Artykuł</translation>
     </message>
     <message>
         <location line="-116"/>
@@ -1338,7 +1338,7 @@
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-116"/>
         <location line="+130"/>
         <source>Hardware-ID</source>
-        <translation type="unfinished">Hardware-ID</translation>
+        <translation>ID sprzętu</translation>
     </message>
     <message>
         <location line="-132"/>
@@ -1348,7 +1348,7 @@
         <location filename="../../../Include/prolifegql/CDeviceChangeGeneratorComp.cpp" line="-35"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-128"/>
         <source>Serial Number</source>
-        <translation type="unfinished">Serial Number</translation>
+        <translation>Numer seryjny</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1367,7 +1367,7 @@
         <location line="+38"/>
         <location line="+80"/>
         <source>Delivery-ID</source>
-        <translation type="unfinished">Delivery-ID</translation>
+        <translation>ID dostawy</translation>
     </message>
     <message>
         <location line="-120"/>
@@ -1387,7 +1387,7 @@
         <location line="+38"/>
         <location line="+80"/>
         <source>Purchase Order-ID</source>
-        <translation type="unfinished">Purchase Order-ID</translation>
+        <translation>ID zamówienia zakupu</translation>
     </message>
     <message>
         <location line="-114"/>
@@ -1421,7 +1421,7 @@
         <location line="+38"/>
         <location line="+82"/>
         <source>Last Modified</source>
-        <translation type="unfinished">Last Modified</translation>
+        <translation>Ostatnia modyfikacja</translation>
     </message>
     <message>
         <location line="-338"/>
@@ -1449,7 +1449,7 @@
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-10"/>
         <location line="+6"/>
         <source>Bind</source>
-        <translation type="unfinished">Bind</translation>
+        <translation>Powiąż</translation>
     </message>
     <message>
         <location line="-18"/>
@@ -1468,7 +1468,7 @@
         <location line="+200"/>
         <location line="+14"/>
         <source>Create License File</source>
-        <translation type="unfinished">Create License File</translation>
+        <translation>Utwórz plik licencji</translation>
     </message>
     <message>
         <location line="-210"/>
@@ -1482,7 +1482,7 @@
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-36"/>
         <location line="+120"/>
         <source>Name</source>
-        <translation type="unfinished">Name</translation>
+        <translation>Nazwa</translation>
     </message>
     <message>
         <location line="+46"/>
@@ -1492,7 +1492,7 @@
         <location filename="../../../Include/prolifegql/CLicenseChangeGeneratorComp.cpp" line="-12"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-372"/>
         <source>Product-ID</source>
-        <translation type="unfinished">Product-ID</translation>
+        <translation>ID produktu</translation>
     </message>
     <message>
         <location line="-154"/>
@@ -1511,7 +1511,7 @@
         <location line="+38"/>
         <location line="+80"/>
         <source>Customer</source>
-        <translation type="unfinished">Customer</translation>
+        <translation>Klient</translation>
     </message>
     <message>
         <location line="-94"/>
@@ -1540,7 +1540,7 @@
         <location line="+48"/>
         <location line="+72"/>
         <source>Status</source>
-        <translation type="unfinished">Status</translation>
+        <translation>Status</translation>
     </message>
     <message>
         <location line="-34"/>
@@ -1554,7 +1554,7 @@
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-32"/>
         <location line="+62"/>
         <source>Orders</source>
-        <translation type="unfinished">Orders</translation>
+        <translation>Zamówienia</translation>
     </message>
     <message>
         <location line="+182"/>
@@ -1563,7 +1563,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-224"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-224"/>
         <source>Licenses</source>
-        <translation type="unfinished">Licenses</translation>
+        <translation>Licencje</translation>
     </message>
     <message>
         <location line="-272"/>
@@ -1572,7 +1572,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+150"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+144"/>
         <source>Customers</source>
-        <translation type="unfinished">Customers</translation>
+        <translation>Klienci</translation>
     </message>
     <message>
         <location line="+234"/>
@@ -1726,7 +1726,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>Category</source>
-        <translation type="unfinished">Category</translation>
+        <translation>Kategoria</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -1735,7 +1735,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+14"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+10"/>
         <source>Add feature</source>
-        <translation type="unfinished">Add feature</translation>
+        <translation>Dodaj funkcję</translation>
     </message>
     <message>
         <location line="+26"/>
@@ -1822,7 +1822,7 @@
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-4"/>
         <location line="+6"/>
         <source>License</source>
-        <translation type="unfinished">License</translation>
+        <translation>Licencja</translation>
     </message>
     <message>
         <location line="-50"/>
@@ -1840,7 +1840,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-286"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+90"/>
         <source>DB Settings</source>
-        <translation type="unfinished">DB Settings</translation>
+        <translation>Ustawienia bazy danych</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -1868,7 +1868,7 @@
         <location line="+10"/>
         <location line="+18"/>
         <source>Duplicate</source>
-        <translation type="unfinished">Duplicate</translation>
+        <translation>Duplikuj</translation>
     </message>
     <message>
         <location line="+20"/>
@@ -1882,7 +1882,7 @@
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-48"/>
         <location line="+88"/>
         <source>Open</source>
-        <translation type="unfinished">Open</translation>
+        <translation>Otwórz</translation>
     </message>
     <message>
         <location line="-48"/>
@@ -1901,7 +1901,7 @@
         <location line="+20"/>
         <location line="+108"/>
         <source>Import</source>
-        <translation type="unfinished">Import</translation>
+        <translation>Importuj</translation>
     </message>
     <message>
         <location line="-130"/>
@@ -1920,7 +1920,7 @@
         <location line="+20"/>
         <location line="+98"/>
         <source>Export</source>
-        <translation type="unfinished">Export</translation>
+        <translation>Eksportuj</translation>
     </message>
     <message>
         <location line="-192"/>
@@ -1990,7 +1990,7 @@
         <location line="+326"/>
         <location line="+120"/>
         <source>Product</source>
-        <translation type="unfinished">Product</translation>
+        <translation>Produkt</translation>
     </message>
     <message>
         <location line="-320"/>
@@ -1999,7 +1999,7 @@
         <location filename="../../../AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-468"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="-374"/>
         <source>License Name</source>
-        <translation type="unfinished">License Name</translation>
+        <translation>Nazwa licencji</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -2009,7 +2009,7 @@
         <location filename="../../../Include/prolifegql/CLicenseChangeGeneratorComp.cpp" line="+29"/>
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+2"/>
         <source>License-ID</source>
-        <translation type="unfinished">License-ID</translation>
+        <translation>ID licencji</translation>
     </message>
     <message>
         <location line="-152"/>
@@ -2025,7 +2025,7 @@
         <location filename="../../../ProLife/AuxInclude/Qt6_VC17_x64/GeneratedFiles/ProLifeSettingsPlugin/CProLifeSettingsPlugin.cpp" line="+266"/>
         <location line="+118"/>
         <source>Project</source>
-        <translation type="unfinished">Project</translation>
+        <translation>Projekt</translation>
     </message>
     <message>
         <location line="+246"/>
@@ -2060,17 +2060,17 @@
     <message>
         <location line="+55"/>
         <source>City</source>
-        <translation type="unfinished">City</translation>
+        <translation>Miasto</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Country</source>
-        <translation type="unfinished">Country</translation>
+        <translation>Kraj</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Street</source>
-        <translation type="unfinished">Street</translation>
+        <translation>Ulica</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -2080,12 +2080,12 @@
     <message>
         <location filename="../../../Include/prolifegql/CLicenseChangeGeneratorComp.cpp" line="+45"/>
         <source>Expiration</source>
-        <translation type="unfinished">Expiration</translation>
+        <translation>Wygaśnięcie</translation>
     </message>
     <message>
         <location filename="../../../Include/prolifegql/COrderChangeGeneratorComp.cpp" line="-7"/>
         <source>Order Customer</source>
-        <translation type="unfinished">Order Customer</translation>
+        <translation>Klient zamówienia</translation>
     </message>
 </context>
 <context>
@@ -2093,12 +2093,12 @@
     <message>
         <location filename="../../../Bin/web/src/imtauthgui/AuthorizationController.qml" line="+323"/>
         <source>The user has been successfully registered</source>
-        <translation type="unfinished">The user has been successfully registered</translation>
+        <translation>Użytkownik został pomyślnie zarejestrowany</translation>
     </message>
     <message>
         <location line="+21"/>
         <source>Password changed successfully</source>
-        <translation type="unfinished">Password changed successfully</translation>
+        <translation>Hasło zostało pomyślnie zmienione</translation>
     </message>
 </context>
 <context>
@@ -2106,60 +2106,60 @@
     <message>
         <location filename="../../../Bin/web/src/imtauthgui/AuthorizationPage.qml" line="+152"/>
         <source>Welcome</source>
-        <translation type="unfinished">Welcome</translation>
+        <translation>Witamy</translation>
     </message>
     <message>
         <location line="-105"/>
         <location line="+147"/>
         <location line="+260"/>
         <source>Login</source>
-        <translation type="unfinished">Login</translation>
+        <translation>Zaloguj się</translation>
     </message>
     <message>
         <location line="-302"/>
         <source>Welcome to</source>
-        <translation type="unfinished">Welcome to</translation>
+        <translation>Witamy w</translation>
     </message>
     <message>
         <location line="+60"/>
         <source>Enter the login</source>
-        <translation type="unfinished">Enter the login</translation>
+        <translation>Wprowadź login</translation>
     </message>
     <message>
         <location line="+35"/>
         <source>Password</source>
-        <translation type="unfinished">Password</translation>
+        <translation>Hasło</translation>
     </message>
     <message>
         <location line="+18"/>
         <source>Enter the password</source>
-        <translation type="unfinished">Enter the password</translation>
+        <translation>Wprowadź hasło</translation>
     </message>
     <message>
         <location line="+71"/>
         <source>Password recovery</source>
-        <translation type="unfinished">Password recovery</translation>
+        <translation>Odzyskiwanie hasła</translation>
     </message>
     <message>
         <location line="+35"/>
         <source>Remember me</source>
-        <translation type="unfinished">Remember me</translation>
+        <translation>Zapamiętaj mnie</translation>
     </message>
     <message>
         <location line="+20"/>
         <location line="+93"/>
         <source>Register</source>
-        <translation type="unfinished">Register</translation>
+        <translation>Zarejestruj się</translation>
     </message>
     <message>
         <location line="-9"/>
         <source>User Registration</source>
-        <translation type="unfinished">User Registration</translation>
+        <translation>Rejestracja użytkownika</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Close</source>
-        <translation type="unfinished">Close</translation>
+        <translation>Zamknij</translation>
     </message>
 </context>
 <context>
@@ -2167,207 +2167,207 @@
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Inputs/Calendar.qml" line="+70"/>
         <source>January</source>
-        <translation type="unfinished">January</translation>
+        <translation>Styczeń</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>February</source>
-        <translation type="unfinished">February</translation>
+        <translation>Luty</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>March</source>
-        <translation type="unfinished">March</translation>
+        <translation>Marzec</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>April</source>
-        <translation type="unfinished">April</translation>
+        <translation>Kwiecień</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>May</source>
-        <translation type="unfinished">May</translation>
+        <translation>Maj</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>June</source>
-        <translation type="unfinished">June</translation>
+        <translation>Czerwiec</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>July</source>
-        <translation type="unfinished">July</translation>
+        <translation>Lipiec</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>August</source>
-        <translation type="unfinished">August</translation>
+        <translation>Sierpień</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>September</source>
-        <translation type="unfinished">September</translation>
+        <translation>Wrzesień</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>October</source>
-        <translation type="unfinished">October</translation>
+        <translation>Październik</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>November</source>
-        <translation type="unfinished">November</translation>
+        <translation>Listopad</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>December</source>
-        <translation type="unfinished">December</translation>
+        <translation>Grudzień</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Январь</source>
-        <translation type="unfinished">Январь</translation>
+        <translation>Styczeń</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Февраль</source>
-        <translation type="unfinished">Февраль</translation>
+        <translation>Luty</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Март</source>
-        <translation type="unfinished">Март</translation>
+        <translation>Marzec</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Апрель</source>
-        <translation type="unfinished">Апрель</translation>
+        <translation>Kwiecień</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Май</source>
-        <translation type="unfinished">Май</translation>
+        <translation>Maj</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Июнь</source>
-        <translation type="unfinished">Июнь</translation>
+        <translation>Czerwiec</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Июль</source>
-        <translation type="unfinished">Июль</translation>
+        <translation>Lipiec</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Август</source>
-        <translation type="unfinished">Август</translation>
+        <translation>Sierpień</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Сентябрь</source>
-        <translation type="unfinished">Сентябрь</translation>
+        <translation>Wrzesień</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Октябрь</source>
-        <translation type="unfinished">Октябрь</translation>
+        <translation>Październik</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Ноябрь</source>
-        <translation type="unfinished">Ноябрь</translation>
+        <translation>Listopad</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Декабрь</source>
-        <translation type="unfinished">Декабрь</translation>
+        <translation>Grudzień</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Пн</source>
-        <translation type="unfinished">Пн</translation>
+        <translation>Pn</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Вт</source>
-        <translation type="unfinished">Вт</translation>
+        <translation>Wt</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Ср</source>
-        <translation type="unfinished">Ср</translation>
+        <translation>Śr</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Чт</source>
-        <translation type="unfinished">Чт</translation>
+        <translation>Cz</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Пт</source>
-        <translation type="unfinished">Пт</translation>
+        <translation>Pt</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Сб</source>
-        <translation type="unfinished">Сб</translation>
+        <translation>So</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Вс</source>
-        <translation type="unfinished">Вс</translation>
+        <translation>Nd</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Mo</source>
-        <translation type="unfinished">Mo</translation>
+        <translation>Pn</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Tu</source>
-        <translation type="unfinished">Tu</translation>
+        <translation>Wt</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>We</source>
-        <translation type="unfinished">We</translation>
+        <translation>Śr</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Th</source>
-        <translation type="unfinished">Th</translation>
+        <translation>Cz</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Fr</source>
-        <translation type="unfinished">Fr</translation>
+        <translation>Pt</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Sa</source>
-        <translation type="unfinished">Sa</translation>
+        <translation>So</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Su</source>
-        <translation type="unfinished">Su</translation>
+        <translation>Nd</translation>
     </message>
     <message>
         <location line="+19"/>
         <source>Ok</source>
-        <translation type="unfinished">Ok</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Anuluj</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Today</source>
-        <translation type="unfinished">Today</translation>
+        <translation>Dzisiaj</translation>
     </message>
 </context>
 <context>
@@ -2375,62 +2375,62 @@
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Inputs/CalendarFunctions.qml" line="+10"/>
         <source>January</source>
-        <translation type="unfinished">January</translation>
+        <translation>Styczeń</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>February</source>
-        <translation type="unfinished">February</translation>
+        <translation>Luty</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>March</source>
-        <translation type="unfinished">March</translation>
+        <translation>Marzec</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>April</source>
-        <translation type="unfinished">April</translation>
+        <translation>Kwiecień</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>May</source>
-        <translation type="unfinished">May</translation>
+        <translation>Maj</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>June</source>
-        <translation type="unfinished">June</translation>
+        <translation>Czerwiec</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>July</source>
-        <translation type="unfinished">July</translation>
+        <translation>Lipiec</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>August</source>
-        <translation type="unfinished">August</translation>
+        <translation>Sierpień</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>September</source>
-        <translation type="unfinished">September</translation>
+        <translation>Wrzesień</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>October</source>
-        <translation type="unfinished">October</translation>
+        <translation>Październik</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>November</source>
-        <translation type="unfinished">November</translation>
+        <translation>Listopad</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>December</source>
-        <translation type="unfinished">December</translation>
+        <translation>Grudzień</translation>
     </message>
 </context>
 <context>
@@ -2438,37 +2438,37 @@
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Inputs/CalendarView.qml" line="+40"/>
         <source>Mo</source>
-        <translation type="unfinished">Mo</translation>
+        <translation>Pn</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Tu</source>
-        <translation type="unfinished">Tu</translation>
+        <translation>Wt</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>We</source>
-        <translation type="unfinished">We</translation>
+        <translation>Śr</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Th</source>
-        <translation type="unfinished">Th</translation>
+        <translation>Cz</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Fr</source>
-        <translation type="unfinished">Fr</translation>
+        <translation>Pt</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Sa</source>
-        <translation type="unfinished">Sa</translation>
+        <translation>So</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Su</source>
-        <translation type="unfinished">Su</translation>
+        <translation>Nd</translation>
     </message>
 </context>
 <context>
@@ -2476,12 +2476,12 @@
     <message>
         <location filename="../../../Bin/web/src/imtauthgui/ChangePasswordDialog.qml" line="+15"/>
         <source>Save</source>
-        <translation type="unfinished">Save</translation>
+        <translation>Zapisz</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Anuluj</translation>
     </message>
 </context>
 <context>
@@ -2489,7 +2489,7 @@
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Inputs/CheckBoxMenu.qml" line="+285"/>
         <source>All</source>
-        <translation type="unfinished">All</translation>
+        <translation>Wszystkie</translation>
     </message>
 </context>
 <context>
@@ -2497,7 +2497,7 @@
     <message>
         <location filename="../../../Bin/web/src/imtgui/View/ClearableComboBoxElementView.qml" line="+75"/>
         <source>Clear</source>
-        <translation type="unfinished">Clear</translation>
+        <translation>Wyczyść</translation>
     </message>
 </context>
 <context>
@@ -2505,32 +2505,32 @@
     <message>
         <location filename="../../../Bin/web/src/imtcolgui/CollectionStructure.qml" line="+190"/>
         <source>Edit</source>
-        <translation type="unfinished">Edit</translation>
+        <translation>Edytuj</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Remove</source>
-        <translation type="unfinished">Remove</translation>
+        <translation>Usuń</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Rename</source>
-        <translation type="unfinished">Rename</translation>
+        <translation>Zmień nazwę</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Set Description</source>
-        <translation type="unfinished">Set Description</translation>
+        <translation>Ustaw opis</translation>
     </message>
     <message>
         <location line="+333"/>
         <source>This table has been modified from another computer</source>
-        <translation type="unfinished">This table has been modified from another computer</translation>
+        <translation>Ta tabela została zmodyfikowana z innego komputera</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>Update</source>
-        <translation type="unfinished">Update</translation>
+        <translation>Aktualizuj</translation>
     </message>
 </context>
 <context>
@@ -2538,42 +2538,42 @@
     <message>
         <location filename="../../../Bin/web/src/imtcolgui/CollectionStructureCommandsDelegateBase.qml" line="+47"/>
         <source>Deleting a selected element</source>
-        <translation type="unfinished">Deleting a selected element</translation>
+        <translation>Usuwanie wybranego elementu</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Remove selected item from the collection ?</source>
-        <translation type="unfinished">Remove selected item from the collection ?</translation>
+        <translation>Usunąć wybrany element z kolekcji?</translation>
     </message>
     <message>
         <location line="+134"/>
         <source>Please enter the name of the new node</source>
-        <translation type="unfinished">Please enter the name of the new node</translation>
+        <translation>Wprowadź nazwę nowego węzła</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Please enter the name of the document:</source>
-        <translation type="unfinished">Please enter the name of the document:</translation>
+        <translation>Wprowadź nazwę dokumentu:</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>Please enter the description of the document:</source>
-        <translation type="unfinished">Please enter the description of the document:</translation>
+        <translation>Wprowadź opis dokumentu:</translation>
     </message>
     <message>
         <location line="+75"/>
         <source>Rename document</source>
-        <translation type="unfinished">Rename document</translation>
+        <translation>Zmień nazwę dokumentu</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>New node</source>
-        <translation type="unfinished">New node</translation>
+        <translation>Nowy węzeł</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Set description</source>
-        <translation type="unfinished">Set description</translation>
+        <translation>Ustaw opis</translation>
     </message>
 </context>
 <context>
@@ -2581,7 +2581,7 @@
     <message>
         <location filename="../../../Bin/web/src/imtcolgui/CollectionStructureCommandsObserver.qml" line="+27"/>
         <source>Open</source>
-        <translation type="unfinished">Open</translation>
+        <translation>Otwórz</translation>
     </message>
 </context>
 <context>
@@ -2589,7 +2589,7 @@
     <message>
         <location filename="../../../Bin/web/src/imtcolgui/CollectionView.qml" line="+529"/>
         <source>Please select an item for showing additional informations</source>
-        <translation type="unfinished">Please select an item for showing additional informations</translation>
+        <translation>Wybierz element, aby wyświetlić dodatkowe informacje</translation>
     </message>
 </context>
 <context>
@@ -2597,132 +2597,132 @@
     <message>
         <location filename="../../../Bin/web/src/imtcolgui/CollectionViewCommandsDelegateBase.qml" line="+19"/>
         <source>Deleting a selected element</source>
-        <translation type="unfinished">Deleting a selected element</translation>
+        <translation>Usuwanie wybranego elementu</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Remove selected item from the collection ?</source>
-        <translation type="unfinished">Remove selected item from the collection ?</translation>
+        <translation>Usunąć wybrany element z kolekcji?</translation>
     </message>
     <message>
         <location line="+103"/>
         <source>The object has been successfully imported</source>
-        <translation type="unfinished">The object has been successfully imported</translation>
+        <translation>Obiekt został pomyślnie zaimportowany</translation>
     </message>
     <message>
         <location line="+107"/>
         <source>Duplicate</source>
-        <translation type="unfinished">Duplicate</translation>
+        <translation>Duplikuj</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Edit</source>
-        <translation type="unfinished">Edit</translation>
+        <translation>Edytuj</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Remove</source>
-        <translation type="unfinished">Remove</translation>
+        <translation>Usuń</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Rename</source>
-        <translation type="unfinished">Rename</translation>
+        <translation>Zmień nazwę</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Set Description</source>
-        <translation type="unfinished">Set Description</translation>
+        <translation>Ustaw opis</translation>
     </message>
     <message>
         <location line="+71"/>
         <source>Restore all items with the current filter ?</source>
-        <translation type="unfinished">Restore all items with the current filter ?</translation>
+        <translation>Przywrócić wszystkie elementy z bieżącym filtrem?</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Restore all data from this collection ?</source>
-        <translation type="unfinished">Restore all data from this collection ?</translation>
+        <translation>Przywrócić wszystkie dane z tej kolekcji?</translation>
     </message>
     <message>
         <location line="+51"/>
         <source>Import file</source>
-        <translation type="unfinished">Import file</translation>
+        <translation>Importuj plik</translation>
     </message>
     <message>
         <location line="+104"/>
         <source>Save file</source>
-        <translation type="unfinished">Save file</translation>
+        <translation>Zapisz plik</translation>
     </message>
     <message>
         <location line="+65"/>
         <source>Delete all items with the current filter ?</source>
-        <translation type="unfinished">Delete all items with the current filter ?</translation>
+        <translation>Usunąć wszystkie elementy z bieżącym filtrem?</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Delete all data from this collection ?</source>
-        <translation type="unfinished">Delete all data from this collection ?</translation>
+        <translation>Usunąć wszystkie dane z tej kolekcji?</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Please enter the name of the document:</source>
-        <translation type="unfinished">Please enter the name of the document:</translation>
+        <translation>Wprowadź nazwę dokumentu:</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Please enter the description of the document:</source>
-        <translation type="unfinished">Please enter the description of the document:</translation>
+        <translation>Wprowadź opis dokumentu:</translation>
     </message>
     <message>
         <location line="+73"/>
         <source>Restoring an objects</source>
-        <translation type="unfinished">Restoring an objects</translation>
+        <translation>Przywracanie obiektów</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Restore the selected objects ?</source>
-        <translation type="unfinished">Restore the selected objects ?</translation>
+        <translation>Przywrócić wybrane obiekty?</translation>
     </message>
     <message>
         <location line="+22"/>
         <source>Enter the description</source>
-        <translation type="unfinished">Enter the description</translation>
+        <translation>Wprowadź opis</translation>
     </message>
     <message>
         <location line="+22"/>
         <source>Duplicate Name</source>
-        <translation type="unfinished">Duplicate Name</translation>
+        <translation>Nazwa duplikatu</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Enter the duplicate name</source>
-        <translation type="unfinished">Enter the duplicate name</translation>
+        <translation>Wprowadź nazwę duplikatu</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>Rename document</source>
-        <translation type="unfinished">Rename document</translation>
+        <translation>Zmień nazwę dokumentu</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Enter the name</source>
-        <translation type="unfinished">Enter the name</translation>
+        <translation>Wprowadź nazwę</translation>
     </message>
     <message>
         <location line="+42"/>
         <source>Deleting elements</source>
-        <translation type="unfinished">Deleting elements</translation>
+        <translation>Usuwanie elementów</translation>
     </message>
     <message>
         <location line="+27"/>
         <source>Restoring elements</source>
-        <translation type="unfinished">Restoring elements</translation>
+        <translation>Przywracanie elementów</translation>
     </message>
     <message>
         <location line="-114"/>
         <source>Set description</source>
-        <translation type="unfinished">Set description</translation>
+        <translation>Ustaw opis</translation>
     </message>
 </context>
 <context>
@@ -2739,7 +2739,7 @@
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/+Universal/ColorDialog.qml" line="+208"/>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/ColorDialog.qml" line="+212"/>
         <source>Color</source>
-        <translation type="unfinished">Color</translation>
+        <translation>Kolor</translation>
     </message>
 </context>
 <context>
@@ -2748,25 +2748,25 @@
         <location filename="../../../Bin/Debug_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/ColorInputs.qml" line="+50"/>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/ColorInputs.qml" line="+50"/>
         <source>Hex</source>
-        <translation type="unfinished">Hex</translation>
+        <translation>Hex</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/ColorInputs.qml" line="+3"/>
         <source>RGB</source>
-        <translation type="unfinished">RGB</translation>
+        <translation>RGB</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/ColorInputs.qml" line="+3"/>
         <source>HSV</source>
-        <translation type="unfinished">HSV</translation>
+        <translation>HSV</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/ColorInputs.qml" line="+3"/>
         <source>HSL</source>
-        <translation type="unfinished">HSL</translation>
+        <translation>HSL</translation>
     </message>
 </context>
 <context>
@@ -2774,12 +2774,12 @@
     <message>
         <location filename="../../../Bin/web/src/imtgui/View/ComboBoxAddressElementView.qml" line="+13"/>
         <source>Please select an item</source>
-        <translation type="unfinished">Please select an item</translation>
+        <translation>Wybierz element</translation>
     </message>
     <message>
         <location line="+68"/>
         <source>Address</source>
-        <translation type="unfinished">Address</translation>
+        <translation>Adres</translation>
     </message>
 </context>
 <context>
@@ -2787,7 +2787,7 @@
     <message>
         <location filename="../../../Bin/web/src/imtgui/View/ComboBoxElementView.qml" line="+12"/>
         <source>Please select an item</source>
-        <translation type="unfinished">Please select an item</translation>
+        <translation>Wybierz element</translation>
     </message>
 </context>
 <context>
@@ -2795,7 +2795,7 @@
     <message>
         <location filename="../../../Bin/web/src/imtgui/View/ComboBoxGqlElementView.qml" line="+13"/>
         <source>Please select an item</source>
-        <translation type="unfinished">Please select an item</translation>
+        <translation>Wybierz element</translation>
     </message>
 </context>
 <context>
@@ -2803,7 +2803,7 @@
     <message>
         <location filename="../../../Bin/web/src/imtgui/View/ComboBoxGqlLegacyElementView.qml" line="+13"/>
         <source>Please select an item</source>
-        <translation type="unfinished">Please select an item</translation>
+        <translation>Wybierz element</translation>
     </message>
 </context>
 <context>
@@ -2811,22 +2811,22 @@
     <message>
         <location filename="../../../Bin/web/src/imtgui/Application/Configurator.qml" line="+88"/>
         <source>Apply</source>
-        <translation type="unfinished">Apply</translation>
+        <translation>Zastosuj</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Close</source>
-        <translation type="unfinished">Close</translation>
+        <translation>Zamknij</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Save all changes ?</source>
-        <translation type="unfinished">Save all changes ?</translation>
+        <translation>Zapisać wszystkie zmiany?</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Anuluj</translation>
     </message>
 </context>
 <context>
@@ -2834,7 +2834,7 @@
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Dialogs/CriticalErrorDialog.qml" line="+11"/>
         <source>Error</source>
-        <translation type="unfinished">Error</translation>
+        <translation>Błąd</translation>
     </message>
 </context>
 <context>
@@ -2843,7 +2843,7 @@
         <location filename="../../../Bin/web/src/CustomerFilterDelegate.qml" line="+9"/>
         <location filename="../../../Qml/Include/prolifeqml/CustomerFilterDelegate.qml" line="+9"/>
         <source>Customers</source>
-        <translation type="unfinished">Customers</translation>
+        <translation>Klienci</translation>
     </message>
 </context>
 <context>
@@ -2851,57 +2851,57 @@
     <message>
         <location filename="../../../Bin/web/src/imtgui/Params/DatabaseAccessSettingsEditor.qml" line="+22"/>
         <source>Database restore was successful</source>
-        <translation type="unfinished">Database restore was successful</translation>
+        <translation>Przywracanie bazy danych zakończone pomyślnie</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Error when trying to restore the database</source>
-        <translation type="unfinished">Error when trying to restore the database</translation>
+        <translation>Błąd podczas próby przywrócenia bazy danych</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Error when trying to create a database backup</source>
-        <translation type="unfinished">Error when trying to create a database backup</translation>
+        <translation>Błąd podczas próby utworzenia kopii zapasowej bazy danych</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Select backup file</source>
-        <translation type="unfinished">Select backup file</translation>
+        <translation>Wybierz plik kopii zapasowej</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Save file</source>
-        <translation type="unfinished">Save file</translation>
+        <translation>Zapisz plik</translation>
     </message>
     <message>
         <location line="+39"/>
         <source>Database name</source>
-        <translation type="unfinished">Database name</translation>
+        <translation>Nazwa bazy danych</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Host</source>
-        <translation type="unfinished">Host</translation>
+        <translation>Host</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Password</source>
-        <translation type="unfinished">Password</translation>
+        <translation>Hasło</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Port</source>
-        <translation type="unfinished">Port</translation>
+        <translation>Port</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Username</source>
-        <translation type="unfinished">Username</translation>
+        <translation>Nazwa użytkownika</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Test database connection</source>
-        <translation type="unfinished">Test database connection</translation>
+        <translation>Testuj połączenie z bazą danych</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -2911,42 +2911,42 @@
     <message>
         <location line="+17"/>
         <source>There is no connection to the database</source>
-        <translation type="unfinished">There is no connection to the database</translation>
+        <translation>Brak połączenia z bazą danych</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Test connection successfully</source>
-        <translation type="unfinished">Test connection successfully</translation>
+        <translation>Test połączenia zakończony pomyślnie</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Backup Information</source>
-        <translation type="unfinished">Backup Information</translation>
+        <translation>Informacje o kopii zapasowej</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>Backup data</source>
-        <translation type="unfinished">Backup data</translation>
+        <translation>Utwórz kopię zapasową danych</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Before performing the operation, check the connection to the server</source>
-        <translation type="unfinished">Before performing the operation, check the connection to the server</translation>
+        <translation>Przed wykonaniem operacji sprawdź połączenie z serwerem</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Backup</source>
-        <translation type="unfinished">Backup</translation>
+        <translation>Kopia zapasowa</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Restore data from backup</source>
-        <translation type="unfinished">Restore data from backup</translation>
+        <translation>Przywróć dane z kopii zapasowej</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Restore</source>
-        <translation type="unfinished">Restore</translation>
+        <translation>Przywróć</translation>
     </message>
 </context>
 <context>
@@ -2954,62 +2954,62 @@
     <message>
         <location filename="../../../Bin/web/src/imtgui/Application/DatabaseBackupController.qml" line="+22"/>
         <source>Backup Information</source>
-        <translation type="unfinished">Backup Information</translation>
+        <translation>Informacje o kopii zapasowej</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Backup data</source>
-        <translation type="unfinished">Backup data</translation>
+        <translation>Utwórz kopię zapasową danych</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Before performing the operation, check the connection to the server</source>
-        <translation type="unfinished">Before performing the operation, check the connection to the server</translation>
+        <translation>Przed wykonaniem operacji sprawdź połączenie z serwerem</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Backup</source>
-        <translation type="unfinished">Backup</translation>
+        <translation>Kopia zapasowa</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Restore data from backup</source>
-        <translation type="unfinished">Restore data from backup</translation>
+        <translation>Przywróć dane z kopii zapasowej</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Restore</source>
-        <translation type="unfinished">Restore</translation>
+        <translation>Przywróć</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Restore successful</source>
-        <translation type="unfinished">Restore successful</translation>
+        <translation>Przywracanie zakończone pomyślnie</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Database restore was successful</source>
-        <translation type="unfinished">Database restore was successful</translation>
+        <translation>Przywracanie bazy danych zakończone pomyślnie</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Error when trying to restore the database</source>
-        <translation type="unfinished">Error when trying to restore the database</translation>
+        <translation>Błąd podczas próby przywrócenia bazy danych</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Error when trying to create a database backup</source>
-        <translation type="unfinished">Error when trying to create a database backup</translation>
+        <translation>Błąd podczas próby utworzenia kopii zapasowej bazy danych</translation>
     </message>
     <message>
         <location line="+21"/>
         <source>Select backup file</source>
-        <translation type="unfinished">Select backup file</translation>
+        <translation>Wybierz plik kopii zapasowej</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Save file</source>
-        <translation type="unfinished">Save file</translation>
+        <translation>Zapisz plik</translation>
     </message>
 </context>
 <context>
@@ -3017,22 +3017,22 @@
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Inputs/DateInput.qml" line="+35"/>
         <source>Wrong date format!</source>
-        <translation type="unfinished">Wrong date format!</translation>
+        <translation>Nieprawidłowy format daty!</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Invalid month value!</source>
-        <translation type="unfinished">Invalid month value!</translation>
+        <translation>Nieprawidłowa wartość miesiąca!</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Invalid day value!</source>
-        <translation type="unfinished">Invalid day value!</translation>
+        <translation>Nieprawidłowa wartość dnia!</translation>
     </message>
     <message>
         <location line="+230"/>
         <source>Date:</source>
-        <translation type="unfinished">Date:</translation>
+        <translation>Data:</translation>
     </message>
 </context>
 <context>
@@ -3040,62 +3040,62 @@
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Inputs/DatePicker.qml" line="+28"/>
         <source>January</source>
-        <translation type="unfinished">January</translation>
+        <translation>Styczeń</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>February</source>
-        <translation type="unfinished">February</translation>
+        <translation>Luty</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>March</source>
-        <translation type="unfinished">March</translation>
+        <translation>Marzec</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>April</source>
-        <translation type="unfinished">April</translation>
+        <translation>Kwiecień</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>May</source>
-        <translation type="unfinished">May</translation>
+        <translation>Maj</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>June</source>
-        <translation type="unfinished">June</translation>
+        <translation>Czerwiec</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>July</source>
-        <translation type="unfinished">July</translation>
+        <translation>Lipiec</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>August</source>
-        <translation type="unfinished">August</translation>
+        <translation>Sierpień</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>September</source>
-        <translation type="unfinished">September</translation>
+        <translation>Wrzesień</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>October</source>
-        <translation type="unfinished">October</translation>
+        <translation>Październik</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>November</source>
-        <translation type="unfinished">November</translation>
+        <translation>Listopad</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>December</source>
-        <translation type="unfinished">December</translation>
+        <translation>Grudzień</translation>
     </message>
 </context>
 <context>
@@ -3103,13 +3103,13 @@
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Base/Decorators.qml" line="+1306"/>
         <source>Progress:</source>
-        <translation type="unfinished">Progress:</translation>
+        <translation>Postęp:</translation>
     </message>
     <message>
         <location line="+80"/>
         <location line="+1"/>
         <source>Completed</source>
-        <translation type="unfinished">Completed</translation>
+        <translation>Ukończono</translation>
     </message>
 </context>
 <context>
@@ -3124,37 +3124,37 @@
         <location line="+6"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionView.qml" line="+6"/>
         <source>None</source>
-        <translation type="unfinished">None</translation>
+        <translation>Brak</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionView.qml" line="+1"/>
         <source>Accepted</source>
-        <translation type="unfinished">Accepted</translation>
+        <translation>Zaakceptowano</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionView.qml" line="+1"/>
         <source>In Progress</source>
-        <translation type="unfinished">In Progress</translation>
+        <translation>W toku</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionView.qml" line="+1"/>
         <source>Canceled</source>
-        <translation type="unfinished">Canceled</translation>
+        <translation>Anulowano</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionView.qml" line="+1"/>
         <source>On Hold</source>
-        <translation type="unfinished">On Hold</translation>
+        <translation>Wstrzymano</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionView.qml" line="+1"/>
         <source>Finished</source>
-        <translation type="unfinished">Finished</translation>
+        <translation>Zakończono</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -3202,13 +3202,13 @@
         <location line="+22"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionView.qml" line="+22"/>
         <source>Products</source>
-        <translation type="unfinished">Products</translation>
+        <translation>Produkty</translation>
     </message>
     <message>
         <location line="+29"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionView.qml" line="+29"/>
         <source>Licenses</source>
-        <translation type="unfinished">Licenses</translation>
+        <translation>Licencje</translation>
     </message>
 </context>
 <context>
@@ -3229,19 +3229,19 @@
         <location line="+4"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+4"/>
         <source>Removing the sensor</source>
-        <translation type="unfinished">Removing the sensor</translation>
+        <translation>Usuwanie czujnika</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+1"/>
         <source>Do you really want to remove this sensor? In case of deletion, it will disappear in all orders in which it is present.</source>
-        <translation type="unfinished">Do you really want to remove this sensor? In case of deletion, it will disappear in all orders in which it is present.</translation>
+        <translation>Czy na pewno chcesz usunąć ten czujnik? W przypadku usunięcia zniknie on ze wszystkich zamówień, w których występuje.</translation>
     </message>
     <message>
         <location line="+11"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+11"/>
         <source>Warning message</source>
-        <translation type="unfinished">Warning message</translation>
+        <translation>Komunikat ostrzegawczy</translation>
     </message>
     <message>
         <location line="+136"/>
@@ -3271,7 +3271,7 @@
         <location line="+9"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+9"/>
         <source>Please save the document first</source>
-        <translation type="unfinished">Please save the document first</translation>
+        <translation>Najpierw zapisz dokument</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -3283,25 +3283,25 @@
         <location line="+23"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+23"/>
         <source>Please enter a valid MAC-Address</source>
-        <translation type="unfinished">Please enter a valid MAC-Address</translation>
+        <translation>Wprowadź prawidłowy adres MAC</translation>
     </message>
     <message>
         <location line="+52"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+52"/>
         <source>Edit</source>
-        <translation type="unfinished">Edit</translation>
+        <translation>Edytuj</translation>
     </message>
     <message>
         <location line="+8"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+8"/>
         <source>Remove</source>
-        <translation type="unfinished">Remove</translation>
+        <translation>Usuń</translation>
     </message>
     <message>
         <location line="+9"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+9"/>
         <source>Add license to sensor &apos;%1&apos;</source>
-        <translation type="unfinished">Add license to sensor &apos;%1&apos;</translation>
+        <translation>Dodaj licencję do czujnika „%1”</translation>
     </message>
     <message>
         <location line="+43"/>
@@ -3309,25 +3309,25 @@
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+43"/>
         <location line="+150"/>
         <source>No license is linked</source>
-        <translation type="unfinished">No license is linked</translation>
+        <translation>Nie powiązano żadnej licencji</translation>
     </message>
     <message>
         <location line="-144"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="-144"/>
         <source>The MAC-Address is not set</source>
-        <translation type="unfinished">The MAC-Address is not set</translation>
+        <translation>Adres MAC nie jest ustawiony</translation>
     </message>
     <message>
         <location line="+6"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+6"/>
         <source>The Serial Number is not set</source>
-        <translation type="unfinished">The Serial Number is not set</translation>
+        <translation>Numer seryjny nie jest ustawiony</translation>
     </message>
     <message>
         <location line="+6"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+6"/>
         <source>The production status must be &apos;Finished&apos;</source>
-        <translation type="unfinished">The production status must be &apos;Finished&apos;</translation>
+        <translation>Status produkcji musi być „Zakończono”</translation>
     </message>
     <message>
         <location line="+31"/>
@@ -3351,7 +3351,7 @@
         <location line="+46"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+46"/>
         <source>The license file could not be created</source>
-        <translation type="unfinished">The license file could not be created</translation>
+        <translation>Nie udało się utworzyć pliku licencji</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -3417,7 +3417,7 @@
         <location line="+60"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+60"/>
         <source>Products</source>
-        <translation type="unfinished">Products</translation>
+        <translation>Produkty</translation>
     </message>
     <message>
         <location line="+68"/>
@@ -3429,7 +3429,7 @@
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceCollectionViewCommandsDelegate.qml" line="+1"/>
         <source>Close</source>
-        <translation type="unfinished">Close</translation>
+        <translation>Zamknij</translation>
     </message>
 </context>
 <context>
@@ -3438,103 +3438,103 @@
         <location filename="../../../Bin/web/src/DeviceEditor.qml" line="+379"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="+379"/>
         <source>Device Type</source>
-        <translation type="unfinished">Device Type</translation>
+        <translation>Typ urządzenia</translation>
     </message>
     <message>
         <location line="-239"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="-239"/>
         <source>Confirm status</source>
-        <translation type="unfinished">Confirm status</translation>
+        <translation>Potwierdź status</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="+1"/>
         <source>Do you want to set the production state of the sensor to Finished ?</source>
-        <translation type="unfinished">Do you want to set the production state of the sensor to Finished ?</translation>
+        <translation>Czy chcesz ustawić status produkcji czujnika na „Zakończono”?</translation>
     </message>
     <message>
         <location line="+226"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="+226"/>
         <source>Device Information</source>
-        <translation type="unfinished">Device Information</translation>
+        <translation>Informacje o urządzeniu</translation>
     </message>
     <message>
         <location line="+21"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="+21"/>
         <source>Please select a device type</source>
-        <translation type="unfinished">Please select a device type</translation>
+        <translation>Wybierz typ urządzenia</translation>
     </message>
     <message>
         <location line="+29"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="+29"/>
         <source>Hardware Configuration</source>
-        <translation type="unfinished">Hardware Configuration</translation>
+        <translation>Konfiguracja sprzętu</translation>
     </message>
     <message>
         <location line="+5"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="+5"/>
         <source>Please select a configuration</source>
-        <translation type="unfinished">Please select a configuration</translation>
+        <translation>Wybierz konfigurację</translation>
     </message>
     <message>
         <location line="+21"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="+21"/>
         <source>Article</source>
-        <translation type="unfinished">Article</translation>
+        <translation>Artykuł</translation>
     </message>
     <message>
         <location line="+9"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="+9"/>
         <source>Description</source>
-        <translation type="unfinished">Description</translation>
+        <translation>Opis</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="+1"/>
         <source>Enter description</source>
-        <translation type="unfinished">Enter description</translation>
+        <translation>Wprowadź opis</translation>
     </message>
     <message>
         <location line="+13"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="+13"/>
         <source>Serial Number</source>
-        <translation type="unfinished">Serial Number</translation>
+        <translation>Numer seryjny</translation>
     </message>
     <message>
         <location line="+2"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="+2"/>
         <source>Enter serial number</source>
-        <translation type="unfinished">Enter serial number</translation>
+        <translation>Wprowadź numer seryjny</translation>
     </message>
     <message>
         <location line="+46"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="+46"/>
         <source>Additional Information</source>
-        <translation type="unfinished">Additional Information</translation>
+        <translation>Informacje dodatkowe</translation>
     </message>
     <message>
         <location line="+11"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="+11"/>
         <source>Order-ID</source>
-        <translation type="unfinished">Order-ID</translation>
+        <translation>ID zamówienia</translation>
     </message>
     <message>
         <location line="+16"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="+16"/>
         <source>Customer</source>
-        <translation type="unfinished">Customer</translation>
+        <translation>Klient</translation>
     </message>
     <message>
         <location line="+39"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="+39"/>
         <source>Project</source>
-        <translation type="unfinished">Project</translation>
+        <translation>Projekt</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="+1"/>
         <source>Enter the project</source>
-        <translation type="unfinished">Enter the project</translation>
+        <translation>Wprowadź projekt</translation>
     </message>
     <message>
         <location line="+14"/>
@@ -3552,7 +3552,7 @@
         <location line="+12"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="+12"/>
         <source>License Information</source>
-        <translation type="unfinished">License Information</translation>
+        <translation>Informacje o licencji</translation>
     </message>
     <message>
         <location line="+31"/>
@@ -3570,7 +3570,7 @@
         <location line="-86"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceEditor.qml" line="-86"/>
         <source>Production Status</source>
-        <translation type="unfinished">Production Status</translation>
+        <translation>Status produkcji</translation>
     </message>
 </context>
 <context>
@@ -3579,37 +3579,37 @@
         <location filename="../../../Bin/web/src/DeviceProductionStatus.qml" line="+80"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceProductionStatus.qml" line="+80"/>
         <source>None</source>
-        <translation type="unfinished">None</translation>
+        <translation>Brak</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceProductionStatus.qml" line="+1"/>
         <source>Accepted</source>
-        <translation type="unfinished">Accepted</translation>
+        <translation>Zaakceptowano</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceProductionStatus.qml" line="+1"/>
         <source>In Progress</source>
-        <translation type="unfinished">In Progress</translation>
+        <translation>W toku</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceProductionStatus.qml" line="+1"/>
         <source>Canceled</source>
-        <translation type="unfinished">Canceled</translation>
+        <translation>Anulowano</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceProductionStatus.qml" line="+1"/>
         <source>On Hold</source>
-        <translation type="unfinished">On Hold</translation>
+        <translation>Wstrzymano</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceProductionStatus.qml" line="+1"/>
         <source>Finished</source>
-        <translation type="unfinished">Finished</translation>
+        <translation>Zakończono</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -3642,19 +3642,19 @@
         <location line="+9"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceValidator.qml" line="+9"/>
         <source>MAC-Address invalid</source>
-        <translation type="unfinished">MAC-Address invalid</translation>
+        <translation>Nieprawidłowy adres MAC</translation>
     </message>
     <message>
         <location line="+8"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceValidator.qml" line="+8"/>
         <source>Please select a device type</source>
-        <translation type="unfinished">Please select a device type</translation>
+        <translation>Wybierz typ urządzenia</translation>
     </message>
     <message>
         <location line="+8"/>
         <location filename="../../../Qml/Include/prolifeqml/DeviceValidator.qml" line="+8"/>
         <source>Please select a device configuration</source>
-        <translation type="unfinished">Please select a device configuration</translation>
+        <translation>Wybierz konfigurację urządzenia</translation>
     </message>
 </context>
 <context>
@@ -3662,22 +3662,22 @@
     <message>
         <location filename="../../../Bin/web/src/imtdocgui/DocCollectionViewDelegate.qml" line="+179"/>
         <source>Select Document Type</source>
-        <translation type="unfinished">Select Document Type</translation>
+        <translation>Wybierz typ dokumentu</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Anuluj</translation>
     </message>
     <message>
         <location line="+53"/>
         <source>Please select a document type</source>
-        <translation type="unfinished">Please select a document type</translation>
+        <translation>Wybierz typ dokumentu</translation>
     </message>
 </context>
 <context>
@@ -3685,7 +3685,7 @@
     <message>
         <location filename="../../../Bin/web/src/imtdocgui/DocumentCollectionViewDelegate.qml" line="+197"/>
         <source>User</source>
-        <translation type="unfinished">User</translation>
+        <translation>Użytkownik</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -3695,57 +3695,57 @@
     <message>
         <location line="+4"/>
         <source>Active</source>
-        <translation type="unfinished">Active</translation>
+        <translation>Aktywny</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Time</source>
-        <translation type="unfinished">Time</translation>
+        <translation>Czas</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Revision Manager</source>
-        <translation type="unfinished">Revision Manager</translation>
+        <translation>Menedżer rewizji</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Set this revision</source>
-        <translation type="unfinished">Set this revision</translation>
+        <translation>Ustaw tę rewizję</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Delete revision</source>
-        <translation type="unfinished">Delete revision</translation>
+        <translation>Usuń rewizję</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Close</source>
-        <translation type="unfinished">Close</translation>
+        <translation>Zamknij</translation>
     </message>
     <message>
         <location line="+60"/>
         <source>The document revision has been successfully delete</source>
-        <translation type="unfinished">The document revision has been successfully delete</translation>
+        <translation>Rewizja dokumentu została pomyślnie usunięta</translation>
     </message>
     <message>
         <location line="+25"/>
         <source>The document revision has been successfully set</source>
-        <translation type="unfinished">The document revision has been successfully set</translation>
+        <translation>Rewizja dokumentu została pomyślnie ustawiona</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Remove revision</source>
-        <translation type="unfinished">Remove revision</translation>
+        <translation>Usuń rewizję</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Delete the selected revision ?</source>
-        <translation type="unfinished">Delete the selected revision ?</translation>
+        <translation>Usunąć wybraną rewizję?</translation>
     </message>
     <message>
         <location line="+123"/>
         <source>Description</source>
-        <translation type="unfinished">Description</translation>
+        <translation>Opis</translation>
     </message>
 </context>
 <context>
@@ -3753,7 +3753,7 @@
     <message>
         <location filename="../../../Bin/web/src/imtdocgui/DocumentHistoryDialog.qml" line="+12"/>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
 </context>
 <context>
@@ -3761,7 +3761,7 @@
     <message>
         <location filename="../../../Bin/web/src/imtdocgui/DocumentHistoryPanel.qml" line="+79"/>
         <source>History</source>
-        <translation type="unfinished">History</translation>
+        <translation>Historia</translation>
     </message>
 </context>
 <context>
@@ -3774,12 +3774,12 @@
     <message>
         <location line="+6"/>
         <source>Active</source>
-        <translation type="unfinished">Active</translation>
+        <translation>Aktywny</translation>
     </message>
     <message>
         <location line="+51"/>
         <source>There is no history for this document</source>
-        <translation type="unfinished">There is no history for this document</translation>
+        <translation>Brak historii dla tego dokumentu</translation>
     </message>
 </context>
 <context>
@@ -3787,18 +3787,18 @@
     <message>
         <location filename="../../../Bin/web/src/imtdocgui/DocumentService.qml" line="+9"/>
         <source>&lt;no name&gt;</source>
-        <translation type="unfinished">&lt;no name&gt;</translation>
+        <translation>&lt;bez nazwy&gt;</translation>
     </message>
     <message>
         <location line="+286"/>
         <source>Unable to get a model for document. Error: Document data controller is invalid</source>
-        <translation type="unfinished">Unable to get a model for document. Error: Document data controller is invalid</translation>
+        <translation>Nie można pobrać modelu dokumentu. Błąd: kontroler danych dokumentu jest nieprawidłowy</translation>
     </message>
     <message>
         <location line="+363"/>
         <location line="+54"/>
         <source>Internal error</source>
-        <translation type="unfinished">Internal error</translation>
+        <translation>Błąd wewnętrzny</translation>
     </message>
 </context>
 <context>
@@ -3806,7 +3806,7 @@
     <message>
         <location filename="../../../Bin/web/src/imtdocgui/DocumentServiceBase.qml" line="+100"/>
         <source>&lt;no name&gt;</source>
-        <translation type="unfinished">&lt;no name&gt;</translation>
+        <translation>&lt;bez nazwy&gt;</translation>
     </message>
 </context>
 <context>
@@ -3814,7 +3814,7 @@
     <message>
         <location filename="../../../Bin/web/src/imtdocgui/DocumentWorkspaceCommandsDelegate.qml" line="+12"/>
         <source>Document history</source>
-        <translation type="unfinished">Document history</translation>
+        <translation>Historia dokumentu</translation>
     </message>
 </context>
 <context>
@@ -3822,22 +3822,22 @@
     <message>
         <location filename="../../../Bin/web/src/imtgui/View/DoubleInputElementView.qml" line="+27"/>
         <source>Please enter a value ranging from</source>
-        <translation type="unfinished">Please enter a value ranging from</translation>
+        <translation>Wprowadź wartość z zakresu od</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>to</source>
-        <translation type="unfinished">to</translation>
+        <translation>do</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Please enter a value less than or equal to</source>
-        <translation type="unfinished">Please enter a value less than or equal to</translation>
+        <translation>Wprowadź wartość mniejszą lub równą</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Please enter a value greater than or equal to</source>
-        <translation type="unfinished">Please enter a value greater than or equal to</translation>
+        <translation>Wprowadź wartość większą lub równą</translation>
     </message>
 </context>
 <context>
@@ -3845,13 +3845,13 @@
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Dialogs/ErrorDialog.qml" line="+11"/>
         <source>Error</source>
-        <translation type="unfinished">Error</translation>
+        <translation>Błąd</translation>
     </message>
     <message>
         <location line="+8"/>
         <location line="+10"/>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
 </context>
 <context>
@@ -3859,101 +3859,101 @@
     <message>
         <location filename="../../ProLifeServer/ProLifeFeatures.h" line="+22"/>
         <source>Sensor Management</source>
-        <translation type="unfinished">Sensor Management</translation>
+        <translation>Zarządzanie czujnikami</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>View Sensor History</source>
-        <translation type="unfinished">View Sensor History</translation>
+        <translation>Wyświetlanie historii czujnika</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Unbind Sensor</source>
-        <translation type="unfinished">Unbind Sensor</translation>
+        <translation>Odłączanie czujnika</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Bind Sensor</source>
-        <translation type="unfinished">Bind Sensor</translation>
+        <translation>Powiązanie czujnika</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Create License File</source>
-        <translation type="unfinished">Create License File</translation>
+        <translation>Utwórz plik licencji</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>View All Sensors</source>
-        <translation type="unfinished">View All Sensors</translation>
+        <translation>Wyświetlanie wszystkich czujników</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Edit Sensor</source>
-        <translation type="unfinished">Edit Sensor</translation>
+        <translation>Edycja czujnika</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Change Sensor</source>
-        <translation type="unfinished">Change Sensor</translation>
+        <translation>Zmiana czujnika</translation>
     </message>
     <message>
         <location line="+7"/>
         <location line="+157"/>
         <location line="+171"/>
         <source>Change Order</source>
-        <translation type="unfinished">Change Order</translation>
+        <translation>Zmiana zamówienia</translation>
     </message>
     <message>
         <location line="-319"/>
         <source>Change Production Status</source>
-        <translation type="unfinished">Change Production Status</translation>
+        <translation>Zmiana statusu produkcji</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Change Hardware Configuration</source>
-        <translation type="unfinished">Change Hardware Configuration</translation>
+        <translation>Zmiana konfiguracji sprzętu</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Change Device Type</source>
-        <translation type="unfinished">Change Device Type</translation>
+        <translation>Zmiana typu urządzenia</translation>
     </message>
     <message>
         <location line="+9"/>
         <location line="+155"/>
         <source>Change Description</source>
-        <translation type="unfinished">Change Description</translation>
+        <translation>Zmiana opisu</translation>
     </message>
     <message>
         <location line="-146"/>
         <source>Change Serial Number</source>
-        <translation type="unfinished">Change Serial Number</translation>
+        <translation>Zmiana numeru seryjnego</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Change Mac Address</source>
-        <translation type="unfinished">Change Mac Address</translation>
+        <translation>Zmiana adresu MAC</translation>
     </message>
     <message>
         <location line="+9"/>
         <location line="+274"/>
         <source>Change Project</source>
-        <translation type="unfinished">Change Project</translation>
+        <translation>Zmiana projektu</translation>
     </message>
     <message>
         <location line="-263"/>
         <source>Remove Sensor</source>
-        <translation type="unfinished">Remove Sensor</translation>
+        <translation>Usuwanie czujnika</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Add Sensor</source>
-        <translation type="unfinished">Add Sensor</translation>
+        <translation>Dodawanie czujnika</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>View Sensors</source>
-        <translation type="unfinished">View Sensors</translation>
+        <translation>Wyświetlanie czujników</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -3968,382 +3968,382 @@
     <message>
         <location line="+12"/>
         <source>Order Management</source>
-        <translation type="unfinished">Order Management</translation>
+        <translation>Zarządzanie zamówieniami</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>View Order History</source>
-        <translation type="unfinished">View Order History</translation>
+        <translation>Wyświetlanie historii zamówienia</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>View All Orders</source>
-        <translation type="unfinished">View All Orders</translation>
+        <translation>Wyświetlanie wszystkich zamówień</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Edit Order</source>
-        <translation type="unfinished">Edit Order</translation>
+        <translation>Edycja zamówienia</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Change Order Products</source>
-        <translation type="unfinished">Change Order Products</translation>
+        <translation>Zmiana produktów zamówienia</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Change Order Status</source>
-        <translation type="unfinished">Change Order Status</translation>
+        <translation>Zmiana statusu zamówienia</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Change Customer</source>
-        <translation type="unfinished">Change Customer</translation>
+        <translation>Zmiana klienta</translation>
     </message>
     <message>
         <location line="+18"/>
         <source>Change Purchase Order-ID</source>
-        <translation type="unfinished">Change Purchase Order-ID</translation>
+        <translation>Zmiana ID zamówienia zakupu</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Change Delivery-ID</source>
-        <translation type="unfinished">Change Delivery-ID</translation>
+        <translation>Zmiana ID dostawy</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Remove Order</source>
-        <translation type="unfinished">Remove Order</translation>
+        <translation>Usuwanie zamówienia</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Add Order</source>
-        <translation type="unfinished">Add Order</translation>
+        <translation>Dodawanie zamówienia</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>View Orders</source>
-        <translation type="unfinished">View Orders</translation>
+        <translation>Wyświetlanie zamówień</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>License Management</source>
-        <translation type="unfinished">License Management</translation>
+        <translation>Zarządzanie licencjami</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>View License History</source>
-        <translation type="unfinished">View License History</translation>
+        <translation>Wyświetlanie historii licencji</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>View All Licenses</source>
-        <translation type="unfinished">View All Licenses</translation>
+        <translation>Wyświetlanie wszystkich licencji</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Edit License</source>
-        <translation type="unfinished">Edit License</translation>
+        <translation>Edycja licencji</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Change License</source>
-        <translation type="unfinished">Change License</translation>
+        <translation>Zmiana licencji</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Change License Number</source>
-        <translation type="unfinished">Change License Number</translation>
+        <translation>Zmiana numeru licencji</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Change Expiration</source>
-        <translation type="unfinished">Change Expiration</translation>
+        <translation>Zmiana wygaśnięcia</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Change Product Licenses</source>
-        <translation type="unfinished">Change Product Licenses</translation>
+        <translation>Zmiana licencji produktu</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Change Product</source>
-        <translation type="unfinished">Change Product</translation>
+        <translation>Zmiana produktu</translation>
     </message>
     <message>
         <location line="+29"/>
         <source>Remove License</source>
-        <translation type="unfinished">Remove License</translation>
+        <translation>Usuwanie licencji</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Add License</source>
-        <translation type="unfinished">Add License</translation>
+        <translation>Dodawanie licencji</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>View Licenses</source>
-        <translation type="unfinished">View Licenses</translation>
+        <translation>Wyświetlanie licencji</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>Account Management</source>
-        <translation type="unfinished">Account Management</translation>
+        <translation>Zarządzanie kontami</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>View Account History</source>
-        <translation type="unfinished">View Account History</translation>
+        <translation>Wyświetlanie historii konta</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Edit Account</source>
-        <translation type="unfinished">Edit Account</translation>
+        <translation>Edycja konta</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Change Account</source>
-        <translation type="unfinished">Change Account</translation>
+        <translation>Zmiana konta</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Change Account Groups</source>
-        <translation type="unfinished">Change Account Groups</translation>
+        <translation>Zmiana grup konta</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Change Company Address</source>
-        <translation type="unfinished">Change Company Address</translation>
+        <translation>Zmiana adresu firmy</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Change Account Email</source>
-        <translation type="unfinished">Change Account Email</translation>
+        <translation>Zmiana adresu e-mail konta</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Change Account Description</source>
-        <translation type="unfinished">Change Account Description</translation>
+        <translation>Zmiana opisu konta</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Change Account Name</source>
-        <translation type="unfinished">Change Account Name</translation>
+        <translation>Zmiana nazwy konta</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Change Customer-ID</source>
-        <translation type="unfinished">Change Customer-ID</translation>
+        <translation>Zmiana ID klienta</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Remove Account</source>
-        <translation type="unfinished">Remove Account</translation>
+        <translation>Usuwanie konta</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Add Account</source>
-        <translation type="unfinished">Add Account</translation>
+        <translation>Dodawanie konta</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>View Accounts</source>
-        <translation type="unfinished">View Accounts</translation>
+        <translation>Wyświetlanie kont</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>View All Accounts</source>
-        <translation type="unfinished">View All Accounts</translation>
+        <translation>Wyświetlanie wszystkich kont</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>Search management</source>
-        <translation type="unfinished">Search management</translation>
+        <translation>Zarządzanie wyszukiwaniem</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>View search page</source>
-        <translation type="unfinished">View search page</translation>
+        <translation>Wyświetlanie strony wyszukiwania</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Revision Management</source>
-        <translation type="unfinished">Revision Management</translation>
+        <translation>Zarządzanie rewizjami</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Delete Revision</source>
-        <translation type="unfinished">Delete Revision</translation>
+        <translation>Usuwanie rewizji</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Export Revision</source>
-        <translation type="unfinished">Export Revision</translation>
+        <translation>Eksportowanie rewizji</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>View Revisions</source>
-        <translation type="unfinished">View Revisions</translation>
+        <translation>Wyświetlanie rewizji</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Backup Revision</source>
-        <translation type="unfinished">Backup Revision</translation>
+        <translation>Tworzenie kopii zapasowej rewizji</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Restore Revision</source>
-        <translation type="unfinished">Restore Revision</translation>
+        <translation>Przywracanie rewizji</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Administration</source>
-        <translation type="unfinished">Administration</translation>
+        <translation>Administracja</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Edit Administration</source>
-        <translation type="unfinished">Edit Administration</translation>
+        <translation>Edycja administracji</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Edit Group</source>
-        <translation type="unfinished">Edit Group</translation>
+        <translation>Edycja grupy</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Change Group</source>
-        <translation type="unfinished">Change Group</translation>
+        <translation>Zmiana grupy</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Remove Group</source>
-        <translation type="unfinished">Remove Group</translation>
+        <translation>Usuwanie grupy</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Add Group</source>
-        <translation type="unfinished">Add Group</translation>
+        <translation>Dodawanie grupy</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Edit Role</source>
-        <translation type="unfinished">Edit Role</translation>
+        <translation>Edycja roli</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Change Role</source>
-        <translation type="unfinished">Change Role</translation>
+        <translation>Zmiana roli</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Remove Role</source>
-        <translation type="unfinished">Remove Role</translation>
+        <translation>Usuwanie roli</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Add Role</source>
-        <translation type="unfinished">Add Role</translation>
+        <translation>Dodawanie roli</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Edit User</source>
-        <translation type="unfinished">Edit User</translation>
+        <translation>Edycja użytkownika</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Change User</source>
-        <translation type="unfinished">Change User</translation>
+        <translation>Zmiana użytkownika</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Remove User</source>
-        <translation type="unfinished">Remove User</translation>
+        <translation>Usuwanie użytkownika</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Add User</source>
-        <translation type="unfinished">Add User</translation>
+        <translation>Dodawanie użytkownika</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>View Administration</source>
-        <translation type="unfinished">View Administration</translation>
+        <translation>Wyświetlanie administracji</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>View Group History</source>
-        <translation type="unfinished">View Group History</translation>
+        <translation>Wyświetlanie historii grupy</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>View User History</source>
-        <translation type="unfinished">View User History</translation>
+        <translation>Wyświetlanie historii użytkownika</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>View Role History</source>
-        <translation type="unfinished">View Role History</translation>
+        <translation>Wyświetlanie historii roli</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>View Groups</source>
-        <translation type="unfinished">View Groups</translation>
+        <translation>Wyświetlanie grup</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>View Users</source>
-        <translation type="unfinished">View Users</translation>
+        <translation>Wyświetlanie użytkowników</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>View Roles</source>
-        <translation type="unfinished">View Roles</translation>
+        <translation>Wyświetlanie ról</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Workspace Management</source>
-        <translation type="unfinished">Workspace Management</translation>
+        <translation>Zarządzanie obszarem roboczym</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>View Workspace</source>
-        <translation type="unfinished">View Workspace</translation>
+        <translation>Wyświetlanie obszaru roboczego</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>View workspace page</source>
-        <translation type="unfinished">View workspace page</translation>
+        <translation>Wyświetlanie strony obszaru roboczego</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>View User Actions</source>
-        <translation type="unfinished">View User Actions</translation>
+        <translation>Wyświetlanie działań użytkownika</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>View only your activity</source>
-        <translation type="unfinished">View only your activity</translation>
+        <translation>Wyświetlanie tylko własnej aktywności</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>View All User Actions</source>
-        <translation type="unfinished">View All User Actions</translation>
+        <translation>Wyświetlanie działań wszystkich użytkowników</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>View the activity of all users</source>
-        <translation type="unfinished">View the activity of all users</translation>
+        <translation>Wyświetlanie aktywności wszystkich użytkowników</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>View Analytics</source>
-        <translation type="unfinished">View Analytics</translation>
+        <translation>Wyświetlanie analityki</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>View analytics page</source>
-        <translation type="unfinished">View analytics page</translation>
+        <translation>Wyświetlanie strony analityki</translation>
     </message>
 </context>
 <context>
@@ -4365,7 +4365,7 @@
     <message>
         <location line="-368"/>
         <source>Enter the feature name</source>
-        <translation type="unfinished">Enter the feature name</translation>
+        <translation>Wprowadź nazwę funkcji</translation>
     </message>
     <message>
         <location line="+16"/>
@@ -4376,43 +4376,43 @@
     <message>
         <location line="-348"/>
         <source>Enter the feature ID</source>
-        <translation type="unfinished">Enter the feature ID</translation>
+        <translation>Wprowadź ID funkcji</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Description</source>
-        <translation type="unfinished">Description</translation>
+        <translation>Opis</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Enter the description</source>
-        <translation type="unfinished">Enter the description</translation>
+        <translation>Wprowadź opis</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Is Optional</source>
-        <translation type="unfinished">Is Optional</translation>
+        <translation>Opcjonalna</translation>
     </message>
     <message>
         <location line="+15"/>
         <location line="+316"/>
         <source>Is Permission</source>
-        <translation type="unfinished">Is Permission</translation>
+        <translation>Uprawnienie</translation>
     </message>
     <message>
         <location line="-138"/>
         <source>Dependencies</source>
-        <translation type="unfinished">Dependencies</translation>
+        <translation>Zależności</translation>
     </message>
     <message>
         <location line="+130"/>
         <source>Feature Description</source>
-        <translation type="unfinished">Feature Description</translation>
+        <translation>Opis funkcji</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Optional</source>
-        <translation type="unfinished">Optional</translation>
+        <translation>Opcjonalna</translation>
     </message>
 </context>
 <context>
@@ -4420,17 +4420,17 @@
     <message>
         <location filename="../../../Bin/web/src/imtlicgui/FeaturesDialog.qml" line="+11"/>
         <source>Select features</source>
-        <translation type="unfinished">Select features</translation>
+        <translation>Wybierz funkcje</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Add</source>
-        <translation type="unfinished">Add</translation>
+        <translation>Dodaj</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Anuluj</translation>
     </message>
     <message>
         <location line="+53"/>
@@ -4452,7 +4452,7 @@
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/+Universal/FileDialog.qml" line="+40"/>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/FileDialog.qml" line="+44"/>
         <source>Overwrite file?</source>
-        <translation type="unfinished">Overwrite file?</translation>
+        <translation>Zastąpić plik?</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -4467,8 +4467,8 @@
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/FileDialog.qml" line="+4"/>
         <source>“%1” already exists.
 Do you want to replace it?</source>
-        <translation type="unfinished">“%1” already exists.
-Do you want to replace it?</translation>
+        <translation>„%1” już istnieje.
+Czy chcesz go zastąpić?</translation>
     </message>
     <message>
         <location line="+121"/>
@@ -4482,7 +4482,7 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/+Universal/FileDialog.qml" line="+97"/>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/FileDialog.qml" line="+103"/>
         <source>File name</source>
-        <translation type="unfinished">File name</translation>
+        <translation>Nazwa pliku</translation>
     </message>
     <message>
         <location line="+14"/>
@@ -4496,7 +4496,7 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/+Universal/FileDialog.qml" line="+15"/>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/FileDialog.qml" line="+15"/>
         <source>Filter</source>
-        <translation type="unfinished">Filter</translation>
+        <translation>Filtr</translation>
     </message>
 </context>
 <context>
@@ -4504,7 +4504,7 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Dialogs/FileImportDialog.qml" line="+10"/>
         <source>Import file</source>
-        <translation type="unfinished">Import file</translation>
+        <translation>Importuj plik</translation>
     </message>
 </context>
 <context>
@@ -4512,17 +4512,17 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtgui/View/FilePickerElementView.qml" line="+12"/>
         <source>Browse...</source>
-        <translation type="unfinished">Browse...</translation>
+        <translation>Przeglądaj...</translation>
     </message>
     <message>
         <location line="+22"/>
         <source>Select a file</source>
-        <translation type="unfinished">Select a file</translation>
+        <translation>Wybierz plik</translation>
     </message>
     <message>
         <location line="+25"/>
         <source>Nothing is selected</source>
-        <translation type="unfinished">Nothing is selected</translation>
+        <translation>Nic nie wybrano</translation>
     </message>
 </context>
 <context>
@@ -4530,17 +4530,17 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtgui/Panels/FilterPanelDecorator.qml" line="+217"/>
         <source>Document State</source>
-        <translation type="unfinished">Document State</translation>
+        <translation>Stan dokumentu</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Active</source>
-        <translation type="unfinished">Active</translation>
+        <translation>Aktywny</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Disabled</source>
-        <translation type="unfinished">Disabled</translation>
+        <translation>Wyłączony</translation>
     </message>
     <message>
         <location line="+30"/>
@@ -4550,7 +4550,7 @@ Do you want to replace it?</translation>
     <message>
         <location line="+48"/>
         <source>Reset all filters</source>
-        <translation type="unfinished">Reset all filters</translation>
+        <translation>Resetuj wszystkie filtry</translation>
     </message>
 </context>
 <context>
@@ -4558,7 +4558,7 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtgui/View/FilterableComboBoxElementView.qml" line="+86"/>
         <source>Clear</source>
-        <translation type="unfinished">Clear</translation>
+        <translation>Wyczyść</translation>
     </message>
 </context>
 <context>
@@ -4575,7 +4575,7 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/+Universal/FontDialog.qml" line="+80"/>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/FontDialog.qml" line="+94"/>
         <source>Writing System</source>
-        <translation type="unfinished">Writing System</translation>
+        <translation>System pisma</translation>
     </message>
 </context>
 <context>
@@ -4584,43 +4584,43 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/Debug_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/FontDialogContent.qml" line="+30"/>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/FontDialogContent.qml" line="+30"/>
         <source>Family</source>
-        <translation type="unfinished">Family</translation>
+        <translation>Rodzina</translation>
     </message>
     <message>
         <location line="+50"/>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/FontDialogContent.qml" line="+50"/>
         <source>Style</source>
-        <translation type="unfinished">Style</translation>
+        <translation>Styl</translation>
     </message>
     <message>
         <location line="+46"/>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/FontDialogContent.qml" line="+46"/>
         <source>Size</source>
-        <translation type="unfinished">Size</translation>
+        <translation>Rozmiar</translation>
     </message>
     <message>
         <location line="+52"/>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/FontDialogContent.qml" line="+52"/>
         <source>Effects</source>
-        <translation type="unfinished">Effects</translation>
+        <translation>Efekty</translation>
     </message>
     <message>
         <location line="+15"/>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/FontDialogContent.qml" line="+15"/>
         <source>Underline</source>
-        <translation type="unfinished">Underline</translation>
+        <translation>Podkreślenie</translation>
     </message>
     <message>
         <location line="+5"/>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/FontDialogContent.qml" line="+5"/>
         <source>Strikeout</source>
-        <translation type="unfinished">Strikeout</translation>
+        <translation>Przekreślenie</translation>
     </message>
     <message>
         <location line="+9"/>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/FontDialogContent.qml" line="+9"/>
         <source>Sample</source>
-        <translation type="unfinished">Sample</translation>
+        <translation>Próbka</translation>
     </message>
 </context>
 <context>
@@ -4628,27 +4628,27 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Views/Gallery.qml" line="+86"/>
         <source>Gallery</source>
-        <translation type="unfinished">Gallery</translation>
+        <translation>Galeria</translation>
     </message>
     <message>
         <location line="+293"/>
         <source>Delete photo</source>
-        <translation type="unfinished">Delete photo</translation>
+        <translation>Usuń zdjęcie</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Are you sure you want to delete the photo?</source>
-        <translation type="unfinished">Are you sure you want to delete the photo?</translation>
+        <translation>Czy na pewno chcesz usunąć zdjęcie?</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Ok</source>
-        <translation type="unfinished">Ok</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location line="+19"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Anuluj</translation>
     </message>
 </context>
 <context>
@@ -4659,7 +4659,7 @@ Do you want to replace it?</translation>
         <location line="+34"/>
         <location line="+37"/>
         <source>Invalid user-ID</source>
-        <translation type="unfinished">Invalid user-ID</translation>
+        <translation>Nieprawidłowy ID użytkownika</translation>
     </message>
     <message>
         <location line="-101"/>
@@ -4667,33 +4667,33 @@ Do you want to replace it?</translation>
         <location line="+34"/>
         <location line="+37"/>
         <source>Invalid document-ID</source>
-        <translation type="unfinished">Invalid document-ID</translation>
+        <translation>Nieprawidłowy ID dokumentu</translation>
     </message>
     <message>
         <location line="-101"/>
         <source>Save document failed</source>
-        <translation type="unfinished">Save document failed</translation>
+        <translation>Nie udało się zapisać dokumentu</translation>
     </message>
     <message>
         <location line="+33"/>
         <source>Close document failed</source>
-        <translation type="unfinished">Close document failed</translation>
+        <translation>Nie udało się zamknąć dokumentu</translation>
     </message>
     <message>
         <location line="+34"/>
         <source>Undo failed</source>
-        <translation type="unfinished">Undo failed</translation>
+        <translation>Nie udało się cofnąć</translation>
     </message>
     <message>
         <location line="+3"/>
         <location line="+37"/>
         <source>Invalid step count</source>
-        <translation type="unfinished">Invalid step count</translation>
+        <translation>Nieprawidłowa liczba kroków</translation>
     </message>
     <message>
         <location line="-3"/>
         <source>Redo failed</source>
-        <translation type="unfinished">Redo failed</translation>
+        <translation>Nie udało się ponowić</translation>
     </message>
 </context>
 <context>
@@ -4701,7 +4701,7 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtguigql/GqlBasedDataModelController.qml" line="+104"/>
         <source>Network error</source>
-        <translation type="unfinished">Network error</translation>
+        <translation>Błąd sieci</translation>
     </message>
 </context>
 <context>
@@ -4709,7 +4709,7 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtguigql/GqlBasedDataModelProvider.qml" line="+105"/>
         <source>Network error</source>
-        <translation type="unfinished">Network error</translation>
+        <translation>Błąd sieci</translation>
     </message>
 </context>
 <context>
@@ -4717,7 +4717,7 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtguigql/GqlSdlRequestSender.qml" line="+156"/>
         <source>Network error</source>
-        <translation type="unfinished">Network error</translation>
+        <translation>Błąd sieci</translation>
     </message>
 </context>
 <context>
@@ -4725,47 +4725,47 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/GraphicsView/GraphicsView.qml" line="+1310"/>
         <source>Selection mode</source>
-        <translation type="unfinished">Selection mode</translation>
+        <translation>Tryb zaznaczania</translation>
     </message>
     <message>
         <location line="+24"/>
         <source>Edit mode</source>
-        <translation type="unfinished">Edit mode</translation>
+        <translation>Tryb edycji</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>Edit points mode</source>
-        <translation type="unfinished">Edit points mode</translation>
+        <translation>Tryb edycji punktów</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>Add points mode</source>
-        <translation type="unfinished">Add points mode</translation>
+        <translation>Tryb dodawania punktów</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>Delete points mode</source>
-        <translation type="unfinished">Delete points mode</translation>
+        <translation>Tryb usuwania punktów</translation>
     </message>
     <message>
         <location line="+111"/>
         <source>Zoom in</source>
-        <translation type="unfinished">Zoom in</translation>
+        <translation>Powiększ</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>Zoom out</source>
-        <translation type="unfinished">Zoom out</translation>
+        <translation>Pomniejsz</translation>
     </message>
     <message>
         <location line="+24"/>
         <source>Reset view</source>
-        <translation type="unfinished">Reset view</translation>
+        <translation>Resetuj widok</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Fit to view</source>
-        <translation type="unfinished">Fit to view</translation>
+        <translation>Dopasuj do widoku</translation>
     </message>
 </context>
 <context>
@@ -4774,25 +4774,25 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/HardwareProductBindingDialog.qml" line="+55"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingDialog.qml" line="+55"/>
         <source>Save</source>
-        <translation type="unfinished">Save</translation>
+        <translation>Zapisz</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingDialog.qml" line="+1"/>
         <source>Close</source>
-        <translation type="unfinished">Close</translation>
+        <translation>Zamknij</translation>
     </message>
     <message>
         <location line="+80"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingDialog.qml" line="+80"/>
         <source>Product</source>
-        <translation type="unfinished">Product</translation>
+        <translation>Produkt</translation>
     </message>
     <message>
         <location line="+16"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingDialog.qml" line="+16"/>
         <source>Please select a product</source>
-        <translation type="unfinished">Please select a product</translation>
+        <translation>Wybierz produkt</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -4816,13 +4816,13 @@ Do you want to replace it?</translation>
         <location line="+106"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingDialog.qml" line="+106"/>
         <source>Name</source>
-        <translation type="unfinished">Name</translation>
+        <translation>Nazwa</translation>
     </message>
     <message>
         <location line="+4"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingDialog.qml" line="+4"/>
         <source>Article</source>
-        <translation type="unfinished">Article</translation>
+        <translation>Artykuł</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -4840,19 +4840,19 @@ Do you want to replace it?</translation>
         <location line="+59"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingDialog.qml" line="+59"/>
         <source>Apply changes</source>
-        <translation type="unfinished">Apply changes</translation>
+        <translation>Zastosuj zmiany</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingDialog.qml" line="+1"/>
         <source>Please check the data before saving. Save changes ?</source>
-        <translation type="unfinished">Please check the data before saving. Save changes ?</translation>
+        <translation>Sprawdź dane przed zapisaniem. Zapisać zmiany?</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingDialog.qml" line="+1"/>
         <source>Please enter the project</source>
-        <translation type="unfinished">Please enter the project</translation>
+        <translation>Wprowadź projekt</translation>
     </message>
 </context>
 <context>
@@ -4867,13 +4867,13 @@ Do you want to replace it?</translation>
         <location line="+19"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingEditor.qml" line="+19"/>
         <source>Bind</source>
-        <translation type="unfinished">Bind</translation>
+        <translation>Powiąż</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingEditor.qml" line="+1"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Anuluj</translation>
     </message>
     <message>
         <location line="+21"/>
@@ -4885,13 +4885,13 @@ Do you want to replace it?</translation>
         <location line="+48"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingEditor.qml" line="+48"/>
         <source>Name</source>
-        <translation type="unfinished">Name</translation>
+        <translation>Nazwa</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingEditor.qml" line="+1"/>
         <source>Article</source>
-        <translation type="unfinished">Article</translation>
+        <translation>Artykuł</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -4915,7 +4915,7 @@ Do you want to replace it?</translation>
         <location line="+45"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductBindingEditor.qml" line="+45"/>
         <source>Products</source>
-        <translation type="unfinished">Products</translation>
+        <translation>Produkty</translation>
     </message>
 </context>
 <context>
@@ -4924,25 +4924,25 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/HardwareProductCard.qml" line="+49"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductCard.qml" line="+49"/>
         <source>MAC Address</source>
-        <translation type="unfinished">MAC Address</translation>
+        <translation>Adres MAC</translation>
     </message>
     <message>
         <location line="+4"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductCard.qml" line="+4"/>
         <source>Serial Number</source>
-        <translation type="unfinished">Serial Number</translation>
+        <translation>Numer seryjny</translation>
     </message>
     <message>
         <location line="+4"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductCard.qml" line="+4"/>
         <source>Model Type</source>
-        <translation type="unfinished">Model Type</translation>
+        <translation>Typ modelu</translation>
     </message>
     <message>
         <location line="+4"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductCard.qml" line="+4"/>
         <source>Article</source>
-        <translation type="unfinished">Article</translation>
+        <translation>Artykuł</translation>
     </message>
     <message>
         <location line="+20"/>
@@ -4963,7 +4963,7 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/HardwareProductEditor.qml" line="+143"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductEditor.qml" line="+143"/>
         <source>New Sensor</source>
-        <translation type="unfinished">New Sensor</translation>
+        <translation>Nowy czujnik</translation>
     </message>
     <message>
         <location line="+26"/>
@@ -4975,7 +4975,7 @@ Do you want to replace it?</translation>
         <location line="+30"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductEditor.qml" line="+30"/>
         <source>Hardware-ID</source>
-        <translation type="unfinished">Hardware-ID</translation>
+        <translation>ID sprzętu</translation>
     </message>
     <message>
         <location line="+15"/>
@@ -4983,31 +4983,31 @@ Do you want to replace it?</translation>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductEditor.qml" line="+15"/>
         <location line="+205"/>
         <source>MAC Address</source>
-        <translation type="unfinished">MAC Address</translation>
+        <translation>Adres MAC</translation>
     </message>
     <message>
         <location line="-205"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductEditor.qml" line="-205"/>
         <source>not specified</source>
-        <translation type="unfinished">not specified</translation>
+        <translation>nie określono</translation>
     </message>
     <message>
         <location line="+40"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductEditor.qml" line="+40"/>
         <source>Please select a sensor</source>
-        <translation type="unfinished">Please select a sensor</translation>
+        <translation>Wybierz czujnik</translation>
     </message>
     <message>
         <location line="+17"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductEditor.qml" line="+17"/>
         <source>Types</source>
-        <translation type="unfinished">Types</translation>
+        <translation>Typy</translation>
     </message>
     <message>
         <location line="+30"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductEditor.qml" line="+30"/>
         <source>Please select a type sensor</source>
-        <translation type="unfinished">Please select a type sensor</translation>
+        <translation>Wybierz typ czujnika</translation>
     </message>
     <message>
         <location line="+49"/>
@@ -5021,19 +5021,19 @@ Do you want to replace it?</translation>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductEditor.qml" line="+12"/>
         <location line="+64"/>
         <source>Serial Number</source>
-        <translation type="unfinished">Serial Number</translation>
+        <translation>Numer seryjny</translation>
     </message>
     <message>
         <location line="-63"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductEditor.qml" line="-63"/>
         <source>Enter the serial number</source>
-        <translation type="unfinished">Enter the serial number</translation>
+        <translation>Wprowadź numer seryjny</translation>
     </message>
     <message>
         <location line="+26"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductEditor.qml" line="+26"/>
         <source>Serial Number already exists</source>
-        <translation type="unfinished">Serial Number already exists</translation>
+        <translation>Numer seryjny już istnieje</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -5041,13 +5041,13 @@ Do you want to replace it?</translation>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductEditor.qml" line="+12"/>
         <location line="+32"/>
         <source>Article Number</source>
-        <translation type="unfinished">Article Number</translation>
+        <translation>Numer artykułu</translation>
     </message>
     <message>
         <location line="-21"/>
         <location filename="../../../Qml/Include/prolifeqml/HardwareProductEditor.qml" line="-21"/>
         <source>Type</source>
-        <translation type="unfinished">Type</translation>
+        <translation>Typ</translation>
     </message>
 </context>
 <context>
@@ -5055,27 +5055,27 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Inputs/InputActions.qml" line="+37"/>
         <source>Cut</source>
-        <translation type="unfinished">Cut</translation>
+        <translation>Wytnij</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Copy</source>
-        <translation type="unfinished">Copy</translation>
+        <translation>Kopiuj</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Paste</source>
-        <translation type="unfinished">Paste</translation>
+        <translation>Wklej</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Remove</source>
-        <translation type="unfinished">Remove</translation>
+        <translation>Usuń</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Select All</source>
-        <translation type="unfinished">Select All</translation>
+        <translation>Zaznacz wszystko</translation>
     </message>
 </context>
 <context>
@@ -5084,13 +5084,13 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/imtcontrols/Dialogs/InputDialog.qml" line="+20"/>
         <location line="+17"/>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location line="-16"/>
         <location line="+17"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Anuluj</translation>
     </message>
 </context>
 <context>
@@ -5098,7 +5098,7 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../ProLifeClientServer/CMake/InstallationCollectionView.qml" line="+322"/>
         <source>Save file</source>
-        <translation type="unfinished">Save file</translation>
+        <translation>Zapisz plik</translation>
     </message>
 </context>
 <context>
@@ -5113,13 +5113,13 @@ Do you want to replace it?</translation>
         <location line="+12"/>
         <location filename="../../../Qml/Include/prolifeqml/IotDeviceEditor.qml" line="+12"/>
         <source>Serial Number</source>
-        <translation type="unfinished">Serial Number</translation>
+        <translation>Numer seryjny</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/IotDeviceEditor.qml" line="+1"/>
         <source>Enter serial number</source>
-        <translation type="unfinished">Enter serial number</translation>
+        <translation>Wprowadź numer seryjny</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -5149,38 +5149,38 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/imtlicgui/LicenseEditor.qml" line="+237"/>
         <location line="+226"/>
         <source>License Name</source>
-        <translation type="unfinished">License Name</translation>
+        <translation>Nazwa licencji</translation>
     </message>
     <message>
         <location line="-217"/>
         <source>Enter the license name</source>
-        <translation type="unfinished">Enter the license name</translation>
+        <translation>Wprowadź nazwę licencji</translation>
     </message>
     <message>
         <location line="+21"/>
         <location line="+201"/>
         <source>License-ID</source>
-        <translation type="unfinished">License-ID</translation>
+        <translation>ID licencji</translation>
     </message>
     <message>
         <location line="-192"/>
         <source>Enter the license ID</source>
-        <translation type="unfinished">Enter the license ID</translation>
+        <translation>Wprowadź ID licencji</translation>
     </message>
     <message>
         <location line="+21"/>
         <source>Description</source>
-        <translation type="unfinished">Description</translation>
+        <translation>Opis</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Enter the license description</source>
-        <translation type="unfinished">Enter the license description</translation>
+        <translation>Wprowadź opis licencji</translation>
     </message>
     <message>
         <location line="+16"/>
         <source>Product</source>
-        <translation type="unfinished">Product</translation>
+        <translation>Produkt</translation>
     </message>
     <message>
         <location line="+44"/>
@@ -5190,7 +5190,7 @@ Do you want to replace it?</translation>
     <message>
         <location line="+48"/>
         <source>Dependencies</source>
-        <translation type="unfinished">Dependencies</translation>
+        <translation>Zależności</translation>
     </message>
     <message>
         <location line="+67"/>
@@ -5204,19 +5204,19 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/LicenseFileController.qml" line="+34"/>
         <location filename="../../../Qml/Include/prolifeqml/LicenseFileController.qml" line="+34"/>
         <source>Error when trying to create a license file.</source>
-        <translation type="unfinished">Error when trying to create a license file.</translation>
+        <translation>Błąd podczas próby utworzenia pliku licencji.</translation>
     </message>
     <message>
         <location line="+20"/>
         <location filename="../../../Qml/Include/prolifeqml/LicenseFileController.qml" line="+20"/>
         <source>License creation error</source>
-        <translation type="unfinished">License creation error</translation>
+        <translation>Błąd tworzenia licencji</translation>
     </message>
     <message>
         <location line="+7"/>
         <location filename="../../../Qml/Include/prolifeqml/LicenseFileController.qml" line="+7"/>
         <source>Save file</source>
-        <translation type="unfinished">Save file</translation>
+        <translation>Zapisz plik</translation>
     </message>
 </context>
 <context>
@@ -5231,13 +5231,13 @@ Do you want to replace it?</translation>
         <location line="+3"/>
         <location filename="../../../Qml/Include/prolifeqml/LicenseFilterDelegate.qml" line="+3"/>
         <source>Sensors without a license</source>
-        <translation type="unfinished">Sensors without a license</translation>
+        <translation>Czujniki bez licencji</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/LicenseFilterDelegate.qml" line="+1"/>
         <source>Sensors with license</source>
-        <translation type="unfinished">Sensors with license</translation>
+        <translation>Czujniki z licencją</translation>
     </message>
 </context>
 <context>
@@ -5252,7 +5252,7 @@ Do you want to replace it?</translation>
         <location line="+17"/>
         <location filename="../../../Qml/Include/prolifeqml/LicenseTreeDialog.qml" line="+17"/>
         <source>Close</source>
-        <translation type="unfinished">Close</translation>
+        <translation>Zamknij</translation>
     </message>
 </context>
 <context>
@@ -5267,19 +5267,19 @@ Do you want to replace it?</translation>
         <location line="+5"/>
         <location filename="../../../Qml/Include/prolifeqml/LicenseValidator.qml" line="+5"/>
         <source>Please select a product</source>
-        <translation type="unfinished">Please select a product</translation>
+        <translation>Wybierz produkt</translation>
     </message>
     <message>
         <location line="+6"/>
         <location filename="../../../Qml/Include/prolifeqml/LicenseValidator.qml" line="+6"/>
         <source>Please select a license</source>
-        <translation type="unfinished">Please select a license</translation>
+        <translation>Wybierz licencję</translation>
     </message>
     <message>
         <location line="+6"/>
         <location filename="../../../Qml/Include/prolifeqml/LicenseValidator.qml" line="+6"/>
         <source>Please enter the software-ID</source>
-        <translation type="unfinished">Please enter the software-ID</translation>
+        <translation>Wprowadź ID oprogramowania</translation>
     </message>
 </context>
 <context>
@@ -5287,7 +5287,7 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtgui/View/LogView.qml" line="+31"/>
         <source>Log</source>
-        <translation type="unfinished">Log</translation>
+        <translation>Dziennik</translation>
     </message>
 </context>
 <context>
@@ -5295,22 +5295,22 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtgui/View/MacAddressElementView.qml" line="+10"/>
         <source>MAC-Address</source>
-        <translation type="unfinished">MAC-Address</translation>
+        <translation>Adres MAC</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Enter MAC-Address</source>
-        <translation type="unfinished">Enter MAC-Address</translation>
+        <translation>Wprowadź adres MAC</translation>
     </message>
     <message>
         <location line="+54"/>
         <source>MAC Address must be in the format XX:XX:XX:XX:XX:XX</source>
-        <translation type="unfinished">MAC Address must be in the format XX:XX:XX:XX:XX:XX</translation>
+        <translation>Adres MAC musi być w formacie XX:XX:XX:XX:XX:XX</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>Only the symbols &lt;a-f&gt; and &lt;0 - 9&gt; may be included</source>
-        <translation type="unfinished">Only the symbols &lt;a-f&gt; and &lt;0 - 9&gt; may be included</translation>
+        <translation>Dozwolone są tylko znaki &lt;a-f&gt; oraz &lt;0 - 9&gt;</translation>
     </message>
 </context>
 <context>
@@ -5318,27 +5318,27 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtcolgui/MessageCollectionFilterDecorator.qml" line="+106"/>
         <source>Info</source>
-        <translation type="unfinished">Info</translation>
+        <translation>Informacja</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Warning</source>
-        <translation type="unfinished">Warning</translation>
+        <translation>Ostrzeżenie</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Error</source>
-        <translation type="unfinished">Error</translation>
+        <translation>Błąd</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Critical</source>
-        <translation type="unfinished">Critical</translation>
+        <translation>Krytyczny</translation>
     </message>
     <message>
         <location line="+18"/>
         <source>Verbose</source>
-        <translation type="unfinished">Verbose</translation>
+        <translation>Szczegółowy</translation>
     </message>
 </context>
 <context>
@@ -5346,7 +5346,7 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtcolgui/MessageCollectionView.qml" line="+118"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Anuluj</translation>
     </message>
 </context>
 <context>
@@ -5354,19 +5354,19 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Dialogs/MessageDialog.qml" line="+11"/>
         <source>Message</source>
-        <translation type="unfinished">Message</translation>
+        <translation>Wiadomość</translation>
     </message>
     <message>
         <location line="+8"/>
         <location line="+11"/>
         <source>Yes</source>
-        <translation type="unfinished">Yes</translation>
+        <translation>Tak</translation>
     </message>
     <message>
         <location line="-10"/>
         <location line="+11"/>
         <source>No</source>
-        <translation type="unfinished">No</translation>
+        <translation>Nie</translation>
     </message>
     <message>
         <location filename="../../../Bin/Debug_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/+Fusion/MessageDialog.qml" line="+89"/>
@@ -5380,7 +5380,7 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/+Universal/MessageDialog.qml" line="+89"/>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/MessageDialog.qml" line="+95"/>
         <source>Hide Details...</source>
-        <translation type="unfinished">Hide Details...</translation>
+        <translation>Ukryj szczegóły...</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -5394,7 +5394,7 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/+Universal/MessageDialog.qml" line="+0"/>
         <location filename="../../../Bin/Release_Qt6_VC17_x64/qml/QtQuick/Dialogs/quickimpl/qml/MessageDialog.qml" line="+0"/>
         <source>Show Details...</source>
-        <translation type="unfinished">Show Details...</translation>
+        <translation>Pokaż szczegóły...</translation>
     </message>
 </context>
 <context>
@@ -5402,7 +5402,7 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Dialogs/MessagePopup.qml" line="+9"/>
         <source>Message</source>
-        <translation type="unfinished">Message</translation>
+        <translation>Wiadomość</translation>
     </message>
 </context>
 <context>
@@ -5410,22 +5410,22 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Dialogs/ModalDialogManager.qml" line="+132"/>
         <source>Information</source>
-        <translation type="unfinished">Information</translation>
+        <translation>Informacja</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Warning</source>
-        <translation type="unfinished">Warning</translation>
+        <translation>Ostrzeżenie</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Critical</source>
-        <translation type="unfinished">Critical</translation>
+        <translation>Krytyczny</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Anuluj</translation>
     </message>
 </context>
 <context>
@@ -5433,22 +5433,22 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtdocgui/MultiDocWorkspaceView.qml" line="+172"/>
         <source>Save document</source>
-        <translation type="unfinished">Save document</translation>
+        <translation>Zapisz dokument</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Save all changes ?</source>
-        <translation type="unfinished">Save all changes ?</translation>
+        <translation>Zapisać wszystkie zmiany?</translation>
     </message>
     <message>
         <location line="+81"/>
         <source>Close document</source>
-        <translation type="unfinished">Close document</translation>
+        <translation>Zamknij dokument</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Close all documents</source>
-        <translation type="unfinished">Close all documents</translation>
+        <translation>Zamknij wszystkie dokumenty</translation>
     </message>
 </context>
 <context>
@@ -5456,32 +5456,32 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtdocgui/MultiDocumentCollectionView.qml" line="+123"/>
         <source>Document Name</source>
-        <translation type="unfinished">Document Name</translation>
+        <translation>Nazwa dokumentu</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Enter the document name</source>
-        <translation type="unfinished">Enter the document name</translation>
+        <translation>Wprowadź nazwę dokumentu</translation>
     </message>
     <message>
         <location line="+204"/>
         <source>Save document</source>
-        <translation type="unfinished">Save document</translation>
+        <translation>Zapisz dokument</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Save all changes ?</source>
-        <translation type="unfinished">Save all changes ?</translation>
+        <translation>Zapisać wszystkie zmiany?</translation>
     </message>
     <message>
         <location line="+52"/>
         <source>Close document</source>
-        <translation type="unfinished">Close document</translation>
+        <translation>Zamknij dokument</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Close all documents</source>
-        <translation type="unfinished">Close all documents</translation>
+        <translation>Zamknij wszystkie dokumenty</translation>
     </message>
 </context>
 <context>
@@ -5490,25 +5490,25 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/OrderCollectionView.qml" line="+38"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderCollectionView.qml" line="+38"/>
         <source>Edit</source>
-        <translation type="unfinished">Edit</translation>
+        <translation>Edytuj</translation>
     </message>
     <message>
         <location line="+8"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderCollectionView.qml" line="+8"/>
         <source>Remove</source>
-        <translation type="unfinished">Remove</translation>
+        <translation>Usuń</translation>
     </message>
     <message>
         <location line="+9"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderCollectionView.qml" line="+9"/>
         <source>Set Description</source>
-        <translation type="unfinished">Set Description</translation>
+        <translation>Ustaw opis</translation>
     </message>
     <message>
         <location line="+49"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderCollectionView.qml" line="+49"/>
         <source>Customers</source>
-        <translation type="unfinished">Customers</translation>
+        <translation>Klienci</translation>
     </message>
 </context>
 <context>
@@ -5517,97 +5517,97 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/OrderEditor.qml" line="+230"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderEditor.qml" line="+230"/>
         <source>Order Information</source>
-        <translation type="unfinished">Order Information</translation>
+        <translation>Informacje o zamówieniu</translation>
     </message>
     <message>
         <location line="+16"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderEditor.qml" line="+16"/>
         <source>Enter a 5-digit or 8-digit number</source>
-        <translation type="unfinished">Enter a 5-digit or 8-digit number</translation>
+        <translation>Wprowadź liczbę 5- lub 8-cyfrową</translation>
     </message>
     <message>
         <location line="+11"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderEditor.qml" line="+11"/>
         <source>Delivery-ID</source>
-        <translation type="unfinished">Delivery-ID</translation>
+        <translation>ID dostawy</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderEditor.qml" line="+1"/>
         <source>Enter the delivery-ID</source>
-        <translation type="unfinished">Enter the delivery-ID</translation>
+        <translation>Wprowadź ID dostawy</translation>
     </message>
     <message>
         <location line="+44"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderEditor.qml" line="+44"/>
         <source>Purchase Order-ID</source>
-        <translation type="unfinished">Purchase Order-ID</translation>
+        <translation>ID zamówienia zakupu</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderEditor.qml" line="+1"/>
         <source>Enter the Purchase-ID</source>
-        <translation type="unfinished">Enter the Purchase-ID</translation>
+        <translation>Wprowadź ID zakupu</translation>
     </message>
     <message>
         <location line="+15"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderEditor.qml" line="+15"/>
         <source>Description</source>
-        <translation type="unfinished">Description</translation>
+        <translation>Opis</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderEditor.qml" line="+1"/>
         <source>Enter the comment</source>
-        <translation type="unfinished">Enter the comment</translation>
+        <translation>Wprowadź komentarz</translation>
     </message>
     <message>
         <location line="+15"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderEditor.qml" line="+15"/>
         <source>Customer</source>
-        <translation type="unfinished">Customer</translation>
+        <translation>Klient</translation>
     </message>
     <message>
         <location line="+5"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderEditor.qml" line="+5"/>
         <source>Please select a customer</source>
-        <translation type="unfinished">Please select a customer</translation>
+        <translation>Wybierz klienta</translation>
     </message>
     <message>
         <location line="+17"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderEditor.qml" line="+17"/>
         <source>Order Status</source>
-        <translation type="unfinished">Order Status</translation>
+        <translation>Status zamówienia</translation>
     </message>
     <message>
         <location line="+119"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderEditor.qml" line="+119"/>
         <source>Detailed view</source>
-        <translation type="unfinished">Detailed view</translation>
+        <translation>Widok szczegółowy</translation>
     </message>
     <message>
         <location line="+0"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderEditor.qml" line="+0"/>
         <source>Compact view</source>
-        <translation type="unfinished">Compact view</translation>
+        <translation>Widok kompaktowy</translation>
     </message>
     <message>
         <location line="+17"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderEditor.qml" line="+17"/>
         <source>Add a new product</source>
-        <translation type="unfinished">Add a new product</translation>
+        <translation>Dodaj nowy produkt</translation>
     </message>
     <message>
         <location line="+15"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderEditor.qml" line="+15"/>
         <source>Products</source>
-        <translation type="unfinished">Products</translation>
+        <translation>Produkty</translation>
     </message>
     <message>
         <location line="+35"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderEditor.qml" line="+35"/>
         <source>Remove selected product ?</source>
-        <translation type="unfinished">Remove selected product ?</translation>
+        <translation>Usunąć wybrany produkt?</translation>
     </message>
 </context>
 <context>
@@ -5616,7 +5616,7 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/OrderProductDelegate.qml" line="+67"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderProductDelegate.qml" line="+67"/>
         <source>New</source>
-        <translation type="unfinished">New</translation>
+        <translation>Nowy</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -5637,25 +5637,25 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/OrderStatus.qml" line="+16"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderStatus.qml" line="+16"/>
         <source>Created</source>
-        <translation type="unfinished">Created</translation>
+        <translation>Utworzono</translation>
     </message>
     <message>
         <location line="+6"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderStatus.qml" line="+6"/>
         <source>In Progress</source>
-        <translation type="unfinished">In Progress</translation>
+        <translation>W toku</translation>
     </message>
     <message>
         <location line="+6"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderStatus.qml" line="+6"/>
         <source>Canceled</source>
-        <translation type="unfinished">Canceled</translation>
+        <translation>Anulowano</translation>
     </message>
     <message>
         <location line="+6"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderStatus.qml" line="+6"/>
         <source>Closed</source>
-        <translation type="unfinished">Closed</translation>
+        <translation>Zamknięto</translation>
     </message>
 </context>
 <context>
@@ -5670,13 +5670,13 @@ Do you want to replace it?</translation>
         <location line="+10"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderValidator.qml" line="+10"/>
         <source>Delivery-ID invalid</source>
-        <translation type="unfinished">Delivery-ID invalid</translation>
+        <translation>Nieprawidłowy ID dostawy</translation>
     </message>
     <message>
         <location line="+6"/>
         <location filename="../../../Qml/Include/prolifeqml/OrderValidator.qml" line="+6"/>
         <source>Customer cannot be empty</source>
-        <translation type="unfinished">Customer cannot be empty</translation>
+        <translation>Klient nie może być pusty</translation>
     </message>
 </context>
 <context>
@@ -5684,12 +5684,12 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtlicgui/PackageCollectionViewCommandsDelegate.qml" line="+10"/>
         <source>Deleting a feature</source>
-        <translation type="unfinished">Deleting a feature</translation>
+        <translation>Usuwanie funkcji</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Delete the selected feature ?</source>
-        <translation type="unfinished">Delete the selected feature ?</translation>
+        <translation>Usunąć wybraną funkcję?</translation>
     </message>
 </context>
 <context>
@@ -5697,12 +5697,12 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtlicgui/PackageViewItemDelegate.qml" line="+152"/>
         <source>Feature-ID already exists (In this or another package)</source>
-        <translation type="unfinished">Feature-ID already exists (In this or another package)</translation>
+        <translation>ID funkcji już istnieje (w tym lub innym pakiecie)</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>It is impossible to rename the feature, please remove all dependencies</source>
-        <translation type="unfinished">It is impossible to rename the feature, please remove all dependencies</translation>
+        <translation>Nie można zmienić nazwy funkcji, usuń wszystkie zależności</translation>
     </message>
 </context>
 <context>
@@ -5710,12 +5710,12 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtgui/Settings/PageAboutProvider.qml" line="+36"/>
         <source>Server Version</source>
-        <translation type="unfinished">Server Version</translation>
+        <translation>Wersja serwera</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Server Log</source>
-        <translation type="unfinished">Server Log</translation>
+        <translation>Dziennik serwera</translation>
     </message>
 </context>
 <context>
@@ -5723,7 +5723,7 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtgui/View/Pagination.qml" line="+193"/>
         <source>Per page: </source>
-        <translation type="unfinished">Per page: </translation>
+        <translation>Na stronę: </translation>
     </message>
 </context>
 <context>
@@ -5731,33 +5731,33 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtauthgui/PasswordInput.qml" line="+43"/>
         <source>Passwords don&apos;t match</source>
-        <translation type="unfinished">Passwords don&apos;t match</translation>
+        <translation>Hasła nie są zgodne</translation>
     </message>
     <message>
         <location line="+17"/>
         <source>Current password</source>
-        <translation type="unfinished">Current password</translation>
+        <translation>Bieżące hasło</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Enter the current password</source>
-        <translation type="unfinished">Enter the current password</translation>
+        <translation>Wprowadź bieżące hasło</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>New password</source>
-        <translation type="unfinished">New password</translation>
+        <translation>Nowe hasło</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Enter the new password</source>
-        <translation type="unfinished">Enter the new password</translation>
+        <translation>Wprowadź nowe hasło</translation>
     </message>
     <message>
         <location line="+11"/>
         <location line="+2"/>
         <source>Confirm password</source>
-        <translation type="unfinished">Confirm password</translation>
+        <translation>Potwierdź hasło</translation>
     </message>
 </context>
 <context>
@@ -5765,38 +5765,38 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtauthgui/PasswordRecoveryDialog.qml" line="+15"/>
         <source>Password Recovery</source>
-        <translation type="unfinished">Password Recovery</translation>
+        <translation>Odzyskiwanie hasła</translation>
     </message>
     <message>
         <location line="+27"/>
         <location line="+40"/>
         <source>Check the email</source>
-        <translation type="unfinished">Check the email</translation>
+        <translation>Sprawdź e-mail</translation>
     </message>
     <message>
         <location line="-35"/>
         <source>Yes</source>
-        <translation type="unfinished">Yes</translation>
+        <translation>Tak</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Check the code</source>
-        <translation type="unfinished">Check the code</translation>
+        <translation>Sprawdź kod</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Change password</source>
-        <translation type="unfinished">Change password</translation>
+        <translation>Zmień hasło</translation>
     </message>
     <message>
         <location line="+24"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Anuluj</translation>
     </message>
     <message>
         <location line="+24"/>
         <source>Check the email you entered</source>
-        <translation type="unfinished">Check the email you entered</translation>
+        <translation>Sprawdź wprowadzony adres e-mail</translation>
     </message>
     <message>
         <location line="+41"/>
@@ -5811,57 +5811,57 @@ Do you want to replace it?</translation>
     <message>
         <location line="+1"/>
         <source>Enter the email address that was specified on your account, a code will be sent to it</source>
-        <translation type="unfinished">Enter the email address that was specified on your account, a code will be sent to it</translation>
+        <translation>Wprowadź adres e-mail podany na koncie, zostanie na niego wysłany kod</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Please enter the valid email</source>
-        <translation type="unfinished">Please enter the valid email</translation>
+        <translation>Wprowadź prawidłowy adres e-mail</translation>
     </message>
     <message>
         <location line="+37"/>
         <source>Enter the code</source>
-        <translation type="unfinished">Enter the code</translation>
+        <translation>Wprowadź kod</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Code</source>
-        <translation type="unfinished">Code</translation>
+        <translation>Kod</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Please enter the code sent to your email</source>
-        <translation type="unfinished">Please enter the code sent to your email</translation>
+        <translation>Wprowadź kod wysłany na Twój adres e-mail</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Send the code again</source>
-        <translation type="unfinished">Send the code again</translation>
+        <translation>Wyślij kod ponownie</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Send</source>
-        <translation type="unfinished">Send</translation>
+        <translation>Wyślij</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>The new code can be obtained via</source>
-        <translation type="unfinished">The new code can be obtained via</translation>
+        <translation>Nowy kod można uzyskać za pośrednictwem</translation>
     </message>
     <message>
         <location line="+47"/>
         <source>Username</source>
-        <translation type="unfinished">Username</translation>
+        <translation>Nazwa użytkownika</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>For this email this account has been found, is that you?</source>
-        <translation type="unfinished">For this email this account has been found, is that you?</translation>
+        <translation>Dla tego adresu e-mail znaleziono to konto, czy to Ty?</translation>
     </message>
     <message>
         <location line="+142"/>
         <source>Password changed successfully</source>
-        <translation type="unfinished">Password changed successfully</translation>
+        <translation>Hasło zostało pomyślnie zmienione</translation>
     </message>
 </context>
 <context>
@@ -5869,112 +5869,112 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtgui/Params/PatTokenParamEditor.qml" line="+138"/>
         <source>Token Created Successfully</source>
-        <translation type="unfinished">Token Created Successfully</translation>
+        <translation>Token utworzony pomyślnie</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location line="+17"/>
         <source>Please copy and save the token:</source>
-        <translation type="unfinished">Please copy and save the token:</translation>
+        <translation>Skopiuj i zapisz token:</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>The token is copied</source>
-        <translation type="unfinished">The token is copied</translation>
+        <translation>Token został skopiowany</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Copy the token</source>
-        <translation type="unfinished">Copy the token</translation>
+        <translation>Kopiuj token</translation>
     </message>
     <message>
         <location line="+28"/>
         <source>New Token</source>
-        <translation type="unfinished">New Token</translation>
+        <translation>Nowy token</translation>
     </message>
     <message>
         <location line="+62"/>
         <source>No Expiration</source>
-        <translation type="unfinished">No Expiration</translation>
+        <translation>Bez wygaśnięcia</translation>
     </message>
     <message>
         <location line="+16"/>
         <source>Delete Token</source>
-        <translation type="unfinished">Delete Token</translation>
+        <translation>Usuń token</translation>
     </message>
     <message>
         <location line="+22"/>
         <source>Revoke Token</source>
-        <translation type="unfinished">Revoke Token</translation>
+        <translation>Unieważnij token</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Revoked</source>
-        <translation type="unfinished">Revoked</translation>
+        <translation>Unieważniony</translation>
     </message>
     <message>
         <location line="+16"/>
         <source>Are you sure you want to delete this token?</source>
-        <translation type="unfinished">Are you sure you want to delete this token?</translation>
+        <translation>Czy na pewno chcesz usunąć ten token?</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Any applications or scripts using this token will no longer be able to access the API. You cannot undo this action.</source>
-        <translation type="unfinished">Any applications or scripts using this token will no longer be able to access the API. You cannot undo this action.</translation>
+        <translation>Wszelkie aplikacje lub skrypty korzystające z tego tokena nie będą już mogły uzyskać dostępu do API. Tej operacji nie można cofnąć.</translation>
     </message>
     <message>
         <location line="+22"/>
         <source>Add PAT Token</source>
-        <translation type="unfinished">Add PAT Token</translation>
+        <translation>Dodaj token PAT</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Add</source>
-        <translation type="unfinished">Add</translation>
+        <translation>Dodaj</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Anuluj</translation>
     </message>
     <message>
         <location line="+28"/>
         <source>Token Name</source>
-        <translation type="unfinished">Token Name</translation>
+        <translation>Nazwa tokena</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>A descriptive name for this token</source>
-        <translation type="unfinished">A descriptive name for this token</translation>
+        <translation>Opisowa nazwa tego tokena</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Please enter the token name</source>
-        <translation type="unfinished">Please enter the token name</translation>
+        <translation>Wprowadź nazwę tokena</translation>
     </message>
     <message>
         <location line="+16"/>
         <source>Description</source>
-        <translation type="unfinished">Description</translation>
+        <translation>Opis</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Optional description for this token</source>
-        <translation type="unfinished">Optional description for this token</translation>
+        <translation>Opcjonalny opis tego tokena</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Expiration</source>
-        <translation type="unfinished">Expiration</translation>
+        <translation>Wygaśnięcie</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>The token will expire on the selected date</source>
-        <translation type="unfinished">The token will expire on the selected date</translation>
+        <translation>Token wygaśnie w wybranym dniu</translation>
     </message>
 </context>
 <context>
@@ -5982,12 +5982,12 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtgui/Settings/PatTokenSettingsController.qml" line="+14"/>
         <source>PAT Tokens</source>
-        <translation type="unfinished">PAT Tokens</translation>
+        <translation>Tokeny PAT</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Personal Access Tokens for API authentication</source>
-        <translation type="unfinished">Personal Access Tokens for API authentication</translation>
+        <translation>Osobiste tokeny dostępu do uwierzytelniania API</translation>
     </message>
 </context>
 <context>
@@ -5995,7 +5995,7 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Dialogs/PopupDecoratorGql.qml" line="+310"/>
         <source>No data</source>
-        <translation type="unfinished">No data</translation>
+        <translation>Brak danych</translation>
     </message>
 </context>
 <context>
@@ -6003,23 +6003,23 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtgui/Settings/PreferenceDialog.qml" line="+12"/>
         <source>Preferences</source>
-        <translation type="unfinished">Preferences</translation>
+        <translation>Preferencje</translation>
     </message>
     <message>
         <location line="+29"/>
         <source>Apply</source>
-        <translation type="unfinished">Apply</translation>
+        <translation>Zastosuj</translation>
     </message>
     <message>
         <location line="+1"/>
         <location line="+6"/>
         <source>Close</source>
-        <translation type="unfinished">Close</translation>
+        <translation>Zamknij</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Anuluj</translation>
     </message>
 </context>
 <context>
@@ -6044,32 +6044,32 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtlicgui/ProductCollectionViewCommandsDelegate.qml" line="+15"/>
         <source>Deleting a product</source>
-        <translation type="unfinished">Deleting a product</translation>
+        <translation>Usuwanie produktu</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Delete the selected product ?</source>
-        <translation type="unfinished">Delete the selected product ?</translation>
+        <translation>Usunąć wybrany produkt?</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Select product</source>
-        <translation type="unfinished">Select product</translation>
+        <translation>Wybierz produkt</translation>
     </message>
     <message>
         <location line="+46"/>
         <source>Feature overwriting</source>
-        <translation type="unfinished">Feature overwriting</translation>
+        <translation>Nadpisywanie funkcji</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Overwrite features ?</source>
-        <translation type="unfinished">Overwrite features ?</translation>
+        <translation>Nadpisać funkcje?</translation>
     </message>
     <message>
         <location line="+27"/>
         <source>Please enter the name of the document:</source>
-        <translation type="unfinished">Please enter the name of the document:</translation>
+        <translation>Wprowadź nazwę dokumentu:</translation>
     </message>
 </context>
 <context>
@@ -6078,43 +6078,43 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/ProductEditor.qml" line="+295"/>
         <location filename="../../../Qml/Include/prolifeqml/ProductEditor.qml" line="+295"/>
         <source>Product Category</source>
-        <translation type="unfinished">Product Category</translation>
+        <translation>Kategoria produktu</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/ProductEditor.qml" line="+1"/>
         <source>Please select the product category you want to create</source>
-        <translation type="unfinished">Please select the product category you want to create</translation>
+        <translation>Wybierz kategorię produktu, który chcesz utworzyć</translation>
     </message>
     <message>
         <location line="+15"/>
         <location filename="../../../Qml/Include/prolifeqml/ProductEditor.qml" line="+15"/>
         <source>Currently selected: </source>
-        <translation type="unfinished">Currently selected: </translation>
+        <translation>Aktualnie wybrane: </translation>
     </message>
     <message>
         <location line="+33"/>
         <location filename="../../../Qml/Include/prolifeqml/ProductEditor.qml" line="+33"/>
         <source>Software</source>
-        <translation type="unfinished">Software</translation>
+        <translation>Oprogramowanie</translation>
     </message>
     <message>
         <location line="+17"/>
         <location filename="../../../Qml/Include/prolifeqml/ProductEditor.qml" line="+17"/>
         <source>Hardware</source>
-        <translation type="unfinished">Hardware</translation>
+        <translation>Sprzęt</translation>
     </message>
     <message>
         <location line="+16"/>
         <location filename="../../../Qml/Include/prolifeqml/ProductEditor.qml" line="+16"/>
         <source>Product</source>
-        <translation type="unfinished">Product</translation>
+        <translation>Produkt</translation>
     </message>
     <message>
         <location line="+15"/>
         <location filename="../../../Qml/Include/prolifeqml/ProductEditor.qml" line="+15"/>
         <source>Please select a product</source>
-        <translation type="unfinished">Please select a product</translation>
+        <translation>Wybierz produkt</translation>
     </message>
 </context>
 <context>
@@ -6123,13 +6123,13 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/ProductEditorDialog.qml" line="+21"/>
         <location filename="../../../Qml/Include/prolifeqml/ProductEditorDialog.qml" line="+21"/>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/ProductEditorDialog.qml" line="+1"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Anuluj</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -6153,7 +6153,7 @@ Do you want to replace it?</translation>
     <message>
         <location line="+4"/>
         <source>Description</source>
-        <translation type="unfinished">Description</translation>
+        <translation>Opis</translation>
     </message>
     <message>
         <location line="+147"/>
@@ -6163,12 +6163,12 @@ Do you want to replace it?</translation>
     <message>
         <location line="+11"/>
         <source>Enter the product name</source>
-        <translation type="unfinished">Enter the product name</translation>
+        <translation>Wprowadź nazwę produktu</translation>
     </message>
     <message>
         <location line="+21"/>
         <source>Category</source>
-        <translation type="unfinished">Category</translation>
+        <translation>Kategoria</translation>
     </message>
 </context>
 <context>
@@ -6176,28 +6176,28 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtauthgui/ProfileView.qml" line="+122"/>
         <source>General</source>
-        <translation type="unfinished">General</translation>
+        <translation>Ogólne</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Username</source>
-        <translation type="unfinished">Username</translation>
+        <translation>Nazwa użytkownika</translation>
     </message>
     <message>
         <location line="+10"/>
         <location line="+137"/>
         <source>Name</source>
-        <translation type="unfinished">Name</translation>
+        <translation>Nazwa</translation>
     </message>
     <message>
         <location line="-136"/>
         <source>Enter the name</source>
-        <translation type="unfinished">Enter the name</translation>
+        <translation>Wprowadź nazwę</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>Email Address</source>
-        <translation type="unfinished">Email Address</translation>
+        <translation>Adres e-mail</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -6207,42 +6207,42 @@ Do you want to replace it?</translation>
     <message>
         <location line="+11"/>
         <source>Save</source>
-        <translation type="unfinished">Save</translation>
+        <translation>Zapisz</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Change password</source>
-        <translation type="unfinished">Change password</translation>
+        <translation>Zmień hasło</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Change</source>
-        <translation type="unfinished">Change</translation>
+        <translation>Zmień</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Change Password</source>
-        <translation type="unfinished">Change Password</translation>
+        <translation>Zmień hasło</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Roles</source>
-        <translation type="unfinished">Roles</translation>
+        <translation>Role</translation>
     </message>
     <message>
         <location line="+18"/>
         <source>Groups</source>
-        <translation type="unfinished">Groups</translation>
+        <translation>Grupy</translation>
     </message>
     <message>
         <location line="+17"/>
         <source>Permissions</source>
-        <translation type="unfinished">Permissions</translation>
+        <translation>Uprawnienia</translation>
     </message>
     <message>
         <location line="+31"/>
         <source>Description</source>
-        <translation type="unfinished">Description</translation>
+        <translation>Opis</translation>
     </message>
 </context>
 <context>
@@ -6250,7 +6250,7 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Views/ProgressBar.qml" line="+22"/>
         <source>Progress:</source>
-        <translation type="unfinished">Progress:</translation>
+        <translation>Postęp:</translation>
     </message>
 </context>
 <context>
@@ -6258,34 +6258,34 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Dialogs/ProgressDialogManager.qml" line="+11"/>
         <source>Progress manager</source>
-        <translation type="unfinished">Progress manager</translation>
+        <translation>Menedżer postępu</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Total progress</source>
-        <translation type="unfinished">Total progress</translation>
+        <translation>Postęp całkowity</translation>
     </message>
     <message>
         <location line="+45"/>
         <source>Ok</source>
-        <translation type="unfinished">Ok</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location line="+32"/>
         <location line="+4"/>
         <location line="+116"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Anuluj</translation>
     </message>
     <message>
         <location line="-47"/>
         <source>Subtasks</source>
-        <translation type="unfinished">Subtasks</translation>
+        <translation>Podzadania</translation>
     </message>
     <message>
         <location line="+82"/>
         <source>Cancelling</source>
-        <translation type="unfinished">Cancelling</translation>
+        <translation>Anulowanie</translation>
     </message>
 </context>
 <context>
@@ -6293,12 +6293,12 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtguigql/RemoteCollectionView.qml" line="+157"/>
         <source>This table has been modified from another computer</source>
-        <translation type="unfinished">This table has been modified from another computer</translation>
+        <translation>Ta tabela została zmodyfikowana z innego komputera</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>Update</source>
-        <translation type="unfinished">Update</translation>
+        <translation>Aktualizuj</translation>
     </message>
 </context>
 <context>
@@ -6319,7 +6319,7 @@ Do you want to replace it?</translation>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/RevokeLicenseDialog.qml" line="+1"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Anuluj</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -6349,7 +6349,7 @@ Do you want to replace it?</translation>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/RevokeLicenseDialog.qml" line="+1"/>
         <source>Account Name</source>
-        <translation type="unfinished">Account Name</translation>
+        <translation>Nazwa konta</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -6393,12 +6393,12 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtauthgui/RoleCollectionViewCommandsDelegate.qml" line="+12"/>
         <source>Deleting a role</source>
-        <translation type="unfinished">Deleting a role</translation>
+        <translation>Usuwanie roli</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Delete the selected role ?</source>
-        <translation type="unfinished">Delete the selected role ?</translation>
+        <translation>Usunąć wybraną rolę?</translation>
     </message>
 </context>
 <context>
@@ -6406,52 +6406,52 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtauthgui/RoleView.qml" line="+99"/>
         <source>General</source>
-        <translation type="unfinished">General</translation>
+        <translation>Ogólne</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Role Name</source>
-        <translation type="unfinished">Role Name</translation>
+        <translation>Nazwa roli</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Enter the role name</source>
-        <translation type="unfinished">Enter the role name</translation>
+        <translation>Wprowadź nazwę roli</translation>
     </message>
     <message>
         <location line="+19"/>
         <source>Role-ID</source>
-        <translation type="unfinished">Role-ID</translation>
+        <translation>ID roli</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Description</source>
-        <translation type="unfinished">Description</translation>
+        <translation>Opis</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Enter the description</source>
-        <translation type="unfinished">Enter the description</translation>
+        <translation>Wprowadź opis</translation>
     </message>
     <message>
         <location line="+16"/>
         <source>Parent Roles</source>
-        <translation type="unfinished">Parent Roles</translation>
+        <translation>Role nadrzędne</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Adding Parent Role</source>
-        <translation type="unfinished">Adding Parent Role</translation>
+        <translation>Dodawanie roli nadrzędnej</translation>
     </message>
     <message>
         <location line="+47"/>
         <source>Permissions</source>
-        <translation type="unfinished">Permissions</translation>
+        <translation>Uprawnienia</translation>
     </message>
     <message>
         <location line="+80"/>
         <source>Permission</source>
-        <translation type="unfinished">Permission</translation>
+        <translation>Uprawnienie</translation>
     </message>
 </context>
 <context>
@@ -6459,27 +6459,27 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtgui/Params/SchedulerParamEditor.qml" line="+34"/>
         <source>Start Time</source>
-        <translation type="unfinished">Start Time</translation>
+        <translation>Czas rozpoczęcia</translation>
     </message>
     <message>
         <location line="+37"/>
         <source>Backup Interval</source>
-        <translation type="unfinished">Backup Interval</translation>
+        <translation>Interwał kopii zapasowej</translation>
     </message>
     <message>
         <location line="+54"/>
         <source>Day</source>
-        <translation type="unfinished">Day</translation>
+        <translation>Dzień</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Week</source>
-        <translation type="unfinished">Week</translation>
+        <translation>Tydzień</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Month</source>
-        <translation type="unfinished">Month</translation>
+        <translation>Miesiąc</translation>
     </message>
 </context>
 <context>
@@ -6487,7 +6487,7 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtgui/View/SearchAddressComp.qml" line="+21"/>
         <source>Address</source>
-        <translation type="unfinished">Address</translation>
+        <translation>Adres</translation>
     </message>
 </context>
 <context>
@@ -6495,7 +6495,7 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtgui/View/SearchCompLegacy.qml" line="+731"/>
         <source>Search</source>
-        <translation type="unfinished">Search</translation>
+        <translation>Szukaj</translation>
     </message>
 </context>
 <context>
@@ -6503,12 +6503,12 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtgui/View/SearchResultsView.qml" line="+67"/>
         <source>No results</source>
-        <translation type="unfinished">No results</translation>
+        <translation>Brak wyników</translation>
     </message>
     <message>
         <location line="+122"/>
         <source>Go to the content</source>
-        <translation type="unfinished">Go to the content</translation>
+        <translation>Przejdź do treści</translation>
     </message>
 </context>
 <context>
@@ -6516,7 +6516,7 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Inputs/SearchTextInput.qml" line="+12"/>
         <source>Enter text for search</source>
-        <translation type="unfinished">Enter text for search</translation>
+        <translation>Wprowadź tekst do wyszukania</translation>
     </message>
 </context>
 <context>
@@ -6524,33 +6524,33 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtguigql/SelectableCollectionEditor.qml" line="+71"/>
         <source>New</source>
-        <translation type="unfinished">New</translation>
+        <translation>Nowy</translation>
     </message>
     <message>
         <location line="+15"/>
         <location line="+151"/>
         <source>Add</source>
-        <translation type="unfinished">Add</translation>
+        <translation>Dodaj</translation>
     </message>
     <message>
         <location line="-132"/>
         <source>Remove</source>
-        <translation type="unfinished">Remove</translation>
+        <translation>Usuń</translation>
     </message>
     <message>
         <location line="+39"/>
         <source>Selected Elements</source>
-        <translation type="unfinished">Selected Elements</translation>
+        <translation>Wybrane elementy</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>New Elements</source>
-        <translation type="unfinished">New Elements</translation>
+        <translation>Nowe elementy</translation>
     </message>
     <message>
         <location line="+93"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Anuluj</translation>
     </message>
 </context>
 <context>
@@ -6558,22 +6558,22 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtgui/View/ServerConnectionParamElementView.qml" line="+45"/>
         <source>Server Host</source>
-        <translation type="unfinished">Server Host</translation>
+        <translation>Host serwera</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Http Port</source>
-        <translation type="unfinished">Http Port</translation>
+        <translation>Port HTTP</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Web Socket Port</source>
-        <translation type="unfinished">Web Socket Port</translation>
+        <translation>Port WebSocket</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Secure Connection</source>
-        <translation type="unfinished">Secure Connection</translation>
+        <translation>Bezpieczne połączenie</translation>
     </message>
 </context>
 <context>
@@ -6581,17 +6581,17 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtgui/Settings/ServerLogProvider.qml" line="+18"/>
         <source>Server Log</source>
-        <translation type="unfinished">Server Log</translation>
+        <translation>Dziennik serwera</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Download</source>
-        <translation type="unfinished">Download</translation>
+        <translation>Pobierz</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>Save file</source>
-        <translation type="unfinished">Save file</translation>
+        <translation>Zapisz plik</translation>
     </message>
 </context>
 <context>
@@ -6599,12 +6599,12 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtdocgui/SingleDocumentWorkspaceView.qml" line="+134"/>
         <source>Save document</source>
-        <translation type="unfinished">Save document</translation>
+        <translation>Zapisz dokument</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Save all changes ?</source>
-        <translation type="unfinished">Save all changes ?</translation>
+        <translation>Zapisać wszystkie zmiany?</translation>
     </message>
 </context>
 <context>
@@ -6613,73 +6613,73 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/SoftwareEditor.qml" line="+53"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+53"/>
         <source>The product cannot be edited as it is in use.</source>
-        <translation type="unfinished">The product cannot be edited as it is in use.</translation>
+        <translation>Nie można edytować produktu, ponieważ jest w użyciu.</translation>
     </message>
     <message>
         <location line="+253"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+253"/>
         <source>Software Information</source>
-        <translation type="unfinished">Software Information</translation>
+        <translation>Informacje o oprogramowaniu</translation>
     </message>
     <message>
         <location line="+12"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+12"/>
         <source>Project</source>
-        <translation type="unfinished">Project</translation>
+        <translation>Projekt</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+1"/>
         <source>Enter the project</source>
-        <translation type="unfinished">Enter the project</translation>
+        <translation>Wprowadź projekt</translation>
     </message>
     <message>
         <location line="+16"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+16"/>
         <source>Order</source>
-        <translation type="unfinished">Order</translation>
+        <translation>Zamówienie</translation>
     </message>
     <message>
         <location line="+14"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+14"/>
         <source>Customer</source>
-        <translation type="unfinished">Customer</translation>
+        <translation>Klient</translation>
     </message>
     <message>
         <location line="+18"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+18"/>
         <source>License Information</source>
-        <translation type="unfinished">License Information</translation>
+        <translation>Informacje o licencji</translation>
     </message>
     <message>
         <location line="+77"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+77"/>
         <source>Please select a product</source>
-        <translation type="unfinished">Please select a product</translation>
+        <translation>Wybierz produkt</translation>
     </message>
     <message>
         <location line="+29"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+29"/>
         <source>Licenses</source>
-        <translation type="unfinished">Licenses</translation>
+        <translation>Licencje</translation>
     </message>
     <message>
         <location line="+8"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+8"/>
         <source>Please select a license</source>
-        <translation type="unfinished">Please select a license</translation>
+        <translation>Wybierz licencję</translation>
     </message>
     <message>
         <location line="+23"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+23"/>
         <source>Article</source>
-        <translation type="unfinished">Article</translation>
+        <translation>Artykuł</translation>
     </message>
     <message>
         <location line="+9"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+9"/>
         <source>Enter the software-ID</source>
-        <translation type="unfinished">Enter the software-ID</translation>
+        <translation>Wprowadź ID oprogramowania</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -6691,7 +6691,7 @@ Do you want to replace it?</translation>
         <location line="+7"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+7"/>
         <source>Please enter the software-ID</source>
-        <translation type="unfinished">Please enter the software-ID</translation>
+        <translation>Wprowadź ID oprogramowania</translation>
     </message>
     <message>
         <location line="+13"/>
@@ -6721,31 +6721,31 @@ Do you want to replace it?</translation>
         <location line="+12"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+12"/>
         <source>Expiration Information</source>
-        <translation type="unfinished">Expiration Information</translation>
+        <translation>Informacje o wygaśnięciu</translation>
     </message>
     <message>
         <location line="+12"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+12"/>
         <source>Unlimited</source>
-        <translation type="unfinished">Unlimited</translation>
+        <translation>Nieograniczony</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+1"/>
         <source>Deactivate it if you want to set the expiration date manually</source>
-        <translation type="unfinished">Deactivate it if you want to set the expiration date manually</translation>
+        <translation>Dezaktywuj, jeśli chcesz ustawić datę wygaśnięcia ręcznie</translation>
     </message>
     <message>
         <location line="+0"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+0"/>
         <source>Activate it if you want to set an unlimited expiration date</source>
-        <translation type="unfinished">Activate it if you want to set an unlimited expiration date</translation>
+        <translation>Aktywuj, jeśli chcesz ustawić nieograniczoną datę wygaśnięcia</translation>
     </message>
     <message>
         <location line="+21"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="+21"/>
         <source>Expiration</source>
-        <translation type="unfinished">Expiration</translation>
+        <translation>Wygaśnięcie</translation>
     </message>
     <message>
         <location line="+22"/>
@@ -6757,7 +6757,7 @@ Do you want to replace it?</translation>
         <location line="-188"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareEditor.qml" line="-188"/>
         <source>Product</source>
-        <translation type="unfinished">Product</translation>
+        <translation>Produkt</translation>
     </message>
 </context>
 <context>
@@ -6772,19 +6772,19 @@ Do you want to replace it?</translation>
         <location line="+12"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductCard.qml" line="+12"/>
         <source>Article</source>
-        <translation type="unfinished">Article</translation>
+        <translation>Artykuł</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductCard.qml" line="+3"/>
         <source>Unlimited</source>
-        <translation type="unfinished">Unlimited</translation>
+        <translation>Nieograniczony</translation>
     </message>
     <message>
         <location line="+7"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductCard.qml" line="+7"/>
         <source>Expiration</source>
-        <translation type="unfinished">Expiration</translation>
+        <translation>Wygaśnięcie</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -6829,13 +6829,13 @@ Do you want to replace it?</translation>
         <location line="+11"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductCollectionView.qml" line="+11"/>
         <source>Products</source>
-        <translation type="unfinished">Products</translation>
+        <translation>Produkty</translation>
     </message>
     <message>
         <location line="+21"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductCollectionView.qml" line="+21"/>
         <source>Licenses</source>
-        <translation type="unfinished">Licenses</translation>
+        <translation>Licencje</translation>
     </message>
     <message>
         <location line="+24"/>
@@ -6847,25 +6847,25 @@ Do you want to replace it?</translation>
         <location line="+3"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductCollectionView.qml" line="+3"/>
         <source>Show only paired licenses</source>
-        <translation type="unfinished">Show only paired licenses</translation>
+        <translation>Pokaż tylko sparowane licencje</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductCollectionView.qml" line="+1"/>
         <source>Show only not paired licenses</source>
-        <translation type="unfinished">Show only not paired licenses</translation>
+        <translation>Pokaż tylko niesparowane licencje</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductCollectionView.qml" line="+1"/>
         <source>Show the licenses for which the file was created</source>
-        <translation type="unfinished">Show the licenses for which the file was created</translation>
+        <translation>Pokaż licencje, dla których utworzono plik</translation>
     </message>
     <message>
         <location line="+38"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductCollectionView.qml" line="+38"/>
         <source>Customers</source>
-        <translation type="unfinished">Customers</translation>
+        <translation>Klienci</translation>
     </message>
 </context>
 <context>
@@ -6874,31 +6874,31 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/SoftwareProductEditor.qml" line="+181"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductEditor.qml" line="+181"/>
         <source>New License</source>
-        <translation type="unfinished">New License</translation>
+        <translation>Nowa licencja</translation>
     </message>
     <message>
         <location line="+28"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductEditor.qml" line="+28"/>
         <source>License</source>
-        <translation type="unfinished">License</translation>
+        <translation>Licencja</translation>
     </message>
     <message>
         <location line="+17"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductEditor.qml" line="+17"/>
         <source>No software-ID</source>
-        <translation type="unfinished">No software-ID</translation>
+        <translation>Brak ID oprogramowania</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductEditor.qml" line="+3"/>
         <source>Article</source>
-        <translation type="unfinished">Article</translation>
+        <translation>Artykuł</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductEditor.qml" line="+1"/>
         <source>not specified</source>
-        <translation type="unfinished">not specified</translation>
+        <translation>nie określono</translation>
     </message>
     <message>
         <location line="+23"/>
@@ -6906,13 +6906,13 @@ Do you want to replace it?</translation>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductEditor.qml" line="+23"/>
         <location line="+230"/>
         <source>Unlimited</source>
-        <translation type="unfinished">Unlimited</translation>
+        <translation>Nieograniczony</translation>
     </message>
     <message>
         <location line="-206"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductEditor.qml" line="-206"/>
         <source>License Type</source>
-        <translation type="unfinished">License Type</translation>
+        <translation>Typ licencji</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -6920,7 +6920,7 @@ Do you want to replace it?</translation>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductEditor.qml" line="+6"/>
         <location line="+260"/>
         <source>Article Number</source>
-        <translation type="unfinished">Article Number</translation>
+        <translation>Numer artykułu</translation>
     </message>
     <message>
         <location line="-254"/>
@@ -6936,7 +6936,7 @@ Do you want to replace it?</translation>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductEditor.qml" line="-104"/>
         <location line="+145"/>
         <source>Expiration</source>
-        <translation type="unfinished">Expiration</translation>
+        <translation>Wygaśnięcie</translation>
     </message>
     <message>
         <location line="-134"/>
@@ -6966,25 +6966,25 @@ Do you want to replace it?</translation>
         <location line="+23"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductEditor.qml" line="+23"/>
         <source>License Types</source>
-        <translation type="unfinished">License Types</translation>
+        <translation>Typy licencji</translation>
     </message>
     <message>
         <location line="+38"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductEditor.qml" line="+38"/>
         <source>Please select a license</source>
-        <translation type="unfinished">Please select a license</translation>
+        <translation>Wybierz licencję</translation>
     </message>
     <message>
         <location line="+15"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductEditor.qml" line="+15"/>
         <source>Enter the software-ID</source>
-        <translation type="unfinished">Enter the software-ID</translation>
+        <translation>Wprowadź ID oprogramowania</translation>
     </message>
     <message>
         <location line="+27"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductEditor.qml" line="+27"/>
         <source>Serial Number already exists</source>
-        <translation type="unfinished">Serial Number already exists</translation>
+        <translation>Numer seryjny już istnieje</translation>
     </message>
 </context>
 <context>
@@ -6993,25 +6993,25 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/SoftwareProductsCollectionViewCommandsDelegate.qml" line="+13"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductsCollectionViewCommandsDelegate.qml" line="+13"/>
         <source>Removing the software instance</source>
-        <translation type="unfinished">Removing the software instance</translation>
+        <translation>Usuwanie instancji oprogramowania</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductsCollectionViewCommandsDelegate.qml" line="+1"/>
         <source>Do you really want to remove this product? In case of deletion, it will disappear in all orders in which it is present.</source>
-        <translation type="unfinished">Do you really want to remove this product? In case of deletion, it will disappear in all orders in which it is present.</translation>
+        <translation>Czy na pewno chcesz usunąć ten produkt? W przypadku usunięcia zniknie on ze wszystkich zamówień, w których występuje.</translation>
     </message>
     <message>
         <location line="+54"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductsCollectionViewCommandsDelegate.qml" line="+54"/>
         <source>Edit</source>
-        <translation type="unfinished">Edit</translation>
+        <translation>Edytuj</translation>
     </message>
     <message>
         <location line="+8"/>
         <location filename="../../../Qml/Include/prolifeqml/SoftwareProductsCollectionViewCommandsDelegate.qml" line="+8"/>
         <source>Remove</source>
-        <translation type="unfinished">Remove</translation>
+        <translation>Usuń</translation>
     </message>
 </context>
 <context>
@@ -7026,13 +7026,13 @@ Do you want to replace it?</translation>
         <location line="+26"/>
         <location filename="../../../Qml/Include/prolifeqml/SplitLicenseDialog.qml" line="+26"/>
         <source>Save</source>
-        <translation type="unfinished">Save</translation>
+        <translation>Zapisz</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../Qml/Include/prolifeqml/SplitLicenseDialog.qml" line="+1"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Anuluj</translation>
     </message>
     <message>
         <location line="+58"/>
@@ -7050,7 +7050,7 @@ Do you want to replace it?</translation>
         <location line="+10"/>
         <location filename="../../../Qml/Include/prolifeqml/SplitLicenseDialog.qml" line="+10"/>
         <source>New License</source>
-        <translation type="unfinished">New License</translation>
+        <translation>Nowa licencja</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -7113,7 +7113,7 @@ Do you want to replace it?</translation>
         <location line="+33"/>
         <location filename="../../../Qml/Include/prolifeqml/StatisticsPage.qml" line="+33"/>
         <source>Hardware Configuration</source>
-        <translation type="unfinished">Hardware Configuration</translation>
+        <translation>Konfiguracja sprzętu</translation>
     </message>
     <message>
         <location line="+46"/>
@@ -7127,12 +7127,12 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtauthgui/SuperuserPasswordPage.qml" line="+67"/>
         <source>Please fill in the information for the system administrator</source>
-        <translation type="unfinished">Please fill in the information for the system administrator</translation>
+        <translation>Wypełnij informacje dla administratora systemu</translation>
     </message>
     <message>
         <location line="+30"/>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
 </context>
 <context>
@@ -7140,37 +7140,37 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Views/TableHeaderParamComp.qml" line="+12"/>
         <source>Table configuration</source>
-        <translation type="unfinished">Table configuration</translation>
+        <translation>Konfiguracja tabeli</translation>
     </message>
     <message>
         <location line="+95"/>
         <source>Select at least one column</source>
-        <translation type="unfinished">Select at least one column</translation>
+        <translation>Wybierz co najmniej jedną kolumnę</translation>
     </message>
     <message>
         <location line="+120"/>
         <source>Available Columns</source>
-        <translation type="unfinished">Available Columns</translation>
+        <translation>Dostępne kolumny</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Apply</source>
-        <translation type="unfinished">Apply</translation>
+        <translation>Zastosuj</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Anuluj</translation>
     </message>
     <message>
         <location line="+19"/>
         <source>Confirm reset headers</source>
-        <translation type="unfinished">Confirm reset headers</translation>
+        <translation>Potwierdź resetowanie nagłówków</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Reset header settings to default ?</source>
-        <translation type="unfinished">Reset header settings to default ?</translation>
+        <translation>Przywrócić domyślne ustawienia nagłówków?</translation>
     </message>
 </context>
 <context>
@@ -7178,7 +7178,7 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtgui/View/TextInputElementView.qml" line="+22"/>
         <source>Enter the correct value</source>
-        <translation type="unfinished">Enter the correct value</translation>
+        <translation>Wprowadź prawidłową wartość</translation>
     </message>
 </context>
 <context>
@@ -7191,32 +7191,32 @@ Do you want to replace it?</translation>
     <message>
         <location line="+105"/>
         <source>Last 7 Days</source>
-        <translation type="unfinished">Last 7 Days</translation>
+        <translation>Ostatnie 7 dni</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>This Month</source>
-        <translation type="unfinished">This Month</translation>
+        <translation>Ten miesiąc</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Last Month</source>
-        <translation type="unfinished">Last Month</translation>
+        <translation>Poprzedni miesiąc</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>This Year</source>
-        <translation type="unfinished">This Year</translation>
+        <translation>Ten rok</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Last Year</source>
-        <translation type="unfinished">Last Year</translation>
+        <translation>Poprzedni rok</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Custom</source>
-        <translation type="unfinished">Custom</translation>
+        <translation>Niestandardowy</translation>
     </message>
 </context>
 <context>
@@ -7224,52 +7224,52 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtgui/View/TimeFilterParamView.qml" line="+119"/>
         <source>Last 7 Days</source>
-        <translation type="unfinished">Last 7 Days</translation>
+        <translation>Ostatnie 7 dni</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>This Month</source>
-        <translation type="unfinished">This Month</translation>
+        <translation>Ten miesiąc</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Last Month</source>
-        <translation type="unfinished">Last Month</translation>
+        <translation>Poprzedni miesiąc</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>This Year</source>
-        <translation type="unfinished">This Year</translation>
+        <translation>Ten rok</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Last Year</source>
-        <translation type="unfinished">Last Year</translation>
+        <translation>Poprzedni rok</translation>
     </message>
     <message>
         <location line="+76"/>
         <source>From</source>
-        <translation type="unfinished">From</translation>
+        <translation>Od</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Select a date</source>
-        <translation type="unfinished">Select a date</translation>
+        <translation>Wybierz datę</translation>
     </message>
     <message>
         <location line="+25"/>
         <source>To</source>
-        <translation type="unfinished">To</translation>
+        <translation>Do</translation>
     </message>
     <message>
         <location line="+28"/>
         <source>Apply</source>
-        <translation type="unfinished">Apply</translation>
+        <translation>Zastosuj</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Clear</source>
-        <translation type="unfinished">Clear</translation>
+        <translation>Wyczyść</translation>
     </message>
 </context>
 <context>
@@ -7277,12 +7277,12 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Inputs/TimeInput.qml" line="+154"/>
         <source>Time:</source>
-        <translation type="unfinished">Time:</translation>
+        <translation>Czas:</translation>
     </message>
     <message>
         <location line="+87"/>
         <source>Wrong time format!</source>
-        <translation type="unfinished">Wrong time format!</translation>
+        <translation>Nieprawidłowy format czasu!</translation>
     </message>
 </context>
 <context>
@@ -7290,17 +7290,17 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Inputs/TimeIntervalPicker.qml" line="+127"/>
         <source>Days</source>
-        <translation type="unfinished">Days</translation>
+        <translation>Dni</translation>
     </message>
     <message>
         <location line="+26"/>
         <source>Hours</source>
-        <translation type="unfinished">Hours</translation>
+        <translation>Godziny</translation>
     </message>
     <message>
         <location line="+26"/>
         <source>Minutes</source>
-        <translation type="unfinished">Minutes</translation>
+        <translation>Minuty</translation>
     </message>
 </context>
 <context>
@@ -7308,12 +7308,12 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtcontrols/Inputs/TimePicker.qml" line="+97"/>
         <source>Hours</source>
-        <translation type="unfinished">Hours</translation>
+        <translation>Godziny</translation>
     </message>
     <message>
         <location line="+26"/>
         <source>Minutes</source>
-        <translation type="unfinished">Minutes</translation>
+        <translation>Minuty</translation>
     </message>
 </context>
 <context>
@@ -7321,27 +7321,27 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtauthgui/UserActionCollectionView.qml" line="+37"/>
         <source>Action</source>
-        <translation type="unfinished">Action</translation>
+        <translation>Działanie</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Create</source>
-        <translation type="unfinished">Create</translation>
+        <translation>Utwórz</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Update</source>
-        <translation type="unfinished">Update</translation>
+        <translation>Aktualizuj</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Delete</source>
-        <translation type="unfinished">Delete</translation>
+        <translation>Usuń</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Users</source>
-        <translation type="unfinished">Users</translation>
+        <translation>Użytkownicy</translation>
     </message>
 </context>
 <context>
@@ -7349,12 +7349,12 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtauthgui/UserCollectionView.qml" line="+60"/>
         <source>System Info</source>
-        <translation type="unfinished">System Info</translation>
+        <translation>Informacje systemowe</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Internal</source>
-        <translation type="unfinished">Internal</translation>
+        <translation>Wewnętrzny</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7364,42 +7364,42 @@ Do you want to replace it?</translation>
     <message>
         <location line="+67"/>
         <source>View roles</source>
-        <translation type="unfinished">View roles</translation>
+        <translation>Pokaż role</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>has been assigned</source>
-        <translation type="unfinished">has been assigned</translation>
+        <translation>ma przypisane</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>roles:</source>
-        <translation type="unfinished">roles:</translation>
+        <translation>role:</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>No roles</source>
-        <translation type="unfinished">No roles</translation>
+        <translation>Brak ról</translation>
     </message>
     <message>
         <location line="+54"/>
         <source>View groups</source>
-        <translation type="unfinished">View groups</translation>
+        <translation>Pokaż grupy</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>is included into</source>
-        <translation type="unfinished">is included into</translation>
+        <translation>należy do</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>groups</source>
-        <translation type="unfinished">groups</translation>
+        <translation>grup</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>No groups</source>
-        <translation type="unfinished">No groups</translation>
+        <translation>Brak grup</translation>
     </message>
 </context>
 <context>
@@ -7407,37 +7407,37 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtauthgui/UserGeneralEditor.qml" line="+50"/>
         <source>Username</source>
-        <translation type="unfinished">Username</translation>
+        <translation>Nazwa użytkownika</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Enter the username</source>
-        <translation type="unfinished">Enter the username</translation>
+        <translation>Wprowadź nazwę użytkownika</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Please enter the username</source>
-        <translation type="unfinished">Please enter the username</translation>
+        <translation>Wprowadź nazwę użytkownika</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Name</source>
-        <translation type="unfinished">Name</translation>
+        <translation>Nazwa</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Enter the name</source>
-        <translation type="unfinished">Enter the name</translation>
+        <translation>Wprowadź nazwę</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Please enter the name</source>
-        <translation type="unfinished">Please enter the name</translation>
+        <translation>Wprowadź nazwę</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Email Address</source>
-        <translation type="unfinished">Email Address</translation>
+        <translation>Adres e-mail</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -7447,49 +7447,49 @@ Do you want to replace it?</translation>
     <message>
         <location line="+3"/>
         <source>Please enter the email</source>
-        <translation type="unfinished">Please enter the email</translation>
+        <translation>Wprowadź adres e-mail</translation>
     </message>
     <message>
         <location line="+18"/>
         <location line="+11"/>
         <source>Passwords don&apos;t match</source>
-        <translation type="unfinished">Passwords don&apos;t match</translation>
+        <translation>Hasła nie są zgodne</translation>
     </message>
     <message>
         <location line="+36"/>
         <source>Password</source>
-        <translation type="unfinished">Password</translation>
+        <translation>Hasło</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Enter the password</source>
-        <translation type="unfinished">Enter the password</translation>
+        <translation>Wprowadź hasło</translation>
     </message>
     <message>
         <location line="+14"/>
         <location line="+2"/>
         <source>Confirm password</source>
-        <translation type="unfinished">Confirm password</translation>
+        <translation>Potwierdź hasło</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Please enter the password</source>
-        <translation type="unfinished">Please enter the password</translation>
+        <translation>Wprowadź hasło</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Change password</source>
-        <translation type="unfinished">Change password</translation>
+        <translation>Zmień hasło</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Change</source>
-        <translation type="unfinished">Change</translation>
+        <translation>Zmień</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Change Password</source>
-        <translation type="unfinished">Change Password</translation>
+        <translation>Zmień hasło</translation>
     </message>
 </context>
 <context>
@@ -7497,57 +7497,57 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtauthgui/UserGroupView.qml" line="+106"/>
         <source>General</source>
-        <translation type="unfinished">General</translation>
+        <translation>Ogólne</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Group Name</source>
-        <translation type="unfinished">Group Name</translation>
+        <translation>Nazwa grupy</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Enter the name</source>
-        <translation type="unfinished">Enter the name</translation>
+        <translation>Wprowadź nazwę</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>Description</source>
-        <translation type="unfinished">Description</translation>
+        <translation>Opis</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Enter the description</source>
-        <translation type="unfinished">Enter the description</translation>
+        <translation>Wprowadź opis</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>Parent Groups</source>
-        <translation type="unfinished">Parent Groups</translation>
+        <translation>Grupy nadrzędne</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Adding Parent Group</source>
-        <translation type="unfinished">Adding Parent Group</translation>
+        <translation>Dodawanie grupy nadrzędnej</translation>
     </message>
     <message>
         <location line="+42"/>
         <source>Users</source>
-        <translation type="unfinished">Users</translation>
+        <translation>Użytkownicy</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Adding Users</source>
-        <translation type="unfinished">Adding Users</translation>
+        <translation>Dodawanie użytkowników</translation>
     </message>
     <message>
         <location line="+24"/>
         <source>Roles</source>
-        <translation type="unfinished">Roles</translation>
+        <translation>Role</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Adding Roles</source>
-        <translation type="unfinished">Adding Roles</translation>
+        <translation>Dodawanie ról</translation>
     </message>
 </context>
 <context>
@@ -7556,12 +7556,12 @@ Do you want to replace it?</translation>
         <location filename="../../../Bin/web/src/imtauthgui/UserPanel.qml" line="+121"/>
         <location line="+13"/>
         <source>Profile</source>
-        <translation type="unfinished">Profile</translation>
+        <translation>Profil</translation>
     </message>
     <message>
         <location line="-11"/>
         <source>Logout</source>
-        <translation type="unfinished">Logout</translation>
+        <translation>Wyloguj się</translation>
     </message>
 </context>
 <context>
@@ -7569,39 +7569,39 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Bin/web/src/imtauthgui/UserView.qml" line="+184"/>
         <source>General</source>
-        <translation type="unfinished">General</translation>
+        <translation>Ogólne</translation>
     </message>
     <message>
         <location line="+21"/>
         <source>System Information</source>
-        <translation type="unfinished">System Information</translation>
+        <translation>Informacje systemowe</translation>
     </message>
     <message>
         <location line="+22"/>
         <source>System Name</source>
-        <translation type="unfinished">System Name</translation>
+        <translation>Nazwa systemowa</translation>
     </message>
     <message>
         <location line="+80"/>
         <location line="+12"/>
         <source>Roles</source>
-        <translation type="unfinished">Roles</translation>
+        <translation>Role</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Adding Role</source>
-        <translation type="unfinished">Adding Role</translation>
+        <translation>Dodawanie roli</translation>
     </message>
     <message>
         <location line="+18"/>
         <location line="+12"/>
         <source>Groups</source>
-        <translation type="unfinished">Groups</translation>
+        <translation>Grupy</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Adding Group</source>
-        <translation type="unfinished">Adding Group</translation>
+        <translation>Dodawanie grupy</translation>
     </message>
 </context>
 <context>
@@ -7707,17 +7707,17 @@ Do you want to replace it?</translation>
     <message>
         <location line="+10"/>
         <source>Created the license file</source>
-        <translation type="unfinished">Created the license file</translation>
+        <translation>Utworzono plik licencji</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Removed the license &apos;%1&apos;</source>
-        <translation type="unfinished">Removed the license &apos;%1&apos;</translation>
+        <translation>Usunięto licencję „%1”</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Added the license &apos;%1&apos;</source>
-        <translation type="unfinished">Added the license &apos;%1&apos;</translation>
+        <translation>Dodano licencję „%1”</translation>
     </message>
 </context>
 <context>
@@ -7725,7 +7725,7 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Include/prolifegql/CDeviceCollectionControllerComp.cpp" line="+178"/>
         <source>It is not possible to delete this sensor because a license file has been created for it. Contact your system administrator.</source>
-        <translation type="unfinished">It is not possible to delete this sensor because a license file has been created for it. Contact your system administrator.</translation>
+        <translation>Nie można usunąć tego czujnika, ponieważ utworzono dla niego plik licencji. Skontaktuj się z administratorem systemu.</translation>
     </message>
 </context>
 <context>
@@ -7738,17 +7738,17 @@ Do you want to replace it?</translation>
     <message>
         <location line="+11"/>
         <source>License binded to hardware &apos;%1&apos;</source>
-        <translation type="unfinished">License binded to hardware &apos;%1&apos;</translation>
+        <translation>Licencja powiązana ze sprzętem „%1”</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>License unbinded from hardware &apos;%1&apos;</source>
-        <translation type="unfinished">License unbinded from hardware &apos;%1&apos;</translation>
+        <translation>Licencja odłączona od sprzętu „%1”</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Created the license file</source>
-        <translation type="unfinished">Created the license file</translation>
+        <translation>Utworzono plik licencji</translation>
     </message>
 </context>
 <context>
@@ -7756,12 +7756,12 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Include/prolifegql/COrderChangeGeneratorComp.cpp" line="+54"/>
         <source>Added the product &apos;%1&apos;</source>
-        <translation type="unfinished">Added the product &apos;%1&apos;</translation>
+        <translation>Dodano produkt „%1”</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Removed the product &apos;%1&apos;</source>
-        <translation type="unfinished">Removed the product &apos;%1&apos;</translation>
+        <translation>Usunięto produkt „%1”</translation>
     </message>
 </context>
 <context>
@@ -7769,12 +7769,12 @@ Do you want to replace it?</translation>
     <message>
         <location filename="../../../Include/prolifegql/COrderCollectionControllerComp.cpp" line="+72"/>
         <source>It is not possible to save the product &apos;%1&apos; because serial number &apos;%2&apos; already exists</source>
-        <translation type="unfinished">It is not possible to save the product &apos;%1&apos; because serial number &apos;%2&apos; already exists</translation>
+        <translation>Nie można zapisać produktu „%1”, ponieważ numer seryjny „%2” już istnieje</translation>
     </message>
     <message>
         <location line="+24"/>
         <source>It is not possible to save the product &apos;%1&apos; because MAC address &apos;%2&apos; already exists</source>
-        <translation type="unfinished">It is not possible to save the product &apos;%1&apos; because MAC address &apos;%2&apos; already exists</translation>
+        <translation>Nie można zapisać produktu „%1”, ponieważ adres MAC „%2” już istnieje</translation>
     </message>
 </context>
 <context>
