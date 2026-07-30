@@ -32,39 +32,6 @@
         <Element ComponentName="UsersModelUpdateBridge" X="300" Y="650" Note="This was done in order to manually trigger the collection update via Subscription, since Postgres remote connection does not support subscription"/>
     </PositionMap>
     <EmbeddedRegistries>
-        <EmbededRegistry Id="DocumentService">
-            <PositionMap>
-                <Element ComponentName="CollectionDocumentService" X="575" Y="325" Note=""/>
-                <Element ComponentName="CollectionDocumentServiceController" X="575" Y="225" Note=""/>
-                <Element ComponentName="CollectionDocumentServicePublisher" X="800" Y="550" Note=""/>
-                <Element ComponentName="DeviceDocumentNameProvider" X="200" Y="125" Note=""/>
-                <Element ComponentName="DeviceDocumentValidator" X="975" Y="150" Note=""/>
-                <Element ComponentName="DeviceInfo" X="150" Y="325" Note=""/>
-                <Element ComponentName="IotDeviceInfo" X="300" Y="450" Note=""/>
-                <Element ComponentName="SerializedUndoManager" X="425" Y="650" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="Subscriptions">
-            <PositionMap>
-                <Element ComponentName="AccountCollectionChangeNotifier" X="700" Y="450" Note=""/>
-                <Element ComponentName="DeviceCollectionChangeNotifier" X="225" Y="225" Note=""/>
-                <Element ComponentName="OrderCollectionChangeNotifier" X="975" Y="550" Note=""/>
-                <Element ComponentName="SlaveSubscriberController" X="625" Y="100" Note=""/>
-                <Element ComponentName="SoftwareCollectionChangeNotifier" X="400" Y="350" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="ContextTypeProviders">
-            <PositionMap>
-                <Element ComponentName="CustomersEntityTypeProvider" X="175" Y="400" Note=""/>
-                <Element ComponentName="DevicesEntityTypeProvider" X="175" Y="300" Note=""/>
-                <Element ComponentName="OrdersEntityTypeProvider" X="425" Y="300" Note=""/>
-                <Element ComponentName="SoftwareProductsEntityTypeProvider" X="700" Y="300" Note=""/>
-                <Element ComponentName="TicketsEntityTypeProvider" X="1000" Y="300" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
         <EmbededRegistry Id="Repositories">
             <PositionMap>
                 <Element ComponentName="AccountSqlRepository" X="1000" Y="75" Note=""/>
@@ -78,6 +45,39 @@
                 <Element ComponentName="PersonalAccessTokenSqlRepository" X="225" Y="525" Note=""/>
                 <Element ComponentName="SoftwareSqlRepository" X="200" Y="175" Note=""/>
                 <Element ComponentName="SoftwareTransferSqlRepository" X="1000" Y="375" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="Subscriptions">
+            <PositionMap>
+                <Element ComponentName="AccountCollectionChangeNotifier" X="700" Y="450" Note=""/>
+                <Element ComponentName="DeviceCollectionChangeNotifier" X="225" Y="225" Note=""/>
+                <Element ComponentName="OrderCollectionChangeNotifier" X="975" Y="550" Note=""/>
+                <Element ComponentName="SlaveSubscriberController" X="625" Y="100" Note=""/>
+                <Element ComponentName="SoftwareCollectionChangeNotifier" X="400" Y="350" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="DocumentService">
+            <PositionMap>
+                <Element ComponentName="CollectionDocumentService" X="575" Y="325" Note=""/>
+                <Element ComponentName="CollectionDocumentServiceController" X="575" Y="225" Note=""/>
+                <Element ComponentName="CollectionDocumentServicePublisher" X="800" Y="550" Note=""/>
+                <Element ComponentName="DeviceDocumentNameProvider" X="200" Y="125" Note=""/>
+                <Element ComponentName="DeviceDocumentValidator" X="975" Y="150" Note=""/>
+                <Element ComponentName="DeviceInfo" X="150" Y="325" Note=""/>
+                <Element ComponentName="IotDeviceInfo" X="300" Y="450" Note=""/>
+                <Element ComponentName="SerializedUndoManager" X="425" Y="650" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="ContextTypeProviders">
+            <PositionMap>
+                <Element ComponentName="CustomersEntityTypeProvider" X="175" Y="400" Note=""/>
+                <Element ComponentName="DevicesEntityTypeProvider" X="175" Y="300" Note=""/>
+                <Element ComponentName="OrdersEntityTypeProvider" X="425" Y="300" Note=""/>
+                <Element ComponentName="SoftwareProductsEntityTypeProvider" X="700" Y="300" Note=""/>
+                <Element ComponentName="TicketsEntityTypeProvider" X="1000" Y="300" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

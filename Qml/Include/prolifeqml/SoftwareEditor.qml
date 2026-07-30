@@ -354,32 +354,9 @@ ViewBase {
 		return null
 	}
 
-	// History panel is not used in embedded (Order product dialog) mode: it sits on the
-	// right with z+1 and would cover the page CustomScrollbar / steal wheel input even when
-	// "hidden" by a Binding race with its own Component.onCompleted visibility check.
-	Loader {
-		id: historyPanelLoader
-		active: !root.embedded
-		anchors.top: parent.top
-		anchors.right: parent.right
-		anchors.bottom: parent.bottom
-		width: item ? item.width : 0
-
-		sourceComponent: Component {
-			DocumentHistoryPanel {
-				documentId: root.softwareProductData ? root.softwareProductData.m_id : ""
-				collectionId: "SoftwareProducts"
-				editorFlickable: null
-			}
-		}
-	}
-
 	MultiPageView {
 		id: multiPageView
 		anchors.fill: parent
-		anchors.rightMargin: historyPanelLoader.active && historyPanelLoader.item && historyPanelLoader.item.visible
-			? historyPanelLoader.width
-			: 0
 		// Ensure page Flickables receive a real height and clip correctly when hosted in a dialog.
 		clip: true
 		panelWidth: Style.sizeHintXXS
@@ -403,6 +380,9 @@ ViewBase {
 			if (root.showLicenseHierarchy && !root.embedded) {
 				multiPageView.addPage("Hierarchy", qsTr("Hierarchy"), hierarchyPageComp, "Icons/Workflow")
 			}
+			if (!root.embedded && PermissionsController.checkPermission("ViewRevisions")) {
+				multiPageView.addPage("History", qsTr("History"), historyPageComp, "Icons/History")
+			}
 
 			let targetIndex = multiPageView.getIndexById(currentId)
 			multiPageView.currentIndex = targetIndex >= 0 ? targetIndex : 0
@@ -418,6 +398,15 @@ ViewBase {
 				root.setReadOnly(true)
 			else
 				root.checkPermissions()
+		}
+	}
+
+	Component {
+		id: historyPageComp
+
+		DocumentHistoryPanel {
+			documentId: root.softwareProductData ? root.softwareProductData.m_id : ""
+			collectionId: "SoftwareProducts"
 		}
 	}
 

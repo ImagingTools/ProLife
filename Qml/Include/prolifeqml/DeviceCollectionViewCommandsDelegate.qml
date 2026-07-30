@@ -217,21 +217,10 @@ DocCollectionViewDelegate {
 	}
 	
 	Component {
-		id: entityContextTicketsDialogComp
-		EntityContextTicketsDialog {}
-	}
-
-	Component {
 		id: deviceEditorComp;
 		
 		DeviceEditor {
 			id: deviceEditor;
-
-			onRepresentationControllerChanged: {
-				if (representationController){
-					representationController.updateRepresentationFromDocument()
-				}
-			}
 			
 			commandsControllerComp:
 				Component { GqlBasedCommandsController {
@@ -248,15 +237,6 @@ DocCollectionViewDelegate {
 			commandsDelegateComp: Component {ViewCommandsDelegateBase {
 					view: deviceEditor;
 					onCommandActivated: {
-						if (commandId === "Support"){
-							ModalDialogManager.openDialog(entityContextTicketsDialogComp, {
-																entityType: "Devices",
-																entityId: deviceEditor.deviceData.m_id,
-																entityDisplayName: deviceEditor.deviceData.m_macAddress
-															})
-							return
-						}
-
 						if (commandId !== container.createLicenseFileCommand &&
 							commandId !== container.transferLicensesCommand &&
 							commandId !== container.bindCommand){
@@ -265,13 +245,13 @@ DocCollectionViewDelegate {
 						
 						let documentManager = MainDocumentService.getDocumentService(container.collectionId);
 						if (!documentManager){
-							ModalDialogManager.showErrorDialog(qsTr("Unable to handle command. Document manager is invalid"))
+							PopupManager.addErrorMessage(qsTr("Unable to handle command. Document manager is invalid"), true)
 							return;
 						}
 
 						let documentModel = deviceEditor.deviceData
 						if (!documentModel){
-							ModalDialogManager.showInfoDialog(qsTr("Unable to handle command. Document model is invalid"));
+							PopupManager.addErrorMessage(qsTr("Unable to handle command. Document model is invalid"), true);
 							return;
 						}
 
@@ -281,13 +261,13 @@ DocCollectionViewDelegate {
 						let isNew = documentManager.documentIsNew(documentId);
 
 						if (documentId === "" || isNew || isDirty){
-							ModalDialogManager.showInfoDialog(qsTr("Please save the document first"));
+							PopupManager.addWarningMessage(qsTr("Please save the document first"), true);
 							return;
 						}
 
 						if (commandId == container.createLicenseFileCommand){
 							if (documentModel.m_productionStatus !== "Finished"){
-								ModalDialogManager.showInfoDialog(qsTr("The production status should be 'Finished'"))
+								PopupManager.addWarningMessage(qsTr("The production status should be 'Finished'"), true)
 								return;
 							}
 							
@@ -310,7 +290,7 @@ DocCollectionViewDelegate {
 						else if (commandId == container.bindCommand){
 							let macAddress = documentModel.m_macAddress;
 							if (!macAddressValidator.isValid(macAddress)){
-								ModalDialogManager.showInfoDialog(qsTr("Please enter a valid MAC-Address"))
+								PopupManager.addWarningMessage(qsTr("Please enter a valid MAC-Address"), true)
 								return;
 							}
 
@@ -611,10 +591,10 @@ DocCollectionViewDelegate {
 			ResetTransferCounterPayload {
 				onFinished: {
 					if (m_result){
-						ModalDialogManager.showInfoDialog(qsTr("The transfer counter has been successfully reset"));
+						PopupManager.addSuccessMessage(qsTr("The transfer counter has been successfully reset"), true);
 					}
 					else{
-						ModalDialogManager.showErrorDialog(m_message);
+						PopupManager.addErrorMessage(m_message, true);
 					}
 				}
 			}
@@ -667,7 +647,7 @@ DocCollectionViewDelegate {
 			TransferLicensesPayload {
 				onFinished: {
 					if (m_ok){
-						ModalDialogManager.showInfoDialog(qsTr("The licenses were successfully transferred"));
+						PopupManager.addSuccessMessage(qsTr("The licenses were successfully transferred"), true);
 					}
 					
 					if (m_limit && !m_ok){
@@ -682,7 +662,7 @@ DocCollectionViewDelegate {
 						else{
 							message += " " + qsTr("It is not possible to request a transfer because the support email is not specified.")
 							message = message.replace("%1", m_supportEmail)
-							ModalDialogManager.showInfoDialog(message)
+							PopupManager.addWarningMessage(message, true)
 						}
 					}
 				}
@@ -698,10 +678,10 @@ DocCollectionViewDelegate {
 			RequestTransferLicensesPayload {
 				onFinished: {
 					if (m_result){
-						ModalDialogManager.showInfoDialog(qsTr("The license transfer request was successfully sent to the administrator's email address"));
+						PopupManager.addSuccessMessage(qsTr("The license transfer request was successfully sent to the administrator's email address"), true);
 					}
 					else{
-						ModalDialogManager.showErrorDialog(qsTr("Error when sending the request, please try again later"));
+						PopupManager.addErrorMessage(qsTr("Error when sending the request, please try again later"), true);
 					}
 				}
 			}
