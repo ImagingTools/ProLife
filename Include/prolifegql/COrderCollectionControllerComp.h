@@ -47,6 +47,7 @@ protected:
 				const QByteArray& objectId,
 				const QString& description,
 				const imtgql::CGqlRequest& gqlRequest) const override;
+	virtual bool IsDescriptionStoredInDocument() const override;
 
 	// reimplemented (sdl::V1_0::prolife::COrderCollectionControllerCompBase)
 	virtual bool CreateRepresentationFromObject(

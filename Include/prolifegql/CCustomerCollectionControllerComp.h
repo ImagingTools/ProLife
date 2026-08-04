@@ -29,6 +29,7 @@ protected:
 				const QByteArray& objectId,
 				const QString& description,
 				const imtgql::CGqlRequest& gqlRequest) const override;
+	virtual bool IsDescriptionStoredInDocument() const override;
 	virtual bool OnBeforeRemoveElements(
 				const QByteArrayList& elementIds,
 				const imtgql::CGqlRequest& gqlRequest,

@@ -8,6 +8,7 @@
 
 // ProLife includes
 #include <prolifedata/CHardwareProductBinding.h>
+#include <prolifedata/IDeviceInfo.h>
 
 
 namespace prolifegql
@@ -36,70 +37,125 @@ bool CHardwareBindingChangeGeneratorComp::CompareDocuments(
 		return false;
 	}
 
-	oldHardwareBindingInfoPtr->GetHardwareId();
-	newHardwareBindingInfoPtr->GetHardwareId();
+	InsertChange(
+				documentChangeCollection,
+				"HardwareId",
+				QT_TRANSLATE_NOOP("Attribute", "Hardware-ID"),
+				oldHardwareBindingInfoPtr->GetHardwareId(),
+				newHardwareBindingInfoPtr->GetHardwareId());
 
-	QByteArrayList oldSoftwareIds = oldHardwareBindingInfoPtr->GetSoftwareIds();
-	QByteArrayList newSoftwareIds = newHardwareBindingInfoPtr->GetSoftwareIds();
-
-	QByteArrayList addedIds;
-	QByteArrayList removedIds;
-
-	for (const QByteArray& softwareId : oldSoftwareIds){
-		if (!newSoftwareIds.contains(softwareId)){
-			removedIds << softwareId;
-		}
-	}
-
-	for (const QByteArray& softwareId : newSoftwareIds){
-		if (!oldSoftwareIds.contains(softwareId)){
-			addedIds << softwareId;
-		}
-	}
-
-	for (const QByteArray& softwareId : std::as_const(addedIds)){
-		QString name = GetLicenseName(softwareId);
-		InsertOperationDescription(documentChangeCollection, "AddLicense", "License", name);
-	}
-
-	for (const QByteArray& softwareId : std::as_const(removedIds)){
-		QString name = GetLicenseName(softwareId);
-		InsertOperationDescription(documentChangeCollection, "RemoveLicense", "License", name);
-	}
+	InsertListChanges(
+				documentChangeCollection,
+				"AddLicense",
+				"RemoveLicense",
+				"License",
+				QT_TRANSLATE_NOOP("Attribute", "License"),
+				oldHardwareBindingInfoPtr->GetSoftwareIds(),
+				newHardwareBindingInfoPtr->GetSoftwareIds());
 
 	return true;
 }
 
 
-QString CHardwareBindingChangeGeneratorComp::GetLicenseName(const QByteArray& productUuid) const
+QString CHardwareBindingChangeGeneratorComp::CreateCustomOperationDescription(
+			const imtbase::COperationDescription& operationDescription,
+			const QByteArray& languageId) const
 {
-	imtbase::IObjectCollection::DataPtr dataPtr;
-	if (m_softwareInstanceCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
-		const imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
-		if (productInstanceInfoPtr != nullptr){
-			imtbase::ICollectionInfo::Ids licenseCollectionIds = productInstanceInfoPtr->GetLicenseInstances().GetElementIds();
-			if (!licenseCollectionIds.isEmpty()){
-				QByteArray licenseDefinitionUuid = licenseCollectionIds[0];
+	static const QByteArray translationContext = QByteArrayLiteral("prolifegql::CHardwareBindingChangeGeneratorComp");
 
-				imtbase::IObjectCollection::DataPtr licenseDataPtr;
-				if (m_licenseCollectionCompPtr->GetObjectData(licenseDefinitionUuid, licenseDataPtr)){
-					const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<const imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
-					if (licenseInfoPtr != nullptr){
-						QByteArray licenseId = licenseInfoPtr->GetLicenseId();
-						QString licenseName = licenseInfoPtr->GetLicenseName();
+	const QByteArray typeId = operationDescription.GetOperationTypeId();
 
-						QString name = licenseName + " (" + licenseId + ")";
-						return name;
-					}
-				}
-			}
-		}
+	if (typeId == "AddLicense"){
+		return Translate(QT_TR_NOOP("Bound the license '%1'"), languageId, translationContext)
+					.arg(GetLicenseName(operationDescription.GetNewValue()).toHtmlEscaped());
+	}
+
+	if (typeId == "RemoveLicense"){
+		return Translate(QT_TR_NOOP("Unbound the license '%1'"), languageId, translationContext)
+					.arg(GetLicenseName(operationDescription.GetOldValue()).toHtmlEscaped());
 	}
 
 	return QString();
 }
 
 
+QString CHardwareBindingChangeGeneratorComp::GetKeyNameForOperation(const QByteArray& key, const QByteArray& value) const
+{
+	if (key == "HardwareId"){
+		return GetHardwareName(value);
+	}
+
+	return BaseClass::GetKeyNameForOperation(key, value);
+}
+
+
+QString CHardwareBindingChangeGeneratorComp::GetLicenseName(const QByteArray& productUuid) const
+{
+	if (!IsUuid(productUuid) || !m_softwareInstanceCollectionCompPtr.IsValid() || !m_licenseCollectionCompPtr.IsValid()){
+		return productUuid;
+	}
+
+	imtbase::IObjectCollection::DataPtr dataPtr;
+	if (!m_softwareInstanceCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
+		return productUuid;
+	}
+
+	const imtlic::IProductInstanceInfo* productInstanceInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(dataPtr.GetPtr());
+	if (productInstanceInfoPtr == nullptr){
+		return productUuid;
+	}
+
+	// A product instance can carry several license instances, all of them describe the binding.
+	QStringList licenseNames;
+	const imtbase::ICollectionInfo::Ids licenseCollectionIds = productInstanceInfoPtr->GetLicenseInstances().GetElementIds();
+	for (const QByteArray& licenseDefinitionUuid : licenseCollectionIds){
+		imtbase::IObjectCollection::DataPtr licenseDataPtr;
+		if (!m_licenseCollectionCompPtr->GetObjectData(licenseDefinitionUuid, licenseDataPtr)){
+			continue;
+		}
+
+		const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<const imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
+		if (licenseInfoPtr == nullptr){
+			continue;
+		}
+
+		const QByteArray licenseId = licenseInfoPtr->GetLicenseId();
+		const QString licenseName = licenseInfoPtr->GetLicenseName();
+
+		if (licenseName.isEmpty()){
+			licenseNames << QString::fromUtf8(licenseId);
+		}
+		else{
+			licenseNames << licenseName + " (" + QString::fromUtf8(licenseId) + ")";
+		}
+	}
+
+	if (licenseNames.isEmpty()){
+		const QByteArray serialNumber = productInstanceInfoPtr->GetSerialNumber();
+
+		return serialNumber.isEmpty() ? QString::fromUtf8(productUuid) : QString::fromUtf8(serialNumber);
+	}
+
+	return licenseNames.join(", ");
+}
+
+
+QString CHardwareBindingChangeGeneratorComp::GetHardwareName(const QByteArray& hardwareId) const
+{
+	if (!IsUuid(hardwareId) || !m_deviceCollectionCompPtr.IsValid()){
+		return hardwareId;
+	}
+
+	imtbase::IObjectCollection::DataPtr dataPtr;
+	if (m_deviceCollectionCompPtr->GetObjectData(hardwareId, dataPtr)){
+		const prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::IDeviceInfo*>(dataPtr.GetPtr());
+		if (deviceInfoPtr != nullptr){
+			return deviceInfoPtr->GetMacAddress();
+		}
+	}
+
+	return hardwareId;
+}
+
+
 } // namespace prolifegql
-
-

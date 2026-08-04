@@ -65,8 +65,14 @@ sdl::V1_0::prolife::CDeviceBindingData CDeviceControllerComp::OnGetDeviceBinding
 		deviceBindingPtr->SetHardwareId(deviceId);
 		
 		hardwareProductBindingPtr.SetPtr(deviceBindingPtr, true);
-		
-		m_deviceBindingCollectionCompPtr->InsertNewObject("HardwareBinding", "", "", deviceBindingPtr, deviceId);
+
+		istd::TDelPtr<imtbase::IOperationContext> createContextPtr = nullptr;
+		if (m_bindingOperationContextControllerCompPtr.IsValid()){
+			createContextPtr = m_bindingOperationContextControllerCompPtr->CreateOperationContext("Create", deviceId, deviceBindingPtr);
+		}
+
+		m_deviceBindingCollectionCompPtr->InsertNewObject(
+					"HardwareBinding", "", "", deviceBindingPtr, deviceId, nullptr, nullptr, createContextPtr.GetPtr());
 	}
 
 	if (m_deviceCollectionCompPtr.IsValid()){
@@ -144,7 +150,13 @@ sdl::V1_0::imtbase::CUpdatedNotificationPayload CDeviceControllerComp::OnUpdateD
 
 		deviceBindingInfoPtr.SetPtr(deviceBindingPtr, true);
 
-		QByteArray result = m_deviceBindingCollectionCompPtr->InsertNewObject("HardwareBinding", "", "", deviceBindingPtr, deviceId);
+		istd::TDelPtr<imtbase::IOperationContext> createContextPtr = nullptr;
+		if (m_bindingOperationContextControllerCompPtr.IsValid()){
+			createContextPtr = m_bindingOperationContextControllerCompPtr->CreateOperationContext("Create", deviceId, deviceBindingPtr);
+		}
+
+		QByteArray result = m_deviceBindingCollectionCompPtr->InsertNewObject(
+					"HardwareBinding", "", "", deviceBindingPtr, deviceId, nullptr, nullptr, createContextPtr.GetPtr());
 		if (result.isEmpty()){
 			SendWarningMessage(0, QString("Unable to insert hardware binding object to collection"), "CDeviceControllerComp");
 		}
@@ -267,15 +279,27 @@ sdl::V1_0::imtbase::CUpdatedNotificationPayload CDeviceControllerComp::OnUpdateD
 		}
 	}
 
-	if (!m_deviceBindingCollectionCompPtr->SetObjectData(deviceId, *deviceBindingInfoPtr)){
+	istd::TDelPtr<imtbase::IOperationContext> bindingOperationContextPtr = nullptr;
+	if (m_bindingOperationContextControllerCompPtr.IsValid()){
+		bindingOperationContextPtr = m_bindingOperationContextControllerCompPtr->CreateOperationContext("Update", deviceId, deviceBindingInfoPtr.GetPtr());
+	}
+
+	if (!m_deviceBindingCollectionCompPtr->SetObjectData(deviceId, *deviceBindingInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, bindingOperationContextPtr.GetPtr())){
 		errorMessage = QString("Unable to update hardware binding info");
 		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
 
 		return retVal;
 	}
 
+	// The product count of the affected instances changes here, this has to be attributed as well.
 	for (auto iter = productInstancesMap.begin(); iter != productInstancesMap.end(); ++iter){
-		m_softwareProductCollectionCompPtr->SetObjectData(iter.key(), *iter.value().GetPtr());
+		istd::TDelPtr<imtbase::IOperationContext> softwareOperationContextPtr = nullptr;
+		if (m_softwareOperationContextControllerCompPtr.IsValid()){
+			softwareOperationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Update", iter.key(), iter.value().GetPtr());
+		}
+
+		m_softwareProductCollectionCompPtr->SetObjectData(
+					iter.key(), *iter.value().GetPtr(), istd::IChangeable::CM_WITHOUT_REFS, softwareOperationContextPtr.GetPtr());
 	}
 
 	CreateDeviceOperationContext(deviceId, project.toUtf8(), addedSoftwareIds, removedSoftwareIds);
@@ -407,15 +431,25 @@ sdl::V1_0::prolife::CTransferLicensesPayload CDeviceControllerComp::OnTransferLi
 	fromDeviceBindingInfoPtr->TransferAllLicenses(*toDeviceBindingInfoPtr);
 
 	// Update licenses for TO device
-	if (!m_deviceBindingCollectionCompPtr->SetObjectData(toDeviceId, *toDeviceBindingInfoPtr)){
+	istd::TDelPtr<imtbase::IOperationContext> toBindingOperationContextPtr = nullptr;
+	if (m_bindingOperationContextControllerCompPtr.IsValid()){
+		toBindingOperationContextPtr = m_bindingOperationContextControllerCompPtr->CreateOperationContext("Update", toDeviceId, toDeviceBindingInfoPtr.GetPtr());
+	}
+
+	if (!m_deviceBindingCollectionCompPtr->SetObjectData(toDeviceId, *toDeviceBindingInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, toBindingOperationContextPtr.GetPtr())){
 		errorMessage = QString("Unable to update hardware binding info");
 		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
-		
+
 		return retVal;
 	}
 
 	// Update licenses for FROM device
-	if (!m_deviceBindingCollectionCompPtr->SetObjectData(fromDeviceId, *fromDeviceBindingInfoPtr)){
+	istd::TDelPtr<imtbase::IOperationContext> fromBindingOperationContextPtr = nullptr;
+	if (m_bindingOperationContextControllerCompPtr.IsValid()){
+		fromBindingOperationContextPtr = m_bindingOperationContextControllerCompPtr->CreateOperationContext("Update", fromDeviceId, fromDeviceBindingInfoPtr.GetPtr());
+	}
+
+	if (!m_deviceBindingCollectionCompPtr->SetObjectData(fromDeviceId, *fromDeviceBindingInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, fromBindingOperationContextPtr.GetPtr())){
 		errorMessage = QString("Unable to update hardware binding info");
 		SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
 		return retVal;
@@ -1147,7 +1181,13 @@ prolifedata::IHardwareProductBinding* CDeviceControllerComp::GetOrCreateDeviceBi
 	deviceBindingInfoPtr.SetPtr(new prolifedata::CHardwareProductBinding());
 	deviceBindingInfoPtr->SetHardwareId(deviceId);
 
-	m_deviceBindingCollectionCompPtr->InsertNewObject("HardwareBinding", "", "", deviceBindingInfoPtr.GetPtr(), deviceId);
+	istd::TDelPtr<imtbase::IOperationContext> createContextPtr = nullptr;
+	if (m_bindingOperationContextControllerCompPtr.IsValid()){
+		createContextPtr = m_bindingOperationContextControllerCompPtr->CreateOperationContext("Create", deviceId, deviceBindingInfoPtr.GetPtr());
+	}
+
+	m_deviceBindingCollectionCompPtr->InsertNewObject(
+				"HardwareBinding", "", "", deviceBindingInfoPtr.GetPtr(), deviceId, nullptr, nullptr, createContextPtr.GetPtr());
 
 	return deviceBindingInfoPtr.PopPtr();
 }

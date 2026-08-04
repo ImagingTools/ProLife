@@ -656,24 +656,24 @@ ViewBase {
 								}
 							}
 
-							Button {
+							Text {
 								id: addProduct
+								objectName: "AddProductButton"
 								anchors.verticalCenter: parent.verticalCenter
-								text: qsTr("Add Product")
-								iconSource: "../../../" + Style.getIconPath("Icons/Add", Icon.State.On, Icon.Mode.Normal)
+								text: "+ " + qsTr("Add Product")
+								font.pixelSize: Style.fontSizeM
+								font.bold: true
+								color: Style.imaginToolsAccentColor
 
-								decorator: Component {
-									ButtonDecorator {
-										color: Style.buttonAccentColor
-										textColor: Style.baseColor
-										border.width: 0
-										opacity: addProduct.hovered ? Style.opacityHigh : 1
+								MouseArea {
+									objectName: "MouseArea"
+									anchors.fill: parent
+									hoverEnabled: true
+									cursorShape: Qt.PointingHandCursor
+									onClicked: {
+										productsView.activeProductIndex = -1
+										ModalDialogManager.openDialog(productEditorDialog, {})
 									}
-								}
-
-								onClicked: {
-									productsView.activeProductIndex = -1
-									ModalDialogManager.openDialog(productEditorDialog, {})
 								}
 							}
 						}

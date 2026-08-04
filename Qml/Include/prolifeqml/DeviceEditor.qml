@@ -168,8 +168,8 @@ DocumentViewBase {
 
 			let canChangeConfiguration = PermissionsController.checkPermission("ChangeHardwareConfiguration")
 			let canChangeDevice = PermissionsController.checkPermission("ChangeDeviceType")
-			devicePage.configurationCB.changeable = canChangeConfiguration && canChangeDevice
-			devicePage.productCB.changeable = canChangeConfiguration && canChangeDevice
+			devicePage.configurationCB.changeable = canChangeConfiguration
+			devicePage.productCB.changeable = canChangeDevice
 
 			let ok =
 				canChangeDescription ||
@@ -619,19 +619,26 @@ DocumentViewBase {
 							errorText: qsTr("Please select a device type")
 
 							onCurrentIndexChanged: {
-								let ok = false
-								if (productCB.currentIndex >= 0) {
-									let model = productCB.model.getData(ProductItemTypeMetaInfo.s_licenses, productCB.currentIndex)
-									if (model) {
-										configurationCB.model = model
-										ok = true
+								// hardwareProductsModel is assembled with copyItemDataFromModel, which
+								// does not carry the nested "licenses" sub-model across, so reading it
+								// straight off the copy yields nothing and the configuration combo ends
+								// up with no model at all - and a model-less ComboBox refuses to open,
+								// which is why the field looked completely unresponsive. Fall back to
+								// the source collection (where the sub-model does live), then to an
+								// empty sub-model, mirroring SoftwareEditor's product combo.
+								let licensesModel = null
+								if (productCB.currentIndex >= 0 && productCB.model) {
+									licensesModel = productCB.model.getData(ProductItemTypeMetaInfo.s_licenses, productCB.currentIndex)
+									if (!licensesModel) {
+										let productId = productCB.model.getData(ProductItemTypeMetaInfo.s_id, productCB.currentIndex)
+										licensesModel = CachedProductCollection.getLicensesModel(productId)
+									}
+									if (!licensesModel) {
+										licensesModel = productCB.model.addTreeModel(ProductItemTypeMetaInfo.s_licenses, productCB.currentIndex)
 									}
 								}
 
-								if (!ok) {
-									configurationCB.model = 0
-								}
-
+								configurationCB.model = licensesModel
 								configurationCB.currentIndex = -1
 								deviceEditorContainer.doUpdateModel()
 							}

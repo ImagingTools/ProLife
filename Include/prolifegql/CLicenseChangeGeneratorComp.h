@@ -4,6 +4,7 @@
 // ImtCore includes
 #include <imtbase/CDocumentChangeGeneratorCompBase.h>
 #include <imtbase/CObjectCollection.h>
+#include <imtlic/ILicenseInstanceProvider.h>
 
 
 namespace prolifegql
@@ -20,6 +21,7 @@ public:
 		I_ASSIGN(m_licenseCollectionCompPtr, "LicenseCollection", "License collection", true, "LicenseCollection");
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
 		I_ASSIGN(m_deviceCollectionCompPtr, "DeviceCollection", "Device collection", true, "DeviceCollection");
+		I_ASSIGN(m_accountCollectionCompPtr, "AccountCollection", "Account collection used to resolve customer names", false, "AccountCollection");
 	I_END_COMPONENT
 
 protected:
@@ -38,17 +40,28 @@ protected:
 	virtual QString CreateCustomOperationDescription(const imtbase::COperationDescription& operationDescription, const QByteArray& languageId = QByteArray()) const override;
 	virtual QString GetKeyNameForOperation(const QByteArray& key, const QByteArray& value) const override;
 
+	/**
+		Compare the activated license instances of both documents and record added, removed and modified ones.
+	*/
+	void CompareLicenseInstances(
+				const imtlic::ILicenseInstanceProvider& oldProvider,
+				const imtlic::ILicenseInstanceProvider& newProvider,
+				imtbase::CObjectCollection& documentChangeCollection);
+
 private:
 	QString GetProductName(const QByteArray& productId) const;
 	QString GetOrderName(const QByteArray& orderId) const;
 	QString GetLicenseName(const QByteArray& licenseId) const;
 	QString GetHardwareName(const QByteArray& hardwareId) const;
+	QString GetAccountName(const QByteArray& accountId) const;
+	QString GetSoftwareInstanceName(const QByteArray& instanceId) const;
 
 protected:
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_deviceCollectionCompPtr);
+	I_REF(imtbase::IObjectCollection, m_accountCollectionCompPtr);
 };
 
 

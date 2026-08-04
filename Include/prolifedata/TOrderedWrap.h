@@ -111,7 +111,7 @@ bool TOrderedWrap<Base>::IsEqual(const istd::IChangeable& object) const
 {
 	const TOrderedWrap<Base>* sourcePtr = dynamic_cast<const TOrderedWrap<Base>*>(&object);
 	if (sourcePtr != nullptr){
-		return (m_orderId == sourcePtr->m_orderId);
+		return (m_orderId == sourcePtr->m_orderId) && Base::IsEqual(object);
 	}
 
 	return false;

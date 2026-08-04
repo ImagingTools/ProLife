@@ -130,8 +130,13 @@ bool CSoftwareProductCollectionControllerComp::OnBeforeRemoveElements(
 						QByteArrayList softwareIds = deviceBindingInfoPtr->GetSoftwareIds();
 						if (softwareIds.contains(objectId)){
 							deviceBindingInfoPtr->Unbind(objectId);
-							
-							if (!m_bindingCollectionCompPtr->SetObjectData(elementId, *deviceBindingInfoPtr)){
+
+							istd::TDelPtr<imtbase::IOperationContext> bindingOperationContextPtr = nullptr;
+							if (m_bindingOperationContextControllerCompPtr.IsValid()){
+								bindingOperationContextPtr = m_bindingOperationContextControllerCompPtr->CreateOperationContext("Update", elementId, deviceBindingInfoPtr);
+							}
+
+							if (!m_bindingCollectionCompPtr->SetObjectData(elementId, *deviceBindingInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, bindingOperationContextPtr.GetPtr())){
 								SendWarningMessage(0, QString("Unable to update hardware binding object after software removing"));
 							}
 							

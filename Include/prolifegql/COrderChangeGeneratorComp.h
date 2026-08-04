@@ -33,15 +33,25 @@ protected:
 	virtual QString CreateCustomOperationDescription(const imtbase::COperationDescription& operationDescription, const QByteArray& languageId = QByteArray()) const override;
 	virtual QString GetKeyNameForOperation(const QByteArray& key, const QByteArray& value) const override;
 
+	/**
+		Compare the customer role collections of both documents and record added and removed roles.
+	*/
+	void CompareCustomerRoles(
+				const imtbase::IObjectCollection* oldRolesPtr,
+				const imtbase::IObjectCollection* newRolesPtr,
+				imtbase::CObjectCollection& documentChangeCollection);
+
 private:
+	/// Role type-ID and customer-ID of an assigned customer role.
+	typedef QPair<QByteArray, QByteArray> CustomerRole;
+	typedef QList<CustomerRole> CustomerRoles;
+
+	static CustomerRoles GetCustomerRoles(const imtbase::IObjectCollection* rolesPtr);
+	static QByteArrayList GetProductUuids(const imtbase::IObjectCollection* productCollectionPtr);
+
 	QString GetAccountName(const QByteArray& accountId) const;
 	QString GetProductName(const QByteArray& productId) const;
-	void GenerateDifferences(
-				imtbase::IObjectCollection& prevOrderProducts,
-				imtbase::IObjectCollection& currentOrderProducts,
-				QByteArrayList& addProducts,
-				QByteArrayList& removedProducts,
-				QByteArrayList& updatedProducts) const;
+
 protected:
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr);

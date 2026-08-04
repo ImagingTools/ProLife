@@ -5,6 +5,9 @@
 #include <imtbase/CDocumentChangeGeneratorCompBase.h>
 #include <imtbase/CObjectCollection.h>
 
+// ProLife includes
+#include <prolifedata/IIotDeviceInfo.h>
+
 
 namespace prolifegql
 {
@@ -32,6 +35,14 @@ protected:
 				QString& errorMessage,
 				const iprm::IParamsSet* paramsPtr) override;
 	virtual bool CompareDocuments(const istd::IChangeable& oldDocument, const istd::IChangeable& newDocument, imtbase::CObjectCollection& documentChangeCollection, QString& errorMessage) override;
+
+	/**
+		Record the differences of two IoT devices, which share the device collection with the sensors.
+	*/
+	bool CompareIotDevices(
+				const prolifedata::IIotDeviceInfo& oldDeviceInfo,
+				const prolifedata::IIotDeviceInfo& newDeviceInfo,
+				imtbase::CObjectCollection& documentChangeCollection);
 	virtual QString CreateCustomOperationDescription(const imtbase::COperationDescription& operationDescription, const QByteArray& languageId = QByteArray()) const override;
 	virtual QString GetKeyNameForOperation(const QByteArray& key, const QByteArray& value) const override;
 
