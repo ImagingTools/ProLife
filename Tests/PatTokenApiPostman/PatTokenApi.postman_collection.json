@@ -2313,12 +2313,68 @@
           ]
         },
         {
+          "name": "CreateToken - non-admin cannot mint a scope it does not hold (rejected)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/graphql",
+            "description": "CPersonalAccessTokenControllerComp::AreRequestedScopesAllowed rejects a non-admin caller asking for a scope outside its own effective (tenant-adapted) permission set, so a user cannot escalate privileges with a hand-crafted CreateToken request. This is why the over-broad Scenario C/D tokens below have to be minted by SU (admins bypass the check) in order to still probe the intersection at use time.",
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", name: \"Intersection - Self Escalation Attempt\", scopes: [\"ViewSensors\",\"AddOrder\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
+                "variables": ""
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Self-minted over-broad scope is rejected', function () {",
+                  "  pm.expect(json, 'Unexpected response: ' + JSON.stringify(json)).to.have.property('errors').that.is.an('array').and.not.empty;",
+                  "  pm.expect(json.errors[0].message).to.include('Not authorized to grant');",
+                  "});",
+                  "pm.test('No token is handed out for a rejected scope grant', function () {",
+                  "  const payload = (json.data || {}).CreateToken;",
+                  "  const denied = (payload === undefined || payload === null || payload.success === false);",
+                  "  pm.expect(denied, 'Unexpected response: ' + JSON.stringify(json)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
           "name": "CreateToken - Scenario C (over-broad: scopes include a permission the user lacks)",
           "request": {
             "method": "POST",
             "header": [],
             "url": "{{baseUrl}}/graphql",
-            "description": "AddOrder is NOT granted to the Token Owner role. Scopes are not validated against the catalog or the user's real permissions at creation time, so this succeeds.",
+            "description": "AddOrder is NOT granted to the Token Owner role. Minted by SU because AreRequestedScopesAllowed() only lets admins grant scopes the target user lacks; the point of the scenario is the intersection applied later, at use time.",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{suToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
             "body": {
               "mode": "graphql",
               "graphql": {
@@ -2439,7 +2495,27 @@
             "method": "POST",
             "header": [],
             "url": "{{baseUrl}}/graphql",
-            "description": "",
+            "description": "Minted by SU for the same reason as Scenario C - a non-admin may not grant itself a scope it does not hold.",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{suToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
             "body": {
               "mode": "graphql",
               "graphql": {
@@ -3021,7 +3097,27 @@
             "method": "POST",
             "header": [],
             "url": "{{baseUrl}}/graphql",
-            "description": "Scopes are stored as a single comma-joined SQL text column with no escaping - a scope value itself containing a comma will corrupt round-tripping (see the next request).",
+            "description": "Scopes are stored as a single comma-joined SQL text column with no escaping - a scope value itself containing a comma will corrupt round-tripping (see the next request). Minted by SU: \"ViewSensors,Extra\" is not a real permission, so a non-admin caller would be rejected by AreRequestedScopesAllowed() before the storage layer is ever reached.",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{suToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
             "body": {
               "mode": "graphql",
               "graphql": {
@@ -3172,7 +3268,27 @@
             "method": "POST",
             "header": [],
             "url": "{{baseUrl}}/graphql",
-            "description": "Same Token Owner, a different productId ({{secondaryProductId}}). Because all products' PATs share one central Puma store keyed by productId, this must coexist with the Alpha token rather than replacing it.",
+            "description": "Same Token Owner, a different productId ({{secondaryProductId}}). Because all products' PATs share one central Puma store keyed by productId, this must coexist with the Alpha token rather than replacing it. Minted by SU: scope validation resolves the caller's permissions per requested productId (CUserBaseInfo::GetPermissions is a per-product map lookup), and the Token Owner has no roles configured for {{secondaryProductId}}.",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{suToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
             "body": {
               "mode": "graphql",
               "graphql": {
@@ -4054,7 +4170,27 @@
             "method": "POST",
             "header": [],
             "url": "{{baseUrl}}/graphql",
-            "description": "Same user as token A, different productId tag ({{secondaryProductId}}).",
+            "description": "Same user as token A, different productId tag ({{secondaryProductId}}). Minted by SU: the Token Owner holds no permissions under {{secondaryProductId}}, so scope validation would reject a self-minted token there.",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{suToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
             "body": {
               "mode": "graphql",
               "graphql": {
