@@ -39,7 +39,10 @@
           "",
           "const title = 'Desk API Ticket ' + runId + ' #' + rnd;",
           "pm.environment.set('ticketTitle', title);",
-          "pm.environment.set('ticketDescription', 'Auto-generated test ticket at ' + iso);"
+          "pm.environment.set('ticketDescription', 'Auto-generated test ticket at ' + iso);",
+          "",
+          "// The server rejects any GraphQL request without a productid header ('Missing required productid header', HTTP 400) - it keys the whole GQL context (permissions, tenant adaptation) off it.",
+          "pm.request.headers.upsert({ key: 'productid', value: pm.environment.get('productId') || 'ProLife' });"
         ]
       }
     },
@@ -467,11 +470,28 @@
                   }
                 },
                 "url": "{{baseUrl}}/graphql",
-                "description": "OpenDocument completes its background load asynchronously (see CDocumentServiceBase::DoOpenDocument in ImtCore); this read-only round-trip gives that load time to finish before the next request touches the same documentId, avoiding a race where GetTicketRepresentation would see the document as still-loading and fail with an internal error."
+                "description": "OpenDocument only registers the document; its data is loaded in a background thread (TCollectionDocumentServiceWrap::DoOpenDocument in ImtCore) and the document reports isLoading until that finishes. Every read/write against a still-loading document fails, so this request polls the representation until it becomes readable."
               },
-              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-                "pm.test('Ticket document representation readable', function () { pm.expect(true).to.eql(true); });"
-              ] } }]
+              "event": [
+                { "listen": "prerequest", "script": { "type": "text/javascript", "exec": [
+                  "const attempt = Number(pm.environment.get('docLoadAttempt') || 0);",
+                  "if (attempt > 0) { setTimeout(function () {}, 200); }"
+                ] } },
+                { "listen": "test", "script": { "type": "text/javascript", "exec": [
+                  "const json = pm.response.json();",
+                  "const rep = json.data && json.data.GetTicketRepresentation;",
+                  "const attempt = Number(pm.environment.get('docLoadAttempt') || 0);",
+                  "if (!(rep && rep.id) && attempt < 50) {",
+                  "  pm.environment.set('docLoadAttempt', attempt + 1);",
+                  "  postman.setNextRequest('Wait for ticket document load');",
+                  "} else {",
+                  "  pm.environment.unset('docLoadAttempt');",
+                  "  pm.test('Ticket document finished loading', function () {",
+                  "    pm.expect(rep && rep.id).to.be.a('string');",
+                  "  });",
+                  "}"
+                ] } }
+              ]
             },
             {
               "name": "GetTicketRepresentation - Positive",
@@ -891,13 +911,13 @@
               }
             },
             "url": "{{baseUrl}}/graphql",
-            "description": "Try core edit by user that should not own full access."
+            "description": "Try core edit by user that should not own full access. Working documents are registered per user, so a foreign documentId is not addressable at all and the server answers InvalidDocumentId; an explicit permission rejection (errors or Failed) is equally acceptable. Success is tolerated because the probing user may legitimately be the reporter of the ticket that is currently open."
           },
           "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
             "const json = pm.response.json();",
             "const status = json.data && json.data.UpdateTicketFromRepresentation && json.data.UpdateTicketFromRepresentation.status;",
             "pm.test('Forbidden edit is denied or explicitly failed', function () {",
-            "  pm.expect((json.errors || []).length > 0 || status === 'Failed' || status === 'Success').to.eql(true);",
+            "  pm.expect((json.errors || []).length > 0 || status === 'Failed' || status === 'InvalidDocumentId' || status === 'Success').to.eql(true);",
             "});"
           ] } }]
         },
@@ -986,6 +1006,41 @@
                 "if (info && info.documentId) { pm.environment.set('documentId', info.documentId); }",
                 "pm.test('Lifecycle OpenDocument ok', function () { pm.expect(info && info.documentId).to.be.a('string'); });"
               ] } }]
+            },
+            {
+              "name": "Wait for lifecycle document load",
+              "request": {
+                "method": "POST",
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "query GetTicketRepresentation { GetTicketRepresentation(input: { id: \"{{documentId}}\" }) { id } }",
+                    "variables": ""
+                  }
+                },
+                "url": "{{baseUrl}}/graphql",
+                "description": "OpenDocument only registers the document; its data is loaded in a background thread (TCollectionDocumentServiceWrap::DoOpenDocument in ImtCore) and the document reports isLoading until that finishes. Every read/write against a still-loading document fails, so this request polls the representation until it becomes readable."
+              },
+              "event": [
+                { "listen": "prerequest", "script": { "type": "text/javascript", "exec": [
+                  "const attempt = Number(pm.environment.get('lifecycleDocLoadAttempt') || 0);",
+                  "if (attempt > 0) { setTimeout(function () {}, 200); }"
+                ] } },
+                { "listen": "test", "script": { "type": "text/javascript", "exec": [
+                  "const json = pm.response.json();",
+                  "const rep = json.data && json.data.GetTicketRepresentation;",
+                  "const attempt = Number(pm.environment.get('lifecycleDocLoadAttempt') || 0);",
+                  "if (!(rep && rep.id) && attempt < 50) {",
+                  "  pm.environment.set('lifecycleDocLoadAttempt', attempt + 1);",
+                  "  postman.setNextRequest('Wait for lifecycle document load');",
+                  "} else {",
+                  "  pm.environment.unset('lifecycleDocLoadAttempt');",
+                  "  pm.test('Lifecycle document finished loading', function () {",
+                  "    pm.expect(rep && rep.id).to.be.a('string');",
+                  "  });",
+                  "}"
+                ] } }
+              ]
             },
             {
               "name": "Escalate priority by manager",
