@@ -23,6 +23,7 @@ include(${IMTCOREDIR}/Config/CMake/Quazip.cmake)
 include(${ACFDIR}/Config/CMake/WindeployQt.cmake)
 
 if(DEFINED WEB_COMPILE AND WEB_COMPILE)
+	include(${IMTCOREDIR}/Config/CMake/WebCompiler.cmake)
 	add_compile_definitions(WEB_COMPILE)
 endif()
 

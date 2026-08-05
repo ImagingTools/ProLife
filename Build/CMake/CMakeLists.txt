@@ -12,7 +12,7 @@ if(NOT DEFINED QT_VERSION_MAJOR)
 endif()
 
 if(NOT DEFINED WEB_COMPILE)
-	set(WEB_COMPILE OFF CACHE BOOL "Build whith web compatibility")
+	set(WEB_COMPILE ON CACHE BOOL "Build whith web compatibility")
 endif()
 
 if(NOT DEFINED BUILDDIR)
