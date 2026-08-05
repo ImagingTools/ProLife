@@ -72,8 +72,6 @@ private:
 				istd::IChangeable& object,
 				QByteArray& objectId,
 				QString& errorMessage) const;
-	bool RemoveSoftwareFromOrder(const QByteArray& softwareId, const QByteArray& orderId) const;
-	bool AddSoftwareToOrder(const QByteArray& softwareId, const QByteArray& orderId) const;
 	void PopulateBoundCountInTree(sdl::V1_0::prolife::CLicenseTreeNode& node) const;
 
 private:

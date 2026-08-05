@@ -610,7 +610,6 @@
                                         <Values>
                                             <Value>Bind</Value>
                                             <Value>CreateLicenseFile</Value>
-                                            <Value>DecryptFile</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -632,6 +631,7 @@
                                             <Value>Revision</Value>
                                             <Value>TransferLicenses</Value>
                                             <Value>ResetTransferCounter</Value>
+                                            <Value>DecryptFile</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -713,7 +713,7 @@
                                     <Data IsEnabled="true" Value="Decrypt License File"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Priority" Type="Integer" ExportId="">
-                                    <Data IsEnabled="true" Value="0"/>
+                                    <Data IsEnabled="true" Value="-1"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                                     <Data IsEnabled="false"/>

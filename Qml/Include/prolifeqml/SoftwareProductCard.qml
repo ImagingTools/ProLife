@@ -9,14 +9,20 @@ import prolifeOrdersSdl 1.0
 Rectangle {
 	id: softwareCard
 
-	height: visible ? softwareCard.contentHeight : 0
+	height: softwareCard.expanded ? softwareCard.contentHeight : 0
+	opacity: softwareCard.expanded ? 1 : 0
+	visible: softwareCard.height > 0
+	clip: true
 	color: Style.baseColor
 
-	property int contentHeight: contentColumn.height
+	property bool expanded: true
+	property int contentHeight: contentColumn.height + Style.marginL
 	property OrderedProduct productItem: model.item
 	property bool readOnly: false
 
 	readonly property int labelWidth: Style.sizeHintXXXS
+	readonly property string emptyValueText: "—"
+	readonly property string softwareIdText: productItem ? productItem.m_serialNumber : ""
 	property string articleText: productItem && productItem.m_licenseId !== ""
 		? productItem.m_licenseName + " (" + productItem.m_licenseId + ")"
 		: (productItem ? productItem.m_licenseName : "")
@@ -24,9 +30,23 @@ Rectangle {
 		? productItem.m_expiration
 		: qsTr("Unlimited")
 
+	Behavior on height {
+		NumberAnimation {
+			duration: 160
+			easing.type: Easing.OutCubic
+		}
+	}
+
+	Behavior on opacity {
+		NumberAnimation {
+			duration: 160
+		}
+	}
+
 	Column {
 		id: contentColumn
 		anchors.top: parent.top
+		anchors.topMargin: Style.marginL
 		anchors.left: parent.left
 		anchors.right: parent.right
 		spacing: Style.marginS
@@ -45,8 +65,8 @@ Rectangle {
 
 			Text {
 				width: parent.width - softwareCard.labelWidth - parent.spacing
-				text: softwareCard.productItem ? softwareCard.productItem.m_serialNumber : ""
-				color: Style.textColor
+				text: softwareCard.softwareIdText !== "" ? softwareCard.softwareIdText : softwareCard.emptyValueText
+				color: softwareCard.softwareIdText !== "" ? Style.textColor : Style.inactiveTextColor
 				font.family: Style.fontFamily
 				font.pixelSize: Style.fontSizeM
 				elide: Text.ElideRight
@@ -67,8 +87,8 @@ Rectangle {
 
 			Text {
 				width: parent.width - softwareCard.labelWidth - parent.spacing
-				text: softwareCard.articleText
-				color: Style.textColor
+				text: softwareCard.articleText !== "" ? softwareCard.articleText : softwareCard.emptyValueText
+				color: softwareCard.articleText !== "" ? Style.textColor : Style.inactiveTextColor
 				font.family: Style.fontFamily
 				font.pixelSize: Style.fontSizeM
 				elide: Text.ElideRight

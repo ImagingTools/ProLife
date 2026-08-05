@@ -10,10 +10,14 @@ import prolifeOrdersSdl 1.0
  * OrderProductDelegate — one product line in the Order editor list.
  *
  * Title row layout (left → right):
- *   [Icon] [Product name elided] … [tags] [Edit] [Remove]
+ *   [Chevron] [Icon] [Product name elided] … [tags] [Edit] [Remove]
  *
  * Tags sit next to the action buttons; the name shrinks and elides so it
  * never overlaps tags or commands.
+ *
+ * The title row is clickable and folds just this one card. The list-wide
+ * Detailed/Compact button still wins: every change of "expanded" drops the
+ * per-card override, so one press always brings the whole list back in sync.
  */
 ElementView {
 	id: root
@@ -26,6 +30,9 @@ ElementView {
 
 	property TreeItemModel activeCommandsModel: TreeItemModel {}
 	property bool expanded: true
+	property bool expandOverridden: false
+	property bool localExpanded: true
+	property bool hovered: false
 	property bool readOnly: false
 	property bool inUse: productItem ? productItem.m_inUse : false
 	property bool isNew: productItem ? productItem.m_isNew : false
@@ -34,6 +41,7 @@ ElementView {
 	property bool isMultiple: productItem ? productItem.m_isMultiple : false
 	property int productCount: productItem ? productItem.m_productCount : 0
 
+	readonly property bool contentVisible: root.expandOverridden ? root.localExpanded : root.expanded
 	readonly property bool isSoftware: root.categoryId === "Software"
 	readonly property string categoryLabel: root.isSoftware ? qsTr("Software") : qsTr("Hardware")
 	readonly property string categoryIcon: root.isSoftware ? "Icons/Key" : "Icons/Sensor"
@@ -44,39 +52,104 @@ ElementView {
 	readonly property string newBadgeColor: Style.selectedLinkToColor
 	readonly property string multiBadgeColor: Style.subtitleColor
 
+	property color frameColor: root.hovered ? root.categoryBadgeColor : Style.borderColor
+
+	contentSpacing: 0
+	border.color: root.frameColor
+
 	signal removed()
 	signal edited()
+
+	Behavior on frameColor {
+		ColorAnimation {
+			duration: 120
+		}
+	}
 
 	topComp: Component {
 		Item {
 			id: headerRoot
 			width: parent ? parent.width : 0
-			height: Math.max(Style.iconSizeM, Style.controlHeightM, nameText.height, tagsRow.height)
+			height: Math.max(Style.controlHeightM, nameText.height, tagsRow.height)
+
+			MouseArea {
+				id: headerMouse
+				anchors.fill: parent
+				hoverEnabled: true
+				cursorShape: Qt.PointingHandCursor
+
+				onEntered: {
+					root.hovered = true
+				}
+
+				onExited: {
+					root.hovered = false
+				}
+
+				onClicked: {
+					root.localExpanded = !root.contentVisible
+					root.expandOverridden = true
+				}
+			}
+
+			Image {
+				id: expandChevron
+				anchors.left: parent.left
+				anchors.verticalCenter: parent.verticalCenter
+				width: Style.iconSizeS
+				height: Style.iconSizeS
+				source: "../../../../" + Style.getIconPath("Icons/ArrowDown", Icon.State.On, Icon.Mode.Normal)
+				sourceSize.width: width
+				sourceSize.height: height
+				rotation: root.contentVisible ? 0 : -90
+
+				Behavior on rotation {
+					NumberAnimation {
+						duration: 160
+						easing.type: Easing.OutCubic
+					}
+				}
+			}
 
 			// Left: icon + eliding name (takes remaining space before tags).
 			Row {
 				id: nameRow
-				anchors.left: parent.left
+				anchors.left: expandChevron.right
+				anchors.leftMargin: Style.marginS
 				anchors.right: tagsRow.left
 				anchors.rightMargin: Style.marginM
 				anchors.verticalCenter: parent.verticalCenter
 				spacing: Style.marginM
 				clip: true
 
-				Image {
+				Item {
+					id: categoryIconHolder
 					anchors.verticalCenter: parent.verticalCenter
-					width: Style.iconSizeM
-					height: Style.iconSizeM
-					source: "../../../../" + Style.getIconPath(root.categoryIcon, Icon.State.On, Icon.Mode.Normal)
-					sourceSize.width: width
-					sourceSize.height: height
+					width: Style.controlHeightM
+					height: Style.controlHeightM
+
+					Rectangle {
+						anchors.fill: parent
+						radius: Style.radiusM
+						color: root.categoryBadgeColor
+						opacity: Style.opacityLow
+					}
+
+					Image {
+						anchors.centerIn: parent
+						width: Style.iconSizeM
+						height: Style.iconSizeM
+						source: "../../../../" + Style.getIconPath(root.categoryIcon, Icon.State.On, Icon.Mode.Normal)
+						sourceSize.width: width
+						sourceSize.height: height
+					}
 				}
 
 				Text {
 					id: nameText
 					anchors.verticalCenter: parent.verticalCenter
 					// Bound width so long names elide before the tags.
-					width: Math.max(0, nameRow.width - Style.iconSizeM - nameRow.spacing)
+					width: Math.max(0, nameRow.width - categoryIconHolder.width - nameRow.spacing)
 					text: root.productName
 					color: Style.textColor
 					font.family: Style.fontFamilyBold
@@ -170,6 +243,10 @@ ElementView {
 
 	bottomComp: root.isSoftware ? softwareProductCard : hardwareProductCard
 
+	onExpandedChanged: {
+		root.expandOverridden = false
+	}
+
 	onProductInUseChanged: {
 		if (productInUse) {
 			root.setCommandValue(softwareCommandsModel, "Edit", "IsEnabled", !root.inUse)
@@ -204,14 +281,14 @@ ElementView {
 	Component {
 		id: softwareProductCard
 		SoftwareProductCard {
-			visible: root.expanded
+			expanded: root.contentVisible
 		}
 	}
 
 	Component {
 		id: hardwareProductCard
 		HardwareProductCard {
-			visible: root.expanded
+			expanded: root.contentVisible
 		}
 	}
 

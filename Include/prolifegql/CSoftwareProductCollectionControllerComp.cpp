@@ -143,24 +143,6 @@ bool CSoftwareProductCollectionControllerComp::OnBeforeRemoveElements(
 		}
 	}
 	
-	for (const QByteArray& objectId : elementIds){
-		imtbase::IObjectCollection::DataPtr dataPtr;
-		if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
-			const prolifedata::COrderedIdentifiableSoftwareInstanceInfo* productInstanceInfoPtr = dynamic_cast<const prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(dataPtr.GetPtr());
-			if (productInstanceInfoPtr != nullptr){
-				QByteArray orderId = productInstanceInfoPtr->GetOrderId();
-				if (!orderId.isEmpty()){
-					if (!RemoveSoftwareFromOrder(objectId, orderId)){
-						SendWarningMessage(0,
-										   QString("Remove software '%1' from order '%2' failed")
-											   .arg(qPrintable(objectId), qPrintable(orderId)),
-										   "CDeviceCollectionControllerComp");
-					}
-				}
-			}
-		}
-	}
-
 	return true;
 }
 
@@ -435,16 +417,6 @@ istd::IChangeableUniquePtr CSoftwareProductCollectionControllerComp::CreateObjec
 		return nullptr;
 	}
 	
-	if (softwareProductDataRepresentation.orderUuid){
-		QString orderId = *softwareProductDataRepresentation.orderUuid;
-		if (!orderId.isEmpty()){
-			if (!AddSoftwareToOrder(newObjectId, orderId.toUtf8())){
-				errorMessage = QString("Unable to add software. Error: Add software to order failed");
-				return nullptr;
-			}
-		}
-	}
-
 	istd::IChangeableUniquePtr retVal;
 	retVal.MoveCastedPtr<imtlic::IProductInstanceInfo>(std::move(softwareInstancePtr));
 
@@ -702,17 +674,6 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 			prolifedata::IOrderInfo* productOrderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(orderDataPtr.GetPtr());
 			if (productOrderInfoPtr != nullptr){
 				customerUuid = productOrderInfoPtr->GetCustomerId();
-				
-				istd::TDelPtr<imtbase::CObjectLink> objectLinkPtr;
-				objectLinkPtr.SetPtr(new imtbase::CObjectLink());
-				
-				objectLinkPtr->SetObjectUuid(objectId);
-				objectLinkPtr->SetFactoryId("SoftwareInfo");
-				
-				imtbase::IObjectCollection* productCollectionPtr = productOrderInfoPtr->GetProducts();
-				if (productCollectionPtr != nullptr){
-					productCollectionPtr->InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), objectId);
-				}
 			}
 		}
 	}
@@ -792,143 +753,6 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 }
 
 
-bool CSoftwareProductCollectionControllerComp::RemoveSoftwareFromOrder(const QByteArray& softwareId, const QByteArray& orderId) const
-{
-	if (!m_orderCollectionCompPtr.IsValid()){
-		Q_ASSERT_X(false, "Attribute 'OrderCollection' was not set", "CSoftwareProductCollectionControllerComp");
-		return false;
-	}
-	
-	prolifedata::IOrderInfo* oldOrderInfoPtr = nullptr;
-	imtbase::IObjectCollection::DataPtr oldOrderDataPtr;
-	if (m_orderCollectionCompPtr->GetObjectData(orderId, oldOrderDataPtr)){
-		oldOrderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(oldOrderDataPtr.GetPtr());
-	}
-	
-	if (oldOrderInfoPtr == nullptr){
-		SendErrorMessage(0,
-						 QString("Unable to remove software '%1' from order '%2'. Error: Order does not exists")
-							 .arg(qPrintable(softwareId), qPrintable(orderId)),
-						 "CSoftwareProductCollectionControllerComp");
-		return false;
-	}
-	
-	imtbase::IObjectCollection* productCollectionPtr = oldOrderInfoPtr->GetProducts();
-	if (productCollectionPtr == nullptr){
-		SendErrorMessage(0,
-						 QString("Unable to remove software '%1' from order '%2'. Error: Product collection from order is invalid")
-							 .arg(qPrintable(softwareId), qPrintable(orderId)),
-						 "CSoftwareProductCollectionControllerComp");
-		return false;
-	}
-	
-	QByteArrayList elementIds = productCollectionPtr->GetElementIds();
-	if (!elementIds.contains(softwareId)){
-		SendErrorMessage(0,
-						 QString("Unable to remove software '%1' from order '%2'. Error: The software does not exist in this order")
-							 .arg(qPrintable(softwareId), qPrintable(orderId)),
-						 "CSoftwareProductCollectionControllerComp");
-		return false;
-	}
-	
-	QByteArrayList removedIds;
-	removedIds << softwareId;
-	if (!productCollectionPtr->RemoveElements(removedIds)){
-		SendErrorMessage(0,
-						 QString("Unable to remove software '%1' from order '%2'. Error: Removing element from product collection failed")
-							 .arg(qPrintable(softwareId), qPrintable(orderId)),
-						 "CSoftwareProductCollectionControllerComp");
-		return false;
-	}
-	
-	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
-	if (m_orderOperationContextControllerCompPtr.IsValid()){
-		operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext("Update", orderId, oldOrderInfoPtr);
-	}
-	
-	if (!m_orderCollectionCompPtr->SetObjectData(orderId, *oldOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
-		SendErrorMessage(0,
-						 QString("Unable to remove software '%1' from order '%2'. Error: Updating an order in a collection failed")
-							 .arg(qPrintable(softwareId), qPrintable(orderId)),
-						 "CSoftwareProductCollectionControllerComp");
-		return false;
-	}
-	
-	return true;
-}
-
-
-bool CSoftwareProductCollectionControllerComp::AddSoftwareToOrder(const QByteArray& softwareId, const QByteArray& orderId) const
-{
-	if (!m_orderCollectionCompPtr.IsValid()){
-		Q_ASSERT_X(false, "Attribute 'OrderCollection' was not set", "CSoftwareProductCollectionControllerComp");
-		return false;
-	}
-	
-	prolifedata::IOrderInfo* orderInfoPtr = nullptr;
-	imtbase::IObjectCollection::DataPtr orderDataPtr;
-	if (m_orderCollectionCompPtr->GetObjectData(orderId, orderDataPtr)){
-		orderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(orderDataPtr.GetPtr());
-	}
-	
-	if (orderInfoPtr == nullptr){
-		SendErrorMessage(0,
-						 QString("Unable to add software '%1' to order '%2'. Error: Order does not exists")
-							 .arg(qPrintable(softwareId), qPrintable(orderId)),
-						 "CSoftwareProductCollectionControllerComp");
-		return false;
-	}
-	
-	imtbase::IObjectCollection* productCollectionPtr = orderInfoPtr->GetProducts();
-	if (orderInfoPtr == nullptr){
-		SendErrorMessage(0,
-						 QString("Unable to add software '%1' to order '%2'. Error: Product collection from order is invalid")
-							 .arg(qPrintable(softwareId), qPrintable(orderId)),
-						 "CSoftwareProductCollectionControllerComp");
-		return false;
-	}
-	
-	QByteArrayList elementIds = productCollectionPtr->GetElementIds();
-	if (elementIds.contains(softwareId)){
-		SendErrorMessage(0,
-						 QString("Unable to add software '%1' to order '%2'. Error: The software already exists in this order")
-							 .arg(qPrintable(softwareId), qPrintable(orderId)),
-						 "CSoftwareProductCollectionControllerComp");
-		return false;
-	}
-	
-	istd::TDelPtr<imtbase::CObjectLink> objectLinkPtr;
-	objectLinkPtr.SetPtr(new imtbase::CObjectLink());
-	
-	objectLinkPtr->SetObjectUuid(softwareId);
-	objectLinkPtr->SetFactoryId("SoftwareInfo");
-	
-	QByteArray objectId = productCollectionPtr->InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), softwareId);
-	if (objectId.isEmpty()){
-		SendErrorMessage(0,
-						 QString("Unable to add software '%1' to order '%2'. Error: Adding an order in a collection failed")
-							 .arg(qPrintable(softwareId), qPrintable(orderId)),
-						 "CSoftwareProductCollectionControllerComp");
-		return false;
-	}
-	
-	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
-	if (m_orderOperationContextControllerCompPtr.IsValid()){
-		operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext("Update", orderId, orderInfoPtr);
-	}
-	
-	if (!m_orderCollectionCompPtr->SetObjectData(orderId, *orderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
-		SendErrorMessage(0,
-						 QString("Unable to remove software '%1' from order '%2'. Error: Updating an order in a collection failed")
-							 .arg(qPrintable(softwareId), qPrintable(orderId)),
-						 "CSoftwareProductCollectionControllerComp");
-		return false;
-	}
-	
-	return true;
-}
-
-
 void CSoftwareProductCollectionControllerComp::SetAdditionalFilters(
 	const imtgql::CGqlRequest& gqlRequest,
 	const imtgql::CGqlParamObject& /*viewParamsGql*/,
@@ -998,41 +822,6 @@ bool CSoftwareProductCollectionControllerComp::UpdateObjectFromRepresentationReq
 	if (!FillObjectFromRepresentation(softwareData, object, objectId, errorMessage)){
 		errorMessage = QString("Unable to update software. Error: '%1'").arg(errorMessage);
 		return false;
-	}
-	
-	prolifedata::COrderedIdentifiableSoftwareInstanceInfo* oldSoftwareInfoPtr = nullptr;
-	imtbase::IObjectCollection::DataPtr oldSoftwareDataPtr;
-	if (m_objectCollectionCompPtr->GetObjectData(objectId, oldSoftwareDataPtr)){
-		oldSoftwareInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(oldSoftwareDataPtr.GetPtr());
-	}
-	
-	if (softwareInfoPtr != nullptr && oldSoftwareInfoPtr != nullptr){
-		QByteArray newOrderId = softwareInfoPtr->GetOrderId();
-		QByteArray oldOrderId = oldSoftwareInfoPtr->GetOrderId();
-		
-		if (newOrderId.isEmpty() && !oldOrderId.isEmpty()){
-			if (!RemoveSoftwareFromOrder(objectId, oldOrderId)){
-				errorMessage = QString("Unable to update software. Error: Remove software from order failed");
-				return false;
-			}
-		}
-		else if (!newOrderId.isEmpty() && oldOrderId.isEmpty()){
-			if (!AddSoftwareToOrder(objectId, newOrderId)){
-				errorMessage = QString("Unable to add software. Error: Add software to order failed");
-				return false;
-			}
-		}
-		else if (!newOrderId.isEmpty() && !oldOrderId.isEmpty() && newOrderId != oldOrderId){
-			if (!AddSoftwareToOrder(objectId, newOrderId)){
-				errorMessage = QString("Unable to add software. Error: Add software to order failed");
-				return false;
-			}
-			
-			if (!RemoveSoftwareFromOrder(objectId, oldOrderId)){
-				errorMessage = QString("Unable to update software. Error: Remove software from order failed");
-				return false;
-			}
-		}
 	}
 	
 	return true;
