@@ -87,6 +87,11 @@ set(AUX_INCLUDE_DIR "${PROLIFEDIR}/AuxInclude/${TARGETNAME}/GeneratedFiles")
 include_directories("${AUX_INCLUDE_DIR}/../")
 include_directories("${AUX_INCLUDE_DIR}/")
 
+set(ACF_QT_MODULE_LINK_SCOPE "")
+set(ACF_LIBRARY_LINK_SCOPE "")
+set(ACF_PACKAGE_LINK_SCOPE "")
+set(ACF_APPLICATION_LINK_SCOPE "")
+
 # Dependencies are provided via environment variables
 message(STATUS "Using libraries from environment variables")
 
@@ -128,6 +133,9 @@ add_dependencies(ProLifeGqlPck prolifegql)
 
 # add_subdirectory("${IMPL_DIR}/ProLifeConverter/CMake" "${AUX_INCLUDE_DIR}/ProLifeConverter")
 add_subdirectory("${IMPL_DIR}/ProLifeServerConfigurator/CMake" "${AUX_INCLUDE_DIR}/ProLifeServerConfigurator")
+
+# Declare target-based inter-library dependencies after all targets
+include("${PROLIFEDIR}/Config/CMake/ProLifeLibraryDependencies.cmake")
 
 file(COPY ../Migrations DESTINATION ${AUX_INCLUDE_DIR}/../../../Bin/${CMAKE_BUILD_TYPE}_${TARGETNAME})
 

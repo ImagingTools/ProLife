@@ -18,6 +18,7 @@
 #include <prolifedata/CDeviceInfo.h>
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
 #include <prolifedata/IHardwareProductBinding.h>
+#include <prolifedata/IOrdered.h>
 #include <prolifedata/CGroupFilter.h>
 #include <prolifedata/COrderCustomerRole.h>
 #include <prolifedata/IOrderCustomerRole.h>
@@ -158,66 +159,29 @@ QString COrderCollectionControllerComp::GetProductName(const QByteArray& product
 }
 
 
-void COrderCollectionControllerComp::GenerateDifferences(
-	prolifedata::IOrderInfo& currentOrder,
-	prolifedata::IOrderInfo& newOrder,
-	QByteArrayList& addedProducts,
-	QByteArrayList& removedProducts,
-	QByteArrayList& /*updatedProducts*/) const
-{
-	imtbase::IObjectCollection* currentProductCollectionPtr = currentOrder.GetProducts();
-	imtbase::IObjectCollection* newProductCollectionPtr = newOrder.GetProducts();
-
-	imtbase::ICollectionInfo::Ids currentCollectionIds = currentProductCollectionPtr->GetElementIds();
-	imtbase::ICollectionInfo::Ids newCollectionIds = newProductCollectionPtr->GetElementIds();
-
-	for (const QByteArray& id : newCollectionIds){
-		if (!currentCollectionIds.contains(id)){
-			addedProducts.push_back(id);
-		}
-	}
-
-	for (const QByteArray& id : std::as_const(currentCollectionIds)){
-		if (!newCollectionIds.contains(id)){
-			removedProducts.push_back(id);
-		}
-	}
-}
-
-
 bool COrderCollectionControllerComp::OnBeforeRemoveElements(
 			const QByteArrayList& elementIds,
 			const imtgql::CGqlRequest& /*gqlRequest*/,
 			QString& /*errorMessage*/) const
 {
 	for (const QByteArray& objectId : elementIds){
-		imtbase::IObjectCollection::DataPtr dataPtr;
-		if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
-			prolifedata::CIdentifiableOrderInfo* oldOrderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
-			if (oldOrderInfoPtr != nullptr){
-				imtbase::IObjectCollection* productCollectionPtr = oldOrderInfoPtr->GetProducts();
-				if (productCollectionPtr != nullptr){
-					imtbase::ICollectionInfo::Ids elementIds = productCollectionPtr->GetElementIds();
-					for (const imtbase::ICollectionInfo::Id& id : elementIds){
-						imtbase::ICollectionInfo::Id typeId = productCollectionPtr->GetObjectTypeId(id);
-						if (typeId == QByteArray("HardwareInfo")){
-							if (!UpdateOrderForHardware(id, "")){
-								SendWarningMessage(0,
-												   QString("Unable to remove order '%1' from device '%2'")
-													   .arg(qPrintable(objectId), qPrintable(objectId)),
-												   "COrderCollectionControllerComp");
-							}
-						}
-						else if (typeId == QByteArray("SoftwareInfo")){
-							if (!UpdateOrderForSoftware(id, "")){
-								SendWarningMessage(0,
-												   QString("Unable to remove order '%1' from software '%2'")
-													   .arg(qPrintable(objectId), qPrintable(objectId)),
-												   "COrderCollectionControllerComp");
-							}
-						}
-					}
-				}
+		imtbase::ICollectionInfo::Ids softwareIds = GetProductIdsForOrder(m_softwareInstanceCollectionCompPtr.GetPtr(), objectId);
+		for (const QByteArray& softwareId : softwareIds){
+			if (!UpdateOrderForSoftware(softwareId, "")){
+				SendWarningMessage(0,
+								   QString("Unable to remove order '%1' from software '%2'")
+									   .arg(qPrintable(objectId), qPrintable(softwareId)),
+								   "COrderCollectionControllerComp");
+			}
+		}
+
+		imtbase::ICollectionInfo::Ids deviceIds = GetProductIdsForOrder(m_deviceCollectionCompPtr.GetPtr(), objectId);
+		for (const QByteArray& deviceId : deviceIds){
+			if (!UpdateOrderForHardware(deviceId, "")){
+				SendWarningMessage(0,
+								   QString("Unable to remove order '%1' from device '%2'")
+									   .arg(qPrintable(objectId), qPrintable(deviceId)),
+								   "COrderCollectionControllerComp");
 			}
 		}
 	}
@@ -477,11 +441,6 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 	QByteArray orderStatus = prolifedata::GetIdFromOrderStatus(status);
 	representationPayload.orderStatus = (orderStatus);
 
-	imtbase::IObjectCollection* productCollectionPtr = orderInfoPtr->GetProducts();
-	if (productCollectionPtr == nullptr){
-		return false;
-	}
-
 	// Populate customerRoles
 	{
 		const imtbase::IObjectCollection* rolesCollectionPtr = orderInfoPtr->GetCustomerRoles();
@@ -519,9 +478,24 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 
 	imtsdl::TElementList<sdl::V1_0::prolife::COrderedProduct> products;
 
-	imtbase::ICollectionInfo::Ids orderedProductIds = productCollectionPtr->GetElementIds();
-	for (const imtbase::ICollectionInfo::Id& productId : orderedProductIds){
-		imtbase::ICollectionInfo::Id typeId = productCollectionPtr->GetObjectTypeId(productId);
+	QByteArrayList orderedProductIds;
+	QByteArrayList orderedProductTypeIds;
+
+	imtbase::ICollectionInfo::Ids orderedSoftwareIds = GetProductIdsForOrder(m_softwareInstanceCollectionCompPtr.GetPtr(), id);
+	for (const QByteArray& softwareId : orderedSoftwareIds){
+		orderedProductIds << softwareId;
+		orderedProductTypeIds << QByteArrayLiteral("SoftwareInfo");
+	}
+
+	imtbase::ICollectionInfo::Ids orderedDeviceIds = GetProductIdsForOrder(m_deviceCollectionCompPtr.GetPtr(), id);
+	for (const QByteArray& deviceId : orderedDeviceIds){
+		orderedProductIds << deviceId;
+		orderedProductTypeIds << QByteArrayLiteral("HardwareInfo");
+	}
+
+	for (int productIndex = 0; productIndex < orderedProductIds.count(); productIndex++){
+		const imtbase::ICollectionInfo::Id& productId = orderedProductIds.at(productIndex);
+		const imtbase::ICollectionInfo::Id& typeId = orderedProductTypeIds.at(productIndex);
 
 		imtbase::IObjectCollection::DataPtr productDataPtr;
 		if (typeId == QByteArray("SoftwareInfo")){
@@ -705,25 +679,29 @@ bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 		return false;
 	}
 
-	QByteArrayList addedProducts;
-	QByteArrayList removedProducts;
-	QByteArrayList updatedProducts;
+	// The order reference stored on the product is the single source of truth for the Order-Product relation,
+	// so the current product list of this order is resolved by querying the product collections.
+	imtbase::ICollectionInfo::Ids currentSoftwareIds = GetProductIdsForOrder(m_softwareInstanceCollectionCompPtr.GetPtr(), objectId);
+	imtbase::ICollectionInfo::Ids currentDeviceIds = GetProductIdsForOrder(m_deviceCollectionCompPtr.GetPtr(), objectId);
 
-	GenerateDifferences(*oldOrderInfoPtr, *orderInfoPtr, addedProducts, removedProducts, updatedProducts);
-
-	imtbase::IObjectCollection* productCollectionPtr = oldOrderInfoPtr->GetProducts();
-	if (productCollectionPtr == nullptr){
-		Q_ASSERT(false);
-		return false;
+	QByteArrayList representationProductIds;
+	if (orderData.orderProducts){
+		for (const istd::TNullableValue<sdl::V1_0::prolife::COrderedProduct>& product : *orderData.orderProducts){
+			if (product->id){
+				representationProductIds << *product->id;
+			}
+		}
 	}
 
-	for (const QByteArray& id : removedProducts){
-		imtbase::ICollectionInfo::Id typeId = productCollectionPtr->GetObjectTypeId(id);
-		if (typeId == QByteArray("HardwareInfo")){
-			UpdateOrderForHardware(id, "");
+	for (const QByteArray& softwareId : currentSoftwareIds){
+		if (!representationProductIds.contains(softwareId)){
+			UpdateOrderForSoftware(softwareId, "");
 		}
-		else if (typeId == QByteArray("SoftwareInfo")){
-			UpdateOrderForSoftware(id, "");
+	}
+
+	for (const QByteArray& deviceId : currentDeviceIds){
+		if (!representationProductIds.contains(deviceId)){
+			UpdateOrderForHardware(deviceId, "");
 		}
 	}
 
@@ -748,7 +726,7 @@ bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 				if (isNew){
 					CreateNewHardware(*product, objectId);
 				}
-				else if (addedProducts.contains(productId)){
+				else if (!currentDeviceIds.contains(productId)){
 					UpdateOrderForHardware(productId, objectId);
 				}
 			}
@@ -756,7 +734,7 @@ bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 				if (isNew){
 					CreateNewSoftware(*product, objectId);
 				}
-				else if (addedProducts.contains(productId)){
+				else if (!currentSoftwareIds.contains(productId)){
 					UpdateOrderForSoftware(productId, objectId);
 				}
 			}
@@ -781,6 +759,31 @@ void COrderCollectionControllerComp::SetAdditionalFilters(
 
 
 // private methods
+
+imtbase::ICollectionInfo::Ids COrderCollectionControllerComp::GetProductIdsForOrder(
+	const imtbase::IObjectCollection* productCollectionPtr,
+	const QByteArray& orderUuid) const
+{
+	if (productCollectionPtr == nullptr || orderUuid.isEmpty()){
+		return imtbase::ICollectionInfo::Ids();
+	}
+
+	imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
+	fieldFilter.fieldId = "OrderId";
+	fieldFilter.filterValue = orderUuid;
+
+	imtbase::IComplexCollectionFilter::FilterExpression groupFilter;
+	groupFilter.fieldFilters << fieldFilter;
+
+	imtbase::CComplexCollectionFilter complexFilter;
+	complexFilter.SetFilterExpression(groupFilter);
+
+	iprm::CParamsSet filterParam;
+	filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
+
+	return productCollectionPtr->GetElementIds(0, -1, &filterParam);
+}
+
 
 bool COrderCollectionControllerComp::FillObjectFromRepresentation(
 	const sdl::V1_0::prolife::COrderData& orderDataRepresentation,
@@ -945,6 +948,7 @@ bool COrderCollectionControllerComp::FillObjectFromRepresentation(
 		orderInfoPtr->SetOrderStatus(prolifedata::GetOrderStatusFromId(status));
 	}
 
+	// Legacy mirror of the product list: kept in the order document for serialization compatibility and change tracking only.
 	imtbase::IObjectCollection* productCollectionPtr = orderInfoPtr->GetProducts();
 	if (productCollectionPtr == nullptr){
 		Q_ASSERT(false);
@@ -998,11 +1002,11 @@ bool COrderCollectionControllerComp::FillObjectFromRepresentation(
 bool COrderCollectionControllerComp::UpdateOrderForHardware(const QByteArray& deviceId, const QByteArray& orderId) const
 {
 	imtbase::IObjectCollection::DataPtr productDataPtr;
-	prolifedata::COrderedIdentifiableDeviceInfo* hardwareInfoPtr = nullptr;
-	if (m_deviceCollectionCompPtr->GetObjectData(deviceId, productDataPtr)){
-		hardwareInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(productDataPtr.GetPtr());
+	if (!m_deviceCollectionCompPtr->GetObjectData(deviceId, productDataPtr)){
+		return false;
 	}
 
+	prolifedata::IOrdered* hardwareInfoPtr = dynamic_cast<prolifedata::IOrdered*>(productDataPtr.GetPtr());
 	if (hardwareInfoPtr == nullptr){
 		return false;
 	}
@@ -1011,10 +1015,10 @@ bool COrderCollectionControllerComp::UpdateOrderForHardware(const QByteArray& de
 
 	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 	if (m_deviceOperationContextControllerCompPtr.IsValid()){
-		operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext("Update", deviceId, hardwareInfoPtr);
+		operationContextPtr = m_deviceOperationContextControllerCompPtr->CreateOperationContext("Update", deviceId, productDataPtr.GetPtr());
 	}
 
-	if (!m_deviceCollectionCompPtr->SetObjectData(deviceId, *hardwareInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
+	if (!m_deviceCollectionCompPtr->SetObjectData(deviceId, *productDataPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
 		return false;
 	}
 
@@ -1025,12 +1029,11 @@ bool COrderCollectionControllerComp::UpdateOrderForHardware(const QByteArray& de
 bool COrderCollectionControllerComp::UpdateOrderForSoftware(const QByteArray& softwareId, const QByteArray& orderId) const
 {
 	imtbase::IObjectCollection::DataPtr productDataPtr;
-
-	prolifedata::COrderedIdentifiableSoftwareInstanceInfo* softwareInfoPtr = nullptr;
-	if (m_softwareInstanceCollectionCompPtr->GetObjectData(softwareId, productDataPtr)){
-		softwareInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(productDataPtr.GetPtr());
+	if (!m_softwareInstanceCollectionCompPtr->GetObjectData(softwareId, productDataPtr)){
+		return false;
 	}
 
+	prolifedata::IOrdered* softwareInfoPtr = dynamic_cast<prolifedata::IOrdered*>(productDataPtr.GetPtr());
 	if (softwareInfoPtr == nullptr){
 		return false;
 	}
@@ -1039,10 +1042,10 @@ bool COrderCollectionControllerComp::UpdateOrderForSoftware(const QByteArray& so
 
 	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
 	if (m_softwareOperationContextControllerCompPtr.IsValid()){
-		operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Update", softwareId, softwareInfoPtr);
+		operationContextPtr = m_softwareOperationContextControllerCompPtr->CreateOperationContext("Update", softwareId, productDataPtr.GetPtr());
 	}
 
-	if (!m_softwareInstanceCollectionCompPtr->SetObjectData(softwareId, *softwareInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
+	if (!m_softwareInstanceCollectionCompPtr->SetObjectData(softwareId, *productDataPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
 		return false;
 	}
 

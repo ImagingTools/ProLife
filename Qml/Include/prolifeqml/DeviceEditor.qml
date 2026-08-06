@@ -73,8 +73,11 @@ DocumentViewBase {
 		}
 	}
 
-	onDeviceDataChanged: {
-		deviceEditorContainer.deviceDataWasChanged()
+	Connections {
+		target: deviceEditorContainer
+		function onDeviceDataChanged() {
+			deviceEditorContainer.deviceDataWasChanged()
+		}
 	}
 
 	function deviceDataWasChanged() {
@@ -112,6 +115,14 @@ DocumentViewBase {
 			return null
 		}
 		multiPageView.ensurePageLoaded(idx)
+		return multiPageView.getPageByIndex(idx)
+	}
+
+	function getLoadedPageItem(pageId) {
+		let idx = multiPageView.getIndexById(pageId)
+		if (idx < 0) {
+			return null
+		}
 		return multiPageView.getPageByIndex(idx)
 	}
 
@@ -218,6 +229,7 @@ DocumentViewBase {
 	Component {
 		id: confirmSetFinishedStatusDialogComp
 		MessageDialog {
+			backgroundColor: Style.baseColor
 			title: qsTr("Confirm status")
 			message: qsTr("Do you want to set the production state of the sensor to Finished ?")
 
@@ -264,8 +276,8 @@ DocumentViewBase {
 			deviceData.m_orderId = deviceEditorContainer.forcedOrderId
 		}
 
-		let devicePage = deviceEditorContainer.getPageItem("Device")
-		let productionPage = deviceEditorContainer.hideProductionPage ? null : deviceEditorContainer.getPageItem("Production")
+		let devicePage = deviceEditorContainer.getLoadedPageItem("Device")
+		let productionPage = deviceEditorContainer.hideProductionPage ? null : deviceEditorContainer.getLoadedPageItem("Production")
 		if (devicePage) {
 			devicePage.updateGui()
 		}
@@ -273,7 +285,7 @@ DocumentViewBase {
 			productionPage.updateGui()
 		}
 
-		let licensesPage = deviceEditorContainer.getPageItem("Licenses")
+		let licensesPage = deviceEditorContainer.getLoadedPageItem("Licenses")
 		if (licensesPage) {
 			licensesPage.updateGui()
 		}
@@ -284,8 +296,8 @@ DocumentViewBase {
 			return
 		}
 
-		let devicePage = deviceEditorContainer.getPageItem("Device")
-		let productionPage = deviceEditorContainer.hideProductionPage ? null : deviceEditorContainer.getPageItem("Production")
+		let devicePage = deviceEditorContainer.getLoadedPageItem("Device")
+		let productionPage = deviceEditorContainer.hideProductionPage ? null : deviceEditorContainer.getLoadedPageItem("Production")
 		if (devicePage) {
 			devicePage.updateModel()
 		}
@@ -667,12 +679,14 @@ DocumentViewBase {
 							}
 
 							onCurrentIndexChanged: {
-								if (currentIndex >= 0) {
-									if (model) {
-										articleText.text = model.getData(DeviceItemTypeMetaInfo.s_licenseId, currentIndex)
-									}
-									deviceEditorContainer.doUpdateModel()
+								if (configurationCB.currentIndex >= 0 && configurationCB.model) {
+									articleText.text = configurationCB.model.getData(DeviceItemTypeMetaInfo.s_licenseId, configurationCB.currentIndex)
 								}
+								else {
+									articleText.text = ""
+								}
+
+								deviceEditorContainer.doUpdateModel()
 							}
 						}
 
@@ -802,7 +816,7 @@ DocumentViewBase {
 				}
 
 				let canChangeOrder = PermissionsController.checkPermission("ChangeOrderForSensor")
-				if (canChangeOrder) {
+				if (canChangeOrder && orderCB.sourceModel) {
 					if (orderCB.currentIndex >= 0) {
 						let selectedOrderId = orderCB.sourceModel.getData(OrderItemTypeMetaInfo.s_id, orderCB.currentIndex)
 						deviceEditorContainer.deviceData.m_orderId = selectedOrderId

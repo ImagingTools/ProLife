@@ -9,6 +9,7 @@ Dialog {
 	id: licenseTreeDialog
 
 	title: qsTr("License Hierarchy - Full View")
+	backgroundColor: Style.baseColor
 	width: parent ? parent.width * 0.95 : 1200
 	height: parent ? parent.height * 0.95 : 800
 

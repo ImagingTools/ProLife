@@ -13,486 +13,1008 @@ import imtcolgui 1.0
 import imtauthgui 1.0
 
 Dialog {
-	id: productEditorDialog
+	id: bindingDialog
 
-	height: ModalDialogManager.activeView.height - 200
-
+	title: qsTr("License Binding")
+	backgroundColor: Style.baseColor
+	height: ModalDialogManager.activeView.height - 120
 	canMove: false
-	
+	notClosingButtons: Enums.ok
+
 	property int dialogDefaultWidth: 1000
 	property int rootWidth: ModalDialogManager.activeView.width
-	onRootWidthChanged: {
-		if (rootWidth < dialogDefaultWidth){
-			width = rootWidth
-		}
-		else{
-			width = dialogDefaultWidth
-		}
-	}
-	
-	property var softwareIds: []
-	property string hardwareId: "";
+
+	property string hardwareId: ""
 	property DeviceBindingData bindingModel: null
 
-	notClosingButtons: Enums.ok
-	
-	signal saved();
-	
+	signal saved()
+
+	onRootWidthChanged: {
+		if (bindingDialog.rootWidth < bindingDialog.dialogDefaultWidth){
+			bindingDialog.width = bindingDialog.rootWidth
+		}
+		else{
+			bindingDialog.width = bindingDialog.dialogDefaultWidth
+		}
+	}
+
 	onHardwareIdChanged: {
-		getDeviceBindingRequest.send();
+		getDeviceBindingRequest.send()
 	}
 
 	Component.onCompleted: {
-		productEditorDialog.fillButtons()
+		bindingDialog.fillButtons()
 	}
 
 	onLocalizationChanged: {
-		productEditorDialog.fillButtons()
+		bindingDialog.fillButtons()
 	}
 
 	function fillButtons(){
-		clearButtons()
-		addButton(Enums.ok, qsTr("Save"), false)
-		addButton(Enums.cancel, qsTr("Close"), true)
+		bindingDialog.clearButtons()
+		bindingDialog.addButton(Enums.ok, qsTr("Save"), false)
+		bindingDialog.addButton(Enums.cancel, qsTr("Close"), true)
 	}
-	
+
 	onFinished: {
 		if (buttonId == Enums.ok){
-			if (!bindingModel){
+			if (!bindingDialog.bindingModel){
 				return
 			}
 
-			ModalDialogManager.openDialog(messageDialog, {"inputValue":bindingModel.m_project});
+			ModalDialogManager.openDialog(projectDialogComp, {"inputValue": bindingDialog.bindingModel.m_project})
 		}
 	}
 
 	contentComp: Component {
 		Item {
-			id: flickableContent
-			width: productEditorDialog.width
-			height: productEditorDialog.height - 100
+			id: content
+
+			width: bindingDialog.width
+			height: bindingDialog.height - 100
 			clip: true
-			// contentHeight: content.height
-			
+
+			property DeviceBindingData workingModel: null
+			property DeviceBindingData originalModel: bindingDialog.bindingModel
+
+			property int boundCount: boundTable.elementsCount
+			property var checkedIndexes: []
+			property string bindIssue: ""
+
+			property string productUuid: content.workingModel ? content.workingModel.m_productUuid : ""
+
+			property int pageIndex: 0
+
+			onPageIndexChanged: {
+				pagesAnimation.stop()
+				pagesAnimation.from = pagesRow.x
+				pagesAnimation.to = -content.pageIndex * content.width
+				pagesAnimation.start()
+
+				content.updateSaveState()
+			}
+
+			onWidthChanged: {
+				pagesAnimation.stop()
+				pagesRow.x = -content.pageIndex * content.width
+			}
+
+			onOriginalModelChanged: {
+				if (content.originalModel){
+					content.workingModel = content.originalModel.copyMe()
+					boundLicensesProvider.updateModel()
+					content.updateGui()
+				}
+			}
+
+			onBoundCountChanged: {
+				content.updateGui()
+				availableUpdateTimer.restart()
+			}
+
+			onBindIssueChanged: {
+				if (content.bindIssue !== ""){
+					popupContainer.addMessage("error", content.bindIssue, false, "bindIssue")
+				}
+				else{
+					popupContainer.removeMessageById("bindIssue")
+				}
+			}
+
 			Connections {
-				target: flickableContent.bindingModel
+				target: content.workingModel
+
 				function onModelChanged(){
-					flickableContent.updateGui()
-
-					let isEnabled = target.m_productUuid !== "" && !target.isEqualWithModel(productEditorDialog.bindingModel)
-					productEditorDialog.setButtonEnabled(Enums.ok, isEnabled)
-				}
-			}
-			
-			property int tableHeight: productComboBoxElementView.currentIndex >= 0 ? productEditorDialog.height - 300 : productEditorDialog.height - 340
-			onTableHeightChanged: {
-				if (!usedLicensesTableElementView.table){
-					return
-				}
-				
-				usedLicensesTableElementView.table.height = tableHeight
-			}
-
-			property DeviceBindingData bindingModel: null
-			property DeviceBindingData originalBindingModel: productEditorDialog.bindingModel
-			onOriginalBindingModelChanged: {
-				if (originalBindingModel){
-					bindingModel = originalBindingModel.copyMe()
-					usedLicensesDataProvider.updateModel()
-					updateGui()
+					content.updateGui()
+					content.updateSaveState()
 				}
 			}
 
 			function updateGui(){
-				productComboBoxElementView.changeable = !bindingModel.m_softwareIds.length > 0
-				productComboBoxElementView.currentIndex = -1
-				if (productComboBoxElementView.model){
-					for (let i = 0; i < productComboBoxElementView.model.getItemsCount(); i++){
-						let id = productComboBoxElementView.model.getData("id", i)
-						if (id === bindingModel.m_productUuid){
-							productComboBoxElementView.currentIndex = i
-							break;
+				if (!content.workingModel){
+					return
+				}
+
+				productComboBox.changeable = content.boundCount === 0
+
+				productComboBox.currentIndex = -1
+				if (productComboBox.model){
+					for (let i = 0; i < productComboBox.model.getItemsCount(); i++){
+						let id = productComboBox.model.getData("id", i)
+						if (id === content.workingModel.m_productUuid){
+							productComboBox.currentIndex = i
+							break
 						}
 					}
 				}
 			}
 
-			Column {
-				id: content
-				anchors.top: parent.top
-				anchors.topMargin: Style.marginM
-				anchors.left: parent.left
-				anchors.leftMargin: Style.marginM
+			function updateSaveState(){
+				if (!content.workingModel || !content.originalModel){
+					return
+				}
+
+				let isEnabled = content.pageIndex === 0 && content.workingModel.m_productUuid !== "" && !content.workingModel.isEqualWithModel(content.originalModel)
+				bindingDialog.setButtonEnabled(Enums.ok, isEnabled)
+			}
+
+			function boundArticles(){
+				let result = []
+
+				if (!boundTable.elements){
+					return result
+				}
+
+				for (let i = 0; i < boundTable.elements.getItemsCount(); i++){
+					result.push(boundTable.elements.getData("licenseId", i))
+				}
+
+				return result
+			}
+
+			function findCheckedIssue(){
+				let elements = availableCollection.table.elements
+
+				if (!elements || !content.workingModel){
+					return qsTr("Licenses are not loaded yet")
+				}
+
+				let articles = content.boundArticles()
+
+				for (let i = 0; i < content.checkedIndexes.length; i++){
+					let index = content.checkedIndexes[i]
+					let article = elements.getData("licenseId", index)
+					let itemProductUuid = elements.getData("productUuid", index)
+
+					if (itemProductUuid !== content.workingModel.m_productUuid){
+						return qsTr("A device can hold licenses of one product only")
+					}
+
+					if (articles.indexOf(article) >= 0){
+						return qsTr("This article is already bound or selected: ") + article
+					}
+
+					articles.push(article)
+				}
+
+				return ""
+			}
+
+			function updateBindState(){
+				if (!PermissionsController.checkPermission("BindSensor") || content.checkedIndexes.length === 0){
+					content.bindIssue = ""
+					confirmBindButton.enabled = false
+					return
+				}
+
+				let issue = content.findCheckedIssue()
+
+				content.bindIssue = issue
+				confirmBindButton.enabled = issue === ""
+			}
+
+			function isNewBinding(softwareId){
+				if (!content.originalModel || softwareId === ""){
+					return false
+				}
+
+				return content.originalModel.m_softwareIds.indexOf(softwareId) < 0
+			}
+
+			function bindChecked(){
+				if (!content.workingModel || !availableCollection.table.elements || !boundTable.elements){
+					return
+				}
+
+				let issue = content.findCheckedIssue()
+
+				if (issue !== ""){
+					content.bindIssue = issue
+					return
+				}
+
+				for (let i = 0; i < content.checkedIndexes.length; i++){
+					let index = content.checkedIndexes[i]
+					let softwareId = availableCollection.table.elements.getData("id", index)
+
+					content.workingModel.m_softwareIds.push(softwareId)
+
+					let newIndex = boundTable.elements.insertNewItem()
+					boundTable.elements.copyItemDataFromModel(newIndex, availableCollection.table.elements, index)
+				}
+
+				content.workingModel.modelChanged()
+				boundTable.elements.refresh()
+
+				content.checkedIndexes = []
+				availableCollection.table.uncheckAll()
+				availableUpdateTimer.restart()
+
+				content.pageIndex = 0
+			}
+
+			function unbindAt(index){
+				if (!content.workingModel || !boundTable.elements || index < 0){
+					return
+				}
+
+				let softwareId = boundTable.elements.getData("id", index)
+				let softwareIds = content.workingModel.m_softwareIds
+
+				for (let i = 0; i < softwareIds.length; i++){
+					if (softwareIds[i] === softwareId){
+						softwareIds.splice(i, 1)
+						break
+					}
+				}
+
+				content.workingModel.modelChanged()
+
+				boundTable.elements.removeItem(index)
+
+				availableUpdateTimer.restart()
+			}
+
+			Timer {
+				id: availableUpdateTimer
+
+				interval: 100
+
+				onTriggered: {
+					availableCollection.updateData()
+				}
+			}
+
+			PopupContainer {
+				id: popupContainer
+
 				anchors.right: parent.right
 				anchors.rightMargin: Style.marginM
-				spacing: Style.marginM
+				anchors.bottom: parent.bottom
+				anchors.bottomMargin: Style.marginM
 
-				GroupElementView {
-					width: parent.width
+				z: 100
+			}
 
-					ComboBoxElementView {
-						id: productComboBoxElementView
-						width: parent.width
-						name: qsTr("Product")
-						nameId: "productName"
-						model: CachedProductCollection.softwareProductsModel
-						bottomComp: currentIndex >= 0 ? undefined : productErrorComp
-						controlWidth: 300
-						changeable: false
-						onCurrentIndexChanged: {
-							if (currentIndex > -1){
-								flickableContent.bindingModel.m_productUuid = model.getData("id", currentIndex)
+			NumberAnimation {
+				id: pagesAnimation
+
+				target: pagesRow
+				property: "x"
+				duration: 200
+			}
+
+			Item {
+				id: pagesRow
+
+				width: content.width * 2
+				height: content.height
+
+				Item {
+					id: boundPage
+
+					width: content.width
+					height: content.height
+
+					GroupElementView {
+						id: headerGroup
+
+						anchors.top: parent.top
+						anchors.topMargin: Style.marginL
+						anchors.left: parent.left
+						anchors.leftMargin: Style.marginL
+						anchors.right: parent.right
+						anchors.rightMargin: Style.marginL
+
+						ComboBoxElementView {
+							id: productComboBox
+
+							width: parent.width
+							name: qsTr("Product")
+							nameId: "productName"
+							model: CachedProductCollection.softwareProductsModel
+							bottomComp: productComboBox.currentIndex >= 0 ? undefined : productErrorComp
+							controlWidth: Style.sizeHintXS
+							changeable: false
+
+							onCurrentIndexChanged: {
+								if (productComboBox.currentIndex < 0 || !content.workingModel){
+									return
+								}
+
+								content.workingModel.m_productUuid = productComboBox.model.getData("id", productComboBox.currentIndex)
+								content.updateSaveState()
+								availableUpdateTimer.restart()
 							}
-						}
-	
-						Component {
-							id: productErrorComp
-							BaseText {
-								color: Style.errorTextColor;
-								text: qsTr("Please select a product");
+
+							Component {
+								id: productErrorComp
+
+								BaseText {
+									color: Style.errorTextColor
+									text: qsTr("Please select a product")
+								}
 							}
 						}
 					}
-					
-					TableElementView {
-						id: usedLicensesTableElementView
-						name: qsTr("Used Licenses")
-						controlComp: Component {
-							Row {
-								height: Style.itemSizeM
-								spacing: Style.marginM
-								Button {
-									id: unbindButton
-									text: qsTr("Unbind")
-									icon.source: enabled ?	"qrc:/" + Style.getIconPath("Icons/Unlink", Icon.State.On, Icon.Mode.Normal):
-															"qrc:/" + Style.getIconPath("Icons/Unlink", Icon.State.Off, Icon.Mode.Disabled)
-									enabled: false
-									onClicked: {
-										if (!usedLicensesTableElementView.table){
-											return
-										}
 
-										let selection = usedLicensesTableElementView.table.getSelectedIndexes()
-										if (selection.length !== 1){
-											return
-										}
+					Rectangle {
+						id: boundPane
 
-										flickableContent.bindingModel.m_softwareIds.splice(selection[0], 1)
-										flickableContent.bindingModel.modelChanged()
+						anchors.top: headerGroup.bottom
+						anchors.topMargin: Style.marginL
+						anchors.left: parent.left
+						anchors.leftMargin: Style.marginL
+						anchors.right: parent.right
+						anchors.rightMargin: Style.marginL
+						anchors.bottom: parent.bottom
+						anchors.bottomMargin: Style.marginL
 
-										usedLicensesTableElementView.table.elements.removeItem(selection[0])
-										usedLicensesTableElementView.table.resetSelection()
-									}
+						radius: Style.radiusM
+						color: Style.baseColor
+						border.width: 1
+						border.color: Style.borderColor
+						clip: true
 
-									property int productIndex: productComboBoxElementView.currentIndex
-									onProductIndexChanged: {
-										bindButton.setEnabled(productIndex >= 0)
-									}
+						Item {
+							id: boundHeader
 
-									function setEnabled(enabled){
-										let canUnbind = PermissionsController.checkPermission("UnbindSensor")
+							anchors.top: parent.top
+							anchors.left: parent.left
+							anchors.leftMargin: Style.marginL
+							anchors.right: parent.right
+							anchors.rightMargin: Style.marginL
 
-										let selection = usedLicensesTableElementView.table.getSelectedIndexes();
-										if (selection.length === 0){
-											unbindButton.enabled = false
-											return
-										}
+							height: Style.controlHeightL + Style.marginS
 
-										let inUse = usedLicensesTableElementView.table.elements.getData("inUse", selection[0])
-										if (inUse && !canUnbind){
-											unbindButton.enabled = false
-											return
-										}
+							BaseText {
+								id: boundTitle
 
-										unbindButton.enabled = enabled
-									}
+								anchors.left: parent.left
+								anchors.verticalCenter: parent.verticalCenter
 
-									Connections {
-										target: usedLicensesTableElementView.table
-										function onSelectionChanged(selection){
-											if (selection.length !== 1){
-												unbindButton.setEnabled(false)
-												return
-											}
-											unbindButton.setEnabled(selection.length > 0)
-										}
-										
-										function onHeadersChanged(){
-											target.setColumnContentById("isMultiple", isMultipleColumnDelegateComp)
-										}
-									}
-									
-									Component {
-										id: isMultipleColumnDelegateComp;
-										TableCellDelegateBase {
-											id: cellDelegate
-				
-											Image {
-												id: image;
-												anchors.verticalCenter: parent.verticalCenter;
-												anchors.left: parent.left;
-												anchors.leftMargin: Style.marginM;
-												width: Style.iconSizeM;
-												height: width;
-												source: "../../../" + Style.getIconPath("Icons/Ok", Icon.State.On, Icon.Mode.Normal);
-												sourceSize.width: width;
-												sourceSize.height: height;
-											}
-				
-											onReused: {
-												if (!rowDelegate){
-													return
-												}
-				
-												if (rowIndex >= 0){
-													let isMultiple = cellDelegate.getValue();
-													image.visible = isMultiple;
-												}
-											}
-										}
-									}
-								}
+								text: qsTr("Bound Licenses") + " (" + content.boundCount + ")"
+								font.family: Style.fontFamilyBold
+								font.pixelSize: Style.fontSizeL
+								color: Style.titleColor
+							}
 
-								Button {
-									id: bindButton
-									text: qsTr("Bind New Licenses")
-									icon.source: enabled ?	"qrc:/" + Style.getIconPath("Icons/Link", Icon.State.On, Icon.Mode.Normal) :
-															"qrc:/" + Style.getIconPath("Icons/Link", Icon.State.Off, Icon.Mode.Disabled) 
-									enabled: false
-									onClicked: {
-										ModalDialogManager.openDialog(availableLicenceCollectionComp, {});
-									}
+							Button {
+								id: openAvailableButton
 
-									function setEnabled(enabled){
-										let canBind = PermissionsController.checkPermission("BindSensor")
-										if (!canBind){
-											bindButton.enabled = false
-											return
-										}
-										bindButton.enabled = enabled
-									}
+								anchors.right: parent.right
+								anchors.verticalCenter: parent.verticalCenter
+
+								text: qsTr("Bind Licenses")
+								enabled: content.productUuid !== "" && PermissionsController.checkPermission("BindSensor")
+								tooltipText: qsTr("Pick licenses to bind to this device")
+								iconSource: openAvailableButton.enabled ? "../../../" + Style.getIconPath("Icons/Link", Icon.State.On, Icon.Mode.Normal) :
+																	  "../../../" + Style.getIconPath("Icons/Link", Icon.State.On, Icon.Mode.Disabled)
+
+								onClicked: {
+									content.pageIndex = 1
 								}
 							}
 						}
-						
-						onTableChanged: {
-							if (table){
-								table.isMultiSelect = false
-							}
-						}
-						
-						Connections {
-							target: usedLicensesTableElementView.table
-							function onHeadersChanged(){
-								usedLicensesTableElementView.table.setColumnContentById("licenseName", unbindCellComp)
-							}
-						}
-						
-						Component {
-							id: availableLicenceCollectionComp
-							HardwareProductBindingEditor {
-								hardwareId: productEditorDialog.hardwareId
-								productId: flickableContent.bindingModel.m_productUuid
-								usedLicensesModel: usedLicensesTableElementView.table.elements
-								onFinished: {
-									if (buttonId === Enums.ok){
-										usedLicensesTableElementView.table.resetSelection()
-										for (let i = 0; i < checkedIndexes.length; i++){
-											let index = checkedIndexes[i]
 
-											let softwareId = availableLicensesModel.getData("id", index)
+						Table {
+							id: boundTable
 
-											flickableContent.bindingModel.m_softwareIds.push(softwareId)
-											flickableContent.bindingModel.modelChanged()
-											
-											let index2 = usedLicensesTableElementView.table.elements.insertNewItem()
-											usedLicensesTableElementView.table.elements.copyItemDataFromModel(index2, availableLicensesModel, index)
-										}
-										
-										usedLicensesTableElementView.table.elements.refresh()
-									}
+							anchors.top: boundHeader.bottom
+							anchors.left: parent.left
+							anchors.right: parent.right
+							anchors.bottom: parent.bottom
+							anchors.margins: Style.marginS
+
+							selectable: false
+
+							TableHeaders {
+								id: boundHeaders
+
+								Component.onCompleted: {
+									boundHeaders.addHeader("licenseName", qsTr("Name"))
+									boundHeaders.addHeader("licenseId", qsTr("Article"))
+									boundHeaders.addHeader("serialNumber", qsTr("Software-ID"))
+									boundHeaders.addHeader("unbind", "")
+
+									boundTable.headers = boundHeaders
+
+									boundTable.setColumnContentById("licenseName", boundNameCellComp)
+									boundTable.setColumnContentById("unbind", unbindCellComp)
 								}
 							}
 						}
-						
-						Component {
-							id: unbindCellComp
-							TableCellDelegateBase {
-								id: cellDelegate
-								
-								onReused: {
-									if (rowIndex >= 0){
-										let licenseName = usedLicensesTableElementView.table.elements.getData("licenseName", rowIndex)
-										licenseNameText.text = licenseName
 
-										let inUse = usedLicensesTableElementView.table.elements.getData("inUse", rowIndex)
-										unbindButton2.visible = inUse
-									}
-								}
+						BaseText {
+							id: boundEmptyHint
 
-								ToolButton {
-									id: unbindButton2
-									anchors.verticalCenter: cellDelegate.verticalCenter
-									anchors.left: cellDelegate.left
-									anchors.leftMargin: Style.marginM
-									width: 20
-									height: width
-									icon.source: "qrc:/" + Style.getIconPath("Icons/Lock", Icon.State.On, Icon.Mode.Normal)
-								}
-								
-								BaseText {
-									id: licenseNameText
-									anchors.verticalCenter: cellDelegate.verticalCenter
-									anchors.left: unbindButton2.right
-									anchors.leftMargin: Style.marginM
-								}
+							anchors.centerIn: boundTable
+
+							visible: content.boundCount === 0
+							text: qsTr("Nothing is bound yet. Press Bind Licenses to add one.")
+							color: Style.inactiveTextColor
+							font.pixelSize: Style.fontSizeM
+						}
+					}
+				}
+
+				Item {
+					id: availablePage
+
+					x: content.width
+					width: content.width
+					height: content.height
+
+					Item {
+						id: availableTopBar
+
+						anchors.top: parent.top
+						anchors.topMargin: Style.marginL
+						anchors.left: parent.left
+						anchors.leftMargin: Style.marginL
+						anchors.right: parent.right
+						anchors.rightMargin: Style.marginL
+
+						height: Style.controlHeightL
+
+						ToolButton {
+							id: backButton
+
+							anchors.left: parent.left
+							anchors.verticalCenter: parent.verticalCenter
+
+							width: Style.buttonWidthL
+							height: width
+							tooltipText: qsTr("Back to bound licenses")
+							iconSource: "../../../" + Style.getIconPath("Icons/Left", Icon.State.On, Icon.Mode.Normal)
+
+							onClicked: {
+								content.pageIndex = 0
 							}
 						}
-					
-						TreeItemModel {
-							id: usedLicensesTableHeadersModel
-							
+
+						BaseText {
+							id: availableTitle
+
+							anchors.left: backButton.right
+							anchors.leftMargin: Style.marginM
+							anchors.verticalCenter: parent.verticalCenter
+
+							text: qsTr("Select Licenses")
+							font.family: Style.fontFamilyBold
+							font.pixelSize: Style.fontSizeL
+							color: Style.titleColor
+						}
+
+						Button {
+							id: confirmBindButton
+
+							anchors.right: parent.right
+							anchors.verticalCenter: parent.verticalCenter
+
+							text: content.checkedIndexes.length > 0 ? qsTr("Bind") + " (" + content.checkedIndexes.length + ")" : qsTr("Bind")
+							enabled: false
+							tooltipText: qsTr("Bind the checked licenses to this device")
+							iconSource: confirmBindButton.enabled ? "../../../" + Style.getIconPath("Icons/Link", Icon.State.On, Icon.Mode.Normal) :
+																"../../../" + Style.getIconPath("Icons/Link", Icon.State.On, Icon.Mode.Disabled)
+
+							onClicked: {
+								content.bindChecked()
+							}
+						}
+					}
+
+					Rectangle {
+						id: availablePane
+
+						anchors.top: availableTopBar.bottom
+						anchors.topMargin: Style.marginM
+						anchors.left: parent.left
+						anchors.leftMargin: Style.marginL
+						anchors.right: parent.right
+						anchors.rightMargin: Style.marginL
+						anchors.bottom: parent.bottom
+						anchors.bottomMargin: Style.marginL
+
+						radius: Style.radiusM
+						color: Style.baseColor
+						border.width: 1
+						border.color: Style.borderColor
+						clip: true
+
+						TableHeaders {
+							id: availableHeaders
+
 							Component.onCompleted: {
-								updateHeaders()
-							}
-							
-							function updateHeaders(){
-								usedLicensesTableHeadersModel.clear();
-								
-								let index = usedLicensesTableHeadersModel.insertNewItem();
-								usedLicensesTableHeadersModel.setData("id", "licenseName", index);
-								usedLicensesTableHeadersModel.setData("name", qsTr("Name"), index);
-								
-								index = usedLicensesTableHeadersModel.insertNewItem();
-								usedLicensesTableHeadersModel.setData("id", "licenseId", index);
-								usedLicensesTableHeadersModel.setData("name", qsTr("Article"), index);
+								availableHeaders.addHeader("licenseName", qsTr("Name"))
+								availableHeaders.addHeader("licenseId", qsTr("Article"))
+								availableHeaders.addHeader("serialNumber", qsTr("Software-ID"))
+								availableHeaders.addHeader("isMultiple", qsTr("Is Multiple"))
+								availableHeaders.addHeader("productCount", qsTr("Available"))
 
-								index = usedLicensesTableHeadersModel.insertNewItem();
-								usedLicensesTableHeadersModel.setData("id", "serialNumber", index);
-								usedLicensesTableHeadersModel.setData("name", qsTr("Software-ID"), index);
+								let filteringInfoIds = ["licenseName", "licenseId", "serialNumber"]
 
-								index = usedLicensesTableHeadersModel.insertNewItem();
-								usedLicensesTableHeadersModel.setData("id", "isMultiple", index);
-								usedLicensesTableHeadersModel.setData("name", qsTr("Is Multiple"), index);
+								availableCollection.collectionFilter.setFilteringInfoIds(filteringInfoIds)
+								availableCollection.tableViewParamsStoredServer = false
+								availableCollection.dataController.headersReceived(availableHeaders)
+							}
+				}
 
-								if (usedLicensesTableElementView.table){
-									usedLicensesTableElementView.table.headers = usedLicensesTableHeadersModel
-								}
-							}
-						}
-	
-						ArrayFieldFilter {
-							id: hardwareFilter
-							m_fieldId: "HardwareId"
-							m_filterValues: [productEditorDialog.hardwareId]
-							m_filterValueType: "String"
-							m_filterOperations: ["ArrayHasAny"]
-						}
-						
-						CollectionDataProvider {
-							id: usedLicensesDataProvider
-							commandId: ProlifeLicensesSdlCommandIds.s_softwareProductsList;
-							sortByField: SoftwareProductItemTypeMetaInfo.s_name;
-							fields: [
-								SoftwareProductItemTypeMetaInfo.s_id,
-								SoftwareProductItemTypeMetaInfo.s_name,
-								SoftwareProductItemTypeMetaInfo.s_productName,
-								SoftwareProductItemTypeMetaInfo.s_licenseUuid,
-								SoftwareProductItemTypeMetaInfo.s_licenseId,
-								SoftwareProductItemTypeMetaInfo.s_licenseName,
-								SoftwareProductItemTypeMetaInfo.s_serialNumber,
-								SoftwareProductItemTypeMetaInfo.s_productUuid
-							];
-							
-							onStateChanged: {
-								loading.visible = state === "" || state === "Loading"
-							}
-							
+				SoftwareProductCollectionView {
+					id: availableCollection
+
+					anchors.top: parent.top
+					anchors.left: parent.left
+					anchors.right: parent.right
+					anchors.bottom: parent.bottom
+					anchors.margins: Style.marginS
+
+					commandsControllerComp: null
+					commandsDelegateComp: null
+					table.checkable: true
+					table.selectable: false
+					tableViewParamsStoredServer: false
+					canResetFilters: false
+
+					dataControllerComp: Component {
+						CollectionRepresentation {
+							id: availableDataController
+
 							Component.onCompleted: {
-								filter.addFieldFilter(hardwareFilter)
+								availableDataController.additionalFieldIds.push("orderUuid")
+								availableDataController.additionalFieldIds.push("hardwareId")
+								availableDataController.additionalFieldIds.push("inUse")
+								availableDataController.additionalFieldIds.push("productUuid")
+								availableDataController.additionalFieldIds.push("licenseUuid")
+								availableDataController.additionalFieldIds.push("customerId")
 							}
-							
-							onCollectionModelChanged: {
-								if (collectionModel){
-									if (usedLicensesTableElementView.table){
-										usedLicensesTableElementView.table.elements = collectionModel
+
+							function updateModel(){}
+						}
+					}
+
+					function registerFilters(){
+						availableCollection.registerFieldFilterDelegate("Products", productsDelegateFilterComp)
+					}
+
+					Component {
+						id: productsDelegateFilterComp
+
+						FieldFilterDelegate {
+							id: productsDelegateFilter
+
+							name: qsTr("Products")
+							defaultFieldFilter.m_fieldId: "ProductUuid"
+							readOnly: true
+
+							function syncSelection(){
+								for (let i = 0; i < optionsListAdapter.m_options.count; i++){
+									if (productsDelegateFilter.getOptionId(i) === content.productUuid){
+										productsDelegateFilter.setSelectedIndex(i)
+										return
 									}
 								}
 							}
+
+							Component.onCompleted: {
+								productsDelegateFilter.setOptionsList(optionsListAdapter.m_options)
+								productsDelegateFilter.syncSelection()
+							}
+
+							Connections {
+								target: content
+
+								function onProductUuidChanged(){
+									productsDelegateFilter.syncSelection()
+								}
+							}
+
+							OptionsListAdapter {
+								id: optionsListAdapter
+
+								collectionModel: CachedProductCollection.softwareProductsModel
+
+								onCollectionModelChanged: {
+									productsDelegateFilter.setOptionsList(optionsListAdapter.m_options)
+									productsDelegateFilter.syncSelection()
+								}
+							}
 						}
-					} // TableElementView
+					}
+
+					Connections {
+						target: availableCollection
+
+						function onCheckedItemsChanged(){
+							content.checkedIndexes = availableCollection.table.getCheckedItems()
+							content.updateBindState()
+						}
+					}
+
+					onElementsChanged: {
+						availableCollection.table.uncheckAll()
+						content.checkedIndexes = []
+						content.updateBindState()
+					}
+
+					FieldFilter {
+						id: productFilter
+
+						m_fieldId: "ProductUuid"
+						m_filterValue: content.workingModel ? content.workingModel.m_productUuid : ""
+						m_filterValueType: "String"
+						m_filterOperations: ["Equal"]
+					}
+
+					FieldFilter {
+						id: licenseFilter
+
+						m_fieldId: "LicenseUuid"
+						m_filterValueType: "String"
+						m_filterOperations: ["Not", "Equal"]
+					}
+
+					FieldFilter {
+						id: emptyLicenseIdFilter
+
+						m_fieldId: "LicenseId"
+						m_filterValueType: "String"
+						m_filterValue: ""
+						m_filterOperations: ["Not", "Equal"]
+					}
+
+					FieldFilter {
+						id: excludeFilter
+
+						m_fieldId: "DocumentId"
+						m_filterValueType: "String"
+						m_filterOperations: ["Not", "Equal"]
+					}
+
+					GroupFilter {
+						id: notIsMultiSoftwareFilter
+
+						m_logicalOperation: "And"
+					}
+
+					FieldFilter {
+						id: isMultipleFilter
+
+						m_fieldId: "IsMultiProduct"
+						m_filterValue: "false"
+						m_filterValueType: "Bool"
+						m_filterOperations: ["Equal"]
+					}
+
+					ArrayFieldFilter {
+						id: emptyHardwareFilter
+
+						m_fieldId: "HardwareId"
+						m_filterValueType: "String"
+						m_filterOperations: ["ArrayIsEmpty"]
+					}
+
+					GroupFilter {
+						id: isMultiSoftwareFilter
+
+						m_logicalOperation: "And"
+					}
+
+					FieldFilter {
+						id: isMultipleFilter2
+
+						m_fieldId: "IsMultiProduct"
+						m_filterValue: "true"
+						m_filterValueType: "Bool"
+						m_filterOperations: ["Equal"]
+					}
+
+					FieldFilter {
+						id: productCountFilter
+
+						m_fieldId: "ProductCount"
+						m_filterValue: "0"
+						m_filterValueType: "Integer"
+						m_filterOperations: ["Greater"]
+					}
+
+					GroupFilter {
+						id: softwareFilter
+
+						m_logicalOperation: "Or"
+					}
+
+					function updateData(){
+						if (!content.workingModel || content.workingModel.m_productUuid === ""){
+							return
+						}
+
+						availableCollection.dataController.collectionId = "SoftwareProducts"
+
+						availableCollection.collectionFilter.removeFilterByFieldId(productFilter.m_fieldId)
+						availableCollection.collectionFilter.removeFilterByFieldId(excludeFilter.m_fieldId)
+						availableCollection.collectionFilter.removeFilterByFieldId(licenseFilter.m_fieldId)
+						availableCollection.collectionFilter.removeFilterByFieldId(emptyLicenseIdFilter.m_fieldId)
+						availableCollection.collectionFilter.removeGroupFilter(softwareFilter)
+
+						availableCollection.collectionFilter.addFieldFilter(productFilter)
+
+						notIsMultiSoftwareFilter.emplaceFieldFilters()
+						notIsMultiSoftwareFilter.m_fieldFilters.addElement(isMultipleFilter)
+						notIsMultiSoftwareFilter.m_fieldFilters.addElement(emptyHardwareFilter)
+
+						isMultiSoftwareFilter.emplaceFieldFilters()
+						isMultiSoftwareFilter.m_fieldFilters.addElement(isMultipleFilter2)
+						isMultiSoftwareFilter.m_fieldFilters.addElement(productCountFilter)
+
+						softwareFilter.emplaceGroupFilters()
+						softwareFilter.m_groupFilters.addElement(notIsMultiSoftwareFilter)
+						softwareFilter.m_groupFilters.addElement(isMultiSoftwareFilter)
+
+						availableCollection.collectionFilter.addGroupFilter(softwareFilter)
+
+						if (boundTable.elements){
+							for (let i = 0; i < boundTable.elements.getItemsCount(); i++){
+								let id = boundTable.elements.getData("id", i)
+								let licenseUuid = boundTable.elements.getData("licenseUuid", i)
+								let licenseId = boundTable.elements.getData("licenseId", i)
+
+								if (id !== ""){
+									let filter = excludeFilter.copyMe()
+									filter.m_filterValue = id
+									availableCollection.collectionFilter.addFieldFilter(filter)
+								}
+
+								if (licenseUuid !== ""){
+									let licFilter = licenseFilter.copyMe()
+									licFilter.m_filterValue = licenseUuid
+									availableCollection.collectionFilter.addFieldFilter(licFilter)
+								}
+
+								if (licenseId !== ""){
+									let articleFilter = emptyLicenseIdFilter.copyMe()
+									articleFilter.m_filterValue = licenseId
+									availableCollection.collectionFilter.addFieldFilter(articleFilter)
+								}
+							}
+						}
+
+						availableCollection.collectionFilter.addFieldFilter(emptyLicenseIdFilter)
+
+						availableCollection.collectionFilter.filterChanged()
+					}
+				}
+					}
 				}
 			}
-			
 
-		}// Flickable
+			Component {
+				id: unbindCellComp
+
+				TableCellDelegateBase {
+					id: unbindCellDelegate
+
+					ToolButton {
+						id: unbindRowButton
+
+						anchors.verticalCenter: unbindCellDelegate.verticalCenter
+						anchors.horizontalCenter: unbindCellDelegate.horizontalCenter
+
+						width: Style.buttonWidthM
+						height: width
+						tooltipText: qsTr("Unbind")
+						iconSource: "../../../" + Style.getIconPath("Icons/Unlink", Icon.State.On, Icon.Mode.Normal)
+
+						onClicked: {
+							content.unbindAt(unbindCellDelegate.rowIndex)
+						}
+					}
+
+					onReused: {
+						if (unbindCellDelegate.rowIndex >= 0){
+							let inUse = boundTable.elements.getData("inUse", unbindCellDelegate.rowIndex)
+							unbindRowButton.visible = !inUse || PermissionsController.checkPermission("UnbindSensor")
+						}
+					}
+				}
+			}
+
+			Component {
+				id: boundNameCellComp
+
+				TableCellDelegateBase {
+					id: nameCellDelegate
+
+					ToolButton {
+						id: lockButton
+
+						anchors.verticalCenter: nameCellDelegate.verticalCenter
+						anchors.left: nameCellDelegate.left
+						anchors.leftMargin: Style.marginM
+
+						width: Style.iconSizeM
+						height: width
+						tooltipText: qsTr("Already in use")
+						iconSource: "../../../" + Style.getIconPath("Icons/Lock", Icon.State.On, Icon.Mode.Normal)
+					}
+
+					BaseText {
+						id: licenseNameText
+
+						anchors.verticalCenter: nameCellDelegate.verticalCenter
+						anchors.left: lockButton.right
+						anchors.leftMargin: Style.marginM
+					}
+
+					Rectangle {
+						id: newBadge
+
+						anchors.verticalCenter: nameCellDelegate.verticalCenter
+						anchors.left: licenseNameText.right
+						anchors.leftMargin: Style.marginS
+
+						width: newBadgeText.width + 2 * Style.marginXS
+						height: Style.controlHeightS
+						radius: Style.radiusL
+						color: Style.selectedColor
+
+						BaseText {
+							id: newBadgeText
+
+							anchors.centerIn: parent
+
+							text: qsTr("New")
+							font.family: Style.fontFamilyBold
+							font.pixelSize: Style.fontSizeS
+							color: Style.textColor
+						}
+					}
+
+					onReused: {
+						if (rowIndex >= 0){
+							licenseNameText.text = boundTable.elements.getData("licenseName", rowIndex)
+							lockButton.visible = boundTable.elements.getData("inUse", rowIndex)
+							newBadge.visible = content.isNewBinding(boundTable.elements.getData("id", rowIndex))
+						}
+					}
+				}
+			}
+
+			ArrayFieldFilter {
+				id: boundHardwareFilter
+
+				m_fieldId: "HardwareId"
+				m_filterValues: [bindingDialog.hardwareId]
+				m_filterValueType: "String"
+				m_filterOperations: ["ArrayHasAny"]
+			}
+
+			CollectionDataProvider {
+				id: boundLicensesProvider
+
+				commandId: ProlifeLicensesSdlCommandIds.s_softwareProductsList
+				sortByField: SoftwareProductItemTypeMetaInfo.s_name
+				fields: [
+					SoftwareProductItemTypeMetaInfo.s_id,
+					SoftwareProductItemTypeMetaInfo.s_name,
+					SoftwareProductItemTypeMetaInfo.s_productName,
+					SoftwareProductItemTypeMetaInfo.s_licenseUuid,
+					SoftwareProductItemTypeMetaInfo.s_licenseId,
+					SoftwareProductItemTypeMetaInfo.s_licenseName,
+					SoftwareProductItemTypeMetaInfo.s_serialNumber,
+					SoftwareProductItemTypeMetaInfo.s_productUuid,
+					SoftwareProductItemTypeMetaInfo.s_inUse,
+					SoftwareProductItemTypeMetaInfo.s_isMultiple
+				]
+
+				onStateChanged: {
+					loading.visible = boundLicensesProvider.state === "" || boundLicensesProvider.state === "Loading"
+				}
+
+				Component.onCompleted: {
+					boundLicensesProvider.filter.addFieldFilter(boundHardwareFilter)
+				}
+
+				onCollectionModelChanged: {
+					if (boundLicensesProvider.collectionModel){
+						boundTable.elements = boundLicensesProvider.collectionModel
+						availableUpdateTimer.restart()
+					}
+				}
+			}
+		}
 	}
-	
+
 	Component {
-		id: messageDialog;
-		
+		id: projectDialogComp
+
 		InputDialog {
-			title: qsTr("Apply changes");
+			backgroundColor: Style.baseColor
+			title: qsTr("Apply changes")
 			message: qsTr("Please check the data before saving. Save changes ?")
-			placeHolderText: qsTr("Please enter the project");
+			placeHolderText: qsTr("Please enter the project")
+
 			onFinished: {
 				if (buttonId == Enums.ok){
-					let bindingModel = productEditorDialog.contentItem.bindingModel;
-					bindingModel.m_id = productEditorDialog.hardwareId;
-					deviceBindingInput.m_deviceId = productEditorDialog.hardwareId
+					let workingModel = bindingDialog.contentItem.workingModel
+					workingModel.m_id = bindingDialog.hardwareId
+
+					deviceBindingInput.m_deviceId = bindingDialog.hardwareId
 					deviceBindingInput.m_project = inputValue
-					deviceBindingInput.m_item = bindingModel
-					
+					deviceBindingInput.m_item = workingModel
+
 					updateDeviceBindingRequest.send(deviceBindingInput)
 				}
 			}
 		}
 	}
-	
+
 	Loading {
 		id: loading
-		anchors.fill: productEditorDialog
-		background.color: Style.baseColor;
+
+		anchors.fill: bindingDialog
+		background.color: Style.baseColor
 	}
-	
+
 	GqlSdlRequestSender {
-		id: getDeviceBindingRequest;
-		gqlCommandId: ProlifeSensorsSdlCommandIds.s_getDeviceBinding;
+		id: getDeviceBindingRequest
+
+		gqlCommandId: ProlifeSensorsSdlCommandIds.s_getDeviceBinding
+
 		inputObjectComp: Component {
 			GetDeviceBindingInput {
-				m_id: productEditorDialog.hardwareId;
+				m_id: bindingDialog.hardwareId
 			}
 		}
-		
+
 		sdlObjectComp: Component {
 			DeviceBindingData {
 				onFinished: {
-					productEditorDialog.bindingModel = this;
+					bindingDialog.bindingModel = this
 				}
 			}
 		}
 	}
-	
+
 	DeviceBindingInput {
-		id: deviceBindingInput;
+		id: deviceBindingInput
 	}
-	
+
 	GqlSdlRequestSender {
 		id: updateDeviceBindingRequest
-		requestType: 1;
-		gqlCommandId: ProlifeSensorsSdlCommandIds.s_updateDeviceBinding;
-		
+
+		requestType: 1
+		gqlCommandId: ProlifeSensorsSdlCommandIds.s_updateDeviceBinding
+
 		sdlObjectComp: Component {
 			UpdatedNotificationPayload {
 				onFinished: {
 					if (m_id !== ''){
-						productEditorDialog.saved();
-						productEditorDialog.finished(Enums.cancel);
+						bindingDialog.saved()
+						bindingDialog.finished(Enums.cancel)
 					}
 				}
 			}
 		}
 	}
-}//Container
-
-
+}
