@@ -13,8 +13,8 @@ Dialog {
 
 	title: qsTr("Split License")
 	backgroundColor: Style.baseColor
-	width: 800
-	height: 500
+	width: Math.max(Style.sizeHintXL, Math.min(ModalDialogManager.activeView.width - 100, 800))
+	height: Math.max(Style.sizeHintM, Math.min(ModalDialogManager.activeView.height - 100, 500))
 
 	property string licenseId: ""
 	property int maxAvailableCount: 0

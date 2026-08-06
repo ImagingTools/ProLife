@@ -630,7 +630,7 @@ ViewBase {
 							id: titleLicenses
 							anchors.left: parent.left
 							anchors.verticalCenter: parent.verticalCenter
-							text: qsTr("Products") + " (" + orderEditorContainer.productsCount + ")"
+							text: qsTr("Products") + " (" + productsView.count + ")"
 							color: Style.textColor
 							font.family: Style.fontFamilyBold
 							font.pixelSize: Style.fontSizeXXL
@@ -647,7 +647,6 @@ ViewBase {
 								anchors.verticalCenter: parent.verticalCenter
 								width: Style.buttonWidthM
 								height: width
-								visible: orderEditorContainer.productsCount > 0
 								iconSource: !productsView.expanded
 									? "../../../" + Style.getIconPath("Icons/DetailedView", Icon.State.On, Icon.Mode.Normal)
 									: "../../../" + Style.getIconPath("Icons/CompactView", Icon.State.On, Icon.Mode.Normal)
@@ -657,74 +656,38 @@ ViewBase {
 								}
 							}
 
-							Button {
+							Text {
 								id: addProduct
+								objectName: "AddProductButton"
 								anchors.verticalCenter: parent.verticalCenter
-								text: qsTr("Add Product")
-								iconSource: "../../../" + Style.getIconPath("Icons/Add", Icon.State.On, Icon.Mode.Normal)
+								text: "+ " + qsTr("Add Product")
+								font.pixelSize: Style.fontSizeM
+								font.bold: true
+								color: Style.imaginToolsAccentColor
 
-								onClicked: {
-									productsView.activeProductIndex = -1
-									ModalDialogManager.openDialog(productEditorDialog, {})
+								MouseArea {
+									objectName: "MouseArea"
+									anchors.fill: parent
+									hoverEnabled: true
+									cursorShape: Qt.PointingHandCursor
+									onClicked: {
+										productsView.activeProductIndex = -1
+										ModalDialogManager.openDialog(productEditorDialog, {})
+									}
 								}
 							}
 						}
 					}
 
-					Rectangle {
+					Text {
 						id: noProductsHint
 						width: parent.width
-						height: orderEditorContainer.productsCount === 0 ? noProductsColumn.height + Style.marginXXL * 2 : 0
-						visible: noProductsHint.height > 0
-						opacity: orderEditorContainer.productsCount === 0 ? 1 : 0
-						clip: true
-						radius: Style.radiusM
-						color: Style.backgroundColor2
-						border.width: 1
-						border.color: Style.borderColor
-
-						Behavior on opacity {
-							NumberAnimation {
-								duration: 160
-							}
-						}
-
-						Column {
-							id: noProductsColumn
-							anchors.centerIn: parent
-							width: Math.max(0, parent.width - Style.marginXXL * 2)
-							spacing: Style.marginM
-
-							Image {
-								anchors.horizontalCenter: parent.horizontalCenter
-								width: Style.iconSizeXL
-								height: Style.iconSizeXL
-								source: "../../../" + Style.getIconPath("Icons/Product", Icon.State.On, Icon.Mode.Normal)
-								sourceSize.width: width
-								sourceSize.height: height
-								opacity: Style.opacityLow
-							}
-
-							Text {
-								width: parent.width
-								horizontalAlignment: Text.AlignHCenter
-								text: qsTr("No products yet")
-								color: Style.textColor
-								font.family: Style.fontFamilyBold
-								font.pixelSize: Style.fontSizeL
-								wrapMode: Text.WordWrap
-							}
-
-							Text {
-								width: parent.width
-								horizontalAlignment: Text.AlignHCenter
-								text: qsTr("Use \"Add Product\" above to include software or hardware in this order.")
-								color: Style.inactiveTextColor
-								font.family: Style.fontFamily
-								font.pixelSize: Style.fontSizeM
-								wrapMode: Text.WordWrap
-							}
-						}
+						visible: productsView.count === 0
+						text: qsTr("No products added yet. Use \"Add Product\" above to include software or hardware in this order.")
+						color: Style.inactiveTextColor
+						font.family: Style.fontFamily
+						font.pixelSize: Style.fontSizeM
+						wrapMode: Text.WordWrap
 					}
 
 					ListView {
@@ -733,7 +696,7 @@ ViewBase {
 						width: parent.width
 						height: contentHeight
 						boundsBehavior: Flickable.StopAtBounds
-						spacing: Style.marginL
+						spacing: Style.marginXL
 						cacheBuffer: 1000
 						interactive: false
 
@@ -776,8 +739,6 @@ ViewBase {
 		id: removeDialog
 
 		MessageDialog {
-			backgroundColor: Style.baseColor
-
 			onFinished: {
 				if (buttonId == Enums.yes) {
 					let productsPage = orderEditorContainer.getPageItem("Products")

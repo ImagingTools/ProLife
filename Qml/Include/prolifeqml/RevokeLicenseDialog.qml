@@ -12,8 +12,8 @@ Dialog {
 
 	title: qsTr("Revoke License")
 	backgroundColor: Style.baseColor
-	width: 900
-	height: 600
+	width: Math.max(Style.sizeHintXXL, Math.min(ModalDialogManager.activeView.width - 100, 900))
+	height: Math.max(Style.sizeHintL, Math.min(ModalDialogManager.activeView.height - 100, 600))
 
 	property string parentLicenseId: ""
 

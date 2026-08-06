@@ -1,11 +1,9 @@
 #include <prolifegql/CCustomerChangeGeneratorComp.h>
 
 
-// ACF includes
-#include <iqt/iqt.h>
-
 // ImtCore includes
 #include <imtauth/IUserGroupInfo.h>
+#include <imtauth/IAddress.h>
 
 // ProLife includes
 #include <prolifedata/CCustomerInfo.h>
@@ -23,127 +21,177 @@ bool CCustomerChangeGeneratorComp::CompareDocuments(
 	imtbase::CObjectCollection& documentChangeCollection,
 	QString& errorMessage)
 {
-	prolifedata::CCustomerInfo* oldCustomerInfoPtr = dynamic_cast<prolifedata::CCustomerInfo*>(const_cast<istd::IChangeable*>(&oldDocument));
+	const prolifedata::CCustomerInfo* oldCustomerInfoPtr = dynamic_cast<const prolifedata::CCustomerInfo*>(&oldDocument);
 	if (oldCustomerInfoPtr == nullptr){
 		errorMessage = QString("Unable to compare documents. Old document is invalid");
 		return false;
 	}
 
-	prolifedata::CCustomerInfo* newCustomerInfoPtr = dynamic_cast<prolifedata::CCustomerInfo*>(const_cast<istd::IChangeable*>(&newDocument));
+	const prolifedata::CCustomerInfo* newCustomerInfoPtr = dynamic_cast<const prolifedata::CCustomerInfo*>(&newDocument);
 	if (newCustomerInfoPtr == nullptr){
 		errorMessage = QString("Unable to compare documents. New document is invalid");
 		return false;
 	}
 
-	QByteArray oldCustomerId = oldCustomerInfoPtr->GetCustomerId();
-	QByteArray newCustomerId = newCustomerInfoPtr->GetCustomerId();
-	if (oldCustomerId != newCustomerId){
-		InsertOperationDescription(documentChangeCollection, "", "CustomerId", QT_TRANSLATE_NOOP("Attribute", "Customer-ID"), oldCustomerId, newCustomerId);
-	}
+	InsertChange(documentChangeCollection, "CustomerId", QT_TRANSLATE_NOOP("Attribute", "Customer-ID"), oldCustomerInfoPtr->GetCustomerId(), newCustomerInfoPtr->GetCustomerId());
+	InsertTextChange(documentChangeCollection, "Name", QT_TRANSLATE_NOOP("Attribute", "Customer Name"), oldCustomerInfoPtr->GetName(), newCustomerInfoPtr->GetName());
+	InsertTextChange(documentChangeCollection, "Description", QT_TRANSLATE_NOOP("Attribute", "Description"), oldCustomerInfoPtr->GetDescription(), newCustomerInfoPtr->GetDescription());
+	InsertTextChange(documentChangeCollection, "Email", QT_TRANSLATE_NOOP("Attribute", "Email"), oldCustomerInfoPtr->GetEmail(), newCustomerInfoPtr->GetEmail());
 
-	QString oldName = oldCustomerInfoPtr->GetName();
-	QString newName = newCustomerInfoPtr->GetName();
-	if (oldName != newName){
-		InsertOperationDescription(documentChangeCollection, "", "Name", QT_TRANSLATE_NOOP("Attribute", "Customer Name"), oldName.toUtf8(), newName.toUtf8());
-	}
+	InsertListChanges(
+				documentChangeCollection,
+				"AddGroup",
+				"RemoveGroup",
+				"GroupId",
+				QT_TRANSLATE_NOOP("Attribute", "Group"),
+				oldCustomerInfoPtr->GetGroups(),
+				newCustomerInfoPtr->GetGroups());
 
-	QString oldDescription = oldCustomerInfoPtr->GetDescription();
-	QString newDescription = newCustomerInfoPtr->GetDescription();
-	if (oldDescription != newDescription){
-		InsertOperationDescription(documentChangeCollection, "", "Description", QT_TRANSLATE_NOOP("Attribute", "Description"), oldDescription.toUtf8(), newDescription.toUtf8());
-	}
-
-	QString oldEmail = oldCustomerInfoPtr->GetEmail();
-	QString newEmail = newCustomerInfoPtr->GetEmail();
-	if (oldEmail != newEmail){
-		InsertOperationDescription(documentChangeCollection, "", "Email", QT_TRANSLATE_NOOP("Attribute", "Email"), oldEmail.toUtf8(), newEmail.toUtf8());
-	}
-
-	QByteArrayList oldGroups = oldCustomerInfoPtr->GetGroups();
-	QByteArrayList newGroups = newCustomerInfoPtr->GetGroups();
-
-	QByteArrayList addedGroups;
-	QByteArrayList removedGroups;
-
-	GenerateChanges(oldGroups, newGroups, addedGroups, removedGroups);
-
-	for (const QByteArray& groupId : addedGroups){
-		QString name = GetGroupName(groupId);
-		InsertOperationDescription(documentChangeCollection, "AddGroup", "GroupId", name, groupId, groupId);
-	}
-
-	for (const QByteArray& groupId : removedGroups){
-		QString name = GetGroupName(groupId);
-		InsertOperationDescription(documentChangeCollection, "RemoveGroup", "GroupId", name, groupId, groupId);
-	}
-
-	const imtauth::IAddress* oldAddressPtr = nullptr;
-	const imtauth::IAddressProvider* oldAddressProviderPtr = oldCustomerInfoPtr->GetAddresses();
-	if (oldAddressProviderPtr != nullptr){
-		imtbase::ICollectionInfo::Ids addressesIds = oldAddressProviderPtr->GetAddressList().GetElementIds();
-		if (!addressesIds.isEmpty()){
-			oldAddressPtr = oldAddressProviderPtr->GetAddress(addressesIds[0]);
-		}
-	}
-
-	const imtauth::IAddress* newAddressPtr = nullptr;
-	const imtauth::IAddressProvider* newAddressProviderPtr = newCustomerInfoPtr->GetAddresses();
-	if (newAddressProviderPtr != nullptr){
-		imtbase::ICollectionInfo::Ids addressesIds = newAddressProviderPtr->GetAddressList().GetElementIds();
-		if (!addressesIds.isEmpty()){
-			newAddressPtr = newAddressProviderPtr->GetAddress(addressesIds[0]);
-		}
-	}
-
-	if (oldAddressPtr != nullptr && newAddressPtr != nullptr){
-		QString oldCity = oldAddressPtr->GetCity();
-		QString newCity = newAddressPtr->GetCity();
-		if (oldCity != newCity){
-			InsertOperationDescription(documentChangeCollection, "", "City", QT_TRANSLATE_NOOP("Attribute", "City"), oldCity.toUtf8(), newCity.toUtf8());
-		}
-
-		QString oldCountry = oldAddressPtr->GetCountry();
-		QString newCountry = newAddressPtr->GetCountry();
-		if (oldCountry != newCountry){
-			InsertOperationDescription(documentChangeCollection, "", "Country", QT_TRANSLATE_NOOP("Attribute", "Country"), oldCountry.toUtf8(), newCountry.toUtf8());
-		}
-
-		QString oldStreet = oldAddressPtr->GetStreet();
-		QString newStreet = newAddressPtr->GetStreet();
-		if (oldStreet != newStreet){
-			InsertOperationDescription(documentChangeCollection, "", "Street", QT_TRANSLATE_NOOP("Attribute", "Street"), oldStreet.toUtf8(), newStreet.toUtf8());
-		}
-
-		int oldPostalCode = oldAddressPtr->GetPostalCode();
-		int newPostalCode = newAddressPtr->GetPostalCode();
-		if (oldPostalCode != newPostalCode){
-			InsertOperationDescription(documentChangeCollection, "", "PostalCode", QT_TRANSLATE_NOOP("Attribute", "PostalCode"), QString::number(oldPostalCode).toUtf8(), QString::number(newPostalCode).toUtf8());
-		}
-	}
+	CompareAddresses(oldCustomerInfoPtr->GetAddresses(), newCustomerInfoPtr->GetAddresses(), documentChangeCollection);
 
 	return true;
 }
 
 
+void CCustomerChangeGeneratorComp::CompareAddresses(
+	const imtauth::IAddressProvider* oldAddressProviderPtr,
+	const imtauth::IAddressProvider* newAddressProviderPtr,
+	imtbase::CObjectCollection& documentChangeCollection)
+{
+	const QByteArrayList oldAddressIds = (oldAddressProviderPtr != nullptr) ? oldAddressProviderPtr->GetAddressList().GetElementIds() : QByteArrayList();
+	const QByteArrayList newAddressIds = (newAddressProviderPtr != nullptr) ? newAddressProviderPtr->GetAddressList().GetElementIds() : QByteArrayList();
+
+	// Address-IDs are regenerated every time the customer is rebuilt from a request, so they cannot be
+	// used to match an address of the stored document against one of the incoming document.
+	if (oldAddressIds.size() == 1 && newAddressIds.size() == 1){
+		CompareAddressFields(
+					*oldAddressProviderPtr,
+					oldAddressIds.first(),
+					*newAddressProviderPtr,
+					newAddressIds.first(),
+					documentChangeCollection);
+
+		return;
+	}
+
+	// With several addresses only their rendered text can tell which one was really added or removed.
+	QStringList oldAddresses;
+	for (const QByteArray& addressId : oldAddressIds){
+		const QString address = FormatAddress(oldAddressProviderPtr->GetAddress(addressId));
+		if (!address.isEmpty()){
+			oldAddresses << address;
+		}
+	}
+
+	QStringList newAddresses;
+	for (const QByteArray& addressId : newAddressIds){
+		const QString address = FormatAddress(newAddressProviderPtr->GetAddress(addressId));
+		if (!address.isEmpty()){
+			newAddresses << address;
+		}
+	}
+
+	QStringList remainingOldAddresses = oldAddresses;
+	for (const QString& address : std::as_const(newAddresses)){
+		if (!remainingOldAddresses.removeOne(address)){
+			InsertOperationDescription(
+						documentChangeCollection,
+						"AddAddress",
+						"Address",
+						QT_TRANSLATE_NOOP("Attribute", "Address"),
+						QByteArray(),
+						address.toUtf8());
+		}
+	}
+
+	for (const QString& address : std::as_const(remainingOldAddresses)){
+		InsertOperationDescription(
+					documentChangeCollection,
+					"RemoveAddress",
+					"Address",
+					QT_TRANSLATE_NOOP("Attribute", "Address"),
+					address.toUtf8(),
+					QByteArray());
+	}
+}
+
+
+void CCustomerChangeGeneratorComp::CompareAddressFields(
+	const imtauth::IAddressProvider& oldAddressProvider,
+	const QByteArray& oldAddressId,
+	const imtauth::IAddressProvider& newAddressProvider,
+	const QByteArray& newAddressId,
+	imtbase::CObjectCollection& documentChangeCollection)
+{
+	const imtauth::IAddress* oldAddressPtr = oldAddressProvider.GetAddress(oldAddressId);
+	const imtauth::IAddress* newAddressPtr = newAddressProvider.GetAddress(newAddressId);
+	if (oldAddressPtr == nullptr || newAddressPtr == nullptr){
+		return;
+	}
+
+	InsertTextChange(documentChangeCollection, "Country", QT_TRANSLATE_NOOP("Attribute", "Country"), oldAddressPtr->GetCountry(), newAddressPtr->GetCountry());
+	InsertTextChange(documentChangeCollection, "City", QT_TRANSLATE_NOOP("Attribute", "City"), oldAddressPtr->GetCity(), newAddressPtr->GetCity());
+	InsertTextChange(documentChangeCollection, "Street", QT_TRANSLATE_NOOP("Attribute", "Street"), oldAddressPtr->GetStreet(), newAddressPtr->GetStreet());
+	InsertNumberChange(documentChangeCollection, "PostalCode", QT_TRANSLATE_NOOP("Attribute", "Postal Code"), oldAddressPtr->GetPostalCode(), newAddressPtr->GetPostalCode());
+	InsertEnumChange(
+				documentChangeCollection,
+				"AddressCategory",
+				QT_TRANSLATE_NOOP("Attribute", "Address Category"),
+				oldAddressProvider.GetAddressCategory(oldAddressId),
+				newAddressProvider.GetAddressCategory(newAddressId),
+				imtauth::IAddressProvider::AddressCategoryGetStrings());
+}
+
+
+QString CCustomerChangeGeneratorComp::FormatAddress(const imtauth::IAddress* addressPtr)
+{
+	if (addressPtr == nullptr){
+		return QString();
+	}
+
+	QStringList parts;
+	if (!addressPtr->GetStreet().isEmpty()){
+		parts << addressPtr->GetStreet();
+	}
+	if (addressPtr->GetPostalCode() > 0){
+		parts << QString::number(addressPtr->GetPostalCode());
+	}
+	if (!addressPtr->GetCity().isEmpty()){
+		parts << addressPtr->GetCity();
+	}
+	if (!addressPtr->GetCountry().isEmpty()){
+		parts << addressPtr->GetCountry();
+	}
+
+	return parts.join(", ");
+}
+
+
 QString CCustomerChangeGeneratorComp::CreateCustomOperationDescription(const imtbase::COperationDescription& operationDescription, const QByteArray& languageId) const
 {
-	QString retVal;
+	static const QByteArray translationContext = QByteArrayLiteral("prolifegql::CCustomerChangeGeneratorComp");
 
-	QByteArray typeId = operationDescription.GetOperationTypeId();
-	QByteArray newValue = operationDescription.GetNewValue();
+	const QByteArray typeId = operationDescription.GetOperationTypeId();
+	const QByteArray oldValue = operationDescription.GetOldValue();
+	const QByteArray newValue = operationDescription.GetNewValue();
 
 	if (typeId == "AddGroup"){
-		QString change = iqt::GetTranslation(m_translationManagerCompPtr.GetPtr(), QT_TR_NOOP("Added group '%1'"), languageId, "prolifegql::CCustomerChangeGeneratorComp");
-		change = change.arg(GetGroupName(newValue));
-		retVal += change;
-	}
-	else if (typeId == "RemoveGroup"){
-		QString change = iqt::GetTranslation(m_translationManagerCompPtr.GetPtr(), QT_TR_NOOP("Removed group '%1'"), languageId, "prolifegql::CCustomerChangeGeneratorComp");
-		change = change.arg(GetGroupName(newValue));
-		retVal += change;
+		return Translate(QT_TR_NOOP("Added group '%1'"), languageId, translationContext).arg(GetGroupName(newValue).toHtmlEscaped());
 	}
 
-	return retVal;
+	if (typeId == "RemoveGroup"){
+		return Translate(QT_TR_NOOP("Removed group '%1'"), languageId, translationContext).arg(GetGroupName(oldValue).toHtmlEscaped());
+	}
+
+	if (typeId == "AddAddress"){
+		return Translate(QT_TR_NOOP("Added address '%1'"), languageId, translationContext).arg(QString::fromUtf8(newValue).toHtmlEscaped());
+	}
+
+	if (typeId == "RemoveAddress"){
+		return Translate(QT_TR_NOOP("Removed address '%1'"), languageId, translationContext).arg(QString::fromUtf8(oldValue).toHtmlEscaped());
+	}
+
+	return QString();
 }
 
 
@@ -165,7 +213,8 @@ QString CCustomerChangeGeneratorComp::GetGroupName(const QByteArray& groupId) co
 		}
 	}
 
-	return QString();
+	// Falling back to the raw ID keeps a deleted group traceable in the history.
+	return groupId;
 }
 
 

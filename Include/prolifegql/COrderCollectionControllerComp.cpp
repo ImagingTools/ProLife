@@ -200,17 +200,30 @@ void COrderCollectionControllerComp::OnAfterSetObjectDescription(
 		return;
 	}
 
+	// The description is mirrored into the document body, so this update needs its own operation context,
+	// otherwise the resulting revision would show up in the history without initiator and description.
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
 		prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(dataPtr.GetPtr());
 		if (orderInfoPtr != nullptr){
 			orderInfoPtr->SetDescription(description);
 
-			if (!m_objectCollectionCompPtr->SetObjectData(objectId, *orderInfoPtr)){
+			istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
+			if (m_operationContextControllerCompPtr.IsValid()){
+				operationContextPtr = m_operationContextControllerCompPtr->CreateOperationContext("Update", objectId, dataPtr.GetPtr());
+			}
+
+			if (!m_objectCollectionCompPtr->SetObjectData(objectId, *orderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
 				SendWarningMessage(0, QString("Unable to set description for object '%1'. Error: Set object data failed").arg(QString::fromUtf8(objectId)));
 			}
 		}
 	}
+}
+
+
+bool COrderCollectionControllerComp::IsDescriptionStoredInDocument() const
+{
+	return true;
 }
 
 

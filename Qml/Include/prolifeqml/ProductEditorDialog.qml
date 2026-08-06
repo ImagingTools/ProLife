@@ -9,8 +9,8 @@ Dialog {
 
 	backgroundColor: Style.baseColor
 
-	property int rootWidth: root ? root.width : 0
-	property int rootHeight: root ? root.height : 0
+	width: Math.max(Style.sizeHintXXL, Math.min(ModalDialogManager.activeView.width * 0.94, 1520))
+	height: Math.max(Style.sizeHintXL, Math.min(ModalDialogManager.activeView.height * 0.92, 1000))
 
 	property int activeProductIndex: -1
 
@@ -20,29 +20,23 @@ Dialog {
 	title: activeProductIndex < 0 ? qsTr("Add Product") : qsTr("Edit Product")
 
 	Component.onCompleted: {
-		// Primary action label depends on Add vs Edit of an order product line.
+		addButton(Enums.ok, qsTr("Add"), false)
+		addButton(Enums.cancel, qsTr("Cancel"), true)
+	}
+
+	onActiveProductIndexChanged: {
 		let primaryLabel = productEditorDialog.activeProductIndex < 0
 			? qsTr("Add")
 			: qsTr("Save")
-		addButton(Enums.ok, primaryLabel, false)
-		addButton(Enums.cancel, qsTr("Cancel"), true)
+		productEditorDialog.setButtonName(Enums.ok, primaryLabel)
 	}
 
 	contentComp: Component {
 		ProductEditor {
 			id: productEditor
 
-			// Wide stage for MultiPageView editors + chrome link picker.
-			width: {
-				if (productEditorDialog.rootWidth > 0)
-					return Math.max(1200, Math.min(1520, Math.floor(productEditorDialog.rootWidth * 0.94)))
-				return 1320
-			}
-			height: {
-				if (productEditorDialog.rootHeight > 0)
-					return Math.max(780, Math.min(1000, Math.floor(productEditorDialog.rootHeight * 0.92)))
-				return 900
-			}
+			width: productEditorDialog.width
+			height: productEditorDialog.height - 120
 
 			index: productEditorDialog.activeProductIndex
 

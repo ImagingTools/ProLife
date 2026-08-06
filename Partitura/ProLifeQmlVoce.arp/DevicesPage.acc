@@ -306,6 +306,12 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="OrderOperationContextController" Type="Reference" ExportId="OrderOperationContextController">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="SoftwareProductCollection" Type="Reference" ExportId="SoftwareProductCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -355,6 +361,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceOperationContextController" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="OperationContextController"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="BindingOperationContextController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="BindingOperationContextController"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Encryption" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Encryption"/>
@@ -494,7 +503,22 @@
                     <AttributeInfo Id="SoftwareInstanceCollection" Type="Reference" ExportId="SoftwareInstanceCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="BindingOperationContextController" PackageId="ImtServerGqlPck" ComponentId="OperationContextController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DocumentChangeGenerator" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="HardwareBindingChangeGenerator"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
@@ -1223,7 +1247,9 @@
         <Interface InterfaceId="istd::IPolymorphic" ComponentId="Demultiplexer"/>
     </ExportedInterfaces>
     <ExportedComponents>
+        <Component ExportedId="BindingOperationContextController" ComponentId="BindingOperationContextController"/>
         <Component ExportedId="DeviceChangeGenerator" ComponentId="DeviceChangeGenerator"/>
+        <Component ExportedId="HardwareBindingChangeGenerator" ComponentId="HardwareBindingChangeGenerator"/>
         <Component ExportedId="OperationContextController" ComponentId="OperationContextController"/>
     </ExportedComponents>
 </Acf>
