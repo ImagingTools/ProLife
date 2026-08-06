@@ -75,9 +75,23 @@ if(NOT DEFINED IMTCOREDIR_BUILD)
 	endif()
 endif()
 
+# Enable modern target-based architecture: find_package(ImtCore) provides ImtCore::
+# imported targets (and, transitively, Acf::/AcfSln::/IAcf::) with transitive include
+# dirs and link deps. Legacy global include_directories()/link_directories() are skipped.
+set(ACF_MODERN_CMAKE ON)
+
+# Collect ProLife libraries in their own export set. Read by acf_register_library() (from Acf).
+set(ACF_PACKAGE_NAME "ProLife")
+
 include(${IMTCOREDIR}/Config/CMake/ImtCoreEnv.cmake)
 include(${IMTCOREDIR}/Config/CMake/PartituraUpgrade.cmake)
 imt_core_upgrade_partitura("${CMAKE_CURRENT_LIST_DIR}/../..")
+
+# Discover the ImtCore package published by its build tree (pulls in Acf/AcfSln/IAcf).
+if(ACF_MODERN_CMAKE AND NOT TARGET ImtCore::imtbase)
+	set(ImtCore_DIR "${IMTCOREDIR_BUILD}/Lib/${CMAKE_BUILD_TYPE}_${TARGETNAME}/cmake" CACHE PATH "Path to the ImtCore build-tree CMake package")
+	find_package(ImtCore REQUIRED GLOBAL)
+endif()
 
 get_filename_component(INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/../../Include" ABSOLUTE)
 get_filename_component(IMPL_DIR "${CMAKE_CURRENT_LIST_DIR}/../../Impl" ABSOLUTE)
@@ -87,10 +101,10 @@ set(AUX_INCLUDE_DIR "${PROLIFEDIR}/AuxInclude/${TARGETNAME}/GeneratedFiles")
 include_directories("${AUX_INCLUDE_DIR}/../")
 include_directories("${AUX_INCLUDE_DIR}/")
 
-set(ACF_QT_MODULE_LINK_SCOPE "")
-set(ACF_LIBRARY_LINK_SCOPE "")
-set(ACF_PACKAGE_LINK_SCOPE "")
-set(ACF_APPLICATION_LINK_SCOPE "")
+acf_define_link_scope_var(ACF_QT_MODULE_LINK_SCOPE  "PRIVATE" "Link scope used for Qt module dependencies")
+acf_define_link_scope_var(ACF_LIBRARY_LINK_SCOPE     "PUBLIC"  "Link scope used by ProLife inter-library dependencies")
+acf_define_link_scope_var(ACF_PACKAGE_LINK_SCOPE     "PRIVATE" "Link scope used by package (Pck) libraries linking their dependencies")
+acf_define_link_scope_var(ACF_APPLICATION_LINK_SCOPE "PRIVATE" "Link scope used by executables linking their dependencies")
 
 # Dependencies are provided via environment variables
 message(STATUS "Using libraries from environment variables")

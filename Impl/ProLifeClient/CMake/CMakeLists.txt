@@ -32,15 +32,6 @@ include(${ACFDIR}/Config/CMake/WindeployQt.cmake)
 
 message(VERBOSE "PROJECT_BINARY_DIR ${IMTCOREDIR}/Bin/web")
 
-target_link_libraries(${PROJECT_NAME} ImtCoreLoc ProLifeLoc AcfLoc AcfSlnLoc)
-target_link_libraries(${PROJECT_NAME} imtbasesdl imtauthsdl imtlicsdl imtappsdl imt2dsdl imtdesksdl imtchatsdl)
-target_link_libraries(${PROJECT_NAME} imtbase imtgui imtauth imtauthdb imtdeskdb imtchatdb imtauthgui imtlic imtlicgui imtrest imtrepo imtqml imtdb imtdocguiqml imtdeskguiqml imtchatguiqml)
-target_link_libraries(${PROJECT_NAME} imtlicgql imtguigql imtclientgql imtgql imtauthgql imtcom imtguigqlqml imtauthguiqml imtlicguiqml imtguiqml imtcolguiqml imtstylecontrolsqml imtcontrolsqml imtstyle imtcol imtcolorsdl imtserverapp imtservergql)
-target_link_libraries(${PROJECT_NAME} prolifeqml prolifestyle prolifesdl)
-target_link_libraries(${PROJECT_NAME} iqtgui)
-target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::QuickWidgets Qt${QT_VERSION_MAJOR}::WebSockets)
-target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::QuickControls2)
-
 if(WIN32)
 	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Qml")
 	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Include/imtstylecontrolsqml/Qml")
