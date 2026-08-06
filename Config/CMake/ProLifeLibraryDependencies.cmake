@@ -1,12 +1,7 @@
 # ---------------------------------------------------------------------------
 # Clean, target-based inter-library dependency graph for ProLife.
 #
-# This mirrors the approach introduced for the ACF foundation (Acf) in
-# Config/CMake/AcfLibraryDependencies.cmake, for AcfSln in
-# Config/CMake/AcfSlnLibraryDependencies.cmake, for IAcf in
-# Config/CMake/IAcfLibraryDependencies.cmake, for ImtCore in
-# Config/CMake/ImtCoreLibraryDependencies.cmake and for IotPlatform in
-# Config/CMake/IotPlatformLibraryDependencies.cmake: instead of relying on the
+# Instead of relying on the
 # final executable/package link to resolve symbols and on a hand-tuned build
 # order (the add_dependencies()/inline target_link_libraries() spread across the
 # per-library CMake files), the dependencies between the ProLife libraries - and
@@ -67,8 +62,7 @@ endfunction()
 
 # ImtCore's SDL base library only carries the imtgql usage requirement for
 # consumers that opt into it. ProLife's SDL is GraphQL-oriented, so expose imtgql
-# through imtbasesdl for every ProLife library that builds on the SDL
-# (mirrors IotPlatformLibraryDependencies.cmake).
+# through imtbasesdl for every ProLife library that builds on the SDL.
 prolife_declare_library_dependencies(ImtCore::imtbasesdl	LINK_SCOPE INTERFACE	ImtCore::imtgql)
 
 
@@ -88,3 +82,49 @@ endif()
 
 # --- Arxc-generated static libraries ----------------------------------------
 prolife_declare_library_dependencies(ProLifeLoc		Acf::icomp)
+
+
+# --- Packages ---------------------------------------------------------------
+prolife_declare_library_dependencies(ProLifeDataPck	LINK_SCOPE PRIVATE	prolifedata ImtCore::imtgql)
+prolife_declare_library_dependencies(ProLifeDbPck	LINK_SCOPE PRIVATE	prolifedb prolifedata ImtCore::imtdb ImtCore::imtgql)
+prolife_declare_library_dependencies(ProLifeGqlPck	LINK_SCOPE PRIVATE	prolifegql ImtCore::imtserverapp Qt${QT_VERSION_MAJOR}::Gui)
+
+# --- Plug-ins ---------------------------------------------------------------
+prolife_declare_library_dependencies(ProLifeSettingsPlugin	LINK_SCOPE PRIVATE
+	ImtCore::imtserverapp Acf::i2d Acf::ifile Acf::istd Acf::idoc
+	Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Sql Qt${QT_VERSION_MAJOR}::Xml)
+
+
+# --- Applications -----------------------------------------------------------
+# Web/desktop client.
+prolife_declare_library_dependencies(ProLifeClient	LINK_SCOPE PRIVATE
+	prolifeqml prolifestyle prolifesdl
+	ProLifeLoc ImtCore::ImtCoreLoc Acf::AcfLoc AcfSln::AcfSlnLoc Acf::iqtgui
+	ImtCore::imt2dsdl ImtCore::imtdesksdl ImtCore::imtchatsdl
+	ImtCore::imtserverapp ImtCore::imtauthdb ImtCore::imtdeskdb ImtCore::imtchatdb ImtCore::imtrepo
+	ImtCore::imtlicgql ImtCore::imtauthgql
+	ImtCore::imtcontrolsqml ImtCore::imtstylecontrolsqml ImtCore::imtguiqml ImtCore::imtguigqlqml
+	ImtCore::imtauthguiqml ImtCore::imtcolguiqml ImtCore::imtdocguiqml ImtCore::imtlicguiqml
+	ImtCore::imtdeskguiqml ImtCore::imtchatguiqml
+	Qt${QT_VERSION_MAJOR}::QuickWidgets Qt${QT_VERSION_MAJOR}::WebSockets Qt${QT_VERSION_MAJOR}::QuickControls2)
+
+# Server and its ServerTest twin. This is a server/console component and
+# deliberately does NOT depend on the 3D stack (imt3dgui).
+foreach(_prolife_server ProLifeServer ProLifeServerTest)
+	prolife_declare_library_dependencies(${_prolife_server}	LINK_SCOPE PRIVATE
+		prolifestyle prolifedata prolifedb prolifegql prolifeqml
+		ProLifeLoc ImtCore::ImtCoreLoc Acf::AcfLoc AcfSln::AcfSlnLoc AcfSln::iauth AcfSln::iservice
+		ImtCore::imt2dsdl ImtCore::imtserverapp ImtCore::imtlicdb ImtCore::imtzip ImtCore::imtrepo
+		ImtCore::imtlicgql ImtCore::imtauthgql ImtCore::imtauthdb ImtCore::imtlog
+		ImtCore::imtchatdb ImtCore::imtdeskdb ImtCore::imtdeskgql ImtCore::imtchatgql
+		ImtCore::imtcontrolsqml ImtCore::imtstylecontrolsqml ImtCore::imtguiqml ImtCore::imtguigqlqml
+		ImtCore::imtauthguiqml ImtCore::imtcolguiqml ImtCore::imtdocguiqml ImtCore::imtlicguiqml
+		Qt${QT_VERSION_MAJOR}::QuickWidgets Qt${QT_VERSION_MAJOR}::WebSockets Qt${QT_VERSION_MAJOR}::Sql)
+endforeach()
+
+prolife_declare_library_dependencies(ProLifeServerConfigurator	LINK_SCOPE PRIVATE
+	prolifeqml ProLifeLoc ImtCore::ImtCoreLoc Acf::AcfLoc AcfSln::AcfSlnLoc Acf::iqtgui
+	ImtCore::imt2dsdl ImtCore::imtserverapp ImtCore::imtauthdb ImtCore::imtdeskdb ImtCore::imtchatdb ImtCore::imtlog
+	ImtCore::imtcontrolsqml ImtCore::imtstylecontrolsqml ImtCore::imtguiqml ImtCore::imtguigqlqml
+	ImtCore::imtauthguiqml ImtCore::imtcolguiqml ImtCore::imtdocguiqml ImtCore::imtlicguiqml
+	Qt${QT_VERSION_MAJOR}::QuickWidgets Qt${QT_VERSION_MAJOR}::WebSockets Qt${QT_VERSION_MAJOR}::Sql)
