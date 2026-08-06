@@ -77,8 +77,6 @@ private:
 				istd::IChangeable& object,
 				QByteArray& objectId,
 				QString& errorMessage) const;
-	bool RemoveDeviceFromOrder(const QByteArray& deviceId, const QByteArray& orderId) const;
-	bool AddDeviceToOrder(const QByteArray& deviceId, const QByteArray& orderId) const;
 	QByteArrayList GetBindedSoftware(const QByteArray& deviceId) const;
 	bool GetSoftwareInfo(const QByteArray& softwareId, sdl::V1_0::prolife::CSoftwareBindingInfo& softwareInfo) const;
 

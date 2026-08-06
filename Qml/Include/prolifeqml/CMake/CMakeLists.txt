@@ -11,7 +11,7 @@ if(NOT DEFINED PYTHONEXE)
 	set(PYTHONEXE "$ENV{PYTHONEXE}")
 endif()
 
-set(buildwebdir ${BUILDDIR}/ProLife/Bin/web)
+set(buildwebdir ${BUILDDIR}/ProLife/AuxInclude/Web)
 
 # copy prolife qml from to
 list(APPEND webdirs ${PROLIFEDIR}/Qml/Include/prolifeqml)

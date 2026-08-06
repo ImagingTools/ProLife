@@ -10,17 +10,21 @@
 #include <istd/TDelPtr.h>
 #include <istd/IChangeable.h>
 
+// ProLife includes
+#include <prolifedata/IOrdered.h>
+
 
 namespace prolifedata
 {
 
 
 template<class Base>
-class TOrderedWrap : public Base
+class TOrderedWrap: public Base, virtual public IOrdered
 {
 public:
-	virtual const QByteArray GetOrderId() const;
-	virtual void SetOrderId(const QByteArray& orderId);
+	// reimplemented (prolifedata::IOrdered)
+	virtual QByteArray GetOrderId() const override;
+	virtual void SetOrderId(const QByteArray& orderId) override;
 
 	// reimplemented (iser::ISerializable)
 	virtual bool Serialize(iser::IArchive& archive) override;
@@ -40,7 +44,7 @@ private:
 // public methods
 
 template <class Base>
-const QByteArray TOrderedWrap<Base>::GetOrderId() const
+QByteArray TOrderedWrap<Base>::GetOrderId() const
 {
 	return m_orderId;
 }

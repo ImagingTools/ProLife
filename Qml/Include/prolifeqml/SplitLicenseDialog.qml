@@ -12,6 +12,7 @@ Dialog {
 	id: splitLicenseDialog
 
 	title: qsTr("Split License")
+	backgroundColor: Style.baseColor
 	width: 800
 	height: 500
 
