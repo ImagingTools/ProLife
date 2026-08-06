@@ -2,9 +2,9 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="6435" Description="ACF"/>
-            <Version Id="1" Number="2410" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="395264" Description="Qt Framework"/>
+            <Version Id="0" Number="6435" Description="ACF" />
+            <Version Id="1" Number="2410" Description="ACF-Solutions" />
+            <Version Id="1023" Number="395264" Description="Qt Framework" />
         </VersionInfos>
     </AcfHeader>
     <Description></Description>
@@ -14,22 +14,22 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Accounts"/>
+                        <Data IsEnabled="true" Value="Accounts" />
                     </AttributeInfo>
                     <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/ProLife/AccountCollectionView.qml"/>
+                        <Data IsEnabled="true" Value="qrc:/qml/ProLife/AccountCollectionView.qml" />
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Icons/Customer"/>
+                        <Data IsEnabled="true" Value="Icons/Customer" />
                     </AttributeInfo>
                     <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="true"/>
+                        <Data IsEnabled="true" Value="true" />
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="Name" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Customers"/>
+                        <Data IsEnabled="true" Value="Customers" />
                     </AttributeInfo>
                     <AttributeInfo Id="PagePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
@@ -47,10 +47,10 @@
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -59,22 +59,22 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Alignment" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="32"/>
+                        <Data IsEnabled="true" Value="32" />
                     </AttributeInfo>
                     <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/ProLife/DeviceCollectionView.qml"/>
+                        <Data IsEnabled="true" Value="qrc:/qml/ProLife/DeviceCollectionView.qml" />
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Icons/Sensor"/>
+                        <Data IsEnabled="true" Value="Icons/Sensor" />
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="Name" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Hardware"/>
+                        <Data IsEnabled="true" Value="Hardware" />
                     </AttributeInfo>
                     <AttributeInfo Id="PageId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Devices"/>
+                        <Data IsEnabled="true" Value="Devices" />
                     </AttributeInfo>
                     <AttributeInfo Id="PagePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
@@ -94,10 +94,10 @@
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -126,16 +126,16 @@
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="ObjectCollections" Type="Reference[]" ExportId="ObjectCollections">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -144,19 +144,19 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Orders"/>
+                        <Data IsEnabled="true" Value="Orders" />
                     </AttributeInfo>
                     <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/ProLife/OrderCollectionView.qml"/>
+                        <Data IsEnabled="true" Value="qrc:/qml/ProLife/OrderCollectionView.qml" />
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Icons/Deployment"/>
+                        <Data IsEnabled="true" Value="Icons/Deployment" />
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="Name" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Orders"/>
+                        <Data IsEnabled="true" Value="Orders" />
                     </AttributeInfo>
                     <AttributeInfo Id="PagePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
@@ -174,10 +174,10 @@
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -186,70 +186,70 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="AccountRepository" Type="Reference" ExportId="AccountRepository">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="BindingCollection" Type="Reference" ExportId="BindingProductRepository">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceRepository">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceCollectionDocumentService" Type="Reference" ExportId="DeviceCollectionDocumentService">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="DeviceRepository">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="FeatureCollection" Type="Reference" ExportId="FeatureCollection">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="GroupCollection" Type="Reference" ExportId="GroupCollection">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="HardwareProductBindingRepository" Type="Reference" ExportId="BindingProductRepository">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderRepository">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="OrderRepository">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="SmtpClient" Type="Reference" ExportId="SmtpClient">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="SmtpUserParam" Type="Reference" ExportId="SmtpUserParam">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareRepository" Type="Reference" ExportId="SoftwareRepository">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="SoftwareTransferCollection" Type="Reference" ExportId="SoftwareTransferCollection">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="SupportEmailParam" Type="Reference" ExportId="SupportEmailParam">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="UserActionManager" Type="Reference" ExportId="UserActionManager">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -266,10 +266,10 @@
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -278,19 +278,19 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="SoftwareProducts"/>
+                        <Data IsEnabled="true" Value="SoftwareProducts" />
                     </AttributeInfo>
                     <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/ProLife/SoftwareProductCollectionView.qml"/>
+                        <Data IsEnabled="true" Value="qrc:/qml/ProLife/SoftwareProductCollectionView.qml" />
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Icons/Key"/>
+                        <Data IsEnabled="true" Value="Icons/Key" />
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="Name" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Software"/>
+                        <Data IsEnabled="true" Value="Software" />
                     </AttributeInfo>
                     <AttributeInfo Id="PagePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
@@ -300,10 +300,10 @@
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -312,28 +312,28 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="Alignment" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="32"/>
+                        <Data IsEnabled="true" Value="32" />
                     </AttributeInfo>
                     <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="qrc:/qml/imtauthgui/TenantCollectionView.qml"/>
+                        <Data IsEnabled="true" Value="qrc:/qml/imtauthgui/Views/TenantCollectionView.qml" />
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Icons/Organization"/>
+                        <Data IsEnabled="true" Value="Icons/Organization" />
                     </AttributeInfo>
                     <AttributeInfo Id="IsEnabled" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="true"/>
+                        <Data IsEnabled="true" Value="true" />
                     </AttributeInfo>
                     <AttributeInfo Id="IsVisible" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="true"/>
+                        <Data IsEnabled="true" Value="true" />
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="Name" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Organizations"/>
+                        <Data IsEnabled="true" Value="Organizations" />
                     </AttributeInfo>
                     <AttributeInfo Id="PageId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Tenants"/>
+                        <Data IsEnabled="true" Value="Tenants" />
                     </AttributeInfo>
                     <AttributeInfo Id="PagePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
@@ -343,10 +343,10 @@
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
+                        <Data IsEnabled="false" />
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -360,28 +360,28 @@
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="AccountRepository" Type="Reference" ExportId="AccountRepository">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="GroupCollection" Type="Reference" ExportId="GroupCollection">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="SoftwareCollection" Type="Reference" ExportId="SoftwareRepository">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="UserActionManager" Type="Reference" ExportId="UserActionManager">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -401,7 +401,7 @@
                                     </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -410,67 +410,67 @@
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="BindingCollection" Type="Reference" ExportId="BindingCollection">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="DeviceCollectionDocumentService" Type="Reference" ExportId="DeviceCollectionDocumentService">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="DeviceRepository">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="FeatureCollection" Type="Reference" ExportId="FeatureCollection">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="HardwareProductBindingRepository" Type="Reference" ExportId="HardwareProductBindingRepository">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderCollection">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="OrderOperationContextController" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="OrdersPage/OperationContextController"/>
+                                    <Data IsEnabled="true" Value="OrdersPage/OperationContextController" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="SmtpClient" Type="Reference" ExportId="SmtpClient">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="SmtpUserParam" Type="Reference" ExportId="SmtpUserParam">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="SoftwareInstanceCollection" Type="Reference" ExportId="SoftwareRepository">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="SoftwareOperationContextController" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="SoftwareProductsPage/OperationContextController"/>
+                                    <Data IsEnabled="true" Value="SoftwareProductsPage/OperationContextController" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="SoftwareProductCollection" Type="Reference" ExportId="SoftwareRepository">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="SoftwareTransferCollection" Type="Reference" ExportId="SoftwareTransferCollection">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="SupportEmailParam" Type="Reference" ExportId="SupportEmailParam">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="UserActionManager" Type="Reference" ExportId="UserActionManager">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -479,52 +479,52 @@
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="AccountCollection" Type="Reference" ExportId="AccountRepository">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="BindingCollection" Type="Reference" ExportId="BindingCollection">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="DeviceCollection" Type="Reference" ExportId="DeviceCollection">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="DeviceOperationContextController" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="DevicesPage/OperationContextController"/>
+                                    <Data IsEnabled="true" Value="DevicesPage/OperationContextController" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderCollection">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="OrderRepository">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="SoftwareInstanceCollection" Type="Reference" ExportId="SoftwareRepository">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="SoftwareOperationContextController" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="SoftwareProductsPage/OperationContextController"/>
+                                    <Data IsEnabled="true" Value="SoftwareProductsPage/OperationContextController" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="SoftwareProductCollection" Type="Reference" ExportId="SoftwareRepository">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="UserActionManager" Type="Reference" ExportId="UserActionManager">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -533,46 +533,46 @@
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="AccountRepository" Type="Reference" ExportId="AccountRepository">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="DeviceRepository">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="HardwareProductBindingRepository" Type="Reference" ExportId="HardwareProductBindingRepository">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderCollection">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="OrderOperationContextController" Type="Reference" ExportId="">
-                                    <Data IsEnabled="true" Value="OrdersPage/OperationContextController"/>
+                                    <Data IsEnabled="true" Value="OrdersPage/OperationContextController" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="OrderRepository">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="SoftwareRepository" Type="Reference" ExportId="SoftwareRepository">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="UserActionManager" Type="Reference" ExportId="UserActionManager">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -581,66 +581,66 @@
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="AccountCollection" Type="Reference" ExportId="AccountRepository">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="DeviceRepository">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="OrderCollection">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="SoftwareRepository" Type="Reference" ExportId="SoftwareRepository">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                                    <Data IsEnabled="false"/>
+                                    <Data IsEnabled="false" />
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
                     </Element>
                 </ElementsList>
-                <EmbeddedRegistriesList/>
+                <EmbeddedRegistriesList />
                 <ExportedInterfaces>
-                    <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="Demultiplexer"/>
+                    <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="Demultiplexer" />
                 </ExportedInterfaces>
                 <ExportedComponents>
-                    <Component ExportedId="AccountsPage" ComponentId="AccountsPage"/>
-                    <Component ExportedId="CustomerChangeGenerator" ComponentId="AccountsPage/CustomerChangeGenerator"/>
-                    <Component ExportedId="CustomerOperationContextController" ComponentId="AccountsPage/OperationContextController"/>
-                    <Component ExportedId="DeviceChangeGenerator" ComponentId="DevicesPage/DeviceChangeGenerator"/>
-                    <Component ExportedId="DeviceOperationContextController" ComponentId="DevicesPage/OperationContextController"/>
-                    <Component ExportedId="DevicesPage" ComponentId="DevicesPage"/>
-                    <Component ExportedId="OrderChangeGenerator" ComponentId="OrdersPage/OrderChangeGenerator"/>
-                    <Component ExportedId="OrderOperationContextController" ComponentId="OrdersPage/OperationContextController"/>
-                    <Component ExportedId="OrdersPage" ComponentId="OrdersPage"/>
-                    <Component ExportedId="SoftwareChangeGenerator" ComponentId="SoftwareProductsPage/SoftwareChangeGenerator"/>
-                    <Component ExportedId="SoftwareOperationContextController" ComponentId="SoftwareProductsPage/OperationContextController"/>
-                    <Component ExportedId="SoftwareProductsPage" ComponentId="SoftwareProductsPage"/>
+                    <Component ExportedId="AccountsPage" ComponentId="AccountsPage" />
+                    <Component ExportedId="CustomerChangeGenerator" ComponentId="AccountsPage/CustomerChangeGenerator" />
+                    <Component ExportedId="CustomerOperationContextController" ComponentId="AccountsPage/OperationContextController" />
+                    <Component ExportedId="DeviceChangeGenerator" ComponentId="DevicesPage/DeviceChangeGenerator" />
+                    <Component ExportedId="DeviceOperationContextController" ComponentId="DevicesPage/OperationContextController" />
+                    <Component ExportedId="DevicesPage" ComponentId="DevicesPage" />
+                    <Component ExportedId="OrderChangeGenerator" ComponentId="OrdersPage/OrderChangeGenerator" />
+                    <Component ExportedId="OrderOperationContextController" ComponentId="OrdersPage/OperationContextController" />
+                    <Component ExportedId="OrdersPage" ComponentId="OrdersPage" />
+                    <Component ExportedId="SoftwareChangeGenerator" ComponentId="SoftwareProductsPage/SoftwareChangeGenerator" />
+                    <Component ExportedId="SoftwareOperationContextController" ComponentId="SoftwareProductsPage/OperationContextController" />
+                    <Component ExportedId="SoftwareProductsPage" ComponentId="SoftwareProductsPage" />
                 </ExportedComponents>
             </Data>
         </EmbeddedRegistry>
     </EmbeddedRegistriesList>
     <ExportedInterfaces>
-        <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="PagesDemultiplexer"/>
-        <Interface InterfaceId="istd::IPolymorphic" ComponentId="PagesDemultiplexer"/>
+        <Interface InterfaceId="imtgql::IGqlRequestHandler" ComponentId="PagesDemultiplexer" />
+        <Interface InterfaceId="istd::IPolymorphic" ComponentId="PagesDemultiplexer" />
     </ExportedInterfaces>
     <ExportedComponents>
-        <Component ExportedId="AccountsController" ComponentId="PageData/AccountsPage"/>
-        <Component ExportedId="AccountsPage" ComponentId="CustomersPage"/>
-        <Component ExportedId="DeviceOperationContextController" ComponentId="PageData/DeviceOperationContextController"/>
-        <Component ExportedId="DevicesController" ComponentId="PageData/DevicesPage"/>
-        <Component ExportedId="DevicesPage" ComponentId="DevicesPage"/>
-        <Component ExportedId="OrdersController" ComponentId="PageData/OrdersPage"/>
-        <Component ExportedId="OrdersPage" ComponentId="OrdersPage"/>
-        <Component ExportedId="SoftwareOperationContextController" ComponentId="PageData/SoftwareOperationContextController"/>
-        <Component ExportedId="SoftwareProductsController" ComponentId="PageData/SoftwareProductsPage"/>
-        <Component ExportedId="SoftwareProductsPage" ComponentId="SoftwareProductsPage"/>
-        <Component ExportedId="TenantsPage" ComponentId="TenantsPage"/>
+        <Component ExportedId="AccountsController" ComponentId="PageData/AccountsPage" />
+        <Component ExportedId="AccountsPage" ComponentId="CustomersPage" />
+        <Component ExportedId="DeviceOperationContextController" ComponentId="PageData/DeviceOperationContextController" />
+        <Component ExportedId="DevicesController" ComponentId="PageData/DevicesPage" />
+        <Component ExportedId="DevicesPage" ComponentId="DevicesPage" />
+        <Component ExportedId="OrdersController" ComponentId="PageData/OrdersPage" />
+        <Component ExportedId="OrdersPage" ComponentId="OrdersPage" />
+        <Component ExportedId="SoftwareOperationContextController" ComponentId="PageData/SoftwareOperationContextController" />
+        <Component ExportedId="SoftwareProductsController" ComponentId="PageData/SoftwareProductsPage" />
+        <Component ExportedId="SoftwareProductsPage" ComponentId="SoftwareProductsPage" />
+        <Component ExportedId="TenantsPage" ComponentId="TenantsPage" />
     </ExportedComponents>
 </Acf>
