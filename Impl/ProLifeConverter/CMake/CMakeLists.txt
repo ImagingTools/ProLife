@@ -20,9 +20,6 @@ include(${ACFDIR}/Config/CMake/WindeployQt.cmake)
 
 message(VERBOSE "PROJECT_BINARY_DIR ${IMTCOREDIR}/Bin/web")
 
-target_link_libraries(${PROJECT_NAME} imtbase imtgui imtauth imtauthgui imtlic imtlicdb imtlicgui imtqml imtdb imtclientgql imtcom imtgql)
-target_link_libraries(${PROJECT_NAME} prolifedata prolifedb)
-
 include(${ACFDIR}/Config/CMake/AcfStdGui.cmake)
 include(${ACFDIR}/Config/CMake/AcfStd.cmake)
 

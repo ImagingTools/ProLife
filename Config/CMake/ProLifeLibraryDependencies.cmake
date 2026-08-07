@@ -128,3 +128,26 @@ prolife_declare_library_dependencies(ProLifeServerConfigurator	LINK_SCOPE PRIVAT
 	ImtCore::imtcontrolsqml ImtCore::imtstylecontrolsqml ImtCore::imtguiqml ImtCore::imtguigqlqml
 	ImtCore::imtauthguiqml ImtCore::imtcolguiqml ImtCore::imtdocguiqml ImtCore::imtlicguiqml
 	Qt${QT_VERSION_MAJOR}::QuickWidgets Qt${QT_VERSION_MAJOR}::WebSockets Qt${QT_VERSION_MAJOR}::Sql)
+
+# --- Legacy single-binary / tooling targets (not part of the default in-tree build) ----------
+# Combined client/server single binary. imtserverapp pulls the imtbase/imtgui/imtqml/imtdb/... core.
+prolife_declare_library_dependencies(ProLifeClientServer	LINK_SCOPE PRIVATE
+	prolifeqml prolifestyle prolifedata prolifedb prolifegql
+	ProLifeLoc ImtCore::ImtCoreLoc Acf::iqtgui
+	ImtCore::imtserverapp ImtCore::imtlicdb ImtCore::imtlicgui ImtCore::imtcrypt ImtCore::imtrepo
+	ImtCore::imtstyle ImtCore::imtlicsdl ImtCore::imtlicgql ImtCore::imtdbgql ImtCore::imtguigql
+	ImtCore::imtclientgql ImtCore::imtgql ImtCore::imtauthgql ImtCore::imtauthdb ImtCore::imtcom
+	ImtCore::imtservice ImtCore::imtlog
+	ImtCore::imtcontrolsqml ImtCore::imtguiqml ImtCore::imtstylecontrolsqml ImtCore::imtdocguiqml
+	ImtCore::imtguigqlqml ImtCore::imtauthguiqml ImtCore::imtlicguiqml ImtCore::imtcolguiqml
+	Qt${QT_VERSION_MAJOR}::QuickWidgets Qt${QT_VERSION_MAJOR}::WebSockets Qt${QT_VERSION_MAJOR}::Sql)
+
+prolife_declare_library_dependencies(ProLifeConverter	LINK_SCOPE PRIVATE
+	prolifedata prolifedb
+	ImtCore::imtgui ImtCore::imtauthgui ImtCore::imtlic ImtCore::imtlicdb ImtCore::imtlicgui
+	ImtCore::imtqml ImtCore::imtclientgql ImtCore::imtcom ImtCore::imtgql)
+
+prolife_declare_library_dependencies(prolifetest	LINK_SCOPE PRIVATE
+	Acf::itest Acf::ipackage
+	ImtCore::imtbase ImtCore::imtauth ImtCore::imtdb ImtCore::imtgql ImtCore::imtauthgql
+	Qt${QT_VERSION_MAJOR}::Test Qt${QT_VERSION_MAJOR}::Sql Qt${QT_VERSION_MAJOR}::Widgets)

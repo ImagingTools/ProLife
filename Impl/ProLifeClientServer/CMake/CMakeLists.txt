@@ -36,13 +36,6 @@ if(DEFINED WEB_COMPILE AND WEB_COMPILE)
 	add_compile_definitions(WEB_COMPILE)
 endif()
 
-target_link_libraries(${PROJECT_NAME} imtbase imtgui imtauth imtauthgui imtlicdb imtlic imtlicgui imtrest imtcrypt imtrepo imtstyle imtdb imtfile imtlicsdl)
-target_link_libraries(${PROJECT_NAME} imtlicgql imtdbgql imtguigql imtclientgql imtgql imtauthgql imtauthdb imtcom imtapp imtservice imtlog)
-target_link_libraries(${PROJECT_NAME} imtqml imtcontrolsqml imtguiqml imtstylecontrolsqml imtdocguiqml imtguigqlqml imtauthguiqml imtlicguiqml imtcolguiqml)
-target_link_libraries(${PROJECT_NAME} prolifeqml prolifestyle ImtCoreLoc ProLifeLoc prolifedata prolifedb prolifegql prolifeqml)
-target_link_libraries(${PROJECT_NAME} iqtgui)
-target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::QuickWidgets Qt${QT_VERSION_MAJOR}::WebSockets)
-target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::Sql)
 
 if(WIN32)
 	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Qml")
