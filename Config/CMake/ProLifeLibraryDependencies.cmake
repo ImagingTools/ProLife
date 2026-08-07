@@ -71,8 +71,8 @@ prolife_declare_library_dependencies(prolifesdl		ImtCore::imtbasesdl)
 
 # --- Libraries --------------------------------------------------------------
 prolife_declare_library_dependencies(prolifedata	ImtCore::imtauth)
-prolife_declare_library_dependencies(prolifedb		ImtCore::imtdb Qt${QT_VERSION_MAJOR}::Sql)
-prolife_declare_library_dependencies(prolifegql		prolifesdl prolifedata ImtCore::imtguigql ImtCore::imtgui ImtCore::imtdb)
+prolife_declare_library_dependencies(prolifedb		ImtCore::imtdb)
+prolife_declare_library_dependencies(prolifegql		prolifesdl prolifedata ImtCore::imtguigql ImtCore::imtgui)
 
 # --- QML / style web-resource libraries -------------------------------------
 if(QT_VERSION_MAJOR EQUAL 6)
@@ -85,69 +85,62 @@ prolife_declare_library_dependencies(ProLifeLoc		Acf::icomp)
 
 
 # --- Packages ---------------------------------------------------------------
-prolife_declare_library_dependencies(ProLifeDataPck	LINK_SCOPE PRIVATE	prolifedata ImtCore::imtgql)
-prolife_declare_library_dependencies(ProLifeDbPck	LINK_SCOPE PRIVATE	prolifedb prolifedata ImtCore::imtdb ImtCore::imtgql)
-prolife_declare_library_dependencies(ProLifeGqlPck	LINK_SCOPE PRIVATE	prolifegql ImtCore::imtserverapp Qt${QT_VERSION_MAJOR}::Gui)
+prolife_declare_library_dependencies(ProLifeDataPck	LINK_SCOPE PRIVATE	prolifedata)
+prolife_declare_library_dependencies(ProLifeDbPck	LINK_SCOPE PRIVATE	prolifedb prolifedata)
+prolife_declare_library_dependencies(ProLifeGqlPck	LINK_SCOPE PRIVATE	prolifegql)
 
 # --- Plug-ins ---------------------------------------------------------------
 prolife_declare_library_dependencies(ProLifeSettingsPlugin	LINK_SCOPE PRIVATE
-	ImtCore::imtserverapp Acf::i2d Acf::ifile Acf::istd Acf::idoc
-	Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Sql Qt${QT_VERSION_MAJOR}::Xml)
+	ImtCore::imtserverapp Qt${QT_VERSION_MAJOR}::Xml)
 
 
 # --- Applications -----------------------------------------------------------
 # Web/desktop client.
 prolife_declare_library_dependencies(ProLifeClient	LINK_SCOPE PRIVATE
 	prolifeqml prolifestyle prolifesdl
-	ProLifeLoc ImtCore::ImtCoreLoc Acf::AcfLoc AcfSln::AcfSlnLoc Acf::iqtgui
+	ProLifeLoc ImtCore::ImtCoreLoc Acf::AcfLoc AcfSln::AcfSlnLoc
 	ImtCore::imt2dsdl ImtCore::imtdesksdl ImtCore::imtchatsdl
 	ImtCore::imtserverapp ImtCore::imtauthdb ImtCore::imtdeskdb ImtCore::imtchatdb ImtCore::imtrepo
 	ImtCore::imtlicgql ImtCore::imtauthgql
 	ImtCore::imtcontrolsqml ImtCore::imtstylecontrolsqml ImtCore::imtguiqml ImtCore::imtguigqlqml
 	ImtCore::imtauthguiqml ImtCore::imtcolguiqml ImtCore::imtdocguiqml ImtCore::imtlicguiqml
 	ImtCore::imtdeskguiqml ImtCore::imtchatguiqml
-	Qt${QT_VERSION_MAJOR}::QuickWidgets Qt${QT_VERSION_MAJOR}::WebSockets Qt${QT_VERSION_MAJOR}::QuickControls2)
+	Qt${QT_VERSION_MAJOR}::QuickControls2)
 
 # Server and its ServerTest twin. This is a server/console component and
 # deliberately does NOT depend on the 3D stack (imt3dgui).
 foreach(_prolife_server ProLifeServer ProLifeServerTest)
 	prolife_declare_library_dependencies(${_prolife_server}	LINK_SCOPE PRIVATE
-		prolifestyle prolifedata prolifedb prolifegql prolifeqml
-		ProLifeLoc ImtCore::ImtCoreLoc Acf::AcfLoc AcfSln::AcfSlnLoc AcfSln::iauth AcfSln::iservice
+		prolifestyle prolifedb prolifegql prolifeqml
+		ProLifeLoc ImtCore::ImtCoreLoc Acf::AcfLoc AcfSln::AcfSlnLoc AcfSln::iservice
 		ImtCore::imt2dsdl ImtCore::imtserverapp ImtCore::imtlicdb ImtCore::imtzip ImtCore::imtrepo
 		ImtCore::imtlicgql ImtCore::imtauthgql ImtCore::imtauthdb ImtCore::imtlog
 		ImtCore::imtchatdb ImtCore::imtdeskdb ImtCore::imtdeskgql ImtCore::imtchatgql
 		ImtCore::imtcontrolsqml ImtCore::imtstylecontrolsqml ImtCore::imtguiqml ImtCore::imtguigqlqml
-		ImtCore::imtauthguiqml ImtCore::imtcolguiqml ImtCore::imtdocguiqml ImtCore::imtlicguiqml
-		Qt${QT_VERSION_MAJOR}::QuickWidgets Qt${QT_VERSION_MAJOR}::WebSockets Qt${QT_VERSION_MAJOR}::Sql)
+		ImtCore::imtauthguiqml ImtCore::imtcolguiqml ImtCore::imtdocguiqml ImtCore::imtlicguiqml)
 endforeach()
 
 prolife_declare_library_dependencies(ProLifeServerConfigurator	LINK_SCOPE PRIVATE
-	prolifeqml ProLifeLoc ImtCore::ImtCoreLoc Acf::AcfLoc AcfSln::AcfSlnLoc Acf::iqtgui
+	prolifeqml ProLifeLoc ImtCore::ImtCoreLoc Acf::AcfLoc AcfSln::AcfSlnLoc
 	ImtCore::imt2dsdl ImtCore::imtserverapp ImtCore::imtauthdb ImtCore::imtdeskdb ImtCore::imtchatdb ImtCore::imtlog
 	ImtCore::imtcontrolsqml ImtCore::imtstylecontrolsqml ImtCore::imtguiqml ImtCore::imtguigqlqml
-	ImtCore::imtauthguiqml ImtCore::imtcolguiqml ImtCore::imtdocguiqml ImtCore::imtlicguiqml
-	Qt${QT_VERSION_MAJOR}::QuickWidgets Qt${QT_VERSION_MAJOR}::WebSockets Qt${QT_VERSION_MAJOR}::Sql)
+	ImtCore::imtauthguiqml ImtCore::imtcolguiqml ImtCore::imtdocguiqml ImtCore::imtlicguiqml)
 
 # --- Legacy single-binary / tooling targets (not part of the default in-tree build) ----------
 # Combined client/server single binary. imtserverapp pulls the imtbase/imtgui/imtqml/imtdb/... core.
 prolife_declare_library_dependencies(ProLifeClientServer	LINK_SCOPE PRIVATE
-	prolifeqml prolifestyle prolifedata prolifedb prolifegql
-	ProLifeLoc ImtCore::ImtCoreLoc Acf::iqtgui
-	ImtCore::imtserverapp ImtCore::imtlicdb ImtCore::imtlicgui ImtCore::imtcrypt ImtCore::imtrepo
-	ImtCore::imtstyle ImtCore::imtlicsdl ImtCore::imtlicgql ImtCore::imtdbgql ImtCore::imtguigql
-	ImtCore::imtclientgql ImtCore::imtgql ImtCore::imtauthgql ImtCore::imtauthdb ImtCore::imtcom
-	ImtCore::imtservice ImtCore::imtlog
+	prolifeqml prolifestyle prolifedb prolifegql
+	ProLifeLoc ImtCore::ImtCoreLoc
+	ImtCore::imtserverapp ImtCore::imtlicdb ImtCore::imtrepo ImtCore::imtlicgql ImtCore::imtdbgql
+	ImtCore::imtauthgql ImtCore::imtauthdb ImtCore::imtlog
 	ImtCore::imtcontrolsqml ImtCore::imtguiqml ImtCore::imtstylecontrolsqml ImtCore::imtdocguiqml
-	ImtCore::imtguigqlqml ImtCore::imtauthguiqml ImtCore::imtlicguiqml ImtCore::imtcolguiqml
-	Qt${QT_VERSION_MAJOR}::QuickWidgets Qt${QT_VERSION_MAJOR}::WebSockets Qt${QT_VERSION_MAJOR}::Sql)
+	ImtCore::imtguigqlqml ImtCore::imtauthguiqml ImtCore::imtlicguiqml ImtCore::imtcolguiqml)
 
 prolife_declare_library_dependencies(ProLifeConverter	LINK_SCOPE PRIVATE
 	prolifedata prolifedb
-	ImtCore::imtgui ImtCore::imtauthgui ImtCore::imtlic ImtCore::imtlicdb ImtCore::imtlicgui
-	ImtCore::imtqml ImtCore::imtclientgql ImtCore::imtcom ImtCore::imtgql)
+	ImtCore::imtauthgui ImtCore::imtlicdb ImtCore::imtlicgui)
 
 prolife_declare_library_dependencies(prolifetest	LINK_SCOPE PRIVATE
 	Acf::itest Acf::ipackage
-	ImtCore::imtbase ImtCore::imtauth ImtCore::imtdb ImtCore::imtgql ImtCore::imtauthgql
-	Qt${QT_VERSION_MAJOR}::Test Qt${QT_VERSION_MAJOR}::Sql Qt${QT_VERSION_MAJOR}::Widgets)
+	ImtCore::imtdb ImtCore::imtauthgql
+	Qt${QT_VERSION_MAJOR}::Test)
