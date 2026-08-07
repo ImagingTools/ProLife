@@ -114,6 +114,11 @@ I_EXPORT_COMPONENT(
 		"Device collection document service",
 		"Device Collection Document Service");
 
+I_EXPORT_COMPONENT(
+		SelectableItemInfoProvider,
+		"Object meta info as selectable item parameters",
+		"Selectable Item Info Provider Filterable Select");
+
 
 } // namespace ProLifeGqlPck
 

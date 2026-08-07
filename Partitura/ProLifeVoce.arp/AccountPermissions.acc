@@ -206,21 +206,36 @@
                     <AttributeInfo Id="SetObjectDataPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ChangeAccount</Value>
+                                <Value>ChangeCustomerId</Value>
+                                <Value>ChangeAccountName</Value>
+                                <Value>ChangeAccountEmail</Value>
+                                <Value>ChangeAccountDescription</Value>
+                                <Value>ChangeCompanyAddress</Value>
+                                <Value>ChangeAccountGroups</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="SetObjectDescriptionPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ChangeAccount</Value>
+                                <Value>ChangeCustomerId</Value>
+                                <Value>ChangeAccountName</Value>
+                                <Value>ChangeAccountEmail</Value>
+                                <Value>ChangeAccountDescription</Value>
+                                <Value>ChangeCompanyAddress</Value>
+                                <Value>ChangeAccountGroups</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="SetObjectNamePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ChangeAccount</Value>
+                                <Value>ChangeCustomerId</Value>
+                                <Value>ChangeAccountName</Value>
+                                <Value>ChangeAccountEmail</Value>
+                                <Value>ChangeAccountDescription</Value>
+                                <Value>ChangeCompanyAddress</Value>
+                                <Value>ChangeAccountGroups</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

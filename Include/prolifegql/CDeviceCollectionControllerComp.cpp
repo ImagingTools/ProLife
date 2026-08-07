@@ -242,38 +242,39 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	QString scheme = "applink";
+
 	if (requestInfo.items.isPurchaseIdLinkRequested){
-		sdl::V1_0::imtbase::CObjectLink objectLink;
-		objectLink.id = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_ORDER_ID).toString().toUtf8();
-		objectLink.typeId = QByteArrayLiteral("Order");
-		objectLink.name = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PURCHASE_ID).toString().toUtf8();
+		QByteArray orderId = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_ORDER_ID).toString().toUtf8();
+		if (!orderId.isEmpty()){
+			sdl::V1_0::imtbase::CObjectLink objectLink;
+			objectLink.id = orderId;
+			objectLink.typeId = QByteArrayLiteral("Order");
+			objectLink.name = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PURCHASE_ID).toString().toUtf8();
 
-		sdl::V1_0::imtbase::CUrlParam urlParam;
-		urlParam.scheme = scheme;
-		urlParam.path = QStringLiteral("Orders/Order");
-		if (!(*objectLink.id).isEmpty()){
-			urlParam.path = *urlParam.path + QStringLiteral("/") + *objectLink.id;
+			sdl::V1_0::imtbase::CUrlParam urlParam;
+			urlParam.scheme = scheme;
+			urlParam.path = QStringLiteral("Orders/Order/") + QString::fromUtf8(orderId);
+			objectLink.url = urlParam;
+
+			representationObject.purchaseIdLink = objectLink;
 		}
-		objectLink.url = urlParam;
-
-		representationObject.purchaseIdLink = objectLink;
 	}
 
 	if (requestInfo.items.isCustomerLinkRequested){
-		sdl::V1_0::imtbase::CObjectLink objectLink;
-		objectLink.id = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER_ID).toString().toUtf8();
-		objectLink.typeId = QByteArrayLiteral("Account");
-		objectLink.name = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER_NAME).toString().toUtf8();
+		QByteArray customerId = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER_ID).toString().toUtf8();
+		if (!customerId.isEmpty()){
+			sdl::V1_0::imtbase::CObjectLink objectLink;
+			objectLink.id = customerId;
+			objectLink.typeId = QByteArrayLiteral("Account");
+			objectLink.name = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CUSTOMER_NAME).toString().toUtf8();
 
-		sdl::V1_0::imtbase::CUrlParam urlParam;
-		urlParam.scheme = scheme;
-		urlParam.path = QStringLiteral("Accounts/Account");
-		if (!(*objectLink.id).isEmpty()){
-			urlParam.path = *urlParam.path + QStringLiteral("/") + *objectLink.id;
+			sdl::V1_0::imtbase::CUrlParam urlParam;
+			urlParam.scheme = scheme;
+			urlParam.path = QStringLiteral("Accounts/Account/") + QString::fromUtf8(customerId);
+			objectLink.url = urlParam;
+
+			representationObject.customerLink = objectLink;
 		}
-		objectLink.url = urlParam;
-
-		representationObject.customerLink = objectLink;
 	}
 
 	if (requestInfo.items.isMacAddressRequested){
@@ -313,20 +314,20 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isDeliveryIdLinkRequested){
-		sdl::V1_0::imtbase::CObjectLink objectLink;
-		objectLink.id = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_ORDER_ID).toString().toUtf8();
-		objectLink.typeId = QByteArrayLiteral("Order");
-		objectLink.name = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DELIVERY_ID).toString().toUtf8();
+		QByteArray orderId = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_ORDER_ID).toString().toUtf8();
+		if (!orderId.isEmpty()){
+			sdl::V1_0::imtbase::CObjectLink objectLink;
+			objectLink.id = orderId;
+			objectLink.typeId = QByteArrayLiteral("Order");
+			objectLink.name = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DELIVERY_ID).toString().toUtf8();
 
-		sdl::V1_0::imtbase::CUrlParam urlParam;
-		urlParam.scheme = scheme;
-		urlParam.path = QStringLiteral("Orders/Order");
-		if (!(*objectLink.id).isEmpty()){
-			urlParam.path = *urlParam.path + QStringLiteral("/") + *objectLink.id;
+			sdl::V1_0::imtbase::CUrlParam urlParam;
+			urlParam.scheme = scheme;
+			urlParam.path = QStringLiteral("Orders/Order/") + QString::fromUtf8(orderId);
+			objectLink.url = urlParam;
+
+			representationObject.deliveryIdLink = objectLink;
 		}
-		objectLink.url = urlParam;
-
-		representationObject.deliveryIdLink = objectLink;
 	}
 
 	if (requestInfo.items.isInUseRequested){
