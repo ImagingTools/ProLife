@@ -52,6 +52,22 @@ DocumentViewBase {
 	property string forcedOrderId: ""
 	property bool hideProductionPage: deviceEditorContainer.embedded
 
+	// Id of the stored device record. documentObjectId (DocumentViewBase) is the one
+	// that is correct right after a first save; deviceData.m_id only catches up when
+	// the representation is re-fetched, which is why it is the fallback and not the
+	// other way round.
+	readonly property string deviceObjectId: deviceEditorContainer.documentObjectId !== ""
+		? deviceEditorContainer.documentObjectId
+		: (deviceData ? deviceData.m_id : "")
+
+	// A ticket is stored with a reference to the device record, so that record has to
+	// exist and have an id to point at. isNewDocument comes from DocumentViewBase and
+	// asks the document manager; the local `isNew` below cannot be used - it is fed
+	// documentIsNew(m_id), an object id where a document id is expected, and
+	// documentIsNew() reports "new" for anything it fails to find, so it reads true
+	// for saved devices too.
+	readonly property bool ticketsEnabled: !deviceEditorContainer.isNewDocument && deviceEditorContainer.deviceObjectId !== ""
+
 	DeviceProductionStatus {
 		id: productionStatus
 	}
@@ -179,8 +195,8 @@ DocumentViewBase {
 
 			let canChangeConfiguration = PermissionsController.checkPermission("ChangeHardwareConfiguration")
 			let canChangeDevice = PermissionsController.checkPermission("ChangeDeviceType")
-			devicePage.configurationCB.changeable = canChangeConfiguration
-			devicePage.productCB.changeable = canChangeDevice
+			devicePage.configurationCB.changeable = canChangeConfiguration && canChangeDevice
+			devicePage.productCB.changeable = canChangeConfiguration && canChangeDevice
 
 			let ok =
 				canChangeDescription ||
@@ -430,13 +446,42 @@ DocumentViewBase {
 
 			EntityContextTicketsPanel {
 				id: supportWorkspace
+				visible: deviceEditorContainer.ticketsEnabled
 				anchors.top: parent.top
 				anchors.bottom: parent.bottom
 				x: Math.max(0, (supportPage.width - width) / 2)
 				width: Math.max(0, Math.min(deviceEditorContainer.contentMaxWidth, supportPage.width))
 				entityType: "Devices"
-				entityId: deviceEditorContainer.deviceData ? deviceEditorContainer.deviceData.m_id : ""
+				entityId: deviceEditorContainer.ticketsEnabled ? deviceEditorContainer.deviceObjectId : ""
 				entityDisplayName: deviceEditorContainer.deviceData ? deviceEditorContainer.deviceData.m_macAddress : ""
+			}
+
+			Column {
+				id: supportUnavailableHint
+				visible: !deviceEditorContainer.ticketsEnabled
+				anchors.centerIn: parent
+				width: Math.max(0, Math.min(Style.sizeHintS, supportPage.width - 2 * Style.marginXL))
+				spacing: Style.marginM
+
+				Text {
+					width: parent.width
+					horizontalAlignment: Text.AlignHCenter
+					text: qsTr("Tickets are available after saving")
+					font.pixelSize: Style.fontSizeXL
+					font.family: Style.fontFamilyBold
+					color: Style.textColor
+					wrapMode: Text.WordWrap
+				}
+
+				Text {
+					width: parent.width
+					horizontalAlignment: Text.AlignHCenter
+					text: qsTr("A support ticket is linked to the device record, which only exists once the device has been saved. Save this device and the Support page will let you create and track its tickets.")
+					font.pixelSize: Style.fontSizeM
+					font.family: Style.fontFamily
+					color: Style.inactiveTextColor
+					wrapMode: Text.WordWrap
+				}
 			}
 		}
 	}
@@ -488,7 +533,7 @@ DocumentViewBase {
 				anchors.bottom: parent.bottom
 				x: Math.max(0, (historyPage.width - width) / 2)
 				width: Math.max(0, Math.min(deviceEditorContainer.contentMaxWidth, historyPage.width))
-				documentId: deviceEditorContainer.deviceData ? deviceEditorContainer.deviceData.m_id : ""
+				documentId: deviceEditorContainer.deviceObjectId
 				collectionId: "Devices"
 			}
 		}
@@ -631,26 +676,19 @@ DocumentViewBase {
 							errorText: qsTr("Please select a device type")
 
 							onCurrentIndexChanged: {
-								// hardwareProductsModel is assembled with copyItemDataFromModel, which
-								// does not carry the nested "licenses" sub-model across, so reading it
-								// straight off the copy yields nothing and the configuration combo ends
-								// up with no model at all - and a model-less ComboBox refuses to open,
-								// which is why the field looked completely unresponsive. Fall back to
-								// the source collection (where the sub-model does live), then to an
-								// empty sub-model, mirroring SoftwareEditor's product combo.
-								let licensesModel = null
-								if (productCB.currentIndex >= 0 && productCB.model) {
-									licensesModel = productCB.model.getData(ProductItemTypeMetaInfo.s_licenses, productCB.currentIndex)
-									if (!licensesModel) {
-										let productId = productCB.model.getData(ProductItemTypeMetaInfo.s_id, productCB.currentIndex)
-										licensesModel = CachedProductCollection.getLicensesModel(productId)
-									}
-									if (!licensesModel) {
-										licensesModel = productCB.model.addTreeModel(ProductItemTypeMetaInfo.s_licenses, productCB.currentIndex)
+								let ok = false
+								if (productCB.currentIndex >= 0) {
+									let model = productCB.model.getData(ProductItemTypeMetaInfo.s_licenses, productCB.currentIndex)
+									if (model) {
+										configurationCB.model = model
+										ok = true
 									}
 								}
 
-								configurationCB.model = licensesModel
+								if (!ok) {
+									configurationCB.model = 0
+								}
+
 								configurationCB.currentIndex = -1
 								deviceEditorContainer.doUpdateModel()
 							}

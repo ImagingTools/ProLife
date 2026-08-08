@@ -27,6 +27,7 @@
 #include <prolifegql/CWorkspaceControllerComp.h>
 #include <prolifegql/CSoftwareControllerComp.h>
 #include <prolifegql/CDeviceCollectionDocumentServiceComp.h>
+#include <prolifegql/CSelectableItemInfoProviderComp.h>
 
 
 /**
@@ -63,6 +64,7 @@ typedef prolifegql::CGroupFilterParamJoinerComp GroupFilterParamJoiner;
 typedef prolifegql::CWorkspaceControllerComp WorkspaceController;
 typedef prolifegql::CSoftwareControllerComp SoftwareController;
 typedef prolifegql::CDeviceCollectionDocumentServiceComp DeviceCollectionDocumentService;
+typedef prolifegql::CSelectableItemInfoProviderComp SelectableItemInfoProvider;
 
 
 } // namespace ImtLicenseGqlPck

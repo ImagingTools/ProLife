@@ -263,21 +263,42 @@
                     <AttributeInfo Id="SetObjectDataPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ChangeSensor</Value>
+                                <Value>ChangeDescriptionForSensor</Value>
+                                <Value>ChangeSerialNumberForSensor</Value>
+                                <Value>ChangeMacAddress</Value>
+                                <Value>ChangeDeviceType</Value>
+                                <Value>ChangeHardwareConfiguration</Value>
+                                <Value>ChangeOrderForSensor</Value>
+                                <Value>ChangeProductionStatus</Value>
+                                <Value>ChangeProjectForSensor</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="SetObjectDescriptionPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ChangeSensor</Value>
+                                <Value>ChangeDescriptionForSensor</Value>
+                                <Value>ChangeSerialNumberForSensor</Value>
+                                <Value>ChangeMacAddress</Value>
+                                <Value>ChangeDeviceType</Value>
+                                <Value>ChangeHardwareConfiguration</Value>
+                                <Value>ChangeOrderForSensor</Value>
+                                <Value>ChangeProductionStatus</Value>
+                                <Value>ChangeProjectForSensor</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="SetObjectNamePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ChangeSensor</Value>
+                                <Value>ChangeDescriptionForSensor</Value>
+                                <Value>ChangeSerialNumberForSensor</Value>
+                                <Value>ChangeMacAddress</Value>
+                                <Value>ChangeDeviceType</Value>
+                                <Value>ChangeHardwareConfiguration</Value>
+                                <Value>ChangeOrderForSensor</Value>
+                                <Value>ChangeProductionStatus</Value>
+                                <Value>ChangeProjectForSensor</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

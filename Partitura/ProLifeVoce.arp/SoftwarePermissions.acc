@@ -124,21 +124,36 @@
                     <AttributeInfo Id="SetObjectDataPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ChangeLicense</Value>
+                                <Value>ChangeLicenseNumber</Value>
+                                <Value>ChangeExpiration</Value>
+                                <Value>ChangeProductLicenses</Value>
+                                <Value>ChangeProductForLicense</Value>
+                                <Value>ChangeOrderForLicense</Value>
+                                <Value>ChangeProjectForLicense</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="SetObjectDescriptionPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ChangeLicense</Value>
+                                <Value>ChangeLicenseNumber</Value>
+                                <Value>ChangeExpiration</Value>
+                                <Value>ChangeProductLicenses</Value>
+                                <Value>ChangeProductForLicense</Value>
+                                <Value>ChangeOrderForLicense</Value>
+                                <Value>ChangeProjectForLicense</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="SetObjectNamePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ChangeLicense</Value>
+                                <Value>ChangeLicenseNumber</Value>
+                                <Value>ChangeExpiration</Value>
+                                <Value>ChangeProductLicenses</Value>
+                                <Value>ChangeProductForLicense</Value>
+                                <Value>ChangeOrderForLicense</Value>
+                                <Value>ChangeProjectForLicense</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

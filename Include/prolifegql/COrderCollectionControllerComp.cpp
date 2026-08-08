@@ -288,21 +288,23 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 		representationObject.customerName = metaInfo->GetMetaInfo(prolifedata::IOrderInfo::MIT_CUSTOMER_NAME).toString();
 	}
 
+	// A link is only sent when it points somewhere. An object carrying an empty id
+	// reaches the client as a link to nothing, indistinguishable from a real one.
 	if (requestInfo.items.isCustomerLinkRequested){
-		sdl::V1_0::imtbase::CObjectLink objectLink;
-		objectLink.id = metaInfo->GetMetaInfo(prolifedata::IOrderInfo::MIT_CUSTOMER_ID).toString().toUtf8();
-		objectLink.typeId = QByteArrayLiteral("Account");
-		objectLink.name = metaInfo->GetMetaInfo(prolifedata::IOrderInfo::MIT_CUSTOMER_NAME).toString();
+		QByteArray customerId = metaInfo->GetMetaInfo(prolifedata::IOrderInfo::MIT_CUSTOMER_ID).toString().toUtf8();
+		if (!customerId.isEmpty()){
+			sdl::V1_0::imtbase::CObjectLink objectLink;
+			objectLink.id = customerId;
+			objectLink.typeId = QByteArrayLiteral("Account");
+			objectLink.name = metaInfo->GetMetaInfo(prolifedata::IOrderInfo::MIT_CUSTOMER_NAME).toString();
 
-		sdl::V1_0::imtbase::CUrlParam urlParam;
-		urlParam.scheme = "applink";
-		urlParam.path = QStringLiteral("Accounts/Account");
-		if (!(*objectLink.id).isEmpty()){
-			urlParam.path = *urlParam.path + QStringLiteral("/") + *objectLink.id;
+			sdl::V1_0::imtbase::CUrlParam urlParam;
+			urlParam.scheme = "applink";
+			urlParam.path = QStringLiteral("Accounts/Account/") + QString::fromUtf8(customerId);
+			objectLink.url = urlParam;
+
+			representationObject.customerLink = objectLink;
 		}
-		objectLink.url = urlParam;
-
-		representationObject.customerLink = objectLink;
 	}
 
 	if (requestInfo.items.isPurchaseIdRequested){

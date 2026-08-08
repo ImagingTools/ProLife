@@ -9,13 +9,22 @@
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="ApplicationHandlers" X="600" Y="75" Note=""/>
+        <Element ComponentName="ArticleIdRepresentationController" X="1425" Y="425" Note=""/>
+        <Element ComponentName="ArticleRepresentationController" X="1425" Y="325" Note=""/>
+        <Element ComponentName="ConfigurationRepresentationController" X="1425" Y="525" Note=""/>
         <Element ComponentName="CustomersFilterableSelectController" X="925" Y="525" Note=""/>
         <Element ComponentName="Demultiplexer" X="150" Y="75" Note=""/>
         <Element ComponentName="HardwareFilterableSelectController" X="950" Y="225" Note=""/>
+        <Element ComponentName="HardwareItemInfoProvider" X="1200" Y="225" Note=""/>
         <Element ComponentName="OrdersFilterableSelectController" X="950" Y="425" Note=""/>
         <Element ComponentName="Pages" X="600" Y="325" Note=""/>
+        <Element ComponentName="ProductNameRepresentationController" X="1425" Y="125" Note=""/>
         <Element ComponentName="RestoringDatabaseController" X="225" Y="325" Note=""/>
+        <Element ComponentName="SelectableItemParamsRepresentation" X="1200" Y="325" Note=""/>
+        <Element ComponentName="SerialNumberRepresentationController" X="1425" Y="625" Note=""/>
         <Element ComponentName="SoftwareFilterableSelectController" X="950" Y="325" Note=""/>
+        <Element ComponentName="SoftwareIdRepresentationController" X="1425" Y="225" Note=""/>
+        <Element ComponentName="SoftwareItemInfoProvider" X="1200" Y="425" Note=""/>
         <Element ComponentName="UserGroupParamsSetJoiner" X="975" Y="75" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>

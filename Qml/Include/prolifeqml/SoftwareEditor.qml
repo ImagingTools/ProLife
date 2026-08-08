@@ -227,8 +227,10 @@ ViewBase {
 	}
 
 	function updateGui() {
+		// No model yet is a normal state while the editor is being built - DeviceEditor and
+		// OrderEditor return quietly here too. Logging it as an error meant every "New license"
+		// printed one before the model arrived.
 		if (!softwareProductData) {
-			console.error("Unable to update GUI for 'SoftwareEditor'. Error: softwareProductData is invalid")
 			return
 		}
 
@@ -257,7 +259,6 @@ ViewBase {
 
 	function updateModel() {
 		if (!softwareProductData) {
-			console.error("Unable to update model for 'SoftwareEditor'. Error: softwareProductData is invalid")
 			return
 		}
 
