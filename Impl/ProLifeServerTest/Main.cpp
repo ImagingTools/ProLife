@@ -9,7 +9,7 @@
 int main(int argc, char *argv[])
 {
 #ifdef WEB_COMPILE
-	Q_INIT_RESOURCE(prolifeWeb);
+	Q_INIT_RESOURCE(prolifeqmlWeb);
 #endif
 
 	Q_INIT_RESOURCE(prolifestyle);
