@@ -1,15 +1,17 @@
 // ImtCore includes
-#include <imtbase/Init.h>
+#include <imtcore/CApplicationRunner.h>
+#include <imtcore/CImtCoreBaseInitializer.h>
+#include <imtcore/CImtCoreLicInitializer.h>
+#include <imtcore/CImtCoreLocalizationInitializer.h>
+#include <imtcore/CImtCoreStyleInitializer.h>
+#include <imtcore/CImtCoreAuthInitializer.h>
 
 // ProLife includes
 #include <GeneratedFiles/ProLifeClient/CProLifeClient.h>
 
 
-int main(int argc, char *argv[])
+static void InitializeProLifeClientResources()
 {
-	Q_INIT_RESOURCE(imtlicguiqml);
-	Q_INIT_RESOURCE(imtlicguiTheme);
-
 	Q_INIT_RESOURCE(prolifeqml);
 	Q_INIT_RESOURCE(prolifestyle);
 	Q_INIT_RESOURCE(prolifeAccountsSdl);
@@ -17,22 +19,35 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(prolifeLicensesSdl);
 	Q_INIT_RESOURCE(prolifeOrdersSdl);
 	Q_INIT_RESOURCE(prolifeWorkspaceSdl);
-
-	Q_INIT_RESOURCE(imtlicFeaturesSdl);
-	Q_INIT_RESOURCE(imtlicProductsSdl);
-	Q_INIT_RESOURCE(imtlicLicensesSdl);
-
 	Q_INIT_RESOURCE(prolifeDeviceCollectionDocumentServiceSdl);
 
 	Q_INIT_RESOURCE(imtdeskguiqml);
 	Q_INIT_RESOURCE(imtdeskImtDeskSdl);
 	Q_INIT_RESOURCE(imtdeskTicketCollectionDocumentServiceSdl);
 
-	Q_INIT_RESOURCE(imtchatguiqml);
-	Q_INIT_RESOURCE(imtchatImtChatSdl);
-	Q_INIT_RESOURCE(imtchatConversationCollectionDocumentServiceSdl);
+	Q_INIT_RESOURCE(imtauthguiqml);
 
-	return Run<CProLifeClient, DefaultImtCoreQmlInitializer>(argc, argv);
+	ImtCoreInitLocalizationResources();
+	ImtCoreInitBaseResources();
+
+	ImtCoreInitStyleResources();
+	ImtCoreInitAuthStyleResources();
+	ImtCoreInitLicStyleResources();
+
+	ImtCoreInitQmlApplicationCoreResources();
+	ImtCoreInitQmlDocumentManagementResources();
+	ImtCoreInitLicQmlResources();
+
+	InitializeImtCoreStyle();
+}
+
+
+int main(int argc, char *argv[])
+{
+	InitializeProLifeClientResources();
+
+	CProLifeClient instance;
+	return imtcore::CApplicationRunner::Run(argc, argv, instance);
 }
 
 

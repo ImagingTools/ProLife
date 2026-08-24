@@ -18,16 +18,12 @@ endif()
 
 include(${ACFDIR}/Config/CMake/CustomBuild.cmake)
 include(${ACFDIR}/Config/CMake/ApplicationConfig.cmake)
-include(${ACFDIR}/Config/CMake/AcfQt.cmake)
 include(${IMTCOREDIR}/Config/CMake/Quazip.cmake)
 include(${ACFDIR}/Config/CMake/WindeployQt.cmake)
 
 if(DEFINED WEB_COMPILE AND WEB_COMPILE)
 	add_compile_definitions(WEB_COMPILE)
 endif()
-
-include(${ACFDIR}/Config/CMake/AcfStdGui.cmake)
-include(${ACFDIR}/Config/CMake/AcfStd.cmake)
 
 if(WIN32)
 	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Qml")
@@ -43,3 +39,21 @@ endif()
 
 include(${IMTCOREDIR}/Config/CMake/OpenSSL.cmake)
 include(${IACFDIR}/Config/CMake/zlib.cmake)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+	prolifestyle
+	prolifedb
+	prolifegql
+	prolifeqml
+	ProLifeLoc
+	ImtCore::ImtCoreLoc
+	AcfSln::iservice
+	ImtCore::imtauthgql
+	ImtCore::imtauthdb
+	ImtCore::imtlog
+	ImtCore::imtchatdb
+	ImtCore::imtdeskdb
+	ImtCore::imtdeskgql
+	ImtCore::imtchatgql
+	ImtCore::imtlicguiqml
+)
