@@ -24,9 +24,6 @@ endif()
 include(${IMTCOREDIR}/Config/CMake/WebCompiler.cmake)
 include(${ACFDIR}/Config/CMake/CustomBuild.cmake)
 include(${ACFDIR}/Config/CMake/ApplicationConfig.cmake)
-include(${ACFDIR}/Config/CMake/AcfQt.cmake)
-include(${ACFDIR}/Config/CMake/AcfStd.cmake)
-include(${ACFDIR}/Config/CMake/AcfStdGui.cmake)
 include(${IMTCOREDIR}/Config/CMake/OpenSSL.cmake)
 include(${ACFDIR}/Config/CMake/WindeployQt.cmake)
 
@@ -55,5 +52,25 @@ list(REMOVE_DUPLICATES QML_IMPORT_DIRS)
 set(QML_IMPORT_PATH ${QML_IMPORT_DIRS}
 	CACHE STRING "Qt Creator extra qml import paths for ${PROJECT_NAME}"
 	FORCE
+)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+	prolifeqml
+	prolifestyle
+	prolifesdl
+	ProLifeLoc
+	ImtCore::ImtCoreLoc
+	ImtCore::imtdesksdl
+	ImtCore::imtlicsdl
+	ImtCore::imtcontrolsqml
+	ImtCore::imtstylecontrolsqml
+	ImtCore::imtguiqml
+	ImtCore::imtguigqlqml
+	ImtCore::imtauthguiqml
+	ImtCore::imtcolguiqml
+	ImtCore::imtdocguiqml
+	ImtCore::imtlicguiqml
+	ImtCore::imtdeskguiqml
+	Qt${QT_VERSION_MAJOR}::QuickControls2
 )
 

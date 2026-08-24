@@ -25,9 +25,6 @@ endif()
 
 include(${ACFDIR}/Config/CMake/CustomBuild.cmake)
 include(${ACFDIR}/Config/CMake/ApplicationConfig.cmake)
-include(${ACFDIR}/Config/CMake/AcfQt.cmake)
-include(${ACFDIR}/Config/CMake/AcfStd.cmake)
-include(${ACFDIR}/Config/CMake/AcfStdGui.cmake)
 include(${IMTCOREDIR}/Config/CMake/OpenSSL.cmake)
 include(${IMTCOREDIR}/Config/CMake/Quazip.cmake)
 include(${ACFDIR}/Config/CMake/WindeployQt.cmake)
@@ -45,6 +42,23 @@ if(WIN32)
 	windeploy(${PROJECT_NAME} "${listOptions}" "${files}")
 	unset(listOptions)
 endif()
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+	prolifeqml
+	prolifestyle
+	prolifedb
+	prolifegql
+	ProLifeLoc
+	ImtCore::ImtCoreLoc
+	ImtCore::imtcontrolsqml
+	ImtCore::imtguiqml
+	ImtCore::imtstylecontrolsqml
+	ImtCore::imtdocguiqml
+	ImtCore::imtguigqlqml
+	ImtCore::imtauthguiqml
+	ImtCore::imtlicguiqml
+	ImtCore::imtcolguiqml
+)
 
 
 
