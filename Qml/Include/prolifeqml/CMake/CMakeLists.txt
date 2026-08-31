@@ -46,6 +46,9 @@ if(DEFINED WEB_COMPILE AND WEB_COMPILE)
 	add_compile_definitions(WEB_COMPILE)
 	set(resname "prolife")
 	if(USE_NEW_WEB)
+		# jq_compile_web derives the Qt resource name from resname, and Q_INIT_RESOURCE
+		# in the applications expects ${PROJECT_NAME}Web.
+		set(resname "${PROJECT_NAME}")
 		set(inputjs "${PROLIFEDIR}/Qml/Include/prolifeqml/prolife.json")
 		set(appicon "../Icons/ProLifeIcon.svg")
 		set(dataroot "/ProLife/Views/")

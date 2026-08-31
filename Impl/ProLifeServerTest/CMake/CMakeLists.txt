@@ -19,20 +19,19 @@ endif()
 include(${ACFDIR}/Config/CMake/CustomBuild.cmake)
 include(${ACFDIR}/Config/CMake/ApplicationConfig.cmake)
 include(${IMTCOREDIR}/Config/CMake/Quazip.cmake)
-include(${ACFDIR}/Config/CMake/WindeployQt.cmake)
+include(${ACFDIR}/Config/CMake/DeployQt.cmake)
 
 if(DEFINED WEB_COMPILE AND WEB_COMPILE)
 	add_compile_definitions(WEB_COMPILE)
 endif()
 
+set(DEPLOY_QT_QML_DIRS
+	"${IMTCOREDIR}/Qml"
+	"${PROJECT_SOURCE_DIR}/../../../Qml/Include/prolifeqml"
+)
+deploy_qt(TARGET ${PROJECT_NAME})
+
 if(WIN32)
-	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Qml")
-	list(APPEND listOptions "--qmldir=${PROJECT_SOURCE_DIR}/../../../Qml/Include/prolifeqml")
-	set(files \"${AUX_INCLUDE_DIR}/../../../Bin/${CMAKE_BUILD_TYPE}_${TARGETNAME}/${PROJECT_NAME}.exe\")
-
-	windeploy(${PROJECT_NAME} "${listOptions}" "${files}")
-	unset(listOptions)
-
 	file(COPY ${OPENSSLDIR}/lib/x64/libcrypto-1_1-x64.dll DESTINATION ${PROJECT_SOURCE_DIR}/../../../Bin/${CMAKE_BUILD_TYPE}_${TARGETNAME})
 	file(COPY ${OPENSSLDIR}/lib/x64/libssl-1_1-x64.dll DESTINATION ${PROJECT_SOURCE_DIR}/../../../Bin/${CMAKE_BUILD_TYPE}_${TARGETNAME})
 endif()
@@ -51,6 +50,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	ImtCore::imtauthgql
 	ImtCore::imtauthdb
 	ImtCore::imtlog
+	ImtCore::imtstyle
 	ImtCore::imtchatdb
 	ImtCore::imtdeskdb
 	ImtCore::imtdeskgql

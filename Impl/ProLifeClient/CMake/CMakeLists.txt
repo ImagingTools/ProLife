@@ -25,19 +25,16 @@ include(${IMTCOREDIR}/Config/CMake/WebCompiler.cmake)
 include(${ACFDIR}/Config/CMake/CustomBuild.cmake)
 include(${ACFDIR}/Config/CMake/ApplicationConfig.cmake)
 include(${IMTCOREDIR}/Config/CMake/OpenSSL.cmake)
-include(${ACFDIR}/Config/CMake/WindeployQt.cmake)
+include(${ACFDIR}/Config/CMake/DeployQt.cmake)
 
 message(VERBOSE "PROJECT_BINARY_DIR ${IMTCOREDIR}/Bin/web")
 
-if(WIN32)
-	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Qml")
-	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Include/imtstylecontrolsqml/Qml")
-	list(APPEND listOptions "--qmldir=${PROJECT_SOURCE_DIR}/../../../Qml/Include/prolifeqml")
-	set(files \"${AUX_INCLUDE_DIR}/../../../Bin/${CMAKE_BUILD_TYPE}_${TARGETNAME}/${PROJECT_NAME}.exe\")
-
-	windeploy(${PROJECT_NAME} "${listOptions}" "${files}")
-	unset(listOptions)
-endif()
+set(DEPLOY_QT_QML_DIRS
+	"${IMTCOREDIR}/Qml"
+	"${IMTCOREDIR}/Include/imtstylecontrolsqml/Qml"
+	"${PROJECT_SOURCE_DIR}/../../../Qml/Include/prolifeqml"
+)
+deploy_qt(TARGET ${PROJECT_NAME})
 
 set(QML_IMPORT_DIRS ${QML_IMPORT_PATH})
 list(APPEND QML_IMPORT_DIRS "${PROJECT_SOURCE_DIR}/../../../Qml/Include/prolifeqml")
