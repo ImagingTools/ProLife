@@ -30,9 +30,13 @@
 # helper from ACF/Acf/Config/CMake/ProjectRoot.cmake.
 
 # --- SDL generated libraries ------------------------------------------------
-# ProLife's SDL is GraphQL-oriented, so keep imtgql explicit on the local SDL
-# root instead of mutating ImtCore::imtbasesdl from a downstream repository.
-declare_target_dependencies(prolifesdl		LINK_SCOPE PUBLIC	ImtCore::imtbasesdl ImtCore::imtgql)
+# The SDL code generated into ImtCore::imtbasesdl serializes through
+# imtgql::CGqlParamObject, but ImtCore does not declare that edge, so GNU ld places
+# libimtgql.a before libimtbasesdl.a and leaves those symbols undefined
+# (mirrors AgentinoLibraryDependencies.cmake).
+declare_target_dependencies(ImtCore::imtbasesdl	LINK_SCOPE INTERFACE	ImtCore::imtgql)
+
+declare_target_dependencies(prolifesdl		LINK_SCOPE PUBLIC	ImtCore::imtbasesdl)
 
 # --- Libraries --------------------------------------------------------------
 declare_target_dependencies(prolifedata	LINK_SCOPE PUBLIC	ImtCore::imtauth)
