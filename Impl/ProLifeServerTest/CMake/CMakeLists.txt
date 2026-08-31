@@ -50,6 +50,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	ImtCore::imtauthgql
 	ImtCore::imtauthdb
 	ImtCore::imtlog
+	ImtCore::imtstyle
 	ImtCore::imtchatdb
 	ImtCore::imtdeskdb
 	ImtCore::imtdeskgql

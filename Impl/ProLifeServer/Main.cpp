@@ -1,6 +1,7 @@
 // ImtCore includes
 #include <imtcore/CApplicationRunner.h>
 #include <imtcore/CImtCoreAuthorizableServerInitializer.h>
+#include <imtcore/CImtCoreBaseInitializer.h>
 #include <imtcore/CImtCoreDeskInitializer.h>
 #include <imtlic/IProductInfo.h>
 
@@ -21,6 +22,9 @@ static void InitializeProLifeServerResources()
 
 	InitializeImtCoreAuthorizableServer();
 	ImtCoreInitDeskSqlResources();
+
+	// GetStyleData serves the themes from ':/Style'.
+	ImtCoreInitStyleResources();
 }
 
 
