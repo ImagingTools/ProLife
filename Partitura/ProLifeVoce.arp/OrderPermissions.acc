@@ -124,21 +124,36 @@
                     <AttributeInfo Id="SetObjectDataPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ChangeOrder</Value>
+                                <Value>ChangeDeliveryId</Value>
+                                <Value>ChangePurchaseOrderId</Value>
+                                <Value>ChangeDescriptionForOrder</Value>
+                                <Value>ChangeCustomer</Value>
+                                <Value>ChangeOrderStatus</Value>
+                                <Value>ChangeOrderProducts</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="SetObjectDescriptionPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ChangeOrder</Value>
+                                <Value>ChangeDeliveryId</Value>
+                                <Value>ChangePurchaseOrderId</Value>
+                                <Value>ChangeDescriptionForOrder</Value>
+                                <Value>ChangeCustomer</Value>
+                                <Value>ChangeOrderStatus</Value>
+                                <Value>ChangeOrderProducts</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="SetObjectNamePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ChangeOrder</Value>
+                                <Value>ChangeDeliveryId</Value>
+                                <Value>ChangePurchaseOrderId</Value>
+                                <Value>ChangeDescriptionForOrder</Value>
+                                <Value>ChangeCustomer</Value>
+                                <Value>ChangeOrderStatus</Value>
+                                <Value>ChangeOrderProducts</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -220,7 +235,12 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>ViewOrders</Value>
-                                <Value>ChangeOrder</Value>
+                                <Value>ChangeDeliveryId</Value>
+                                <Value>ChangePurchaseOrderId</Value>
+                                <Value>ChangeDescriptionForOrder</Value>
+                                <Value>ChangeCustomer</Value>
+                                <Value>ChangeOrderStatus</Value>
+                                <Value>ChangeOrderProducts</Value>
                                 <Value>ChangeOrderForLicense</Value>
                                 <Value>ChangeOrderForSensor</Value>
                             </Values>

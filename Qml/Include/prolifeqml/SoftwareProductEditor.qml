@@ -43,6 +43,9 @@ Item {
 	readonly property bool showEditor: root.createMode || root.hasLinkedSelection || root.chromeLocked
 	readonly property bool showEmptyLinkState: !root.createMode && !root.hasLinkedSelection && !root.chromeLocked
 
+	//! Asks the host to open its instance picker.
+	signal linkRequested()
+
 	SoftwareProductData {
 		id: softwareData
 	}
@@ -181,11 +184,24 @@ Item {
 			Text {
 				width: parent.width
 				horizontalAlignment: Text.AlignHCenter
-				text: qsTr("Use the search field on the top panel to find an existing software license by name, software-ID or article.")
+				text: qsTr("Search an existing software license by name, software-ID or article.")
 				color: Style.inactiveTextColor
 				font.family: Style.fontFamily
 				font.pixelSize: Style.fontSizeM
 				wrapMode: Text.WordWrap
+			}
+
+			// Opens the same picker as the control on the top panel, so the empty state
+			// is actionable where the reader is already looking.
+			Button {
+				objectName: "SelectLicenseButton"
+				anchors.horizontalCenter: parent.horizontalCenter
+				text: qsTr("Select license")
+				iconSource: "../../../../" + Style.getIconPath("Icons/Link", Icon.State.On, Icon.Mode.Normal)
+
+				onClicked: {
+					root.linkRequested()
+				}
 			}
 		}
 	}

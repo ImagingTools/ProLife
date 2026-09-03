@@ -7,12 +7,15 @@
 #include <istd/CChangeGroup.h>
 
 // ImtCore includes
+#include <imtbase/CObjectLink.h>
 #include <imtbase/IObjectCollectionIterator.h>
+#include <imtdoc/CDocumentSavedEvent.h>
 
 // ProLife includes
 #include <prolifedata/prolifedata.h>
 #include <prolifedata/CDeviceInfo.h>
 #include <prolifedata/CIotDeviceInfo.h>
+#include <prolifedata/COrderInfo.h>
 #include <prolifedata/IHardwareProductBinding.h>
 
 
@@ -195,11 +198,27 @@ sdl::V1_0::imtbase::CDocumentOperationStatus CDeviceCollectionDocumentServiceCom
 		deviceInfoPtr->SetInternalUse(*deviceData.internalUse);
 	}
 
+	// Order-collection membership (see ProcessEvent below) is reconciled strictly
+	// after the document is actually saved, reading the saved OrderId straight
+	// back off the device collection rather than tracking it through here.
 	m_documentServiceCompPtr->SetDocumentData(userId, documentId, *deviceInfoPtr);
 
 	response.status = sdl::V1_0::imtbase::EDocumentOperationStatus::Success;
 
 	return response;
+}
+
+
+// reimplemented (imtdoc::IDocumentServiceEventHandler)
+
+bool CDeviceCollectionDocumentServiceComp::ProcessEvent(imtdoc::CEventBase* eventPtr)
+{
+	imtdoc::CDocumentSavedEvent* savedEventPtr = dynamic_cast<imtdoc::CDocumentSavedEvent*>(eventPtr);
+	if (savedEventPtr == nullptr){
+		return true;
+	}
+
+	return true;
 }
 
 
@@ -366,6 +385,143 @@ sdl::V1_0::imtbase::CDocumentOperationStatus CDeviceCollectionDocumentServiceCom
 	response.status = sdl::V1_0::imtbase::EDocumentOperationStatus::Success;
 
 	return response;
+}
+
+
+bool CDeviceCollectionDocumentServiceComp::RemoveHardwareFromOrder(const QByteArray& deviceId, const QByteArray& orderId) const
+{
+	if (!m_orderCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'OrderCollection' was not set", "CDeviceCollectionDocumentServiceComp");
+		return false;
+	}
+
+	prolifedata::IOrderInfo* oldOrderInfoPtr = nullptr;
+	imtbase::IObjectCollection::DataPtr oldOrderDataPtr;
+	if (m_orderCollectionCompPtr->GetObjectData(orderId, oldOrderDataPtr)){
+		oldOrderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(oldOrderDataPtr.GetPtr());
+	}
+
+	if (oldOrderInfoPtr == nullptr){
+		SendErrorMessage(0,
+						 QString("Unable to remove device '%1' from order '%2'. Error: Order does not exists")
+							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 "CDeviceCollectionDocumentServiceComp");
+		return false;
+	}
+
+	imtbase::IObjectCollection* productCollectionPtr = oldOrderInfoPtr->GetProducts();
+	if (productCollectionPtr == nullptr){
+		SendErrorMessage(0,
+						 QString("Unable to remove device '%1' from order '%2'. Error: Product collection from order is invalid")
+							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 "CDeviceCollectionDocumentServiceComp");
+		return false;
+	}
+
+	QByteArrayList elementIds = productCollectionPtr->GetElementIds();
+	if (!elementIds.contains(deviceId)){
+		SendErrorMessage(0,
+						 QString("Unable to remove device '%1' from order '%2'. Error: The device does not exist in this order")
+							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 "CDeviceCollectionDocumentServiceComp");
+		return false;
+	}
+
+	QByteArrayList removedIds;
+	removedIds << deviceId;
+	if (!productCollectionPtr->RemoveElements(removedIds)){
+		SendErrorMessage(0,
+						 QString("Unable to remove device '%1' from order '%2'. Error: Removing element from product collection failed")
+							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 "CDeviceCollectionDocumentServiceComp");
+		return false;
+	}
+
+	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
+	if (m_orderOperationContextControllerCompPtr.IsValid()){
+		operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext("Update", orderId, oldOrderInfoPtr);
+	}
+
+	if (!m_orderCollectionCompPtr->SetObjectData(orderId, *oldOrderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
+		SendErrorMessage(0,
+						 QString("Unable to remove device '%1' from order '%2'. Error: Updating an order in a collection failed")
+							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 "CDeviceCollectionDocumentServiceComp");
+		return false;
+	}
+
+	return true;
+}
+
+
+bool CDeviceCollectionDocumentServiceComp::AddHardwareToOrder(const QByteArray& deviceId, const QByteArray& orderId) const
+{
+	if (!m_orderCollectionCompPtr.IsValid()){
+		Q_ASSERT_X(false, "Attribute 'OrderCollection' was not set", "CDeviceCollectionDocumentServiceComp");
+		return false;
+	}
+
+	prolifedata::IOrderInfo* orderInfoPtr = nullptr;
+	imtbase::IObjectCollection::DataPtr orderDataPtr;
+	if (m_orderCollectionCompPtr->GetObjectData(orderId, orderDataPtr)){
+		orderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(orderDataPtr.GetPtr());
+	}
+
+	if (orderInfoPtr == nullptr){
+		SendErrorMessage(0,
+						 QString("Unable to add device '%1' to order '%2'. Error: Order does not exists")
+							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 "CDeviceCollectionDocumentServiceComp");
+		return false;
+	}
+
+	imtbase::IObjectCollection* productCollectionPtr = orderInfoPtr->GetProducts();
+	if (productCollectionPtr == nullptr){
+		SendErrorMessage(0,
+						 QString("Unable to add device '%1' to order '%2'. Error: Product collection from order is invalid")
+							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 "CDeviceCollectionDocumentServiceComp");
+		return false;
+	}
+
+	QByteArrayList elementIds = productCollectionPtr->GetElementIds();
+	if (elementIds.contains(deviceId)){
+		SendErrorMessage(0,
+						 QString("Unable to add device '%1' to order '%2'. Error: The device already exists in this order")
+							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 "CDeviceCollectionDocumentServiceComp");
+		return false;
+	}
+
+	istd::TDelPtr<imtbase::CObjectLink> objectLinkPtr;
+	objectLinkPtr.SetPtr(new imtbase::CObjectLink());
+
+	objectLinkPtr->SetObjectUuid(deviceId);
+	objectLinkPtr->SetFactoryId("HardwareInfo");
+
+	QByteArray objectId = productCollectionPtr->InsertNewObject(objectLinkPtr->GetFactoryId(), "", "", objectLinkPtr.GetPtr(), deviceId);
+	if (objectId.isEmpty()){
+		SendErrorMessage(0,
+						 QString("Unable to add device '%1' to order '%2'. Error: Adding an order in a collection failed")
+							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 "CDeviceCollectionDocumentServiceComp");
+		return false;
+	}
+
+	istd::TDelPtr<imtbase::IOperationContext> operationContextPtr = nullptr;
+	if (m_orderOperationContextControllerCompPtr.IsValid()){
+		operationContextPtr = m_orderOperationContextControllerCompPtr->CreateOperationContext("Update", orderId, orderInfoPtr);
+	}
+
+	if (!m_orderCollectionCompPtr->SetObjectData(orderId, *orderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
+		SendErrorMessage(0,
+						 QString("Unable to add device '%1' to order '%2'. Error: Adding an order in a collection failed")
+							 .arg(qPrintable(deviceId), qPrintable(orderId)),
+						 "CDeviceCollectionDocumentServiceComp");
+		return false;
+	}
+
+	return true;
 }
 
 

@@ -11,6 +11,7 @@ Dialog {
 	id: revokeLicenseDialog
 
 	title: qsTr("Revoke License")
+	backgroundColor: Style.baseColor
 	width: 900
 	height: 600
 

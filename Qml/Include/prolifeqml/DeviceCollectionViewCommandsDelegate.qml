@@ -493,8 +493,7 @@ DocCollectionViewDelegate {
 	
 	Component {
 		id: enterKeyDialog;
-		InputDialog {
-			title: qsTr("Decryption key");
+		InputDialog {				backgroundColor: Style.baseColor;			title: qsTr("Decryption key");
 			message: qsTr("Enter the decryption key");
 			
 			property string encodedContent;
@@ -571,8 +570,7 @@ DocCollectionViewDelegate {
 	
 	Component {
 		id: requestMessageDialog
-		MessageDialog {
-			title: qsTr("Sending a request");
+		MessageDialog {				backgroundColor: Style.baseColor;			title: qsTr("Sending a request");
 			onFinished: {
 				if (buttonId == Enums.yes){
 					transferLicensesRequest2.send(transferLicensesInput)
@@ -694,6 +692,7 @@ DocCollectionViewDelegate {
 		
 		Dialog {
 			id: dialog;
+			backgroundColor: Style.baseColor;
 			title: qsTr("Select device for license transfer");
 			canMove: false;
 			width: ModalDialogManager.activeView.width - 100;

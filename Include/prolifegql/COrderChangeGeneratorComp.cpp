@@ -40,126 +40,117 @@ bool COrderChangeGeneratorComp::CompareDocuments(
 		return false;
 	}
 
-	QByteArray oldOrderId = oldOrderInfoPtr->GetOrderId();
-	QByteArray newOrderId = newOrderInfoPtr->GetOrderId();
-	if (oldOrderId != newOrderId){
-		InsertOperationDescription(documentChangeCollection, "", "OrderId", QT_TRANSLATE_NOOP("Attribute", "Order-ID"), oldOrderId, newOrderId);
-	}
+	InsertChange(documentChangeCollection, "OrderId", QT_TRANSLATE_NOOP("Attribute", "Order-ID"), oldOrderInfoPtr->GetOrderId(), newOrderInfoPtr->GetOrderId());
+	InsertChange(documentChangeCollection, "PurchaseId", QT_TRANSLATE_NOOP("Attribute", "Purchase Order-ID"), oldOrderInfoPtr->GetPurchaseOrderId(), newOrderInfoPtr->GetPurchaseOrderId());
+	InsertChange(documentChangeCollection, "OrderCustomer", QT_TRANSLATE_NOOP("Attribute", "Order Customer"), oldOrderInfoPtr->GetCustomerId(), newOrderInfoPtr->GetCustomerId());
+	InsertTextChange(documentChangeCollection, "Description", QT_TRANSLATE_NOOP("Attribute", "Description"), oldOrderInfoPtr->GetDescription(), newOrderInfoPtr->GetDescription());
+	InsertEnumChange(
+				documentChangeCollection,
+				"Status",
+				QT_TRANSLATE_NOOP("Attribute", "Status"),
+				oldOrderInfoPtr->GetOrderStatus(),
+				newOrderInfoPtr->GetOrderStatus(),
+				oldOrderInfoPtr->OrderStatusGetStrings());
 
-	QByteArray oldPurchaseOrderId = oldOrderInfoPtr->GetPurchaseOrderId();
-	QByteArray newPurchaseOrderId = newOrderInfoPtr->GetPurchaseOrderId();
-	if (oldPurchaseOrderId != newPurchaseOrderId){
-		InsertOperationDescription(documentChangeCollection, "", "PurchaseId", QT_TRANSLATE_NOOP("Attribute", "Purchase Order-ID"), oldPurchaseOrderId, newPurchaseOrderId);
-	}
+	CompareCustomerRoles(oldOrderInfoPtr->GetCustomerRoles(), newOrderInfoPtr->GetCustomerRoles(), documentChangeCollection);
 
-	QByteArray oldCustomerId = oldOrderInfoPtr->GetCustomerId();
-	QByteArray newCustomerId = newOrderInfoPtr->GetCustomerId();
-	if (oldCustomerId != newCustomerId){
-		InsertOperationDescription(documentChangeCollection, "", "OrderCustomer", QT_TRANSLATE_NOOP("Attribute", "Order Customer"), oldCustomerId, newCustomerId);
-	}
-
-	prolifedata::IOrderInfo::OrderStatus oldStatus = oldOrderInfoPtr->GetOrderStatus();
-	prolifedata::IOrderInfo::OrderStatus newStatus = newOrderInfoPtr->GetOrderStatus();
-	if (oldStatus != newStatus){
-		QStringList statuses = oldOrderInfoPtr->OrderStatusGetStrings();
-		InsertOperationDescription(documentChangeCollection, "", "Status", QT_TRANSLATE_NOOP("Attribute", "Status"), statuses[oldStatus].toUtf8(), statuses[newStatus].toUtf8());
-	}
-
-	QString oldDescription = oldOrderInfoPtr->GetDescription();
-	QString newDescription = newOrderInfoPtr->GetDescription();
-	if (oldDescription != newDescription){
-		InsertOperationDescription(documentChangeCollection, "", "Description", QT_TRANSLATE_NOOP("Attribute", "Description"), oldDescription.toUtf8(), newDescription.toUtf8());
-	}
-
-	// Track customer role changes
-	const imtbase::IObjectCollection* oldRolesPtr = oldOrderInfoPtr->GetCustomerRoles();
-	const imtbase::IObjectCollection* newRolesPtr = newOrderInfoPtr->GetCustomerRoles();
-
-	if (oldRolesPtr != nullptr && newRolesPtr != nullptr){
-		imtbase::ICollectionInfo::Ids oldRoleIds = oldRolesPtr->GetElementIds();
-		imtbase::ICollectionInfo::Ids newRoleIds = newRolesPtr->GetElementIds();
-
-		// Detect removed roles (present in old, absent in new by roleType+customerId pair)
-		for (const imtbase::ICollectionInfo::Id& oldRoleId : oldRoleIds){
-			imtbase::IObjectCollection::DataPtr oldRoleData;
-			if (oldRolesPtr->GetObjectData(oldRoleId, oldRoleData)){
-				const prolifedata::COrderCustomerRole* oldRole = dynamic_cast<const prolifedata::COrderCustomerRole*>(oldRoleData.GetPtr());
-				if (oldRole == nullptr){
-					continue;
-				}
-
-				bool found = false;
-				for (const imtbase::ICollectionInfo::Id& newRoleId : newRoleIds){
-					imtbase::IObjectCollection::DataPtr newRoleData;
-					if (newRolesPtr->GetObjectData(newRoleId, newRoleData)){
-						const prolifedata::COrderCustomerRole* newRole = dynamic_cast<const prolifedata::COrderCustomerRole*>(newRoleData.GetPtr());
-						if (newRole != nullptr &&
-							newRole->GetRoleType() == oldRole->GetRoleType() &&
-							newRole->GetCustomerId() == oldRole->GetCustomerId()){
-							found = true;
-							break;
-						}
-					}
-				}
-
-				if (!found){
-					QByteArray roleTypeId = prolifedata::GetIdFromCustomerRoleType(oldRole->GetRoleType());
-					InsertOperationDescription(documentChangeCollection, "RemoveCustomerRole", roleTypeId, QT_TRANSLATE_NOOP("Attribute", "Customer Role"), oldRole->GetCustomerId(), "");
-				}
-			}
-		}
-
-		// Detect added roles (present in new, absent in old by roleType+customerId pair)
-		for (const imtbase::ICollectionInfo::Id& newRoleId : newRoleIds){
-			imtbase::IObjectCollection::DataPtr newRoleData;
-			if (newRolesPtr->GetObjectData(newRoleId, newRoleData)){
-				const prolifedata::COrderCustomerRole* newRole = dynamic_cast<const prolifedata::COrderCustomerRole*>(newRoleData.GetPtr());
-				if (newRole == nullptr){
-					continue;
-				}
-
-				bool found = false;
-				for (const imtbase::ICollectionInfo::Id& oldRoleId : oldRoleIds){
-					imtbase::IObjectCollection::DataPtr oldRoleData;
-					if (oldRolesPtr->GetObjectData(oldRoleId, oldRoleData)){
-						const prolifedata::COrderCustomerRole* oldRole = dynamic_cast<const prolifedata::COrderCustomerRole*>(oldRoleData.GetPtr());
-						if (oldRole != nullptr &&
-							oldRole->GetRoleType() == newRole->GetRoleType() &&
-							oldRole->GetCustomerId() == newRole->GetCustomerId()){
-							found = true;
-							break;
-						}
-					}
-				}
-
-				if (!found){
-					QByteArray roleTypeId = prolifedata::GetIdFromCustomerRoleType(newRole->GetRoleType());
-					InsertOperationDescription(documentChangeCollection, "AddCustomerRole", roleTypeId, QT_TRANSLATE_NOOP("Attribute", "Customer Role"), "", newRole->GetCustomerId());
-				}
-			}
-		}
-	}
-
-	QByteArrayList addedProducts;
-	QByteArrayList removedProducts;
-	QByteArrayList updatedProducts;
-
-	imtbase::IObjectCollection* oldProductCollectionPtr = oldOrderInfoPtr->GetProducts();
-	imtbase::IObjectCollection* newProductCollectionPtr = newOrderInfoPtr->GetProducts();
-
-	if (oldProductCollectionPtr != nullptr && newProductCollectionPtr != nullptr){
-		GenerateDifferences(*oldProductCollectionPtr, *newProductCollectionPtr, addedProducts, removedProducts, updatedProducts);
-	}
-
-	for (const QByteArray& productObjectId : std::as_const(addedProducts)){
-		InsertOperationDescription(documentChangeCollection, "AddProduct", "ProductId", "Product-ID", "", productObjectId);
-	}
-
-	for (const QByteArray& productObjectId : std::as_const(removedProducts)){
-		InsertOperationDescription(documentChangeCollection, "RemoveProduct", "ProductId", "Product-ID", productObjectId, "");
-	}
+	InsertListChanges(
+				documentChangeCollection,
+				"AddProduct",
+				"RemoveProduct",
+				"ProductId",
+				QT_TRANSLATE_NOOP("Attribute", "Product-ID"),
+				GetProductUuids(oldOrderInfoPtr->GetProducts()),
+				GetProductUuids(newOrderInfoPtr->GetProducts()));
 
 	return true;
+}
+
+
+void COrderChangeGeneratorComp::CompareCustomerRoles(
+			const imtbase::IObjectCollection* oldRolesPtr,
+			const imtbase::IObjectCollection* newRolesPtr,
+			imtbase::CObjectCollection& documentChangeCollection)
+{
+	// Roles are identified by the role type / customer pair, the element ID of the entry is not stable.
+	const CustomerRoles oldRoles = GetCustomerRoles(oldRolesPtr);
+	const CustomerRoles newRoles = GetCustomerRoles(newRolesPtr);
+
+	for (const CustomerRole& role : oldRoles){
+		if (!newRoles.contains(role)){
+			InsertOperationDescription(
+						documentChangeCollection,
+						"RemoveCustomerRole",
+						role.first,
+						QT_TRANSLATE_NOOP("Attribute", "Customer Role"),
+						role.second,
+						QByteArray());
+		}
+	}
+
+	for (const CustomerRole& role : newRoles){
+		if (!oldRoles.contains(role)){
+			InsertOperationDescription(
+						documentChangeCollection,
+						"AddCustomerRole",
+						role.first,
+						QT_TRANSLATE_NOOP("Attribute", "Customer Role"),
+						QByteArray(),
+						role.second);
+		}
+	}
+}
+
+
+COrderChangeGeneratorComp::CustomerRoles COrderChangeGeneratorComp::GetCustomerRoles(const imtbase::IObjectCollection* rolesPtr)
+{
+	CustomerRoles retVal;
+
+	if (rolesPtr == nullptr){
+		return retVal;
+	}
+
+	const imtbase::ICollectionInfo::Ids roleIds = rolesPtr->GetElementIds();
+	for (const imtbase::ICollectionInfo::Id& roleId : roleIds){
+		imtbase::IObjectCollection::DataPtr roleDataPtr;
+		if (!rolesPtr->GetObjectData(roleId, roleDataPtr)){
+			continue;
+		}
+
+		const prolifedata::COrderCustomerRole* rolePtr = dynamic_cast<const prolifedata::COrderCustomerRole*>(roleDataPtr.GetPtr());
+		if (rolePtr == nullptr){
+			continue;
+		}
+
+		retVal << CustomerRole(prolifedata::GetIdFromCustomerRoleType(rolePtr->GetRoleType()), rolePtr->GetCustomerId());
+	}
+
+	return retVal;
+}
+
+
+QByteArrayList COrderChangeGeneratorComp::GetProductUuids(const imtbase::IObjectCollection* productCollectionPtr)
+{
+	QByteArrayList retVal;
+
+	if (productCollectionPtr == nullptr){
+		return retVal;
+	}
+
+	const imtbase::ICollectionInfo::Ids productIds = productCollectionPtr->GetElementIds();
+	for (const imtbase::ICollectionInfo::Id& productId : productIds){
+		imtbase::IObjectCollection::DataPtr dataPtr;
+		if (!productCollectionPtr->GetObjectData(productId, dataPtr)){
+			continue;
+		}
+
+		const imtbase::CObjectLink* objectLinkPtr = dynamic_cast<const imtbase::CObjectLink*>(dataPtr.GetPtr());
+		if (objectLinkPtr != nullptr){
+			retVal << objectLinkPtr->GetObjectUuid();
+		}
+	}
+
+	return retVal;
 }
 
 
@@ -167,60 +158,32 @@ QString COrderChangeGeneratorComp::CreateCustomOperationDescription(
 			const imtbase::COperationDescription& operationDescription,
 			const QByteArray& languageId) const
 {
-	QString retVal;
+	static const QByteArray translationContext = QByteArrayLiteral("prolifegql::COrderChangeGeneratorComp");
 
-	QByteArray type = operationDescription.GetOperationTypeId();
-	QByteArray oldValue = operationDescription.GetOldValue();
-	QByteArray newValue = operationDescription.GetNewValue();
-	QString keyName = operationDescription.GetKeyName();
-	keyName = iqt::GetTranslation(m_translationManagerCompPtr.GetPtr(), keyName.toUtf8(), languageId, "Attribute");
+	const QByteArray type = operationDescription.GetOperationTypeId();
+	const QByteArray oldValue = operationDescription.GetOldValue();
+	const QByteArray newValue = operationDescription.GetNewValue();
+
+	// For customer roles the key holds the role type, which is what the user has to see.
+	const QString roleName = Translate(operationDescription.GetKey(), languageId, "Attribute").toHtmlEscaped();
 
 	if (type == "AddProduct"){
-		QString change = iqt::GetTranslation(
-			m_translationManagerCompPtr.GetPtr(),
-			QString(QT_TR_NOOP("Added the product '%1'")).toUtf8(),
-			languageId,
-			"prolifegql::COrderChangeGeneratorComp");
-		
-		change = change.arg(GetProductName(newValue));
-
-		retVal += change + "\n";
-	}
-	else if (type == "RemoveProduct"){
-		QString change = iqt::GetTranslation(
-			m_translationManagerCompPtr.GetPtr(),
-			QString(QT_TR_NOOP("Removed the product '%1'")).toUtf8(),
-			languageId,
-			"prolifegql::COrderChangeGeneratorComp");
-
-		change = change.arg(GetProductName(oldValue));
-
-		retVal += change + "\n";
-	}
-	else if (type == "AddCustomerRole"){
-		QString change = iqt::GetTranslation(
-			m_translationManagerCompPtr.GetPtr(),
-			QString(QT_TR_NOOP("Added customer role '%1' for customer '%2'")).toUtf8(),
-			languageId,
-			"prolifegql::COrderChangeGeneratorComp");
-
-		change = change.arg(QString::fromUtf8(keyName.toUtf8()), GetAccountName(newValue));
-
-		retVal += change + "\n";
-	}
-	else if (type == "RemoveCustomerRole"){
-		QString change = iqt::GetTranslation(
-			m_translationManagerCompPtr.GetPtr(),
-			QString(QT_TR_NOOP("Removed customer role '%1' for customer '%2'")).toUtf8(),
-			languageId,
-			"prolifegql::COrderChangeGeneratorComp");
-
-		change = change.arg(QString::fromUtf8(keyName.toUtf8()), GetAccountName(oldValue));
-
-		retVal += change + "\n";
+		return Translate(QT_TR_NOOP("Added the product '%1'"), languageId, translationContext).arg(GetProductName(newValue).toHtmlEscaped());
 	}
 
-	return retVal;
+	if (type == "RemoveProduct"){
+		return Translate(QT_TR_NOOP("Removed the product '%1'"), languageId, translationContext).arg(GetProductName(oldValue).toHtmlEscaped());
+	}
+
+	if (type == "AddCustomerRole"){
+		return Translate(QT_TR_NOOP("Added customer role '%1' for customer '%2'"), languageId, translationContext).arg(roleName, GetAccountName(newValue).toHtmlEscaped());
+	}
+
+	if (type == "RemoveCustomerRole"){
+		return Translate(QT_TR_NOOP("Removed customer role '%1' for customer '%2'"), languageId, translationContext).arg(roleName, GetAccountName(oldValue).toHtmlEscaped());
+	}
+
+	return QString();
 }
 
 
@@ -235,58 +198,11 @@ QString COrderChangeGeneratorComp::GetKeyNameForOperation(const QByteArray& key,
 }
 
 
-void COrderChangeGeneratorComp::GenerateDifferences(
-			imtbase::IObjectCollection& prevOrderProducts,
-			imtbase::IObjectCollection& currentOrderProducts,
-			QByteArrayList& addProducts,
-			QByteArrayList& removedProducts,
-			QByteArrayList& /*updatedProducts*/) const
-{
-	imtbase::ICollectionInfo::Ids prevProductIds = prevOrderProducts.GetElementIds();
-	imtbase::ICollectionInfo::Ids currentProductIds = currentOrderProducts.GetElementIds();
-
-	QByteArrayList oldProductUuids;
-	QByteArrayList newProductUuids;
-
-	for (const imtbase::ICollectionInfo::Id& productId : currentProductIds){
-		imtbase::IObjectCollection::DataPtr dataPtr;
-		if (currentOrderProducts.GetObjectData(productId, dataPtr)){
-			const imtbase::CObjectLink* objectLinkPtr = dynamic_cast<const imtbase::CObjectLink*>(dataPtr.GetPtr());
-			if (objectLinkPtr != nullptr){
-				newProductUuids << objectLinkPtr->GetObjectUuid();
-			}
-		}
-	}
-
-	for (const imtbase::ICollectionInfo::Id& productId : prevProductIds){
-		imtbase::IObjectCollection::DataPtr dataPtr;
-		if (prevOrderProducts.GetObjectData(productId, dataPtr)){
-			const imtbase::CObjectLink* objectLinkPtr = dynamic_cast<const imtbase::CObjectLink*>(dataPtr.GetPtr());
-			if (objectLinkPtr != nullptr){
-				oldProductUuids << objectLinkPtr->GetObjectUuid();
-			}
-		}
-	}
-
-	for (const imtbase::ICollectionInfo::Id& productId : newProductUuids){
-		if (!oldProductUuids.contains(productId)){
-			addProducts << productId;
-		}
-	}
-
-	for (const imtbase::ICollectionInfo::Id& productId : oldProductUuids){
-		if (!newProductUuids.contains(productId)){
-			removedProducts << productId;
-		}
-	}
-}
-
-
 // private methods
 
 QString COrderChangeGeneratorComp::GetAccountName(const QByteArray& accountId) const
 {
-	if (!IsUuid(accountId)){
+	if (!IsUuid(accountId) || !m_accountCollectionCompPtr.IsValid()){
 		return accountId;
 	}
 
@@ -312,20 +228,18 @@ QString COrderChangeGeneratorComp::GetProductName(const QByteArray& productId) c
 	QByteArray productName;
 
 	imtbase::IObjectCollection::DataPtr productDataPtr;
-	if (m_softwareCollectionCompPtr->GetObjectData(productId, productDataPtr)){
+	if (m_softwareCollectionCompPtr.IsValid() && m_softwareCollectionCompPtr->GetObjectData(productId, productDataPtr)){
 		const imtlic::IProductInstanceInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
 		if (productInfoPtr != nullptr){
 			lisaProductId = productInfoPtr->GetProductId();
 			productName = productInfoPtr->GetSerialNumber();
 		}
 	}
-	else{
-		if (m_deviceCollectionCompPtr->GetObjectData(productId, productDataPtr)){
-			const prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::IDeviceInfo*>(productDataPtr.GetPtr());
-			if (deviceInfoPtr != nullptr){
-				lisaProductId = deviceInfoPtr->GetDeviceType();
-				productName = deviceInfoPtr->GetMacAddress();
-			}
+	else if (m_deviceCollectionCompPtr.IsValid() && m_deviceCollectionCompPtr->GetObjectData(productId, productDataPtr)){
+		const prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::IDeviceInfo*>(productDataPtr.GetPtr());
+		if (deviceInfoPtr != nullptr){
+			lisaProductId = deviceInfoPtr->GetDeviceType();
+			productName = deviceInfoPtr->GetMacAddress();
 		}
 	}
 
@@ -345,8 +259,9 @@ QString COrderChangeGeneratorComp::GetProductName(const QByteArray& productId) c
 		}
 	}
 
+	// Without the product catalogue entry the serial number resp. MAC-address still identifies the product.
 	if (lisaProductName.isEmpty()){
-		return productId;
+		return !productName.isEmpty() ? QString::fromUtf8(productName) : QString::fromUtf8(productId);
 	}
 
 	QString retVal = lisaProductName;

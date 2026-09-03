@@ -2,8 +2,8 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="6435" Description="ACF" />
-            <Version Id="1" Number="2410" Description="ACF-Solutions" />
+            <Version Id="0" Number="6500" Description="ACF" />
+            <Version Id="1" Number="2438" Description="ACF-Solutions" />
             <Version Id="1023" Number="395264" Description="Qt Framework" />
         </VersionInfos>
     </AcfHeader>
@@ -112,6 +112,7 @@
                                 <Value>SoftwareProducts</Value>
                                 <Value>Orders</Value>
                                 <Value>Accounts</Value>
+                                <Value>HardwareBindings</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -122,6 +123,7 @@
                                 <Value>PageData/SoftwareChangeGenerator</Value>
                                 <Value>PageData/OrderChangeGenerator</Value>
                                 <Value>PageData/CustomerChangeGenerator</Value>
+                                <Value>PageData/HardwareBindingChangeGenerator</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -436,6 +438,9 @@
                                 <AttributeInfo Id="OrderOperationContextController" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="OrdersPage/OperationContextController" />
                                 </AttributeInfo>
+                                <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="OrderCollection">
+                                    <Data IsEnabled="false" />
+                                </AttributeInfo>
                                 <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                                     <Data IsEnabled="false" />
                                 </AttributeInfo>
@@ -553,6 +558,9 @@
                                 <AttributeInfo Id="OrderOperationContextController" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="OrdersPage/OperationContextController" />
                                 </AttributeInfo>
+                                <AttributeInfo Id="BindingOperationContextController" Type="Reference" ExportId="">
+                                    <Data IsEnabled="true" Value="DevicesPage/BindingOperationContextController" />
+                                </AttributeInfo>
                                 <AttributeInfo Id="OrderRepository" Type="Reference" ExportId="OrderRepository">
                                     <Data IsEnabled="false" />
                                 </AttributeInfo>
@@ -613,9 +621,11 @@
                     <Component ExportedId="AccountsPage" ComponentId="AccountsPage" />
                     <Component ExportedId="CustomerChangeGenerator" ComponentId="AccountsPage/CustomerChangeGenerator" />
                     <Component ExportedId="CustomerOperationContextController" ComponentId="AccountsPage/OperationContextController" />
+                    <Component ExportedId="BindingOperationContextController" ComponentId="DevicesPage/BindingOperationContextController" />
                     <Component ExportedId="DeviceChangeGenerator" ComponentId="DevicesPage/DeviceChangeGenerator" />
                     <Component ExportedId="DeviceOperationContextController" ComponentId="DevicesPage/OperationContextController" />
                     <Component ExportedId="DevicesPage" ComponentId="DevicesPage" />
+                    <Component ExportedId="HardwareBindingChangeGenerator" ComponentId="DevicesPage/HardwareBindingChangeGenerator" />
                     <Component ExportedId="OrderChangeGenerator" ComponentId="OrdersPage/OrderChangeGenerator" />
                     <Component ExportedId="OrderOperationContextController" ComponentId="OrdersPage/OperationContextController" />
                     <Component ExportedId="OrdersPage" ComponentId="OrdersPage" />

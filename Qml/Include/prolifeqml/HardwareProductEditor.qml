@@ -36,6 +36,9 @@ Item {
 	readonly property bool showEditor: root.createMode || root.hasLinkedSelection || root.chromeLocked
 	readonly property bool showEmptyLinkState: !root.createMode && !root.hasLinkedSelection && !root.chromeLocked
 
+	//! Asks the host to open its instance picker.
+	signal linkRequested()
+
 	DeviceData {
 		id: deviceData
 	}
@@ -194,11 +197,24 @@ Item {
 			Text {
 				width: parent.width
 				horizontalAlignment: Text.AlignHCenter
-				text: qsTr("Use the search field on the top panel to find an existing device by product name or MAC address.")
+				text: qsTr("Search an existing device by product name, article or MAC address.")
 				color: Style.inactiveTextColor
 				font.family: Style.fontFamily
 				font.pixelSize: Style.fontSizeM
 				wrapMode: Text.WordWrap
+			}
+
+			// Opens the same picker as the control on the top panel, so the empty state
+			// is actionable where the reader is already looking.
+			Button {
+				objectName: "SelectDeviceButton"
+				anchors.horizontalCenter: parent.horizontalCenter
+				text: qsTr("Select device")
+				iconSource: "../../../../" + Style.getIconPath("Icons/Link", Icon.State.On, Icon.Mode.Normal)
+
+				onClicked: {
+					root.linkRequested()
+				}
 			}
 		}
 	}

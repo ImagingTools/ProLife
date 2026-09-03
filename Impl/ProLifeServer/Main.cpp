@@ -1,12 +1,16 @@
 // ImtCore includes
-#include <imtlic/Init.h>
+#include <imtcore/CApplicationRunner.h>
+#include <imtcore/CImtCoreAuthorizableServerInitializer.h>
+#include <imtcore/CImtCoreBaseInitializer.h>
+#include <imtcore/CImtCoreDeskInitializer.h>
+#include <imtlic/IProductInfo.h>
 
 // ProLife includes
 #include <GeneratedFiles/ProLifeServer/CProLifeServer.h>
 #include "ProLifeFeatures.h"
 
 
-int main(int argc, char *argv[])
+static void InitializeProLifeServerResources()
 {
 #ifdef WEB_COMPILE
 	Q_INIT_RESOURCE(prolifeqmlWeb);
@@ -14,14 +18,27 @@ int main(int argc, char *argv[])
 
 	Q_INIT_RESOURCE(prolifestyle);
 	Q_INIT_RESOURCE(prolifeqml);
-	Q_INIT_RESOURCE(imtlicguiTheme);
 	Q_INIT_RESOURCE(ProLifeLoc);
-	Q_INIT_RESOURCE(imtauthdb);
 
-	Q_INIT_RESOURCE(imtchatdb);
-	Q_INIT_RESOURCE(imtdeskdb);
+	InitializeImtCoreAuthorizableServer();
+	ImtCoreInitDeskSqlResources();
 
-	return ProductFeatureRun<CProLifeServer, DefaultImtCoreQmlInitializer, prolife::FillProduct>(argc, argv);
+	// GetStyleData serves the themes from ':/Style'.
+	ImtCoreInitStyleResources();
+}
+
+
+int main(int argc, char *argv[])
+{
+	InitializeProLifeServerResources();
+
+	CProLifeServer instance;
+	auto* productInfoPtr = instance.GetInterface<imtlic::IProductInfo>();
+	if (productInfoPtr != nullptr) {
+		prolife::FillProduct(*productInfoPtr);
+	}
+
+	return imtcore::CApplicationRunner::Run(argc, argv, instance);
 }
 
 

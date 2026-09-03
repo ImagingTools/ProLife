@@ -52,6 +52,22 @@ DocumentViewBase {
 	property string forcedOrderId: ""
 	property bool hideProductionPage: deviceEditorContainer.embedded
 
+	// Id of the stored device record. documentObjectId (DocumentViewBase) is the one
+	// that is correct right after a first save; deviceData.m_id only catches up when
+	// the representation is re-fetched, which is why it is the fallback and not the
+	// other way round.
+	readonly property string deviceObjectId: deviceEditorContainer.documentObjectId !== ""
+		? deviceEditorContainer.documentObjectId
+		: (deviceData ? deviceData.m_id : "")
+
+	// A ticket is stored with a reference to the device record, so that record has to
+	// exist and have an id to point at. isNewDocument comes from DocumentViewBase and
+	// asks the document manager; the local `isNew` below cannot be used - it is fed
+	// documentIsNew(m_id), an object id where a document id is expected, and
+	// documentIsNew() reports "new" for anything it fails to find, so it reads true
+	// for saved devices too.
+	readonly property bool ticketsEnabled: !deviceEditorContainer.isNewDocument && deviceEditorContainer.deviceObjectId !== ""
+
 	DeviceProductionStatus {
 		id: productionStatus
 	}
@@ -73,8 +89,11 @@ DocumentViewBase {
 		}
 	}
 
-	onDeviceDataChanged: {
-		deviceEditorContainer.deviceDataWasChanged()
+	Connections {
+		target: deviceEditorContainer
+		function onDeviceDataChanged() {
+			deviceEditorContainer.deviceDataWasChanged()
+		}
 	}
 
 	function deviceDataWasChanged() {
@@ -112,6 +131,14 @@ DocumentViewBase {
 			return null
 		}
 		multiPageView.ensurePageLoaded(idx)
+		return multiPageView.getPageByIndex(idx)
+	}
+
+	function getLoadedPageItem(pageId) {
+		let idx = multiPageView.getIndexById(pageId)
+		if (idx < 0) {
+			return null
+		}
 		return multiPageView.getPageByIndex(idx)
 	}
 
@@ -218,6 +245,7 @@ DocumentViewBase {
 	Component {
 		id: confirmSetFinishedStatusDialogComp
 		MessageDialog {
+			backgroundColor: Style.baseColor
 			title: qsTr("Confirm status")
 			message: qsTr("Do you want to set the production state of the sensor to Finished ?")
 
@@ -264,8 +292,8 @@ DocumentViewBase {
 			deviceData.m_orderId = deviceEditorContainer.forcedOrderId
 		}
 
-		let devicePage = deviceEditorContainer.getPageItem("Device")
-		let productionPage = deviceEditorContainer.hideProductionPage ? null : deviceEditorContainer.getPageItem("Production")
+		let devicePage = deviceEditorContainer.getLoadedPageItem("Device")
+		let productionPage = deviceEditorContainer.hideProductionPage ? null : deviceEditorContainer.getLoadedPageItem("Production")
 		if (devicePage) {
 			devicePage.updateGui()
 		}
@@ -273,7 +301,7 @@ DocumentViewBase {
 			productionPage.updateGui()
 		}
 
-		let licensesPage = deviceEditorContainer.getPageItem("Licenses")
+		let licensesPage = deviceEditorContainer.getLoadedPageItem("Licenses")
 		if (licensesPage) {
 			licensesPage.updateGui()
 		}
@@ -284,8 +312,8 @@ DocumentViewBase {
 			return
 		}
 
-		let devicePage = deviceEditorContainer.getPageItem("Device")
-		let productionPage = deviceEditorContainer.hideProductionPage ? null : deviceEditorContainer.getPageItem("Production")
+		let devicePage = deviceEditorContainer.getLoadedPageItem("Device")
+		let productionPage = deviceEditorContainer.hideProductionPage ? null : deviceEditorContainer.getLoadedPageItem("Production")
 		if (devicePage) {
 			devicePage.updateModel()
 		}
@@ -418,13 +446,42 @@ DocumentViewBase {
 
 			EntityContextTicketsPanel {
 				id: supportWorkspace
+				visible: deviceEditorContainer.ticketsEnabled
 				anchors.top: parent.top
 				anchors.bottom: parent.bottom
 				x: Math.max(0, (supportPage.width - width) / 2)
 				width: Math.max(0, Math.min(deviceEditorContainer.contentMaxWidth, supportPage.width))
 				entityType: "Devices"
-				entityId: deviceEditorContainer.deviceData ? deviceEditorContainer.deviceData.m_id : ""
+				entityId: deviceEditorContainer.ticketsEnabled ? deviceEditorContainer.deviceObjectId : ""
 				entityDisplayName: deviceEditorContainer.deviceData ? deviceEditorContainer.deviceData.m_macAddress : ""
+			}
+
+			Column {
+				id: supportUnavailableHint
+				visible: !deviceEditorContainer.ticketsEnabled
+				anchors.centerIn: parent
+				width: Math.max(0, Math.min(Style.sizeHintS, supportPage.width - 2 * Style.marginXL))
+				spacing: Style.marginM
+
+				Text {
+					width: parent.width
+					horizontalAlignment: Text.AlignHCenter
+					text: qsTr("Tickets are available after saving")
+					font.pixelSize: Style.fontSizeXL
+					font.family: Style.fontFamilyBold
+					color: Style.textColor
+					wrapMode: Text.WordWrap
+				}
+
+				Text {
+					width: parent.width
+					horizontalAlignment: Text.AlignHCenter
+					text: qsTr("A support ticket is linked to the device record, which only exists once the device has been saved. Save this device and the Support page will let you create and track its tickets.")
+					font.pixelSize: Style.fontSizeM
+					font.family: Style.fontFamily
+					color: Style.inactiveTextColor
+					wrapMode: Text.WordWrap
+				}
 			}
 		}
 	}
@@ -476,7 +533,7 @@ DocumentViewBase {
 				anchors.bottom: parent.bottom
 				x: Math.max(0, (historyPage.width - width) / 2)
 				width: Math.max(0, Math.min(deviceEditorContainer.contentMaxWidth, historyPage.width))
-				documentId: deviceEditorContainer.deviceData ? deviceEditorContainer.deviceData.m_id : ""
+				documentId: deviceEditorContainer.deviceObjectId
 				collectionId: "Devices"
 			}
 		}
@@ -660,12 +717,14 @@ DocumentViewBase {
 							}
 
 							onCurrentIndexChanged: {
-								if (currentIndex >= 0) {
-									if (model) {
-										articleText.text = model.getData(DeviceItemTypeMetaInfo.s_licenseId, currentIndex)
-									}
-									deviceEditorContainer.doUpdateModel()
+								if (configurationCB.currentIndex >= 0 && configurationCB.model) {
+									articleText.text = configurationCB.model.getData(DeviceItemTypeMetaInfo.s_licenseId, configurationCB.currentIndex)
 								}
+								else {
+									articleText.text = ""
+								}
+
+								deviceEditorContainer.doUpdateModel()
 							}
 						}
 
@@ -795,7 +854,7 @@ DocumentViewBase {
 				}
 
 				let canChangeOrder = PermissionsController.checkPermission("ChangeOrderForSensor")
-				if (canChangeOrder) {
+				if (canChangeOrder && orderCB.sourceModel) {
 					if (orderCB.currentIndex >= 0) {
 						let selectedOrderId = orderCB.sourceModel.getData(OrderItemTypeMetaInfo.s_id, orderCB.currentIndex)
 						deviceEditorContainer.deviceData.m_orderId = selectedOrderId

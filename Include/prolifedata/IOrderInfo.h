@@ -53,6 +53,16 @@ public:
 	I_DECLARE_ENUM(OrderStatus, OS_NONE, OS_CREATED, OS_IN_PROGRESS, OS_CANCELED, OS_ON_HOLD, OS_FINISHED, OS_CLOSED);
 
 	/**
+		Get purchase ID of the order.
+	*/
+	virtual QByteArray GetPurchaseOrderId() const = 0;
+
+	/**
+		Set purchase order ID.
+	*/
+	virtual void SetPurchaseOrderId(const QByteArray& purchaseOrderId) = 0;
+
+	/**
 		Get customer of the order.
 	*/
 	virtual QByteArray GetCustomerId() const = 0;

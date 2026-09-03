@@ -25,6 +25,7 @@ public:
 		I_ASSIGN(m_bindingCollectionCompPtr, "BindingCollection", "Binding collection", true, "BindingCollection");
 		I_ASSIGN(m_softwareInfoFactCompPtr, "SoftwareFactory", "Factory for software instance", true, "SoftwareFactory");
 		I_ASSIGN(m_orderOperationContextControllerCompPtr, "OrderOperationContextController", "Operation context controller for order info", true, "OrderOperationContextController");
+		I_ASSIGN(m_bindingOperationContextControllerCompPtr, "BindingOperationContextController", "Operation context controller for hardware binding info", false, "BindingOperationContextController");
 		I_ASSIGN(m_groupFilterParamJoinerCompPtr, "GroupFilterParamJoiner", "Group filter param joiner", true, "GroupFilterParamJoiner");
 		I_ASSIGN(m_userActionManagerCompPtr, "UserActionManager", "User action manager for tracking operations", true, "UserActionManager");
 	I_END_COMPONENT;
@@ -72,8 +73,6 @@ private:
 				istd::IChangeable& object,
 				QByteArray& objectId,
 				QString& errorMessage) const;
-	bool RemoveSoftwareFromOrder(const QByteArray& softwareId, const QByteArray& orderId) const;
-	bool AddSoftwareToOrder(const QByteArray& softwareId, const QByteArray& orderId) const;
 	void PopulateBoundCountInTree(sdl::V1_0::prolife::CLicenseTreeNode& node) const;
 
 private:
@@ -85,6 +84,7 @@ private:
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
 	I_REF(imtbase::IOperationContextController, m_orderOperationContextControllerCompPtr);
+	I_REF(imtbase::IOperationContextController, m_bindingOperationContextControllerCompPtr);
 	I_FACT(imtlic::IProductInstanceInfo, m_softwareInfoFactCompPtr);
 	I_REF(prolifedata::IGroupFilterParamJoiner, m_groupFilterParamJoinerCompPtr);
 	I_REF(imtauth::IUserActionManager, m_userActionManagerCompPtr);

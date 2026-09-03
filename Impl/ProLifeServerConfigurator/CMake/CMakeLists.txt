@@ -18,25 +18,26 @@ endif()
 
 include(${ACFDIR}/Config/CMake/CustomBuild.cmake)
 include(${ACFDIR}/Config/CMake/ApplicationConfig.cmake)
-include(${ACFDIR}/Config/CMake/AcfQt.cmake)
-include(${ACFDIR}/Config/CMake/AcfStd.cmake)
-include(${ACFDIR}/Config/CMake/AcfStdGui.cmake)
 include(${IMTCOREDIR}/Config/CMake/OpenSSL.cmake)
 include(${IMTCOREDIR}/Config/CMake/Quazip.cmake)
-include(${ACFDIR}/Config/CMake/WindeployQt.cmake)
+include(${ACFDIR}/Config/CMake/DeployQt.cmake)
 
 if(DEFINED WEB_COMPILE AND WEB_COMPILE)
 	add_compile_definitions(WEB_COMPILE)
 endif()
 
-target_link_libraries(${PROJECT_NAME} prolifeqml)
-target_link_libraries(${PROJECT_NAME} imtauthsdl imtappsdl imtcolorsdl imt2dsdl)
-target_link_libraries(${PROJECT_NAME} imtgui imtauth imtauthdb imtdeskdb imtchatdb imtdb imtfile imtservice imtlog imtauthgui imtstyle imtlicgui imtgql imtcom)
-target_link_libraries(${PROJECT_NAME} imtqml imtguiqml imtstylecontrolsqml imtcontrolsqml imtguigqlqml imtauthguiqml imtcolguiqml imtdocguiqml imtlicguiqml)
-target_link_libraries(${PROJECT_NAME} ImtCoreLoc ProLifeLoc AcfLoc AcfSlnLoc)
-target_link_libraries(${PROJECT_NAME} imtbase imtbasesdl imtserverapp imtapp imtrest imtservergql)
-target_link_libraries(${PROJECT_NAME} iqtgui)
-target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::QuickWidgets Qt${QT_VERSION_MAJOR}::WebSockets)
-target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::Sql)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+	prolifeqml
+	ProLifeLoc
+	ImtCore::ImtCoreLoc
+	ImtCore::imtcontrolsqml
+	ImtCore::imtstylecontrolsqml
+	ImtCore::imtguiqml
+	ImtCore::imtguigqlqml
+	ImtCore::imtauthguiqml
+	ImtCore::imtcolguiqml
+	ImtCore::imtdocguiqml
+	ImtCore::imtlicguiqml
+)
 
 

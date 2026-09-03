@@ -30,6 +30,18 @@
         <Element ComponentName="XmlFileSerializer" X="650" Y="275" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
+        <EmbededRegistry Id="DeviceCommands">
+            <PositionMap>
+                <Element ComponentName="Bind" X="1025" Y="400" Note=""/>
+                <Element ComponentName="CreateLicenseFile" X="600" Y="400" Note=""/>
+                <Element ComponentName="Demultiplexer" X="975" Y="75" Note=""/>
+                <Element ComponentName="DeviceCommandsController" X="600" Y="175" Note=""/>
+                <Element ComponentName="IotDeviceCommandsController" X="225" Y="75" Note=""/>
+                <Element ComponentName="StandardDocumentCommands" X="225" Y="400" Note=""/>
+                <Element ComponentName="TransferLicenses" X="600" Y="600" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
         <EmbededRegistry Id="Permissions">
             <PositionMap>
                 <Element ComponentName="DevicePermissions" X="600" Y="325" Note=""/>
@@ -47,18 +59,6 @@
                 <Element ComponentName="Revision" X="1025" Y="425" Note=""/>
                 <Element ComponentName="StandardCollectionCommands" X="250" Y="275" Note=""/>
                 <Element ComponentName="TransferLicenses" X="1025" Y="600" Note=""/>
-            </PositionMap>
-            <EmbeddedRegistries/>
-        </EmbededRegistry>
-        <EmbededRegistry Id="DeviceCommands">
-            <PositionMap>
-                <Element ComponentName="Bind" X="1025" Y="400" Note=""/>
-                <Element ComponentName="CreateLicenseFile" X="600" Y="400" Note=""/>
-                <Element ComponentName="Demultiplexer" X="975" Y="75" Note=""/>
-                <Element ComponentName="DeviceCommandsController" X="600" Y="175" Note=""/>
-                <Element ComponentName="IotDeviceCommandsController" X="225" Y="75" Note=""/>
-                <Element ComponentName="StandardDocumentCommands" X="225" Y="400" Note=""/>
-                <Element ComponentName="TransferLicenses" X="600" Y="600" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>
         </EmbededRegistry>

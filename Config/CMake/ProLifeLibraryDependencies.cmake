@@ -1,12 +1,7 @@
 # ---------------------------------------------------------------------------
 # Clean, target-based inter-library dependency graph for ProLife.
 #
-# This mirrors the approach introduced for the ACF foundation (Acf) in
-# Config/CMake/AcfLibraryDependencies.cmake, for AcfSln in
-# Config/CMake/AcfSlnLibraryDependencies.cmake, for IAcf in
-# Config/CMake/IAcfLibraryDependencies.cmake, for ImtCore in
-# Config/CMake/ImtCoreLibraryDependencies.cmake and for IotPlatform in
-# Config/CMake/IotPlatformLibraryDependencies.cmake: instead of relying on the
+# Instead of relying on the
 # final executable/package link to resolve symbols and on a hand-tuned build
 # order (the add_dependencies()/inline target_link_libraries() spread across the
 # per-library CMake files), the dependencies between the ProLife libraries - and
@@ -19,11 +14,9 @@
 # directories), so a single ImtCore:: dependency transitively provides the full
 # ImtCore, Acf, AcfSln and IAcf header search paths to the consuming library.
 #
-# The target_link_libraries() signature is controlled by ACF_LIBRARY_LINK_SCOPE:
-#  * when empty, the plain signature is used (matching the legacy ProLife CMake),
-#  * when set to PUBLIC/PRIVATE/INTERFACE, the keyword signature is used.
-# CMake forbids mixing the plain and keyword signatures on the same target. For
-# static libraries the dependency still propagates transitively to consumers.
+# Link scopes are explicit in this file (PUBLIC/PRIVATE/INTERFACE). CMake
+# forbids mixing the plain and keyword signatures on the same target. For static
+# libraries the dependency still propagates transitively to consumers.
 #
 # Dependencies are declared *minimally*: each library lists only its direct
 # dependencies; transitive dependencies propagate automatically through the graph.
@@ -33,58 +26,29 @@
 # targets have been created.
 # ---------------------------------------------------------------------------
 
-# Declare the dependencies of a ProLife library, ignoring any entry whose target
-# does not exist in the current configuration (for example feature-gated
-# libraries, or ImtCore::/Acf::/AcfSln::/IAcf:: targets that are not available
-# because the legacy shim is used instead of find_package).
-function(prolife_declare_library_dependencies target)
-	cmake_parse_arguments(ARG "" "LINK_SCOPE" "" ${ARGN})
-
-	if(NOT ARG_LINK_SCOPE)
-		set(ARG_LINK_SCOPE ${ACF_LIBRARY_LINK_SCOPE})
-	endif()
-
-	if(NOT TARGET ${target})
-		return()
-	endif()
-
-	# The only entry whose *target* is an ImtCore:: name is the imtbasesdl->imtgql
-	# usage-requirement augmentation, needed solely for the imported
-	# find_package(ImtCore) target. In a unified in-tree build ImtCore::imtbasesdl is
-	# an ALIAS: target_link_libraries() is illegal on it, and augmenting the real
-	# target injects a dependency cycle through the Qt autogen targets. Skip aliases.
-	get_target_property(_prolife_aliased ${target} ALIASED_TARGET)
-	if(_prolife_aliased)
-		return()
-	endif()
-
-	foreach(dependency IN LISTS ARG_UNPARSED_ARGUMENTS)
-		if(TARGET ${dependency})
-			target_link_libraries(${target} ${ARG_LINK_SCOPE} ${dependency})
-		endif()
-	endforeach()
-endfunction()
-
-# ImtCore's SDL base library only carries the imtgql usage requirement for
-# consumers that opt into it. ProLife's SDL is GraphQL-oriented, so expose imtgql
-# through imtbasesdl for every ProLife library that builds on the SDL
-# (mirrors IotPlatformLibraryDependencies.cmake).
-prolife_declare_library_dependencies(ImtCore::imtbasesdl	LINK_SCOPE INTERFACE	ImtCore::imtgql)
-
+# Dependencies are declared via the shared declare_target_dependencies()
+# helper from ACF/Acf/Config/CMake/ProjectRoot.cmake.
 
 # --- SDL generated libraries ------------------------------------------------
-prolife_declare_library_dependencies(prolifesdl		ImtCore::imtbasesdl)
+# The SDL code generated into ImtCore::imtbasesdl serializes through
+# imtgql::CGqlParamObject, but ImtCore does not declare that edge, so GNU ld places
+# libimtgql.a before libimtbasesdl.a and leaves those symbols undefined
+# (mirrors AgentinoLibraryDependencies.cmake).
+declare_target_dependencies(ImtCore::imtbasesdl	LINK_SCOPE INTERFACE	ImtCore::imtgql)
+
+declare_target_dependencies(prolifesdl		LINK_SCOPE PUBLIC	ImtCore::imtbasesdl)
 
 # --- Libraries --------------------------------------------------------------
-prolife_declare_library_dependencies(prolifedata	ImtCore::imtauth)
-prolife_declare_library_dependencies(prolifedb		ImtCore::imtdb Qt${QT_VERSION_MAJOR}::Sql)
-prolife_declare_library_dependencies(prolifegql		prolifesdl prolifedata ImtCore::imtguigql ImtCore::imtgui ImtCore::imtdb)
+declare_target_dependencies(prolifedata	LINK_SCOPE PUBLIC	ImtCore::imtauth)
+declare_target_dependencies(prolifedb		LINK_SCOPE PUBLIC	ImtCore::imtdb)
+declare_target_dependencies(prolifegql		LINK_SCOPE PUBLIC	prolifesdl prolifedata ImtCore::imtguigql ImtCore::imtgui)
 
 # --- QML / style web-resource libraries -------------------------------------
 if(QT_VERSION_MAJOR EQUAL 6)
-	prolife_declare_library_dependencies(prolifeqml		Qt${QT_VERSION_MAJOR}::Core5Compat)
-	prolife_declare_library_dependencies(prolifestyle	Qt${QT_VERSION_MAJOR}::Core5Compat)
+	declare_target_dependencies(prolifeqml		LINK_SCOPE PUBLIC	Qt${QT_VERSION_MAJOR}::Core5Compat)
+	declare_target_dependencies(prolifestyle	LINK_SCOPE PUBLIC	Qt${QT_VERSION_MAJOR}::Core5Compat)
 endif()
 
 # --- Arxc-generated static libraries ----------------------------------------
-prolife_declare_library_dependencies(ProLifeLoc		Acf::icomp)
+declare_target_dependencies(ProLifeLoc		LINK_SCOPE PUBLIC	Acf::icomp)
+

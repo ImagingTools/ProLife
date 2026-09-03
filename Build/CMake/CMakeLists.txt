@@ -75,9 +75,23 @@ if(NOT DEFINED IMTCOREDIR_BUILD)
 	endif()
 endif()
 
+# Enable modern target-based architecture: find_package(ImtCore) provides ImtCore::
+# imported targets (and, transitively, Acf::/AcfSln::/IAcf::) with transitive include
+# dirs and link deps. Legacy global include_directories()/link_directories() are skipped.
+set(ACF_MODERN_CMAKE ON)
+
+# Collect ProLife libraries in their own export set. Read by acf_register_library() (from Acf).
+set(ACF_PACKAGE_NAME "ProLife")
+
 include(${IMTCOREDIR}/Config/CMake/ImtCoreEnv.cmake)
 include(${IMTCOREDIR}/Config/CMake/PartituraUpgrade.cmake)
 imt_core_upgrade_partitura("${CMAKE_CURRENT_LIST_DIR}/../..")
+
+# Discover the ImtCore package published by its build tree (pulls in Acf/AcfSln/IAcf).
+if(ACF_MODERN_CMAKE AND NOT TARGET ImtCore::imtbase)
+	set(ImtCore_DIR "${IMTCOREDIR_BUILD}/Lib/${CMAKE_BUILD_TYPE}_${TARGETNAME}/cmake" CACHE PATH "Path to the ImtCore build-tree CMake package")
+	find_package(ImtCore REQUIRED GLOBAL)
+endif()
 
 get_filename_component(INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/../../Include" ABSOLUTE)
 get_filename_component(IMPL_DIR "${CMAKE_CURRENT_LIST_DIR}/../../Impl" ABSOLUTE)
@@ -86,11 +100,6 @@ set(AUX_INCLUDE_DIR "${PROLIFEDIR}/AuxInclude/${TARGETNAME}/GeneratedFiles")
 
 include_directories("${AUX_INCLUDE_DIR}/../")
 include_directories("${AUX_INCLUDE_DIR}/")
-
-set(ACF_QT_MODULE_LINK_SCOPE "")
-set(ACF_LIBRARY_LINK_SCOPE "")
-set(ACF_PACKAGE_LINK_SCOPE "")
-set(ACF_APPLICATION_LINK_SCOPE "")
 
 # Dependencies are provided via environment variables
 message(STATUS "Using libraries from environment variables")
@@ -131,7 +140,7 @@ add_dependencies(ProLifeDbPck prolifedb)
 add_subdirectory("${IMPL_DIR}/ProLifeGqlPck/CMake" "${AUX_INCLUDE_DIR}/ProLifeGqlPck")
 add_dependencies(ProLifeGqlPck prolifegql)
 
-# add_subdirectory("${IMPL_DIR}/ProLifeConverter/CMake" "${AUX_INCLUDE_DIR}/ProLifeConverter")
+add_subdirectory("${IMPL_DIR}/ProLifeConverter/CMake" "${AUX_INCLUDE_DIR}/ProLifeConverter")
 add_subdirectory("${IMPL_DIR}/ProLifeServerConfigurator/CMake" "${AUX_INCLUDE_DIR}/ProLifeServerConfigurator")
 
 # Declare target-based inter-library dependencies after all targets

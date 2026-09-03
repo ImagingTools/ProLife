@@ -61,12 +61,8 @@ sdl::V1_0::prolife::CDeviceBindingData CDeviceControllerComp::OnGetDeviceBinding
 	}
 	
 	if (!hardwareProductBindingPtr.IsValid()){
-		prolifedata::CHardwareProductBinding* deviceBindingPtr = new prolifedata::CHardwareProductBinding();
-		deviceBindingPtr->SetHardwareId(deviceId);
-		
-		hardwareProductBindingPtr.SetPtr(deviceBindingPtr, true);
-		
-		m_deviceBindingCollectionCompPtr->InsertNewObject("HardwareBinding", "", "", deviceBindingPtr, deviceId);
+		hardwareProductBindingPtr.SetPtr(new prolifedata::CHardwareProductBinding(), true);
+		hardwareProductBindingPtr->SetHardwareId(deviceId);
 	}
 
 	if (m_deviceCollectionCompPtr.IsValid()){

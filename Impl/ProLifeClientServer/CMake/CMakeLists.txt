@@ -25,33 +25,36 @@ endif()
 
 include(${ACFDIR}/Config/CMake/CustomBuild.cmake)
 include(${ACFDIR}/Config/CMake/ApplicationConfig.cmake)
-include(${ACFDIR}/Config/CMake/AcfQt.cmake)
-include(${ACFDIR}/Config/CMake/AcfStd.cmake)
-include(${ACFDIR}/Config/CMake/AcfStdGui.cmake)
 include(${IMTCOREDIR}/Config/CMake/OpenSSL.cmake)
 include(${IMTCOREDIR}/Config/CMake/Quazip.cmake)
-include(${ACFDIR}/Config/CMake/WindeployQt.cmake)
+include(${ACFDIR}/Config/CMake/DeployQt.cmake)
 
 if(DEFINED WEB_COMPILE AND WEB_COMPILE)
 	add_compile_definitions(WEB_COMPILE)
 endif()
 
-target_link_libraries(${PROJECT_NAME} imtbase imtgui imtauth imtauthgui imtlicdb imtlic imtlicgui imtrest imtcrypt imtrepo imtstyle imtdb imtfile imtlicsdl)
-target_link_libraries(${PROJECT_NAME} imtlicgql imtdbgql imtguigql imtclientgql imtgql imtauthgql imtauthdb imtcom imtapp imtservice imtlog)
-target_link_libraries(${PROJECT_NAME} imtqml imtcontrolsqml imtguiqml imtstylecontrolsqml imtdocguiqml imtguigqlqml imtauthguiqml imtlicguiqml imtcolguiqml)
-target_link_libraries(${PROJECT_NAME} prolifeqml prolifestyle ImtCoreLoc ProLifeLoc prolifedata prolifedb prolifegql prolifeqml)
-target_link_libraries(${PROJECT_NAME} iqtgui)
-target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::QuickWidgets Qt${QT_VERSION_MAJOR}::WebSockets)
-target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::Sql)
+set(DEPLOY_QT_QML_DIRS
+	"${IMTCOREDIR}/Qml"
+	"${PROJECT_SOURCE_DIR}/../../../Qml/Include/prolifeqml"
+)
+deploy_qt(TARGET ${PROJECT_NAME})
 
-if(WIN32)
-	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Qml")
-	list(APPEND listOptions "--qmldir=${PROJECT_SOURCE_DIR}/../../../Qml/Include/prolifeqml")
-	set(files \"${AUX_INCLUDE_DIR}/../../../Bin/${CMAKE_BUILD_TYPE}_${TARGETNAME}/${PROJECT_NAME}.exe\")
-
-	windeploy(${PROJECT_NAME} "${listOptions}" "${files}")
-	unset(listOptions)
-endif()
+target_link_libraries(${PROJECT_NAME} PRIVATE
+	prolifeqml
+	prolifestyle
+	prolifedb
+	prolifegql
+	ProLifeLoc
+	ImtCore::ImtCoreLoc
+	ImtCore::imtcontrolsqml
+	ImtCore::imtguiqml
+	ImtCore::imtstylecontrolsqml
+	ImtCore::imtdocguiqml
+	ImtCore::imtguigqlqml
+	ImtCore::imtauthguiqml
+	ImtCore::imtlicguiqml
+	ImtCore::imtcolguiqml
+)
 
 
 

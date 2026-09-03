@@ -31,123 +31,89 @@ bool CDeviceChangeGeneratorComp::GenerateDocumentChanges(
 			QString& errorMessage,
 			const iprm::IParamsSet* paramsPtr)
 {
-	if (operationTypeId == "BindLicense"){
-		iprm::TParamsPtr<iprm::ITextParam> addedIdsParamPtr(paramsPtr, "AddedProductIds");
-		if (addedIdsParamPtr.IsValid()){
-			QString ids = addedIdsParamPtr->GetText();
-			if (!ids.isEmpty()){
-				QStringList idList = ids.split(';');
+	static const QString licenseKeyName = QT_TRANSLATE_NOOP("Attribute", "License");
+	static const QString deviceKeyName = QT_TRANSLATE_NOOP("Attribute", "Device-ID");
 
-				for (const QString& id : idList){
-					InsertOperationDescription(documentChangeCollection, "BindLicense", "License", id.toUtf8(), id.toUtf8(), id.toUtf8());
-				}
-			}
+	if (operationTypeId == "BindLicense"){
+		const QStringList addedIds = GetTextParamValue(paramsPtr, "AddedProductIds").split(';', Qt::SkipEmptyParts);
+		for (const QString& id : addedIds){
+			InsertOperationDescription(documentChangeCollection, "BindLicense", "License", licenseKeyName, QByteArray(), id.toUtf8());
 		}
 
-		iprm::TParamsPtr<iprm::ITextParam> removedIdsParamPtr(paramsPtr, "RemovedProductIds");
-		if (removedIdsParamPtr.IsValid()){
-			QString ids = removedIdsParamPtr->GetText();
-			if (!ids.isEmpty()){
-				QStringList idList = ids.split(';');
-
-				for (const QString& id : idList){
-					InsertOperationDescription(documentChangeCollection, "UnbindLicense", "License", id.toUtf8(), id.toUtf8(), id.toUtf8());
-				}
-			}
+		const QStringList removedIds = GetTextParamValue(paramsPtr, "RemovedProductIds").split(';', Qt::SkipEmptyParts);
+		for (const QString& id : removedIds){
+			InsertOperationDescription(documentChangeCollection, "UnbindLicense", "License", licenseKeyName, id.toUtf8(), QByteArray());
 		}
 	}
 	else if (operationTypeId == "TransferFromDevice"){
-		iprm::TParamsPtr<iprm::ITextParam> fromDeviceParamPtr(paramsPtr, "FromDeviceId");
-		if (fromDeviceParamPtr.IsValid()){
-			QString fromDeviceId = fromDeviceParamPtr->GetText();
-			InsertOperationDescription(documentChangeCollection, operationTypeId, "DeviceId", "Device-ID", fromDeviceId.toUtf8(), fromDeviceId.toUtf8());
+		const QByteArray fromDeviceId = GetTextParamValue(paramsPtr, "FromDeviceId").toUtf8();
+		if (!fromDeviceId.isEmpty()){
+			InsertOperationDescription(documentChangeCollection, operationTypeId, "DeviceId", deviceKeyName, fromDeviceId, QByteArray());
 		}
 	}
 	else if (operationTypeId == "TransferToDevice"){
-		iprm::TParamsPtr<iprm::ITextParam> toDeviceParamPtr(paramsPtr, "ToDeviceId");
-		if (toDeviceParamPtr.IsValid()){
-			QString toDeviceId = toDeviceParamPtr->GetText();
-			InsertOperationDescription(documentChangeCollection, operationTypeId, "DeviceId", "Device-ID", toDeviceId.toUtf8(), toDeviceId.toUtf8());
+		const QByteArray toDeviceId = GetTextParamValue(paramsPtr, "ToDeviceId").toUtf8();
+		if (!toDeviceId.isEmpty()){
+			InsertOperationDescription(documentChangeCollection, operationTypeId, "DeviceId", deviceKeyName, QByteArray(), toDeviceId);
 		}
 	}
 	else{
 		return BaseClass::GenerateDocumentChanges(operationTypeId, documentId, documentPtr, documentChangeCollection, errorMessage, paramsPtr);
 	}
 
-	return true;
+	// Binding and transfer also write attributes of the device itself (project, ...), they belong to the same revision.
+	return AppendDocumentComparison(documentId, documentPtr, documentChangeCollection, errorMessage);
 }
 
 
 bool CDeviceChangeGeneratorComp::CompareDocuments(const istd::IChangeable& oldDocument, const istd::IChangeable& newDocument, imtbase::CObjectCollection& documentChangeCollection, QString& errorMessage)
 {
 	const prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* oldDeviceInfoPtr = dynamic_cast<const prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(&oldDocument);
-	if (oldDeviceInfoPtr == nullptr){
-		errorMessage = QString("Unable to compare documents. Old document is invalid");
-
-		return false;
-	}
-
 	const prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>* newDeviceInfoPtr = dynamic_cast<const prolifedata::TOrderedWrap<prolifedata::CIdentifiableDeviceInfo>*>(&newDocument);
-	if (newDeviceInfoPtr == nullptr){
-		errorMessage = QString("Unable to compare documents. New document is invalid");
+
+	// The device collection holds sensors as well as IoT devices, both need their own comparison.
+	if (oldDeviceInfoPtr == nullptr || newDeviceInfoPtr == nullptr){
+		const prolifedata::IIotDeviceInfo* oldIotDeviceInfoPtr = dynamic_cast<const prolifedata::IIotDeviceInfo*>(&oldDocument);
+		const prolifedata::IIotDeviceInfo* newIotDeviceInfoPtr = dynamic_cast<const prolifedata::IIotDeviceInfo*>(&newDocument);
+		if (oldIotDeviceInfoPtr != nullptr && newIotDeviceInfoPtr != nullptr){
+			return CompareIotDevices(*oldIotDeviceInfoPtr, *newIotDeviceInfoPtr, documentChangeCollection);
+		}
+
+		errorMessage = (oldDeviceInfoPtr == nullptr)
+					? QString("Unable to compare documents. Old document is invalid")
+					: QString("Unable to compare documents. New document is invalid");
 
 		return false;
 	}
 
-	QByteArray oldProject = oldDeviceInfoPtr->GetProject();
-	QByteArray newProject = newDeviceInfoPtr->GetProject();
-	if (oldProject != newProject){
-		QString keyName = QT_TRANSLATE_NOOP("Attribute", "Project");
-		InsertOperationDescription(documentChangeCollection, "", "Project", keyName, oldProject, newProject);
-	}
+	InsertChange(documentChangeCollection, "Project", QT_TRANSLATE_NOOP("Attribute", "Project"), oldDeviceInfoPtr->GetProject(), newDeviceInfoPtr->GetProject());
+	InsertChange(documentChangeCollection, "SerialNumber", QT_TRANSLATE_NOOP("Attribute", "Serial Number"), oldDeviceInfoPtr->GetSerialNumber(), newDeviceInfoPtr->GetSerialNumber());
+	InsertChange(documentChangeCollection, "MacAddress", QT_TRANSLATE_NOOP("Attribute", "MAC-Address"), oldDeviceInfoPtr->GetMacAddress(), newDeviceInfoPtr->GetMacAddress());
+	InsertChange(documentChangeCollection, "DeviceType", QT_TRANSLATE_NOOP("Attribute", "Device Type"), oldDeviceInfoPtr->GetDeviceType(), newDeviceInfoPtr->GetDeviceType());
+	InsertChange(documentChangeCollection, "ConfigurationType", QT_TRANSLATE_NOOP("Attribute", "Hardware Configuration"), oldDeviceInfoPtr->GetConfigurationType(), newDeviceInfoPtr->GetConfigurationType());
+	InsertChange(documentChangeCollection, "OrderId", QT_TRANSLATE_NOOP("Attribute", "Order-ID"), oldDeviceInfoPtr->GetOrderId(), newDeviceInfoPtr->GetOrderId());
+	InsertTextChange(documentChangeCollection, "Description", QT_TRANSLATE_NOOP("Attribute", "Description"), oldDeviceInfoPtr->GetDescription(), newDeviceInfoPtr->GetDescription());
+	InsertFlagChange(documentChangeCollection, "InternalUse", QT_TRANSLATE_NOOP("Attribute", "Internal Use"), oldDeviceInfoPtr->IsInternalUse(), newDeviceInfoPtr->IsInternalUse());
+	InsertEnumChange(
+				documentChangeCollection,
+				"ProductionStatus",
+				QT_TRANSLATE_NOOP("Attribute", "Production Status"),
+				oldDeviceInfoPtr->GetDeviceProductionStatus(),
+				newDeviceInfoPtr->GetDeviceProductionStatus(),
+				oldDeviceInfoPtr->DeviceProductionStatusGetStrings());
 
-	QByteArray oldSerialNumber = oldDeviceInfoPtr->GetSerialNumber();
-	QByteArray newSerialNumber = newDeviceInfoPtr->GetSerialNumber();
-	if (oldSerialNumber != newSerialNumber){
-		QString keyName = QT_TRANSLATE_NOOP("Attribute", "Serial Number");
-		InsertOperationDescription(documentChangeCollection, "", "SerialNumber", keyName, oldSerialNumber, newSerialNumber);
-	}
+	return true;
+}
 
-	QByteArray oldMacAddress = oldDeviceInfoPtr->GetMacAddress();
-	QByteArray newMacAddress = newDeviceInfoPtr->GetMacAddress();
-	if (oldMacAddress != newMacAddress){
-		QString keyName = QT_TRANSLATE_NOOP("Attribute", "MAC-Address");
-		InsertOperationDescription(documentChangeCollection, "", "MacAddress", keyName, oldMacAddress, newMacAddress);
-	}
 
-	QByteArray oldDeviceType = oldDeviceInfoPtr->GetDeviceType();
-	QByteArray newDeviceType = newDeviceInfoPtr->GetDeviceType();
-	if (oldDeviceType != newDeviceType){
-		QString keyName = QT_TRANSLATE_NOOP("Attribute", "Device Type");
-		InsertOperationDescription(documentChangeCollection, "", "DeviceType", keyName, oldDeviceType, newDeviceType);
-	}
-
-	QByteArray oldConfigurationType = oldDeviceInfoPtr->GetConfigurationType();
-	QByteArray newConfigurationType = newDeviceInfoPtr->GetConfigurationType();
-	if (oldConfigurationType != newConfigurationType){
-		QString keyName = QT_TRANSLATE_NOOP("Attribute", "Hardware Configuration");
-		InsertOperationDescription(documentChangeCollection, "", "ConfigurationType", keyName, oldConfigurationType, newConfigurationType);
-	}
-
-	QByteArray oldOrderId = oldDeviceInfoPtr->GetOrderId();
-	QByteArray newOrderId = newDeviceInfoPtr->GetOrderId();
-	if (oldOrderId != newOrderId){
-		QString keyName = QT_TRANSLATE_NOOP("Attribute", "Order-ID");
-		InsertOperationDescription(documentChangeCollection, "", "OrderId", keyName, oldOrderId, newOrderId);
-	}
-
-	QString oldDescription = oldDeviceInfoPtr->GetDescription();
-	QString newDescription = newDeviceInfoPtr->GetDescription();
-	if (oldDescription != newDescription){
-		InsertOperationDescription(documentChangeCollection, "", "Description", QT_TRANSLATE_NOOP("Attribute","Description"), oldDescription.toUtf8(), newDescription.toUtf8());
-	}
-
-	prolifedata::IDeviceInfo::DeviceProductionStatus oldStatus = oldDeviceInfoPtr->GetDeviceProductionStatus();
-	prolifedata::IDeviceInfo::DeviceProductionStatus newStatus = newDeviceInfoPtr->GetDeviceProductionStatus();
-	if (oldStatus != newStatus){
-		QStringList statuses = oldDeviceInfoPtr->DeviceProductionStatusGetStrings();
-		InsertOperationDescription(documentChangeCollection, "", "ProductionStatus", QT_TRANSLATE_NOOP("Attribute","Production Status"), statuses[oldStatus].toUtf8(), statuses[newStatus].toUtf8());
-	}
+bool CDeviceChangeGeneratorComp::CompareIotDevices(
+			const prolifedata::IIotDeviceInfo& oldDeviceInfo,
+			const prolifedata::IIotDeviceInfo& newDeviceInfo,
+			imtbase::CObjectCollection& documentChangeCollection)
+{
+	InsertChange(documentChangeCollection, "SerialNumber", QT_TRANSLATE_NOOP("Attribute", "Serial Number"), oldDeviceInfo.GetSerialNumber(), newDeviceInfo.GetSerialNumber());
+	InsertChange(documentChangeCollection, "Manufacturer", QT_TRANSLATE_NOOP("Attribute", "Manufacturer"), oldDeviceInfo.GetManufacturer(), newDeviceInfo.GetManufacturer());
+	InsertChange(documentChangeCollection, "ModelId", QT_TRANSLATE_NOOP("Attribute", "Model-ID"), oldDeviceInfo.GetModelId(), newDeviceInfo.GetModelId());
 
 	return true;
 }
@@ -157,72 +123,33 @@ QString CDeviceChangeGeneratorComp::CreateCustomOperationDescription(
 			const imtbase::COperationDescription& operationDescription,
 			const QByteArray& languageId) const
 {
-	QString retVal;
+	static const QByteArray translationContext = QByteArrayLiteral("prolifegql::CDeviceChangeGeneratorComp");
 
-	QByteArray typeId = operationDescription.GetOperationTypeId();
+	const QByteArray typeId = operationDescription.GetOperationTypeId();
+	const QByteArray oldValue = operationDescription.GetOldValue();
+	const QByteArray newValue = operationDescription.GetNewValue();
 
-	QByteArray oldValue = operationDescription.GetOldValue();
-	QByteArray newValue = operationDescription.GetNewValue();
-	QString keyName = operationDescription.GetKeyName();
-	keyName = iqt::GetTranslation(m_translationManagerCompPtr.GetPtr(), keyName.toUtf8(), languageId, "Attribute");
-	
 	if (typeId == "TransferFromDevice"){
-		QString deviceName = GetDeviceName(oldValue);
-		
-		QString change = iqt::GetTranslation(
-			m_translationManagerCompPtr.GetPtr(),
-			QString(QT_TR_NOOP("Licenses were transferred from the sensor '%1'")).toUtf8(),
-			languageId,
-			"prolifegql::CDeviceChangeGeneratorComp");
-		change = change.arg(deviceName);
-		
-		retVal += change + "\n";
-	}
-	else if (typeId == "TransferToDevice"){
-		QString deviceName = GetDeviceName(oldValue);
-		
-		QString change = iqt::GetTranslation(
-			m_translationManagerCompPtr.GetPtr(),
-			QString(QT_TR_NOOP("Licenses have been transferred to the sensor '%1'")).toUtf8(),
-			languageId,
-			"prolifegql::CDeviceChangeGeneratorComp");
-		change = change.arg(deviceName);
-		
-		retVal += change + "\n";
-	}
-	else if (typeId == "CreateLicenseFile"){
-		QString change = iqt::GetTranslation(
-			m_translationManagerCompPtr.GetPtr(),
-			QString(QT_TR_NOOP("Created the license file")).toUtf8(),
-			languageId,
-			"prolifegql::CDeviceChangeGeneratorComp");
-
-
-		retVal += change + "\n";
-	}
-	else if (typeId == "UnbindLicense"){
-		QString change = iqt::GetTranslation(
-			m_translationManagerCompPtr.GetPtr(),
-			QString(QT_TR_NOOP("Removed the license '%1'")).toUtf8(),
-			languageId,
-			"prolifegql::CDeviceChangeGeneratorComp");
-
-		change = change.arg(GetSoftwareName(oldValue));
-
-		retVal += change + "\n";
-	}
-	else if (typeId == "BindLicense"){
-		QString change = iqt::GetTranslation(
-			m_translationManagerCompPtr.GetPtr(),
-			QString(QT_TR_NOOP("Added the license '%1'")).toUtf8(),
-			languageId,
-			"prolifegql::CDeviceChangeGeneratorComp");
-		change = change.arg(GetSoftwareName(newValue));
-
-		retVal += change + "\n";
+		return Translate(QT_TR_NOOP("Licenses were transferred from the sensor '%1'"), languageId, translationContext).arg(GetDeviceName(oldValue).toHtmlEscaped());
 	}
 
-	return retVal;
+	if (typeId == "TransferToDevice"){
+		return Translate(QT_TR_NOOP("Licenses have been transferred to the sensor '%1'"), languageId, translationContext).arg(GetDeviceName(newValue).toHtmlEscaped());
+	}
+
+	if (typeId == "CreateLicenseFile"){
+		return Translate(QT_TR_NOOP("Created the license file"), languageId, translationContext);
+	}
+
+	if (typeId == "UnbindLicense"){
+		return Translate(QT_TR_NOOP("Removed the license '%1'"), languageId, translationContext).arg(GetSoftwareName(oldValue).toHtmlEscaped());
+	}
+
+	if (typeId == "BindLicense"){
+		return Translate(QT_TR_NOOP("Added the license '%1'"), languageId, translationContext).arg(GetSoftwareName(newValue).toHtmlEscaped());
+	}
+
+	return QString();
 }
 
 

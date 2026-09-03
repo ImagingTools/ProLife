@@ -18,41 +18,42 @@ endif()
 
 include(${ACFDIR}/Config/CMake/CustomBuild.cmake)
 include(${ACFDIR}/Config/CMake/ApplicationConfig.cmake)
-include(${ACFDIR}/Config/CMake/AcfQt.cmake)
 include(${IMTCOREDIR}/Config/CMake/Quazip.cmake)
-include(${ACFDIR}/Config/CMake/WindeployQt.cmake)
+include(${ACFDIR}/Config/CMake/DeployQt.cmake)
 
 if(DEFINED WEB_COMPILE AND WEB_COMPILE)
 	add_compile_definitions(WEB_COMPILE)
 endif()
 
-target_link_libraries(${PROJECT_NAME} prolifestyle prolifedata prolifedb prolifegql prolifeqml)
-target_link_libraries(${PROJECT_NAME} ProLifeLoc ImtCoreLoc AcfLoc AcfSlnLoc)
-target_link_libraries(${PROJECT_NAME} imtappsdl imtauthsdl imtlicsdl imtcolorsdl imt2dsdl imtdesksdl imtchatsdl)
-target_link_libraries(${PROJECT_NAME} imtmail imtgui imtauth imtauthgui imtlicdb imtlic imtlicgui imtwidgets imtzip imt3dgui imtrepo imtstyle imtqml imtdb imtfile imtdoc)
-target_link_libraries(${PROJECT_NAME} imtlicgql imtguigql imtclientgql imtgql imtauthgql imtauthdb imtcom imtservice imtlog imtservergql imtcol)
-target_link_libraries(${PROJECT_NAME} imtstylecontrolsqml imtcontrolsqml imtguiqml imtcolguiqml imtdocguiqml imtguigqlqml imtauthguiqml imtlicguiqml)
-target_link_libraries(${PROJECT_NAME} imtserverapp imtbase imtbasesdl imtapp imtrest imtcrypt)
-target_link_libraries(${PROJECT_NAME} imtdesk imtdeskgql imtchat imtchatgql imtchatdb imtdeskdb)
-target_link_libraries(${PROJECT_NAME} iauth iservice)
-target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::QuickWidgets Qt${QT_VERSION_MAJOR}::WebSockets)
-target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::Sql)
-
-include(${ACFDIR}/Config/CMake/AcfStdGui.cmake)
-include(${ACFDIR}/Config/CMake/AcfStd.cmake)
+set(DEPLOY_QT_QML_DIRS
+	"${IMTCOREDIR}/Qml"
+	"${PROJECT_SOURCE_DIR}/../../../Qml/Include/prolifeqml"
+)
+deploy_qt(TARGET ${PROJECT_NAME})
 
 if(WIN32)
-	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Qml")
-	list(APPEND listOptions "--qmldir=${PROJECT_SOURCE_DIR}/../../../Qml/Include/prolifeqml")
-	set(files \"${AUX_INCLUDE_DIR}/../../../Bin/${CMAKE_BUILD_TYPE}_${TARGETNAME}/${PROJECT_NAME}.exe\")
-
-	windeploy(${PROJECT_NAME} "${listOptions}" "${files}")
-	unset(listOptions)
-
 	file(COPY ${OPENSSLDIR}/lib/x64/libcrypto-1_1-x64.dll DESTINATION ${PROJECT_SOURCE_DIR}/../../../Bin/${CMAKE_BUILD_TYPE}_${TARGETNAME})
 	file(COPY ${OPENSSLDIR}/lib/x64/libssl-1_1-x64.dll DESTINATION ${PROJECT_SOURCE_DIR}/../../../Bin/${CMAKE_BUILD_TYPE}_${TARGETNAME})
 endif()
 
 include(${IMTCOREDIR}/Config/CMake/OpenSSL.cmake)
 include(${IACFDIR}/Config/CMake/zlib.cmake)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+	prolifestyle
+	prolifedb
+	prolifegql
+	prolifeqml
+	ProLifeLoc
+	ImtCore::ImtCoreLoc
+	AcfSln::iservice
+	ImtCore::imtauthgql
+	ImtCore::imtauthdb
+	ImtCore::imtlog
+	ImtCore::imtstyle
+	ImtCore::imtchatdb
+	ImtCore::imtdeskdb
+	ImtCore::imtdeskgql
+	ImtCore::imtchatgql
+)
 

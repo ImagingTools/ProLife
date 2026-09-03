@@ -32,12 +32,6 @@ public:
 protected:
 	bool CheckProducts(const QByteArray& orderUuid, const imtsdl::TElementList<sdl::V1_0::prolife::COrderedProduct>& productsModel, QString& errorMessage) const;
 	QString GetProductName(const QByteArray& productUuid) const;
-	void GenerateDifferences(
-				prolifedata::IOrderInfo& currentOrder,
-				prolifedata::IOrderInfo& newOrder,
-				QByteArrayList& addedProducts,
-				QByteArrayList& removedProducts,
-				QByteArrayList& updatedProducts) const;
 
 	virtual bool OnBeforeRemoveElements(
 				const QByteArrayList& elementIds,
@@ -47,6 +41,7 @@ protected:
 				const QByteArray& objectId,
 				const QString& description,
 				const imtgql::CGqlRequest& gqlRequest) const override;
+	virtual bool IsDescriptionStoredInDocument() const override;
 
 	// reimplemented (sdl::V1_0::prolife::COrderCollectionControllerCompBase)
 	virtual bool CreateRepresentationFromObject(
@@ -76,6 +71,12 @@ private:
 				istd::IChangeable& object,
 				QByteArray& objectId,
 				QString& errorMessage) const;
+
+	/**
+		Get IDs of all products of the given collection referencing the order \a orderUuid.
+		The order reference stored on the product is the single source of truth for the Order-Product relation.
+	*/
+	imtbase::ICollectionInfo::Ids GetProductIdsForOrder(const imtbase::IObjectCollection* productCollectionPtr, const QByteArray& orderUuid) const;
 
 	bool UpdateOrderForHardware(const QByteArray& deviceId, const QByteArray& orderId) const;
 	bool UpdateOrderForSoftware(const QByteArray& softwareId, const QByteArray& orderId) const;

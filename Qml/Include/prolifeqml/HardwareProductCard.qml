@@ -8,17 +8,41 @@ import prolifeOrdersSdl 1.0
 Rectangle {
 	id: hardwareCard
 
-	height: visible ? hardwareCard.contentHeight : 0
+	height: hardwareCard.expanded ? hardwareCard.contentHeight : 0
+	opacity: hardwareCard.expanded ? 1 : 0
+	visible: hardwareCard.height > 0
+	clip: true
 	color: Style.baseColor
 
+	property bool expanded: true
 	property OrderedProduct productItem: model.item ? model.item : null
 	property bool readOnly: false
-	property int contentHeight: contentColumn.height
+	property int contentHeight: contentColumn.height + Style.marginL
+
 	readonly property int labelWidth: Style.sizeHintXXXS
+	readonly property string emptyValueText: "—"
+	readonly property string macAddressText: productItem ? productItem.m_macAddress : ""
+	readonly property string serialNumberText: productItem ? productItem.m_serialNumber : ""
+	readonly property string modelTypeText: productItem ? productItem.m_licenseName : ""
+	readonly property string articleText: productItem ? productItem.m_licenseId : ""
+
+	Behavior on height {
+		NumberAnimation {
+			duration: 160
+			easing.type: Easing.OutCubic
+		}
+	}
+
+	Behavior on opacity {
+		NumberAnimation {
+			duration: 160
+		}
+	}
 
 	Column {
 		id: contentColumn
 		anchors.top: parent.top
+		anchors.topMargin: Style.marginL
 		anchors.left: parent.left
 		anchors.right: parent.right
 		spacing: Style.marginS
@@ -37,8 +61,8 @@ Rectangle {
 
 			Text {
 				width: parent.width - hardwareCard.labelWidth - parent.spacing
-				text: hardwareCard.productItem ? hardwareCard.productItem.m_macAddress : ""
-				color: Style.textColor
+				text: hardwareCard.macAddressText !== "" ? hardwareCard.macAddressText : hardwareCard.emptyValueText
+				color: hardwareCard.macAddressText !== "" ? Style.textColor : Style.inactiveTextColor
 				font.family: Style.fontFamily
 				font.pixelSize: Style.fontSizeM
 				elide: Text.ElideRight
@@ -59,8 +83,8 @@ Rectangle {
 
 			Text {
 				width: parent.width - hardwareCard.labelWidth - parent.spacing
-				text: hardwareCard.productItem ? hardwareCard.productItem.m_serialNumber : ""
-				color: Style.textColor
+				text: hardwareCard.serialNumberText !== "" ? hardwareCard.serialNumberText : hardwareCard.emptyValueText
+				color: hardwareCard.serialNumberText !== "" ? Style.textColor : Style.inactiveTextColor
 				font.family: Style.fontFamily
 				font.pixelSize: Style.fontSizeM
 				elide: Text.ElideRight
@@ -81,8 +105,8 @@ Rectangle {
 
 			Text {
 				width: parent.width - hardwareCard.labelWidth - parent.spacing
-				text: hardwareCard.productItem ? hardwareCard.productItem.m_licenseName : ""
-				color: Style.textColor
+				text: hardwareCard.modelTypeText !== "" ? hardwareCard.modelTypeText : hardwareCard.emptyValueText
+				color: hardwareCard.modelTypeText !== "" ? Style.textColor : Style.inactiveTextColor
 				font.family: Style.fontFamily
 				font.pixelSize: Style.fontSizeM
 				elide: Text.ElideRight
@@ -103,8 +127,8 @@ Rectangle {
 
 			Text {
 				width: parent.width - hardwareCard.labelWidth - parent.spacing
-				text: hardwareCard.productItem ? hardwareCard.productItem.m_licenseId : ""
-				color: Style.textColor
+				text: hardwareCard.articleText !== "" ? hardwareCard.articleText : hardwareCard.emptyValueText
+				color: hardwareCard.articleText !== "" ? Style.textColor : Style.inactiveTextColor
 				font.family: Style.fontFamily
 				font.pixelSize: Style.fontSizeM
 				elide: Text.ElideRight

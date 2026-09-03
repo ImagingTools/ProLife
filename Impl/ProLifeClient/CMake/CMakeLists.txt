@@ -24,32 +24,17 @@ endif()
 include(${IMTCOREDIR}/Config/CMake/WebCompiler.cmake)
 include(${ACFDIR}/Config/CMake/CustomBuild.cmake)
 include(${ACFDIR}/Config/CMake/ApplicationConfig.cmake)
-include(${ACFDIR}/Config/CMake/AcfQt.cmake)
-include(${ACFDIR}/Config/CMake/AcfStd.cmake)
-include(${ACFDIR}/Config/CMake/AcfStdGui.cmake)
 include(${IMTCOREDIR}/Config/CMake/OpenSSL.cmake)
-include(${ACFDIR}/Config/CMake/WindeployQt.cmake)
+include(${ACFDIR}/Config/CMake/DeployQt.cmake)
 
 message(VERBOSE "PROJECT_BINARY_DIR ${IMTCOREDIR}/Bin/web")
 
-target_link_libraries(${PROJECT_NAME} ImtCoreLoc ProLifeLoc AcfLoc AcfSlnLoc)
-target_link_libraries(${PROJECT_NAME} imtbasesdl imtauthsdl imtlicsdl imtappsdl imt2dsdl imtdesksdl imtchatsdl)
-target_link_libraries(${PROJECT_NAME} imtbase imtgui imtauth imtauthdb imtdeskdb imtchatdb imtauthgui imtlic imtlicgui imtrest imtrepo imtqml imtdb imtdocguiqml imtdeskguiqml imtchatguiqml)
-target_link_libraries(${PROJECT_NAME} imtlicgql imtguigql imtclientgql imtgql imtauthgql imtcom imtguigqlqml imtauthguiqml imtlicguiqml imtguiqml imtcolguiqml imtstylecontrolsqml imtcontrolsqml imtstyle imtcol imtcolorsdl imtserverapp imtservergql)
-target_link_libraries(${PROJECT_NAME} prolifeqml prolifestyle prolifesdl)
-target_link_libraries(${PROJECT_NAME} iqtgui)
-target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::QuickWidgets Qt${QT_VERSION_MAJOR}::WebSockets)
-target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::QuickControls2)
-
-if(WIN32)
-	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Qml")
-	list(APPEND listOptions "--qmldir=${IMTCOREDIR}/Include/imtstylecontrolsqml/Qml")
-	list(APPEND listOptions "--qmldir=${PROJECT_SOURCE_DIR}/../../../Qml/Include/prolifeqml")
-	set(files \"${AUX_INCLUDE_DIR}/../../../Bin/${CMAKE_BUILD_TYPE}_${TARGETNAME}/${PROJECT_NAME}.exe\")
-
-	windeploy(${PROJECT_NAME} "${listOptions}" "${files}")
-	unset(listOptions)
-endif()
+set(DEPLOY_QT_QML_DIRS
+	"${IMTCOREDIR}/Qml"
+	"${IMTCOREDIR}/Include/imtstylecontrolsqml/Qml"
+	"${PROJECT_SOURCE_DIR}/../../../Qml/Include/prolifeqml"
+)
+deploy_qt(TARGET ${PROJECT_NAME})
 
 set(QML_IMPORT_DIRS ${QML_IMPORT_PATH})
 list(APPEND QML_IMPORT_DIRS "${PROJECT_SOURCE_DIR}/../../../Qml/Include/prolifeqml")
@@ -64,5 +49,25 @@ list(REMOVE_DUPLICATES QML_IMPORT_DIRS)
 set(QML_IMPORT_PATH ${QML_IMPORT_DIRS}
 	CACHE STRING "Qt Creator extra qml import paths for ${PROJECT_NAME}"
 	FORCE
+)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+	prolifeqml
+	prolifestyle
+	prolifesdl
+	ProLifeLoc
+	ImtCore::ImtCoreLoc
+	ImtCore::imtdesksdl
+	ImtCore::imtlicsdl
+	ImtCore::imtcontrolsqml
+	ImtCore::imtstylecontrolsqml
+	ImtCore::imtguiqml
+	ImtCore::imtguigqlqml
+	ImtCore::imtauthguiqml
+	ImtCore::imtcolguiqml
+	ImtCore::imtdocguiqml
+	ImtCore::imtlicguiqml
+	ImtCore::imtdeskguiqml
+	Qt${QT_VERSION_MAJOR}::QuickControls2
 )
 

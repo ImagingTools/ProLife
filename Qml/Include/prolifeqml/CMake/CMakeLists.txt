@@ -3,15 +3,11 @@ project(prolifeqml LANGUAGES CXX)
 include(${IMTCOREDIR}/Config/CMake/WebCompiler.cmake)
 include(${ACFDIR}/Config/CMake/StaticConfig.cmake)
 
-if(QT_VERSION_MAJOR EQUAL 6)
-	target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::Core5Compat)
-endif()
-
 if(NOT DEFINED PYTHONEXE)
 	set(PYTHONEXE "$ENV{PYTHONEXE}")
 endif()
 
-set(buildwebdir ${BUILDDIR}/ProLife/Bin/web)
+set(buildwebdir ${BUILDDIR}/ProLife/AuxInclude/Web)
 
 # copy prolife qml from to
 list(APPEND webdirs ${PROLIFEDIR}/Qml/Include/prolifeqml)
@@ -50,6 +46,9 @@ if(DEFINED WEB_COMPILE AND WEB_COMPILE)
 	add_compile_definitions(WEB_COMPILE)
 	set(resname "prolife")
 	if(USE_NEW_WEB)
+		# jq_compile_web derives the Qt resource name from resname, and Q_INIT_RESOURCE
+		# in the applications expects ${PROJECT_NAME}Web.
+		set(resname "${PROJECT_NAME}")
 		set(inputjs "${PROLIFEDIR}/Qml/Include/prolifeqml/prolife.json")
 		set(appicon "../Icons/ProLifeIcon.svg")
 		set(dataroot "/ProLife/Views/")
