@@ -201,7 +201,7 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 	viewSensorsFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "Allows viewing Sensors."));
 	viewSensorsFeatureInfo->SetOptional(false);
 	viewSensorsFeatureInfo->SetIsPermission(true);
-	viewSensorsFeatureInfo->SetDependencies(QByteArray("EditSensor;ChangeSensorDescription;ChangeSerialNumber;ChangeMacAddress;ChangeProductionStatus;RemoveSensor;AddSensor").split(';'));
+	viewSensorsFeatureInfo->SetRequirements(QByteArray("/SensorManagement/EditSensor;/SensorManagement/EditSensor/ChangeSensor;/SensorManagement/EditSensor/RemoveSensor;/SensorManagement/EditSensor/AddSensor").split(';'));
 
 	sensorManagementFeatureInfo->InsertSubFeature(viewSensorsFeatureInfo.PopPtr());
 
@@ -363,7 +363,7 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 	viewOrdersFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "Allows viewing Orders."));
 	viewOrdersFeatureInfo->SetOptional(false);
 	viewOrdersFeatureInfo->SetIsPermission(true);
-	viewOrdersFeatureInfo->SetDependencies(QByteArray("EditOrder;ChangeOrder;RemoveOrder;AddOrder").split(';'));
+	viewOrdersFeatureInfo->SetRequirements(QByteArray("/OrderManagement/EditOrder;/OrderManagement/EditOrder/ChangeOrder;/OrderManagement/EditOrder/RemoveOrder;/OrderManagement/EditOrder/AddOrder").split(';'));
 
 	orderManagementFeatureInfo->InsertSubFeature(viewOrdersFeatureInfo.PopPtr());
 
@@ -505,7 +505,7 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 	viewLicensesFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "Allows viewing Licenses."));
 	viewLicensesFeatureInfo->SetOptional(false);
 	viewLicensesFeatureInfo->SetIsPermission(true);
-	viewLicensesFeatureInfo->SetDependencies(QByteArray("EditLicense;ChangeLicenseNumber;RemoveLicense;AddLicense").split(';'));
+	viewLicensesFeatureInfo->SetRequirements(QByteArray("/LicenseManagement/EditLicense;/LicenseManagement/EditLicense/ChangeLicense;/LicenseManagement/EditLicense/RemoveLicense;/LicenseManagement/EditLicense/AddLicense").split(';'));
 
 	licenseManagementFeatureInfo->InsertSubFeature(viewLicensesFeatureInfo.PopPtr());
 
@@ -637,7 +637,7 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 	viewAccountsFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "Allows viewing Accounts."));
 	viewAccountsFeatureInfo->SetOptional(false);
 	viewAccountsFeatureInfo->SetIsPermission(true);
-	viewAccountsFeatureInfo->SetDependencies(QByteArray("EditAccount;ChangeAccount;RemoveAccount;AddAccount").split(';'));
+	viewAccountsFeatureInfo->SetRequirements(QByteArray("/AccountManagement/EditAccount;/AccountManagement/EditAccount/ChangeAccount;/AccountManagement/EditAccount/RemoveAccount;/AccountManagement/EditAccount/AddAccount").split(';'));
 
 	accountManagementFeatureInfo->InsertSubFeature(viewAccountsFeatureInfo.PopPtr());
 
@@ -648,7 +648,7 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 	viewAllAccountsFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "Allows viewing all Accounts."));
 	viewAllAccountsFeatureInfo->SetOptional(false);
 	viewAllAccountsFeatureInfo->SetIsPermission(true);
-	viewAllAccountsFeatureInfo->SetDependencies(QByteArray("ViewAccounts").split(';'));
+	viewAllAccountsFeatureInfo->SetRequirements(QByteArray("/AccountManagement/ViewAccounts").split(';'));
 
 	accountManagementFeatureInfo->InsertSubFeature(viewAllAccountsFeatureInfo.PopPtr());
 
@@ -743,7 +743,7 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 	viewOrganizationMembersFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "Allows viewing Organization Members."));
 	viewOrganizationMembersFeatureInfo->SetOptional(false);
 	viewOrganizationMembersFeatureInfo->SetIsPermission(true);
-	viewOrganizationMembersFeatureInfo->SetDependencies(QByteArray("EditOrganizationMember;InviteOrganizationMember;RemoveOrganizationMember;ExcludeOrganizationMember;ChangeOrganizationMember;ChangeOrganizationMemberRole").split(';'));
+	viewOrganizationMembersFeatureInfo->SetRequirements(QByteArray("/OrganizationManagement/MemberManagement/EditOrganizationMember;/OrganizationManagement/MemberManagement/EditOrganizationMember/InviteOrganizationMember;/OrganizationManagement/MemberManagement/EditOrganizationMember/RemoveOrganizationMember;/OrganizationManagement/MemberManagement/EditOrganizationMember/ExcludeOrganizationMember;/OrganizationManagement/MemberManagement/EditOrganizationMember/ChangeOrganizationMember;/OrganizationManagement/MemberManagement/EditOrganizationMember/ChangeOrganizationMember/ChangeOrganizationMemberRole").split(';'));
 	memberManagementFeatureInfo->InsertSubFeature(viewOrganizationMembersFeatureInfo.PopPtr());
 
 	istd::TDelPtr<imtlic::CFeatureInfo> editOrganizationMemberFeatureInfo;
@@ -817,7 +817,7 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 	viewOrganizationRolesFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "Allows viewing Organization Roles."));
 	viewOrganizationRolesFeatureInfo->SetOptional(false);
 	viewOrganizationRolesFeatureInfo->SetIsPermission(true);
-	viewOrganizationRolesFeatureInfo->SetDependencies(QByteArray("EditOrganizationRole;ChangeOrganizationRole;RemoveOrganizationRole;AddOrganizationRole").split(';'));
+	viewOrganizationRolesFeatureInfo->SetRequirements(QByteArray("/OrganizationManagement/RoleManagement/EditOrganizationRole;/OrganizationManagement/RoleManagement/EditOrganizationRole/ChangeOrganizationRole;/OrganizationManagement/RoleManagement/EditOrganizationRole/RemoveOrganizationRole;/OrganizationManagement/RoleManagement/EditOrganizationRole/AddOrganizationRole").split(';'));
 	roleManagementFeatureInfo->InsertSubFeature(viewOrganizationRolesFeatureInfo.PopPtr());
 
 	istd::TDelPtr<imtlic::CFeatureInfo> editOrganizationRoleFeatureInfo;
@@ -873,7 +873,7 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 	viewOrganizationGroupsFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "Allows viewing Organization Groups."));
 	viewOrganizationGroupsFeatureInfo->SetOptional(false);
 	viewOrganizationGroupsFeatureInfo->SetIsPermission(true);
-	viewOrganizationGroupsFeatureInfo->SetDependencies(QByteArray("EditOrganizationGroup;ChangeOrganizationGroup;RemoveOrganizationGroup;AddOrganizationGroup").split(';'));
+	viewOrganizationGroupsFeatureInfo->SetRequirements(QByteArray("/OrganizationManagement/GroupManagement/EditOrganizationGroup;/OrganizationManagement/GroupManagement/EditOrganizationGroup/ChangeOrganizationGroup;/OrganizationManagement/GroupManagement/EditOrganizationGroup/RemoveOrganizationGroup;/OrganizationManagement/GroupManagement/EditOrganizationGroup/AddOrganizationGroup").split(';'));
 	groupManagementFeatureInfo->InsertSubFeature(viewOrganizationGroupsFeatureInfo.PopPtr());
 
 	istd::TDelPtr<imtlic::CFeatureInfo> editOrganizationGroupFeatureInfo;
@@ -947,7 +947,7 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 	viewOrganizationConnectionsFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "Allows viewing Organization Connections."));
 	viewOrganizationConnectionsFeatureInfo->SetOptional(false);
 	viewOrganizationConnectionsFeatureInfo->SetIsPermission(true);
-	viewOrganizationConnectionsFeatureInfo->SetDependencies(QByteArray("EditOrganizationConnection;ConnectOrganization;RemoveOrganizationConnection").split(';'));
+	viewOrganizationConnectionsFeatureInfo->SetRequirements(QByteArray("/OrganizationManagement/ConnectionManagement/EditOrganizationConnection;/OrganizationManagement/ConnectionManagement/EditOrganizationConnection/ConnectOrganization;/OrganizationManagement/ConnectionManagement/EditOrganizationConnection/RemoveOrganizationConnection").split(';'));
 	connectionManagementFeatureInfo->InsertSubFeature(viewOrganizationConnectionsFeatureInfo.PopPtr());
 
 	istd::TDelPtr<imtlic::CFeatureInfo> editOrganizationConnectionFeatureInfo;
@@ -1254,7 +1254,7 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 	viewAdministrationFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "Allows viewing Administration."));
 	viewAdministrationFeatureInfo->SetOptional(false);
 	viewAdministrationFeatureInfo->SetIsPermission(true);
-	viewAdministrationFeatureInfo->SetDependencies(QByteArray("EditAdministration;EditGroup;ChangeGroup;RemoveGroup;AddGroup;EditRole;ChangeRole;RemoveRole;AddRole;EditUser;ChangeUser;RemoveUser;AddUser").split(';'));
+	viewAdministrationFeatureInfo->SetRequirements(QByteArray("/Administration/EditAdministration;/Administration/EditAdministration/EditGroup;/Administration/EditAdministration/EditGroup/ChangeGroup;/Administration/EditAdministration/EditGroup/RemoveGroup;/Administration/EditAdministration/EditGroup/AddGroup;/Administration/EditAdministration/EditRole;/Administration/EditAdministration/EditRole/ChangeRole;/Administration/EditAdministration/EditRole/RemoveRole;/Administration/EditAdministration/EditRole/AddRole;/Administration/EditAdministration/EditUser;/Administration/EditAdministration/EditUser/ChangeUser;/Administration/EditAdministration/EditUser/RemoveUser;/Administration/EditAdministration/EditUser/AddUser").split(';'));
 
 	istd::TDelPtr<imtlic::CFeatureInfo> viewGroupHistoryFeatureInfo;
 	viewGroupHistoryFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
@@ -1293,7 +1293,7 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 	viewGroupsFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "Allows viewing Groups."));
 	viewGroupsFeatureInfo->SetOptional(false);
 	viewGroupsFeatureInfo->SetIsPermission(true);
-	viewGroupsFeatureInfo->SetDependencies(QByteArray("EditGroup;ChangeGroup;RemoveGroup;AddGroup").split(';'));
+	viewGroupsFeatureInfo->SetRequirements(QByteArray("/Administration/EditAdministration/EditGroup;/Administration/EditAdministration/EditGroup/ChangeGroup;/Administration/EditAdministration/EditGroup/RemoveGroup;/Administration/EditAdministration/EditGroup/AddGroup").split(';'));
 
 	viewAdministrationFeatureInfo->InsertSubFeature(viewGroupsFeatureInfo.PopPtr());
 
@@ -1304,7 +1304,7 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 	viewUsersFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "Allows viewing Users."));
 	viewUsersFeatureInfo->SetOptional(false);
 	viewUsersFeatureInfo->SetIsPermission(true);
-	viewUsersFeatureInfo->SetDependencies(QByteArray("EditUser;ChangeUser;RemoveUser;AddUser").split(';'));
+	viewUsersFeatureInfo->SetRequirements(QByteArray("/Administration/EditAdministration/EditUser;/Administration/EditAdministration/EditUser/ChangeUser;/Administration/EditAdministration/EditUser/RemoveUser;/Administration/EditAdministration/EditUser/AddUser").split(';'));
 
 	viewAdministrationFeatureInfo->InsertSubFeature(viewUsersFeatureInfo.PopPtr());
 
@@ -1315,7 +1315,7 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 	viewRolesFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "Allows viewing Roles."));
 	viewRolesFeatureInfo->SetOptional(false);
 	viewRolesFeatureInfo->SetIsPermission(true);
-	viewRolesFeatureInfo->SetDependencies(QByteArray("EditRole;ChangeRole;RemoveRole;AddRole").split(';'));
+	viewRolesFeatureInfo->SetRequirements(QByteArray("/Administration/EditAdministration/EditRole;/Administration/EditAdministration/EditRole/ChangeRole;/Administration/EditAdministration/EditRole/RemoveRole;/Administration/EditAdministration/EditRole/AddRole").split(';'));
 
 	viewAdministrationFeatureInfo->InsertSubFeature(viewRolesFeatureInfo.PopPtr());
 
