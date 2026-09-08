@@ -10,7 +10,7 @@
 #include <imtbase/IObjectCollectionIterator.h>
 #include <imtbase/CObjectLink.h>
 #include <imtlic/IProductInfo.h>
-#include <imtauth/CCompanyInfo.h>
+#include <imtaccount/CCompanyInfo.h>
 
 // ProLife includes
 #include <prolifedata/prolifedata.h>
@@ -462,7 +462,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 						if (m_accountCollectionCompPtr.IsValid()){
 							imtbase::IObjectCollection::DataPtr accountDataPtr;
 							if (m_accountCollectionCompPtr->GetObjectData(rolePtr->GetCustomerId(), accountDataPtr)){
-								const imtauth::CIdentifiableCompanyInfo* companyInfoPtr = dynamic_cast<const imtauth::CIdentifiableCompanyInfo*>(accountDataPtr.GetPtr());
+								const imtaccount::CIdentifiableCompanyInfo* companyInfoPtr = dynamic_cast<const imtaccount::CIdentifiableCompanyInfo*>(accountDataPtr.GetPtr());
 								if (companyInfoPtr != nullptr){
 									roleRepresentation.customerName = companyInfoPtr->GetName();
 								}

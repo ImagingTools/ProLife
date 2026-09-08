@@ -4,17 +4,17 @@
 // ImtCore includes
 #include <imtbase/CDocumentChangeGeneratorCompBase.h>
 #include <imtbase/CObjectCollection.h>
-#include <imtauth/IAddressProvider.h>
+#include <imtaccount/IAddressProvider.h>
 
 
-namespace imtauth
+namespace imtaccount
 {
 
 
 class IAddress;
 
 
-} // namespace imtauth
+} // namespace imtaccount
 
 
 namespace prolifegql
@@ -42,8 +42,8 @@ protected:
 		Compare the address lists of both documents and record added, removed and modified addresses.
 	*/
 	void CompareAddresses(
-				const imtauth::IAddressProvider* oldAddressProviderPtr,
-				const imtauth::IAddressProvider* newAddressProviderPtr,
+				const imtaccount::IAddressProvider* oldAddressProviderPtr,
+				const imtaccount::IAddressProvider* newAddressProviderPtr,
 				imtbase::CObjectCollection& documentChangeCollection);
 
 private:
@@ -51,13 +51,13 @@ private:
 		Record the field-by-field differences of two addresses which are known to describe the same location.
 	*/
 	void CompareAddressFields(
-				const imtauth::IAddressProvider& oldAddressProvider,
+				const imtaccount::IAddressProvider& oldAddressProvider,
 				const QByteArray& oldAddressId,
-				const imtauth::IAddressProvider& newAddressProvider,
+				const imtaccount::IAddressProvider& newAddressProvider,
 				const QByteArray& newAddressId,
 				imtbase::CObjectCollection& documentChangeCollection);
 
-	static QString FormatAddress(const imtauth::IAddress* addressPtr);
+	static QString FormatAddress(const imtaccount::IAddress* addressPtr);
 
 	QString GetGroupName(const QByteArray& groupId) const;
 
