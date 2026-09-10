@@ -93,6 +93,89 @@ Teardown stops all three in reverse order. Puma/Lisa checkouts are located via t
 
 `prolife_test`'s `Roles`/`Users`/`UserGroups`/`UserSessions` tables are `postgres_fdw` **foreign tables**, all backed by a single foreign server literally named `PumaServer`. As restored from the dev export, that foreign server's `dbname` option is `puma` (the real, non-test database) - on a dev machine that also has a real local `puma` checkout, leaving this uncorrected means any query touching those tables would silently read (and, if the mapping allows, write) the developer's real data instead of `puma_test`. `Run-CiTests.ps1`'s `Repair-ProLifeForeignServers` runs `ALTER SERVER "PumaServer" OPTIONS (SET dbname 'puma_test')` immediately after every `prolife_test` restore to fix this. (There's also a dormant `setup_foreign_table_lisaserver()` helper function in the dump, but it's never invoked - no `LisaServer` foreign server actually exists, so nothing needs repointing for Lisa.)
 
+## WebSocket subscriptions (`ws/ws-subscriptions.js`)
+
+Newman does not execute Postman WebSocket requests — it runs HTTP requests only —
+so the subscription side cannot live in the collection. It is covered by a Node
+runner speaking the same protocol as the client
+(`ImtCore/Qml/imtguigql/SubscriptionManager.qml` and `CWebSocketServletComp`):
+
+```
+-> {"type":"connection_init"}                                    <- {"type":"connection_ack"}
+-> {"id":..,"type":"start","headers":{..},"payload":{"data":Q}}  <- (silence on success)
+                                                                 <- {"type":"data","id":..,"payload":{..}}
+-> {"id":..,"type":"stop"}                                       <- {"type":"complete","id":..}
+                                              refusals arrive as <- {"type":"error","id":..,"payload":[..]}
+                                    plus unsolicited keep-alives <- {"type":"ka"}
+```
+
+`Run-CiTests.ps1` runs it right after newman against the same three live servers,
+writing `junit-report-ws.xml` in the format TeamCity already consumes. Standalone:
+
+```
+npm install
+node ws/ws-subscriptions.js --http http://localhost:17778/ProLife --ws ws://localhost:18778
+```
+
+Options: `--http`, `--ws`, `--env`, `--junit`, `--timeout`, `--grace`, `--su-login`,
+`--su-password`, `--product-id`. `--grace` is how long a `start` has to stay unanswered
+before it counts as accepted (default 2500 ms) — a successful registration is answered
+with silence, so the absence of a refusal is the only acceptance signal on the wire.
+
+### What it covers that the Puma suite cannot
+
+A ProLife client subscribes to the ProLife server, which serves some collections
+itself (`Devices`, `Orders`) and forwards the rest to Puma (`Users`, `Groups`,
+`Roles`, `Tenants`, `TenantRelationships`, `CrossOrgGrants`), to Desk (`Tickets`)
+or to Lisa. Both halves of that routing decision are exercised here; the Puma
+suite only ever sees requests that already arrived. A forwarder that passed the
+command on **without** its input arguments, or that decided on the command alone
+and claimed the local collections too, would look healthy from a single server.
+
+Every subscription the QML client registers at startup is registered here in the
+exact shape the client sends it, so a command list or a forwarding rule that
+drifts away from the client is caught. The two connection probes
+(`PumaWsConnection`, `LisaWsConnection`) additionally have to report the upstream
+link as `Connected` — every forwarded case depends on that link, so a run against
+a dead upstream fails instead of passing vacuously.
+
+### Strictness
+
+Every case asserts on the specific outcome, not on the presence of a frame. A
+refusal is matched against the reason the server gives, so a case that stops
+reaching the check it was written for — a malformed payload, a broken token —
+fails instead of passing on whatever error came back. Notifications are matched
+on `documentId` and `documentOperation` rather than counted. On top of that,
+every inbound frame is audited against a running ledger of what the suite asked
+for: an unknown frame type, an error nobody expected, a notification delivered to
+an id holding no subscription, or a payload carrying another command's data fails
+the final case even though no individual case looks for it. Cases whose
+preconditions an earlier failure destroyed report "precondition not met" rather
+than asserting against undefined state.
+
+Beyond delivery, the suite pins the protocol behaviour that has broken in the
+field: `stop` on a live subscription must answer `complete` **and** end delivery
+— on the forwarding path that means the bridge also unbinds upstream, which is
+the half that breaks — a repeated `stop` must not desynchronise the session, a
+`start` with an empty subscription id must be refused, and an invalid token must
+be refused as an authentication failure.
+
+### Which collections have a document service
+
+`ProLifeQmlVoce.arp/ProLifeServerBase.acc` registers exactly **one**
+`CollectionDocumentServicePublisher`, with `CollectionId` = `Devices`. That is the
+only collection ProLife serves through a document service of its own; `Orders`
+and the rest are served by their own collection controllers, which do not publish
+document-service notifications.
+
+So the suite asserts `Devices` is accepted locally (this is what tells a correct
+forwarder from one that claims every collection and sends it to Puma), and that
+`Orders` is **refused** — a document-service subscription for it has nothing to
+bind to. Both lists are explicit in `ws/ws-subscriptions.js`
+(`localCollections` / `documentServicelessCollections`): adding a publisher for a
+collection means moving it between them, rather than a case quietly starting to
+pass.
+
 ## Coverage
 
 43 ProLife-domain GraphQL fields, one request/test each (see the collection's folder-per-SDL-file structure), plus the `02 Orders` product-lifecycle scenario (11 additional requests covering `OrderUpdate`'s side effects on `Devices`/`SoftwareProducts` - see above) and the `08 Meta Info Propagation` scenario (14 additional requests covering live Account/Order field resolution on `DevicesList`/`SoftwareProductsList`/`OrdersList` - see above). `ChildLicensesList`, `SplitLicense`, `RevokeLicense` are **new coverage** - they aren't exercised by any prior ProLife test suite, so a failure there may be revealing a real gap rather than a suite bug.
