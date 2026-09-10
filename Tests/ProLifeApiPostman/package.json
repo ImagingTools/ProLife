@@ -2,5 +2,11 @@
     "name": "prolife-api-postman-tests",
     "private": true,
     "description": "Newman dependency pin for the ProLife Api Postman CI suite (see Run-CiTests.ps1)",
-    "devDependencies": { "newman": "6.2.2" }
+    "devDependencies": {
+        "newman": "6.2.2",
+        "ws": "8.18.0"
+    },
+    "scripts": {
+        "test:ws": "node ws/ws-subscriptions.js"
+    }
 }

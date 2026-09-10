@@ -1101,11 +1101,15 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
+                  "// 03 Devices / CreateLicenseFile asks for encrypt:false and decryptLicenseFileKey is",
+                  "// blank by default, so this exercises the refusal path only. Set a real key and an",
+                  "// encrypted file to cover the happy path - it is not covered today.",
                   "const json = pm.response.json();",
-                  "pm.test('DecryptLicenseFile responds with data or a graceful error', function () {",
-                  "  const hasData = !!(json.data && json.data.DecryptLicenseFile !== undefined);",
-                  "  const hasErrors = !!(json.errors && json.errors.length);",
-                  "  pm.expect(hasData || hasErrors).to.eql(true);",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
+                  "const payload = json.data && json.data.DecryptLicenseFile;",
+                  "pm.test('Decrypting an unencrypted license file with a blank key is refused', function () {",
+                  "  pm.expect(messages, 'expected a decrypt refusal, got: ' + JSON.stringify(json).slice(0, 300)).to.match(/Unable to decrypt license file/i);",
+                  "  pm.expect(!!(payload && payload.decryptedData), 'data was decrypted despite the refusal').to.eql(false);",
                   "});"
                 ]
               }
@@ -3471,11 +3475,16 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
+                  "// This run creates a license file for the device, and the server refuses to delete a",
+                  "// sensor that has one. That guard is the contract here - the old assertion accepted",
+                  "// either outcome and so could not tell the guard working from the delete silently",
+                  "// failing for some other reason.",
                   "const json = pm.response.json();",
-                  "pm.test('RemoveElements (Devices) returns a well-formed response (success or graceful error)', function () {",
-                  "  const hasWellFormedData = !!(json.data && typeof json.data.RemoveElements === 'object' && json.data.RemoveElements !== null);",
-                  "  const hasWellFormedErrors = Array.isArray(json.errors) && json.errors.length > 0;",
-                  "  pm.expect(hasWellFormedData || hasWellFormedErrors, 'expected either a populated RemoveElements object or a non-empty errors array').to.eql(true);",
+                  "const payload = json.data && json.data.RemoveElements;",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
+                  "pm.test('Removing a licensed sensor is refused with the license reason', function () {",
+                  "  pm.expect(messages, 'expected the license guard, got: ' + JSON.stringify(json).slice(0, 300)).to.match(/license file has been created for it/i);",
+                  "  pm.expect(!!(payload && payload.success === true), 'the licensed sensor was deleted anyway').to.eql(false);",
                   "});"
                 ]
               }
@@ -3504,10 +3513,10 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "pm.test('RemoveElements (SoftwareProducts) returns a well-formed response (success or graceful error)', function () {",
-                  "  const hasWellFormedData = !!(json.data && typeof json.data.RemoveElements === 'object' && json.data.RemoveElements !== null);",
-                  "  const hasWellFormedErrors = Array.isArray(json.errors) && json.errors.length > 0;",
-                  "  pm.expect(hasWellFormedData || hasWellFormedErrors, 'expected either a populated RemoveElements object or a non-empty errors array').to.eql(true);",
+                  "const payload = json.data && json.data.RemoveElements;",
+                  "pm.test('RemoveElements (SoftwareProducts) removes the fixtures created by this run', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(payload && payload.success, 'RemoveElements payload: ' + JSON.stringify(json.data)).to.eql(true);",
                   "});"
                 ]
               }
@@ -3536,10 +3545,10 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "pm.test('RemoveElements (Orders) returns a well-formed response (success or graceful error)', function () {",
-                  "  const hasWellFormedData = !!(json.data && typeof json.data.RemoveElements === 'object' && json.data.RemoveElements !== null);",
-                  "  const hasWellFormedErrors = Array.isArray(json.errors) && json.errors.length > 0;",
-                  "  pm.expect(hasWellFormedData || hasWellFormedErrors, 'expected either a populated RemoveElements object or a non-empty errors array').to.eql(true);",
+                  "const payload = json.data && json.data.RemoveElements;",
+                  "pm.test('RemoveElements (Orders) removes the fixtures created by this run', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(payload && payload.success, 'RemoveElements payload: ' + JSON.stringify(json.data)).to.eql(true);",
                   "});"
                 ]
               }
@@ -3568,10 +3577,10 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "pm.test('RemoveElements (Users) returns a well-formed response (success or graceful error)', function () {",
-                  "  const hasWellFormedData = !!(json.data && typeof json.data.RemoveElements === 'object' && json.data.RemoveElements !== null);",
-                  "  const hasWellFormedErrors = Array.isArray(json.errors) && json.errors.length > 0;",
-                  "  pm.expect(hasWellFormedData || hasWellFormedErrors, 'expected either a populated RemoveElements object or a non-empty errors array').to.eql(true);",
+                  "const payload = json.data && json.data.RemoveElements;",
+                  "pm.test('RemoveElements (Users) removes the fixtures created by this run', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(payload && payload.success, 'RemoveElements payload: ' + JSON.stringify(json.data)).to.eql(true);",
                   "});"
                 ]
               }
@@ -3600,10 +3609,10 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "pm.test('RemoveElements (Roles) returns a well-formed response (success or graceful error)', function () {",
-                  "  const hasWellFormedData = !!(json.data && typeof json.data.RemoveElements === 'object' && json.data.RemoveElements !== null);",
-                  "  const hasWellFormedErrors = Array.isArray(json.errors) && json.errors.length > 0;",
-                  "  pm.expect(hasWellFormedData || hasWellFormedErrors, 'expected either a populated RemoveElements object or a non-empty errors array').to.eql(true);",
+                  "const payload = json.data && json.data.RemoveElements;",
+                  "pm.test('RemoveElements (Roles) removes the fixtures created by this run', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(payload && payload.success, 'RemoveElements payload: ' + JSON.stringify(json.data)).to.eql(true);",
                   "});"
                 ]
               }
@@ -3632,10 +3641,10 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "pm.test('RemoveElements (Accounts) returns a well-formed response (success or graceful error)', function () {",
-                  "  const hasWellFormedData = !!(json.data && typeof json.data.RemoveElements === 'object' && json.data.RemoveElements !== null);",
-                  "  const hasWellFormedErrors = Array.isArray(json.errors) && json.errors.length > 0;",
-                  "  pm.expect(hasWellFormedData || hasWellFormedErrors, 'expected either a populated RemoveElements object or a non-empty errors array').to.eql(true);",
+                  "const payload = json.data && json.data.RemoveElements;",
+                  "pm.test('RemoveElements (Accounts) removes the fixtures created by this run', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(payload && payload.success, 'RemoveElements payload: ' + JSON.stringify(json.data)).to.eql(true);",
                   "});"
                 ]
               }
