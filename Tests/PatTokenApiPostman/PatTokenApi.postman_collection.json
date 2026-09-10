@@ -4720,7 +4720,24 @@
                 "variables": ""
               }
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Known gap, asserted rather than merely logged: a PAT revoked moments ago is still",
+                  "// accepted while its auth-cache entry lives. The sibling long-wait case checks that",
+                  "// the entry does expire. If this ever starts returning 403 the gap is closed and this",
+                  "// case should be flipped to expect the rejection.",
+                  "pm.test(\"Revoked PAT is still accepted while its cache entry is warm (known gap)\", function () {",
+                  "  pm.expect(pm.response.code, 'expected the stale-cache 200; a 403 means the gap is closed').to.eql(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Long-wait check (run manually, >=300s after the previous request)",
@@ -4835,7 +4852,11 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "console.log('Cleanup DeleteToken result:', JSON.stringify(json));"
+                  "const payload = json.data && json.data.DeleteToken;",
+                  "pm.test('Cleanup deletes validationWhitespaceTokenId', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(payload && payload.success, 'DeleteToken payload: ' + JSON.stringify(json.data)).to.eql(true);",
+                  "});"
                 ]
               }
             }
@@ -4863,7 +4884,11 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "console.log('Cleanup DeleteToken result:', JSON.stringify(json));"
+                  "const payload = json.data && json.data.DeleteToken;",
+                  "pm.test('Cleanup deletes validationPastExpiryTokenId', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(payload && payload.success, 'DeleteToken payload: ' + JSON.stringify(json.data)).to.eql(true);",
+                  "});"
                 ]
               }
             }
@@ -4891,7 +4916,11 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "console.log('Cleanup DeleteToken result:', JSON.stringify(json));"
+                  "const payload = json.data && json.data.DeleteToken;",
+                  "pm.test('Cleanup deletes validationMalformedExpiryTokenId', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(payload && payload.success, 'DeleteToken payload: ' + JSON.stringify(json.data)).to.eql(true);",
+                  "});"
                 ]
               }
             }
@@ -4919,7 +4948,11 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "console.log('Cleanup DeleteToken result:', JSON.stringify(json));"
+                  "const payload = json.data && json.data.DeleteToken;",
+                  "pm.test('Cleanup deletes intersectionNarrowTokenId', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(payload && payload.success, 'DeleteToken payload: ' + JSON.stringify(json.data)).to.eql(true);",
+                  "});"
                 ]
               }
             }
@@ -4947,7 +4980,11 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "console.log('Cleanup DeleteToken result:', JSON.stringify(json));"
+                  "const payload = json.data && json.data.DeleteToken;",
+                  "pm.test('Cleanup deletes intersectionOverBroadTokenId', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(payload && payload.success, 'DeleteToken payload: ' + JSON.stringify(json.data)).to.eql(true);",
+                  "});"
                 ]
               }
             }
@@ -4975,7 +5012,11 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "console.log('Cleanup DeleteToken result:', JSON.stringify(json));"
+                  "const payload = json.data && json.data.DeleteToken;",
+                  "pm.test('Cleanup deletes intersectionDisjointTokenId', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(payload && payload.success, 'DeleteToken payload: ' + JSON.stringify(json.data)).to.eql(true);",
+                  "});"
                 ]
               }
             }
@@ -5003,7 +5044,11 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "console.log('Cleanup DeleteToken result:', JSON.stringify(json));"
+                  "const payload = json.data && json.data.DeleteToken;",
+                  "pm.test('Cleanup deletes intersectionAdminNarrowTokenId', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(payload && payload.success, 'DeleteToken payload: ' + JSON.stringify(json.data)).to.eql(true);",
+                  "});"
                 ]
               }
             }
@@ -5031,7 +5076,11 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "console.log('Cleanup DeleteToken result:', JSON.stringify(json));"
+                  "const payload = json.data && json.data.DeleteToken;",
+                  "pm.test('Cleanup deletes commaScopeTokenId', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(payload && payload.success, 'DeleteToken payload: ' + JSON.stringify(json.data)).to.eql(true);",
+                  "});"
                 ]
               }
             }
@@ -5059,7 +5108,18 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "console.log('Cleanup DeleteToken result:', JSON.stringify(json));"
+                  "const payload = json.data && json.data.DeleteToken;",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
+                  "const tokenId = pm.environment.get('cacheStalenessTokenId') || '';",
+                  "pm.test('Cleanup handles the opt-in cache-staleness token', function () {",
+                  "  if (!tokenId) {",
+                  "    // folder 91 did not run, so nothing was minted and the id is empty",
+                  "    pm.expect(messages, 'expected the id-required refusal for an empty id, got: ' + JSON.stringify(json).slice(0, 200)).to.match(/id is required/i);",
+                  "    return;",
+                  "  }",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(payload && payload.success, 'DeleteToken payload: ' + JSON.stringify(json.data)).to.eql(true);",
+                  "});"
                 ]
               }
             }
@@ -5080,7 +5140,22 @@
               }
             }
           },
-          "event": []
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.DeleteToken;",
+                  "pm.test('Cleanup deletes intersectionFullMatchTokenId', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(payload && payload.success, 'DeleteToken payload: ' + JSON.stringify(json.data)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Cleanup: RemoveElements (Users)",
@@ -5104,7 +5179,11 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "console.log('Cleanup RemoveElements (Users) result:', JSON.stringify(json));"
+                  "const payload = json.data && json.data.RemoveElements;",
+                  "pm.test('Cleanup removes the users created by this run', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(payload && payload.success, 'RemoveElements payload: ' + JSON.stringify(json.data)).to.eql(true);",
+                  "});"
                 ]
               }
             }
@@ -5132,7 +5211,11 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "console.log('Cleanup RemoveElements (Roles) result:', JSON.stringify(json));"
+                  "const payload = json.data && json.data.RemoveElements;",
+                  "pm.test('Cleanup removes the roles created by this run', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(payload && payload.success, 'RemoveElements payload: ' + JSON.stringify(json.data)).to.eql(true);",
+                  "});"
                 ]
               }
             }

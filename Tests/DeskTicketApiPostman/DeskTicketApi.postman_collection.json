@@ -96,7 +96,9 @@
         {
           "name": "CreateSuperuser (bootstrap)",
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "header": [],
             "body": {
@@ -127,7 +129,9 @@
         {
           "name": "Auth SU",
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "header": [],
             "body": {
@@ -164,15 +168,169 @@
           ]
         },
         {
-          "name": "Auth Manager",
+          "name": "Setup: RoleAdd (Desk actor role)",
           "request": {
-            "auth": { "type": "noauth" },
+            "url": "{{baseUrl}}/graphql",
             "method": "POST",
             "header": [],
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "query Authorization { Authorization(input: { login: \"{{managerLogin}}\", password: \"{{managerPassword}}\", productId: \"{{productId}}\" }) { token userId username } }",
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{deskActorRoleId}}\", item: { id: \"{{deskActorRoleId}}\", name: \"DeskApi Actor {{runSuffix}}\", description: \"Created by DeskTicketApiPostman - plain actor, no product permissions\", roleId: \"DeskApiActor{{runSuffix}}\", productId: \"{{productId}}\", parentRoles: \"\", permissions: \"\", isDefault: false, isGuest: false } }) { id } }",
+                "variables": ""
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// One suffix for the whole run so the generated logins stay stable between requests.",
+                  "if (!pm.environment.get('runSuffix')) {",
+                  "  pm.environment.set('runSuffix', String(Date.now()) + String(Math.floor(Math.random() * 1000)));",
+                  "}",
+                  "const s = pm.environment.get('runSuffix');",
+                  "pm.environment.set('actorPassword', 'DeskApi_2026!');",
+                  "pm.environment.set('deskActorRoleId', pm.variables.replaceIn('{{$guid}}'));",
+                  "pm.environment.set('clientUserObjId', pm.variables.replaceIn('{{$guid}}'));",
+                  "pm.environment.set('agentUserObjId', pm.variables.replaceIn('{{$guid}}'));",
+                  "pm.environment.set('outsiderUserObjId', pm.variables.replaceIn('{{$guid}}'));",
+                  "pm.environment.set('clientLogin', 'desk_client_' + s);",
+                  "pm.environment.set('agentLogin', 'desk_agent_' + s);",
+                  "pm.environment.set('outsiderLogin', 'desk_outsider_' + s);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// The three lifecycle actors used to be the su account under three different",
+                  "// variable names, so every role and permission assertion in this collection was",
+                  "// really su acting on itself. These fixtures create real, separate users.",
+                  "const json = pm.response.json();",
+                  "const id = json.data && json.data.RoleAdd && json.data.RoleAdd.id;",
+                  "pm.test('Setup: actor role created', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(id, 'RoleAdd payload: ' + JSON.stringify(json.data)).to.be.a('string').and.not.empty;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Setup: UserAdd (client actor)",
+          "request": {
+            "url": "{{baseUrl}}/graphql",
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{clientUserObjId}}\", item: { id: \"{{clientUserObjId}}\", productId: \"{{productId}}\", name: \"DeskApi Client Actor\", username: \"{{clientLogin}}\", password: \"{{actorPassword}}\", email: \"client{{runSuffix}}@deskticketapi.test\", groups: [], roles: [\"{{deskActorRoleId}}\"], permissions: \"\", systemInfos: [] } }) { id } }",
+                "variables": ""
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const id = json.data && json.data.UserAdd && json.data.UserAdd.id;",
+                  "pm.test('Setup: client actor created', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(id, 'UserAdd payload: ' + JSON.stringify(json.data)).to.be.a('string').and.not.empty;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Setup: UserAdd (agent actor)",
+          "request": {
+            "url": "{{baseUrl}}/graphql",
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{agentUserObjId}}\", item: { id: \"{{agentUserObjId}}\", productId: \"{{productId}}\", name: \"DeskApi Agent Actor\", username: \"{{agentLogin}}\", password: \"{{actorPassword}}\", email: \"agent{{runSuffix}}@deskticketapi.test\", groups: [], roles: [\"{{deskActorRoleId}}\"], permissions: \"\", systemInfos: [] } }) { id } }",
+                "variables": ""
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const id = json.data && json.data.UserAdd && json.data.UserAdd.id;",
+                  "pm.test('Setup: agent actor created', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(id, 'UserAdd payload: ' + JSON.stringify(json.data)).to.be.a('string').and.not.empty;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Setup: UserAdd (outsider actor)",
+          "request": {
+            "url": "{{baseUrl}}/graphql",
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{outsiderUserObjId}}\", item: { id: \"{{outsiderUserObjId}}\", productId: \"{{productId}}\", name: \"DeskApi Outsider Actor\", username: \"{{outsiderLogin}}\", password: \"{{actorPassword}}\", email: \"outsider{{runSuffix}}@deskticketapi.test\", groups: [], roles: [\"{{deskActorRoleId}}\"], permissions: \"\", systemInfos: [] } }) { id } }",
+                "variables": ""
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const id = json.data && json.data.UserAdd && json.data.UserAdd.id;",
+                  "pm.test('Setup: outsider actor created', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(id, 'UserAdd payload: ' + JSON.stringify(json.data)).to.be.a('string').and.not.empty;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auth Manager (admin = su)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{suLogin}}\", password: \"{{suPassword}}\", productId: \"{{productId}}\" }) { token userId username } }",
                 "variables": ""
               }
             },
@@ -185,12 +343,20 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
+                  "// 'Manager' is the admin actor. Only an administrator may edit a ticket it neither",
+                  "// reported nor is assigned to (imtdeskgql::CanEditTicket), and su is the only admin",
+                  "// available to this suite - UserAdd cannot grant the admin flag.",
                   "const json = pm.response.json();",
-                  "if ((json.errors || []).length === 0 && json.data && json.data.Authorization) {",
-                  "  pm.environment.set('managerToken', json.data.Authorization.token);",
-                  "  pm.environment.set('managerUserId', json.data.Authorization.userId);",
-                  "}",
-                  "pm.test('Manager auth executed', function () { pm.expect(true).to.eql(true); });"
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('Auth Manager (admin) returns a token', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(auth && auth.token, 'Authorization payload: ' + JSON.stringify(json.data)).to.be.a('string').and.not.empty;",
+                  "  pm.expect(auth && auth.userId, 'Authorization payload: ' + JSON.stringify(json.data)).to.be.a('string').and.not.empty;",
+                  "});",
+                  "if (auth && auth.token) {",
+                  "  pm.environment.set('managerToken', auth.token);",
+                  "  pm.environment.set('managerUserId', auth.userId);",
+                  "}"
                 ]
               }
             }
@@ -199,13 +365,15 @@
         {
           "name": "Auth Agent",
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "header": [],
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "query Authorization { Authorization(input: { login: \"{{agentLogin}}\", password: \"{{agentPassword}}\", productId: \"{{productId}}\" }) { token userId username } }",
+                "query": "query Authorization { Authorization(input: { login: \"{{agentLogin}}\", password: \"{{actorPassword}}\", productId: \"{{productId}}\" }) { token userId username } }",
                 "variables": ""
               }
             },
@@ -219,11 +387,16 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "if ((json.errors || []).length === 0 && json.data && json.data.Authorization) {",
-                  "  pm.environment.set('agentToken', json.data.Authorization.token);",
-                  "  pm.environment.set('agentUserId', json.data.Authorization.userId);",
-                  "}",
-                  "pm.test('Agent auth executed', function () { pm.expect(true).to.eql(true); });"
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('Auth Agent returns a token', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(auth && auth.token, 'Authorization payload: ' + JSON.stringify(json.data)).to.be.a('string').and.not.empty;",
+                  "  pm.expect(auth && auth.userId, 'Authorization payload: ' + JSON.stringify(json.data)).to.be.a('string').and.not.empty;",
+                  "});",
+                  "if (auth && auth.token) {",
+                  "  pm.environment.set('agentToken', auth.token);",
+                  "  pm.environment.set('agentUserId', auth.userId);",
+                  "}"
                 ]
               }
             }
@@ -232,13 +405,15 @@
         {
           "name": "Auth Client",
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "header": [],
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "query Authorization { Authorization(input: { login: \"{{clientLogin}}\", password: \"{{clientPassword}}\", productId: \"{{productId}}\" }) { token userId username } }",
+                "query": "query Authorization { Authorization(input: { login: \"{{clientLogin}}\", password: \"{{actorPassword}}\", productId: \"{{productId}}\" }) { token userId username } }",
                 "variables": ""
               }
             },
@@ -252,11 +427,56 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "if ((json.errors || []).length === 0 && json.data && json.data.Authorization) {",
-                  "  pm.environment.set('clientToken', json.data.Authorization.token);",
-                  "  pm.environment.set('clientUserId', json.data.Authorization.userId);",
-                  "}",
-                  "pm.test('Client auth executed', function () { pm.expect(true).to.eql(true); });"
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('Auth Client returns a token', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(auth && auth.token, 'Authorization payload: ' + JSON.stringify(json.data)).to.be.a('string').and.not.empty;",
+                  "  pm.expect(auth && auth.userId, 'Authorization payload: ' + JSON.stringify(json.data)).to.be.a('string').and.not.empty;",
+                  "});",
+                  "if (auth && auth.token) {",
+                  "  pm.environment.set('clientToken', auth.token);",
+                  "  pm.environment.set('clientUserId', auth.userId);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auth Outsider",
+          "request": {
+            "url": "{{baseUrl}}/graphql",
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{outsiderLogin}}\", password: \"{{actorPassword}}\", productId: \"{{productId}}\" }) { token userId username } }",
+                "variables": ""
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('Auth Outsider returns a token', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(auth && auth.token, 'Authorization payload: ' + JSON.stringify(json.data)).to.be.a('string').and.not.empty;",
+                  "  pm.expect(auth && auth.userId, 'Authorization payload: ' + JSON.stringify(json.data)).to.be.a('string').and.not.empty;",
+                  "});",
+                  "if (auth && auth.token) {",
+                  "  pm.environment.set('outsiderToken', auth.token);",
+                  "  pm.environment.set('outsiderUserId', auth.userId);",
+                  "}"
                 ]
               }
             }
@@ -282,17 +502,29 @@
             "url": "{{baseUrl}}/graphql",
             "description": "Read desk tickets with default page."
           },
-          "event": [{
-            "listen": "test",
-            "script": { "type": "text/javascript", "exec": [
-              "const json = pm.response.json();",
-              "pm.test('TicketsList success', function () { pm.expect(json.errors || []).to.have.length(0); });",
-              "pm.test('TicketsList has items array', function () {",
-              "  const items = json.data && json.data.TicketsList && json.data.TicketsList.items;",
-              "  pm.expect(Array.isArray(items)).to.eql(true);",
-              "});"
-            ] }
-          }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const items = json.data && json.data.TicketsList && json.data.TicketsList.items;",
+                  "pm.test('TicketsList returns a well-formed page for an administrator', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(Array.isArray(items), 'TicketsList payload: ' + JSON.stringify(json.data)).to.eql(true);",
+                  "  items.forEach(function (t) {",
+                  "    pm.expect(t.id, 'ticket without id: ' + JSON.stringify(t)).to.be.a('string').and.not.empty;",
+                  "    pm.expect(t.status, 'ticket without status: ' + JSON.stringify(t)).to.be.a('string').and.not.empty;",
+                  "    pm.expect(t.number, 'ticket without number: ' + JSON.stringify(t)).to.not.eql(undefined);",
+                  "  });",
+                  "});",
+                  "pm.environment.set('firstPageFirstTicketId', items && items.length ? items[0].id : '');",
+                  "pm.environment.set('firstPageCount', String(items ? items.length : 0));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "TicketsList - Positive (pagination)",
@@ -309,15 +541,30 @@
             "url": "{{baseUrl}}/graphql",
             "description": "Verify pagination path with non-zero offset."
           },
-          "event": [{
-            "listen": "test",
-            "script": { "type": "text/javascript", "exec": [
-              "const json = pm.response.json();",
-              "pm.test('Pagination request returns GraphQL payload', function () {",
-              "  pm.expect(json.data && json.data.TicketsList).to.be.an('object');",
-              "});"
-            ] }
-          }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// offset:1/count:5 must actually page - the old assertion only checked that some",
+                  "// object came back, which an unpaginated response would satisfy just as well.",
+                  "const json = pm.response.json();",
+                  "const items = json.data && json.data.TicketsList && json.data.TicketsList.items;",
+                  "const firstPageFirst = pm.environment.get('firstPageFirstTicketId');",
+                  "const firstPageCount = parseInt(pm.environment.get('firstPageCount') || '0', 10);",
+                  "pm.test('Pagination honours count and offset', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(Array.isArray(items), 'TicketsList payload: ' + JSON.stringify(json.data)).to.eql(true);",
+                  "  pm.expect(items.length, 'count:5 must cap the page size').to.be.at.most(5);",
+                  "  if (firstPageCount > 1 && items.length > 0) {",
+                  "    pm.expect(items[0].id, 'offset:1 returned the same first row as offset:0').to.not.eql(firstPageFirst);",
+                  "  }",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "TicketsList - Negative (invalid count)",
@@ -334,15 +581,24 @@
             "url": "{{baseUrl}}/graphql",
             "description": "Send invalid count boundary. Controller clamps count to >=1."
           },
-          "event": [{
-            "listen": "test",
-            "script": { "type": "text/javascript", "exec": [
-              "const json = pm.response.json();",
-              "pm.test('Negative count handled without crash', function () {",
-              "  pm.expect(json.data || json.errors).to.exist;",
-              "});"
-            ] }
-          }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Verified behaviour: a negative count is ignored rather than rejected - the server",
+                  "// answers with a normal page. Pinned explicitly so a change of contract shows up.",
+                  "const json = pm.response.json();",
+                  "const items = json.data && json.data.TicketsList && json.data.TicketsList.items;",
+                  "pm.test('Negative count is ignored and a normal page is returned', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(Array.isArray(items), 'TicketsList payload: ' + JSON.stringify(json.data)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -367,20 +623,26 @@
                 "url": "{{baseUrl}}/graphql",
                 "description": "Create new ticket in context of external entity."
               },
-              "event": [{
-                "listen": "test",
-                "script": { "type": "text/javascript", "exec": [
-                  "const json = pm.response.json();",
-                  "pm.test('Ticket created without GraphQL errors', function () {",
-                  "  pm.expect(json.errors || []).to.have.length(0);",
-                  "});",
-                  "const ticketId = json.data && json.data.CreateEntityContextTicket && json.data.CreateEntityContextTicket.id;",
-                  "pm.test('Created ticket id exists', function () {",
-                  "  pm.expect(ticketId).to.be.a('string').and.not.empty;",
-                  "});",
-                  "pm.environment.set('ticketId', ticketId);"
-                ] }
-              }]
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const id = json.data && json.data.CreateEntityContextTicket && json.data.CreateEntityContextTicket.id;",
+                      "pm.test('Ticket is created without GraphQL errors', function () {",
+                      "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                      "  pm.expect(id, 'CreateEntityContextTicket payload: ' + JSON.stringify(json.data)).to.be.a('string').and.not.empty;",
+                      "});",
+                      "if (id) pm.environment.set('ticketId', id);",
+                      "// Freeze the title actually used for this ticket - the collection prerequest",
+                      "// rebuilds ticketTitle with a fresh random suffix before every single request.",
+                      "pm.environment.set('createdTicketTitle', pm.environment.get('ticketTitle'));"
+                    ]
+                  }
+                }
+              ]
             },
             {
               "name": "CreateEntityContextTicket - Positive (unicode and specials)",
@@ -397,12 +659,22 @@
                 "url": "{{baseUrl}}/graphql",
                 "description": "Boundary content with unicode and special characters."
               },
-              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-                "const json = pm.response.json();",
-                "pm.test('Unicode create handled', function () {",
-                "  pm.expect(json.data || json.errors).to.exist;",
-                "});"
-              ] } }]
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const id = json.data && json.data.CreateEntityContextTicket && json.data.CreateEntityContextTicket.id;",
+                      "pm.test('Unicode title and display name are accepted', function () {",
+                      "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                      "  pm.expect(id, 'CreateEntityContextTicket payload: ' + JSON.stringify(json.data)).to.be.a('string').and.not.empty;",
+                      "});"
+                    ]
+                  }
+                }
+              ]
             },
             {
               "name": "CreateEntityContextTicket - Negative (missing title)",
@@ -419,13 +691,25 @@
                 "url": "{{baseUrl}}/graphql",
                 "description": "Business rule: title.trimmed() must be non-empty."
               },
-              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-                "const json = pm.response.json();",
-                "const id = json.data && json.data.CreateEntityContextTicket && json.data.CreateEntityContextTicket.id;",
-                "pm.test('Missing title is rejected', function () {",
-                "  pm.expect(!id || (json.errors || []).length > 0).to.eql(true);",
-                "});"
-              ] } }]
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "// Verified refusal text from imtdeskgql - pinning it keeps an unrelated failure",
+                      "// (bad request, server error) from satisfying this negative case.",
+                      "const json = pm.response.json();",
+                      "const id = json.data && json.data.CreateEntityContextTicket && json.data.CreateEntityContextTicket.id;",
+                      "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
+                      "pm.test('A blank title is refused with the required-fields reason', function () {",
+                      "  pm.expect(messages, 'expected a validation refusal, got: ' + JSON.stringify(json)).to.match(/Entity context and title are required/i);",
+                      "  pm.expect(!!id, 'a ticket was created despite the blank title').to.eql(false);",
+                      "});"
+                    ]
+                  }
+                }
+              ]
             },
             {
               "name": "OpenDocument (ticket)",
@@ -442,20 +726,28 @@
                 "url": "{{baseUrl}}/graphql",
                 "description": "Open ticket as document to get documentId for Get/Update representation calls."
               },
-              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-                "const json = pm.response.json();",
-                "pm.test('OpenDocument success', function () {",
-                "  pm.expect(json.errors || []).to.have.length(0);",
-                "});",
-                "const info = json.data && json.data.OpenDocument;",
-                "pm.test('OpenDocument returns documentId', function () {",
-                "  pm.expect(info).to.be.an('object');",
-                "  pm.expect(info.documentId).to.be.a('string').and.not.empty;",
-                "});",
-                "if (info && info.documentId) {",
-                "  pm.environment.set('documentId', info.documentId);",
-                "}"
-              ] } }]
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "pm.test('OpenDocument success', function () {",
+                      "  pm.expect(json.errors || []).to.have.length(0);",
+                      "});",
+                      "const info = json.data && json.data.OpenDocument;",
+                      "pm.test('OpenDocument returns documentId', function () {",
+                      "  pm.expect(info).to.be.an('object');",
+                      "  pm.expect(info.documentId).to.be.a('string').and.not.empty;",
+                      "});",
+                      "if (info && info.documentId) {",
+                      "  pm.environment.set('documentId', info.documentId);",
+                      "}"
+                    ]
+                  }
+                }
+              ]
             },
             {
               "name": "Wait for ticket document load",
@@ -473,24 +765,43 @@
                 "description": "OpenDocument only registers the document; its data is loaded in a background thread (TCollectionDocumentServiceWrap::DoOpenDocument in ImtCore) and the document reports isLoading until that finishes. Every read/write against a still-loading document fails, so this request polls the representation until it becomes readable."
               },
               "event": [
-                { "listen": "prerequest", "script": { "type": "text/javascript", "exec": [
-                  "const attempt = Number(pm.environment.get('docLoadAttempt') || 0);",
-                  "if (attempt > 0) { setTimeout(function () {}, 200); }"
-                ] } },
-                { "listen": "test", "script": { "type": "text/javascript", "exec": [
-                  "const json = pm.response.json();",
-                  "const rep = json.data && json.data.GetTicketRepresentation;",
-                  "const attempt = Number(pm.environment.get('docLoadAttempt') || 0);",
-                  "if (!(rep && rep.id) && attempt < 50) {",
-                  "  pm.environment.set('docLoadAttempt', attempt + 1);",
-                  "  postman.setNextRequest('Wait for ticket document load');",
-                  "} else {",
-                  "  pm.environment.unset('docLoadAttempt');",
-                  "  pm.test('Ticket document finished loading', function () {",
-                  "    pm.expect(rep && rep.id).to.be.a('string');",
-                  "  });",
-                  "}"
-                ] } }
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "// Postman's sandbox does not honour setTimeout for pacing, so space the re-polls",
+                      "// with a short bounded busy-wait and only on an actual retry.",
+                      "if (parseInt(pm.environment.get('docLoadAttempt') || '0', 10) > 0) {",
+                      "  const until = Date.now() + 100;",
+                      "  while (Date.now() < until) { /* spin */ }",
+                      "}"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "// OpenDocument loads on a background thread; poll until the representation reads.",
+                      "const json = pm.response.json();",
+                      "const rep = json.data && json.data.GetTicketRepresentation;",
+                      "const attempt = parseInt(pm.environment.get('docLoadAttempt') || '0', 10);",
+                      "const maxAttempts = 50;",
+                      "if (rep && rep.id) {",
+                      "  pm.environment.set('docLoadAttempt', '0');",
+                      "  pm.test('Ticket document finished loading', function () { pm.expect(rep.id).to.be.a('string').and.not.empty; });",
+                      "} else if (attempt < maxAttempts) {",
+                      "  pm.environment.set('docLoadAttempt', String(attempt + 1));",
+                      "  postman.setNextRequest('Wait for ticket document load');",
+                      "} else {",
+                      "  pm.environment.set('docLoadAttempt', '0');",
+                      "  pm.test('Ticket document finished loading', function () { pm.expect.fail('document still not readable after ' + maxAttempts + ' polls: ' + JSON.stringify(json)); });",
+                      "}"
+                    ]
+                  }
+                }
               ]
             },
             {
@@ -508,21 +819,25 @@
                 "url": "{{baseUrl}}/graphql",
                 "description": "Read complete ticket representation for update workflows."
               },
-              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-                "const json = pm.response.json();",
-                "pm.test('GetTicketRepresentation success', function () {",
-                "  pm.expect(json.errors || []).to.have.length(0);",
-                "});",
-                "const t = json.data && json.data.GetTicketRepresentation;",
-                "pm.test('Representation has id/title', function () {",
-                "  pm.expect(t).to.be.an('object');",
-                "  pm.expect(t.id).to.be.a('string').and.not.empty;",
-                "  pm.expect(t.title).to.be.a('string');",
-                "});",
-                "if (t && t.number !== null && t.number !== undefined) {",
-                "  pm.environment.set('ticketNumber', String(t.number));",
-                "}"
-              ] } }]
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const t = json.data && json.data.GetTicketRepresentation;",
+                      "pm.test('Representation matches the ticket that was created', function () {",
+                      "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                      "  pm.expect(t, 'GetTicketRepresentation payload: ' + JSON.stringify(json.data)).to.be.an('object');",
+                      "  pm.expect(t.id).to.be.a('string').and.not.empty;",
+                      "  pm.expect(t.title, 'title does not match the created ticket').to.eql(pm.environment.get('createdTicketTitle'));",
+                      "});",
+                      "if (t && t.number !== null && t.number !== undefined) pm.environment.set('ticketNumber', String(t.number));"
+                    ]
+                  }
+                }
+              ]
             },
             {
               "name": "UpdateTicketFromRepresentation - Positive (assign + priority)",
@@ -532,20 +847,28 @@
                 "body": {
                   "mode": "graphql",
                   "graphql": {
-                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{documentId}}\", ticket: { id: \"{{ticketId}}\", title: \"{{ticketTitle}}\", priority: High, assigneeIds: [\"{{agentUserId}}\"], status: Open, stateReason: None } }) { status } }",
+                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{documentId}}\", ticket: { id: \"{{ticketId}}\", title: \"{{createdTicketTitle}}\", priority: High, assigneeIds: [\"{{agentUserId}}\"], status: Open, stateReason: None } }) { status } }",
                     "variables": ""
                   }
                 },
                 "url": "{{baseUrl}}/graphql",
                 "description": "Assign ticket to agent and escalate priority."
               },
-              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-                "const json = pm.response.json();",
-                "const status = json.data && json.data.UpdateTicketFromRepresentation && json.data.UpdateTicketFromRepresentation.status;",
-                "pm.test('Update is successful', function () {",
-                "  pm.expect(status).to.eql('Success');",
-                "});"
-              ] } }]
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const status = json.data && json.data.UpdateTicketFromRepresentation && json.data.UpdateTicketFromRepresentation.status;",
+                      "pm.test('Update is successful', function () {",
+                      "  pm.expect(status).to.eql('Success');",
+                      "});"
+                    ]
+                  }
+                }
+              ]
             },
             {
               "name": "UpdateTicketFromRepresentation - Positive (close)",
@@ -555,18 +878,26 @@
                 "body": {
                   "mode": "graphql",
                   "graphql": {
-                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{documentId}}\", ticket: { id: \"{{ticketId}}\", title: \"{{ticketTitle}}\", status: Closed, stateReason: Completed } }) { status } }",
+                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{documentId}}\", ticket: { id: \"{{ticketId}}\", title: \"{{createdTicketTitle}}\", status: Closed, stateReason: Completed } }) { status } }",
                     "variables": ""
                   }
                 },
                 "url": "{{baseUrl}}/graphql",
                 "description": "Close ticket and set stateReason + timestamps."
               },
-              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-                "const d = (pm.response.json().data || {});",
-                "const status = d.UpdateTicketFromRepresentation && d.UpdateTicketFromRepresentation.status;",
-                "pm.test('Close operation success', function () { pm.expect(status).to.eql('Success'); });"
-              ] } }]
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const d = (pm.response.json().data || {});",
+                      "const status = d.UpdateTicketFromRepresentation && d.UpdateTicketFromRepresentation.status;",
+                      "pm.test('Close operation success', function () { pm.expect(status).to.eql('Success'); });"
+                    ]
+                  }
+                }
+              ]
             },
             {
               "name": "UpdateTicketFromRepresentation - Positive (reopen)",
@@ -576,18 +907,26 @@
                 "body": {
                   "mode": "graphql",
                   "graphql": {
-                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{documentId}}\", ticket: { id: \"{{ticketId}}\", title: \"{{ticketTitle}}\", status: Open, stateReason: Reopened } }) { status } }",
+                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{documentId}}\", ticket: { id: \"{{ticketId}}\", title: \"{{createdTicketTitle}}\", status: Open, stateReason: Reopened } }) { status } }",
                     "variables": ""
                   }
                 },
                 "url": "{{baseUrl}}/graphql",
                 "description": "Reopen closed ticket to validate workflow transition."
               },
-              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-                "const d = (pm.response.json().data || {});",
-                "const status = d.UpdateTicketFromRepresentation && d.UpdateTicketFromRepresentation.status;",
-                "pm.test('Reopen operation success', function () { pm.expect(status).to.eql('Success'); });"
-              ] } }]
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const d = (pm.response.json().data || {});",
+                      "const status = d.UpdateTicketFromRepresentation && d.UpdateTicketFromRepresentation.status;",
+                      "pm.test('Reopen operation success', function () { pm.expect(status).to.eql('Success'); });"
+                    ]
+                  }
+                }
+              ]
             },
             {
               "name": "UpdateTicketFromRepresentation - Negative (invalid documentId)",
@@ -604,12 +943,20 @@
                 "url": "{{baseUrl}}/graphql",
                 "description": "Expect InvalidDocumentId or Failed for unknown id."
               },
-              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-                "const status = pm.response.json().data && pm.response.json().data.UpdateTicketFromRepresentation && ((pm.response.json().data || {}).UpdateTicketFromRepresentation || {}).status;",
-                "pm.test('Unknown document id rejected', function () {",
-                "  pm.expect(['InvalidDocumentId','Failed']).to.include(status);",
-                "});"
-              ] } }]
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const status = pm.response.json().data && pm.response.json().data.UpdateTicketFromRepresentation && ((pm.response.json().data || {}).UpdateTicketFromRepresentation || {}).status;",
+                      "pm.test('Unknown document id rejected', function () {",
+                      "  pm.expect(['InvalidDocumentId','Failed']).to.include(status);",
+                      "});"
+                    ]
+                  }
+                }
+              ]
             }
           ]
         },
@@ -623,17 +970,25 @@
                 "body": {
                   "mode": "graphql",
                   "graphql": {
-                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{documentId}}\", ticket: { id: \"{{ticketId}}\", title: \"{{ticketTitle}}\", comments: [{ content: \"First comment from API run {{runId}}\" }] } }) { status } }",
+                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{documentId}}\", ticket: { id: \"{{ticketId}}\", title: \"{{createdTicketTitle}}\", comments: [{ content: \"First comment from API run {{runId}}\" }] } }) { status } }",
                     "variables": ""
                   }
                 },
                 "url": "{{baseUrl}}/graphql",
                 "description": "Create ticket comment through update-representation API."
               },
-              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-                "const status = ((pm.response.json().data || {}).UpdateTicketFromRepresentation || {}).status;",
-                "pm.test('Comment create accepted', function () { pm.expect(status).to.eql('Success'); });"
-              ] } }]
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const status = ((pm.response.json().data || {}).UpdateTicketFromRepresentation || {}).status;",
+                      "pm.test('Comment create accepted', function () { pm.expect(status).to.eql('Success'); });"
+                    ]
+                  }
+                }
+              ]
             },
             {
               "name": "GetTicketRepresentation - Extract comment id",
@@ -649,15 +1004,25 @@
                 "url": "{{baseUrl}}/graphql",
                 "description": "Read comments and capture latest comment id for edit/delete tests."
               },
-              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-                "const json = pm.response.json();",
-                "const comments = json.data && json.data.GetTicketRepresentation && json.data.GetTicketRepresentation.comments || [];",
-                "if (comments.length > 0) {",
-                "  const last = comments[comments.length - 1];",
-                "  pm.environment.set('createdCommentId', last.id);",
-                "}",
-                "pm.test('Comment list loaded', function () { pm.expect(Array.isArray(comments)).to.eql(true); });"
-              ] } }]
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const comments = (json.data && json.data.GetTicketRepresentation && json.data.GetTicketRepresentation.comments) || [];",
+                      "pm.test('The comment added above is present on the ticket', function () {",
+                      "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                      "  pm.expect(comments.length, 'no comments came back: ' + JSON.stringify(json.data)).to.be.above(0);",
+                      "  const contents = comments.map(function (c) { return c.content || ''; }).join(' | ');",
+                      "  pm.expect(contents, 'the created comment is missing').to.match(/First comment from API run/i);",
+                      "});",
+                      "if (comments.length > 0) pm.environment.set('createdCommentId', comments[comments.length - 1].id);"
+                    ]
+                  }
+                }
+              ]
             },
             {
               "name": "Edit comment - Positive",
@@ -666,17 +1031,25 @@
                 "body": {
                   "mode": "graphql",
                   "graphql": {
-                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{documentId}}\", ticket: { id: \"{{ticketId}}\", title: \"{{ticketTitle}}\", comments: [{ id: \"{{createdCommentId}}\", content: \"Edited comment {{runId}}\" }] } }) { status } }",
+                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{documentId}}\", ticket: { id: \"{{ticketId}}\", title: \"{{createdTicketTitle}}\", comments: [{ id: \"{{createdCommentId}}\", content: \"Edited comment {{runId}}\" }] } }) { status } }",
                     "variables": ""
                   }
                 },
                 "url": "{{baseUrl}}/graphql",
                 "description": "Edit existing comment by id."
               },
-              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-                "const status = ((pm.response.json().data || {}).UpdateTicketFromRepresentation || {}).status;",
-                "pm.test('Comment edit success', function () { pm.expect(status).to.eql('Success'); });"
-              ] } }]
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const status = ((pm.response.json().data || {}).UpdateTicketFromRepresentation || {}).status;",
+                      "pm.test('Comment edit success', function () { pm.expect(status).to.eql('Success'); });"
+                    ]
+                  }
+                }
+              ]
             },
             {
               "name": "Delete comment - Positive",
@@ -685,17 +1058,25 @@
                 "body": {
                   "mode": "graphql",
                   "graphql": {
-                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{documentId}}\", ticket: { id: \"{{ticketId}}\", title: \"{{ticketTitle}}\", comments: [{ id: \"{{createdCommentId}}\", deleted: true }] } }) { status } }",
+                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{documentId}}\", ticket: { id: \"{{ticketId}}\", title: \"{{createdTicketTitle}}\", comments: [{ id: \"{{createdCommentId}}\", deleted: true }] } }) { status } }",
                     "variables": ""
                   }
                 },
                 "url": "{{baseUrl}}/graphql",
                 "description": "Soft delete comment via deleted=true flag."
               },
-              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-                "const status = ((pm.response.json().data || {}).UpdateTicketFromRepresentation || {}).status;",
-                "pm.test('Comment delete success', function () { pm.expect(status).to.eql('Success'); });"
-              ] } }]
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const status = ((pm.response.json().data || {}).UpdateTicketFromRepresentation || {}).status;",
+                      "pm.test('Comment delete success', function () { pm.expect(status).to.eql('Success'); });"
+                    ]
+                  }
+                }
+              ]
             }
           ]
         },
@@ -709,17 +1090,25 @@
                 "body": {
                   "mode": "graphql",
                   "graphql": {
-                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{documentId}}\", ticket: { id: \"{{ticketId}}\", title: \"{{ticketTitle}}\", comments: [{ content: \"Attachment comment\", attachments: [{ id: \"{{uploadedAttachmentId}}\" }] }] } }) { status } }",
+                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{documentId}}\", ticket: { id: \"{{ticketId}}\", title: \"{{createdTicketTitle}}\", comments: [{ content: \"Attachment comment\", attachments: [{ id: \"{{uploadedAttachmentId}}\" }] }] } }) { status } }",
                     "variables": ""
                   }
                 },
                 "url": "{{baseUrl}}/graphql",
                 "description": "Use pre-uploaded attachment id (uuid.ext) to bind file into comment."
               },
-              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-                "const status = ((pm.response.json().data || {}).UpdateTicketFromRepresentation || {}).status;",
-                "pm.test('Attachment comment success', function () { pm.expect(status).to.eql('Success'); });"
-              ] } }]
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const status = ((pm.response.json().data || {}).UpdateTicketFromRepresentation || {}).status;",
+                      "pm.test('Attachment comment success', function () { pm.expect(status).to.eql('Success'); });"
+                    ]
+                  }
+                }
+              ]
             }
           ]
         },
@@ -740,10 +1129,24 @@
                 "url": "{{baseUrl}}/graphql",
                 "description": "Search tickets in a specific entity context."
               },
-              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-                "const items = (pm.response.json().data || {}).EntityContextTickets ? (pm.response.json().data.EntityContextTickets.items || []) : [];",
-                "pm.test('Entity context query returns list', function () { pm.expect(Array.isArray(items)).to.eql(true); });"
-              ] } }]
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const items = (json.data && json.data.EntityContextTickets && json.data.EntityContextTickets.items) || [];",
+                      "pm.test('Entity context returns the ticket created for this entity', function () {",
+                      "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                      "  pm.expect(items.length, 'no tickets for the run entity: ' + JSON.stringify(json.data)).to.be.above(0);",
+                      "  const ids = items.map(function (i) { return i.id; });",
+                      "  pm.expect(ids, 'the ticket created in this run is missing from its own entity context').to.include(pm.environment.get('ticketId'));",
+                      "});"
+                    ]
+                  }
+                }
+              ]
             },
             {
               "name": "EntityContextTickets - Negative (missing entityType)",
@@ -759,13 +1162,23 @@
                 "url": "{{baseUrl}}/graphql",
                 "description": "Controller expects non-empty entityType + entityId."
               },
-              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-                "const json = pm.response.json();",
-                "const dataItems = json.data && json.data.EntityContextTickets && json.data.EntityContextTickets.items;",
-                "pm.test('Missing entityType is rejected or returns empty data', function () {",
-                "  pm.expect((json.errors || []).length > 0 || !dataItems || dataItems.length === 0).to.eql(true);",
-                "});"
-              ] } }]
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const items = json.data && json.data.EntityContextTickets && json.data.EntityContextTickets.items;",
+                      "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
+                      "pm.test('An empty entity type is refused with the empty-context reason', function () {",
+                      "  pm.expect(messages, 'expected a validation refusal, got: ' + JSON.stringify(json)).to.match(/Entity context is empty/i);",
+                      "  pm.expect(!!items, 'a result set was returned despite the refusal').to.eql(false);",
+                      "});"
+                    ]
+                  }
+                }
+              ]
             },
             {
               "name": "EntityContextTickets - Negative (unknown entityId)",
@@ -781,11 +1194,53 @@
                 "url": "{{baseUrl}}/graphql",
                 "description": "Unknown context should produce empty list."
               },
-              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-                "const json = pm.response.json();",
-                "const items = (json.data && json.data.EntityContextTickets && json.data.EntityContextTickets.items) || [];",
-                "pm.test('Unknown context returns no hits', function () { pm.expect(items.length).to.eql(0); });"
-              ] } }]
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const items = (json.data && json.data.EntityContextTickets && json.data.EntityContextTickets.items) || [];",
+                      "pm.test('Unknown context returns no hits', function () { pm.expect(items.length).to.eql(0); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "EntityContextTickets - Negative (other entity type)",
+              "request": {
+                "url": "{{baseUrl}}/graphql",
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "query EntityContextTickets { EntityContextTickets(input: { entityType: \"Order\", entityId: \"{{entityId}}\", viewParams: { offset: 0, count: 10 } }) { items { id } } }",
+                    "variables": ""
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "// Same entity id, different entity type: the run only ever created Account-context",
+                      "// tickets, so the entity type must be part of the lookup key.",
+                      "const json = pm.response.json();",
+                      "const items = (json.data && json.data.EntityContextTickets && json.data.EntityContextTickets.items) || [];",
+                      "pm.test('A different entity type does not return this entity tickets', function () {",
+                      "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                      "  pm.expect(items.length, 'tickets leaked across entity types: ' + JSON.stringify(items)).to.eql(0);",
+                      "});"
+                    ]
+                  }
+                }
+              ]
             }
           ]
         }
@@ -836,7 +1291,9 @@
         {
           "name": "401/403 probe - no token",
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "body": {
               "mode": "graphql",
@@ -848,14 +1305,36 @@
             "url": "{{baseUrl}}/graphql",
             "description": "Unauthorized access without x-authentication-token."
           },
-          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-            "const json = pm.response.json();",
-            "pm.test('No-token request is handled (rejected or served read-only)', function () {",
-            "  const code = pm.response.code;",
-            "  if (code === 200) { pm.expect(json.data || json.errors).to.exist; }",
-            "  else { pm.expect([401, 403]).to.include(code); }",
-            "});"
-          ] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// An unauthenticated caller must not receive ticket data. The server used to serve",
+                  "// the full list here while an authenticated user with no permissions correctly got an",
+                  "// empty page - CTicketCollectionControllerComp::SetAdditionalFilters skipped the",
+                  "// visibility filter whenever there was no resolved user, so \"anonymous\" was treated",
+                  "// like \"administrator\". It now installs the filter for every non-admin caller, and an",
+                  "// empty user id makes the ticket repository emit WHERE 1=0.",
+                  "const code = pm.response.code;",
+                  "let json = {}; try { json = pm.response.json(); } catch (e) { json = {}; }",
+                  "const list = json.data && json.data.TicketsList;",
+                  "const items = (list && list.items) || [];",
+                  "pm.test('An unauthenticated caller receives no ticket data', function () {",
+                  "  if (code !== 200) {",
+                  "    pm.expect([401, 403], 'unexpected status for an unauthenticated request').to.include(code);",
+                  "    return;",
+                  "  }",
+                  "  pm.expect(items.length, 'unauthenticated request was served ticket data: ' + JSON.stringify(json).slice(0, 300)).to.eql(0);",
+                  "  if (list && list.notification && list.notification.totalCount !== undefined) {",
+                  "    pm.expect(list.notification.totalCount, 'totalCount leaks the real collection size').to.eql(0);",
+                  "  }",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "401/403 probe - invalid token",
@@ -863,9 +1342,21 @@
             "auth": {
               "type": "apikey",
               "apikey": [
-                { "key": "key", "value": "x-authentication-token", "type": "string" },
-                { "key": "value", "value": "{{invalidToken}}", "type": "string" },
-                { "key": "in", "value": "header", "type": "string" }
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{invalidToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
               ]
             },
             "method": "POST",
@@ -879,47 +1370,206 @@
             "url": "{{baseUrl}}/graphql",
             "description": "Invalid token should be denied."
           },
-          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-            "pm.test('Invalid token is rejected', function () {",
-            "  const code = pm.response.code;",
-            "  if (code === 200) {",
-            "    const json = pm.response.json();",
-            "    pm.expect((json.errors || []).length > 0).to.eql(true);",
-            "  } else {",
-            "    pm.expect([401, 403]).to.include(code);",
-            "  }",
-            "});"
-          ] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const code = pm.response.code;",
+                  "let json = {}; try { json = pm.response.json(); } catch (e) { json = {}; }",
+                  "pm.test('An invalid token is rejected', function () {",
+                  "  if (code === 200) {",
+                  "    pm.expect((json.errors || []).length > 0, 'invalid token was accepted: ' + JSON.stringify(json).slice(0, 300)).to.eql(true);",
+                  "  } else {",
+                  "    pm.expect([401, 403]).to.include(code);",
+                  "  }",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
-          "name": "Forbidden edit probe - insufficient rights",
+          "name": "Forbidden edit probe: outsider opens the ticket",
           "request": {
-            "auth": {
-              "type": "apikey",
-              "apikey": [
-                { "key": "key", "value": "x-authentication-token", "type": "string" },
-                { "key": "value", "value": "{{clientToken}}", "type": "string" },
-                { "key": "in", "value": "header", "type": "string" }
-              ]
-            },
+            "url": "{{baseUrl}}/graphql",
             "method": "POST",
+            "header": [],
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{documentId}}\", ticket: { id: \"{{ticketId}}\", title: \"Client tries forbidden core edit {{randomInt}}\" } }) { status } }",
+                "query": "mutation OpenDocument { OpenDocument(input: { collectionId: \"Tickets\", id: \"{{ticketId}}\" }) { documentId } }",
                 "variables": ""
               }
             },
-            "url": "{{baseUrl}}/graphql",
-            "description": "Try core edit by user that should not own full access. Working documents are registered per user, so a foreign documentId is not addressable at all and the server answers InvalidDocumentId; an explicit permission rejection (errors or Failed) is equally acceptable. Success is tolerated because the probing user may legitimately be the reporter of the ticket that is currently open."
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{outsiderToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
           },
-          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-            "const json = pm.response.json();",
-            "const status = json.data && json.data.UpdateTicketFromRepresentation && json.data.UpdateTicketFromRepresentation.status;",
-            "pm.test('Forbidden edit is denied or explicitly failed', function () {",
-            "  pm.expect((json.errors || []).length > 0 || status === 'Failed' || status === 'InvalidDocumentId' || status === 'Success').to.eql(true);",
-            "});"
-          ] } }]
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const info = json.data && json.data.OpenDocument;",
+                  "pm.test('Outsider opens the ticket in its own workspace', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(info && info.documentId, 'OpenDocument payload: ' + JSON.stringify(json.data)).to.be.a('string').and.not.empty;",
+                  "});",
+                  "if (info && info.documentId) pm.environment.set('outsiderDocumentId', info.documentId);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Forbidden edit probe: outsider cannot read the ticket",
+          "request": {
+            "url": "{{baseUrl}}/graphql",
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetTicketRepresentation { GetTicketRepresentation(input: { id: \"{{outsiderDocumentId}}\" }) { id number title description status priority assigneeIds reporterId comments { id content } } }",
+                "variables": ""
+              }
+            },
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{outsiderToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
+                  "const t = json.data && json.data.GetTicketRepresentation;",
+                  "pm.test('An unrelated user cannot read a ticket it does not own', function () {",
+                  "  pm.expect(messages, 'expected an access refusal, got: ' + JSON.stringify(json).slice(0, 300)).to.match(/do not have access to this ticket/i);",
+                  "  pm.expect(!!(t && t.id), 'the ticket was returned despite the refusal').to.eql(false);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Forbidden edit probe: outsider cannot edit the ticket",
+          "request": {
+            "url": "{{baseUrl}}/graphql",
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{outsiderDocumentId}}\", ticket: { id: \"{{ticketId}}\", title: \"Outsider tries a forbidden edit {{randomInt}}\" } }) { status } }",
+                "variables": ""
+              }
+            },
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{outsiderToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (parseInt(pm.environment.get('forbiddenEditAttempt') || '0', 10) > 0) {",
+                  "  const until = Date.now() + 100;",
+                  "  while (Date.now() < until) { /* spin */ }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// InvalidDocumentId means the background load has not finished yet - retry rather",
+                  "// than accept it, so the permission refusal is what actually gets asserted.",
+                  "const json = pm.response.json();",
+                  "const status = json.data && json.data.UpdateTicketFromRepresentation && json.data.UpdateTicketFromRepresentation.status;",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
+                  "const attempt = parseInt(pm.environment.get('forbiddenEditAttempt') || '0', 10);",
+                  "const maxAttempts = 30;",
+                  "if (status === 'InvalidDocumentId' && attempt < maxAttempts) {",
+                  "  pm.environment.set('forbiddenEditAttempt', String(attempt + 1));",
+                  "  postman.setNextRequest('Forbidden edit probe: outsider cannot edit the ticket');",
+                  "} else {",
+                  "  pm.environment.set('forbiddenEditAttempt', '0');",
+                  "  pm.test('An unrelated user is refused with the cannot-edit reason', function () {",
+                  "    pm.expect(messages, 'expected a permission refusal, got: ' + JSON.stringify(json).slice(0, 300)).to.match(/Permission denied: you cannot edit this ticket/i);",
+                  "    pm.expect(status, 'the edit was accepted for an unrelated user').to.not.eql('Success');",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Boundary title length (very long)",
@@ -935,12 +1585,24 @@
             "url": "{{baseUrl}}/graphql",
             "description": "Long-string boundary probe."
           },
-          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-            "const status = pm.response.json().data && pm.response.json().data.UpdateTicketFromRepresentation && ((pm.response.json().data || {}).UpdateTicketFromRepresentation || {}).status;",
-            "pm.test('Long title request returns defined outcome', function () {",
-            "  pm.expect(['Success','Failed','InvalidDocumentData','InvalidDocumentId']).to.include(status);",
-            "});"
-          ] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Verified behaviour: there is no server-side title length limit - a very long title",
+                  "// is stored as-is. Pinned so that introducing a limit shows up as a test change.",
+                  "const json = pm.response.json();",
+                  "const status = json.data && json.data.UpdateTicketFromRepresentation && json.data.UpdateTicketFromRepresentation.status;",
+                  "pm.test('A very long title is accepted', function () {",
+                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(status, 'UpdateTicketFromRepresentation payload: ' + JSON.stringify(json.data)).to.eql('Success');",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -951,219 +1613,1009 @@
           "name": "Full Lifecycle (Client -> Manager -> Agent -> Client)",
           "item": [
             {
-              "name": "Switch token to client",
+              "name": "Lifecycle: client creates the ticket",
               "request": {
-                "method": "POST",
-                "body": {
-                  "mode": "graphql",
-                  "graphql": {
-                    "query": "query PingLifecycleClient { TicketsList(input: { viewParams: { offset: 0, count: 1 } }) { items { id } } }",
-                    "variables": ""
-                  }
-                },
                 "url": "{{baseUrl}}/graphql",
-                "description": "Helper step to force client-context execution."
-              },
-              "event": [{ "listen": "prerequest", "script": { "type": "text/javascript", "exec": [
-                "if (pm.environment.get('clientToken')) { pm.environment.set('token', pm.environment.get('clientToken')); }"
-              ] } }]
-            },
-            {
-              "name": "Create ticket by client",
-              "request": {
                 "method": "POST",
+                "header": [],
                 "body": {
                   "mode": "graphql",
                   "graphql": {
-                    "query": "mutation CreateEntityContextTicket { CreateEntityContextTicket(input: { entityType: \"{{entityType}}\", entityId: \"{{entityId}}\", entityDisplayName: \"{{entityDisplayName}}\", title: \"Lifecycle {{ticketTitle}}\", description: \"Lifecycle create by client\" }) { id } }",
+                    "query": "mutation CreateEntityContextTicket { CreateEntityContextTicket(input: { entityType: \"{{entityType}}\", entityId: \"{{entityId}}\", entityDisplayName: \"{{entityDisplayName}}\", title: \"Lifecycle {{ticketTitle}}\", description: \"Reported by the client actor\" }) { id } }",
                     "variables": ""
                   }
                 },
-                "url": "{{baseUrl}}/graphql"
+                "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                    {
+                      "key": "key",
+                      "value": "x-authentication-token",
+                      "type": "string"
+                    },
+                    {
+                      "key": "value",
+                      "value": "{{clientToken}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
+                }
               },
-              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-                "const id = pm.response.json().data && pm.response.json().data.CreateEntityContextTicket && pm.response.json().data.CreateEntityContextTicket.id;",
-                "if (id) pm.environment.set('ticketId', id);",
-                "pm.test('Lifecycle ticket created', function () { pm.expect(id).to.be.a('string').and.not.empty; });"
-              ] } }]
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "// The client actor is a real, separate user, so it becomes the ticket reporter -",
+                      "// which is what makes the permission steps further down meaningful.",
+                      "const json = pm.response.json();",
+                      "const id = json.data && json.data.CreateEntityContextTicket && json.data.CreateEntityContextTicket.id;",
+                      "pm.test('Client creates the lifecycle ticket', function () {",
+                      "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                      "  pm.expect(id, 'CreateEntityContextTicket payload: ' + JSON.stringify(json.data)).to.be.a('string').and.not.empty;",
+                      "});",
+                      "if (id) pm.environment.set('lifecycleTicketId', id);",
+                      "pm.environment.set('lifecycleTitle', 'Lifecycle ' + pm.environment.get('ticketTitle'));"
+                    ]
+                  }
+                }
+              ]
             },
             {
-              "name": "OpenDocument (lifecycle ticket)",
+              "name": "Lifecycle: client opens the ticket",
               "request": {
-                "method": "POST",
-                "body": {
-                  "mode": "graphql",
-                  "graphql": {
-                    "query": "mutation OpenDocument { OpenDocument(input: { collectionId: \"Tickets\", id: \"{{ticketId}}\" }) { documentId documentName objectId } }",
-                    "variables": ""
-                  }
-                },
                 "url": "{{baseUrl}}/graphql",
-                "description": "Open lifecycle ticket as document for subsequent updates."
-              },
-              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-                "const info = (pm.response.json().data || {}).OpenDocument;",
-                "if (info && info.documentId) { pm.environment.set('documentId', info.documentId); }",
-                "pm.test('Lifecycle OpenDocument ok', function () { pm.expect(info && info.documentId).to.be.a('string'); });"
-              ] } }]
-            },
-            {
-              "name": "Wait for lifecycle document load",
-              "request": {
                 "method": "POST",
+                "header": [],
                 "body": {
                   "mode": "graphql",
                   "graphql": {
-                    "query": "query GetTicketRepresentation { GetTicketRepresentation(input: { id: \"{{documentId}}\" }) { id } }",
+                    "query": "mutation OpenDocument { OpenDocument(input: { collectionId: \"Tickets\", id: \"{{lifecycleTicketId}}\" }) { documentId } }",
                     "variables": ""
                   }
                 },
+                "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                    {
+                      "key": "key",
+                      "value": "x-authentication-token",
+                      "type": "string"
+                    },
+                    {
+                      "key": "value",
+                      "value": "{{clientToken}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const info = json.data && json.data.OpenDocument;",
+                      "pm.test('Client opens the lifecycle ticket in its own workspace', function () {",
+                      "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                      "  pm.expect(info && info.documentId, 'OpenDocument payload: ' + JSON.stringify(json.data)).to.be.a('string').and.not.empty;",
+                      "});",
+                      "if (info && info.documentId) pm.environment.set('lifecycleClientDocId', info.documentId);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Lifecycle: wait for client document load",
+              "request": {
                 "url": "{{baseUrl}}/graphql",
-                "description": "OpenDocument only registers the document; its data is loaded in a background thread (TCollectionDocumentServiceWrap::DoOpenDocument in ImtCore) and the document reports isLoading until that finishes. Every read/write against a still-loading document fails, so this request polls the representation until it becomes readable."
-              },
-              "event": [
-                { "listen": "prerequest", "script": { "type": "text/javascript", "exec": [
-                  "const attempt = Number(pm.environment.get('lifecycleDocLoadAttempt') || 0);",
-                  "if (attempt > 0) { setTimeout(function () {}, 200); }"
-                ] } },
-                { "listen": "test", "script": { "type": "text/javascript", "exec": [
-                  "const json = pm.response.json();",
-                  "const rep = json.data && json.data.GetTicketRepresentation;",
-                  "const attempt = Number(pm.environment.get('lifecycleDocLoadAttempt') || 0);",
-                  "if (!(rep && rep.id) && attempt < 50) {",
-                  "  pm.environment.set('lifecycleDocLoadAttempt', attempt + 1);",
-                  "  postman.setNextRequest('Wait for lifecycle document load');",
-                  "} else {",
-                  "  pm.environment.unset('lifecycleDocLoadAttempt');",
-                  "  pm.test('Lifecycle document finished loading', function () {",
-                  "    pm.expect(rep && rep.id).to.be.a('string');",
-                  "  });",
-                  "}"
-                ] } }
-              ]
-            },
-            {
-              "name": "Escalate priority by manager",
-              "request": {
                 "method": "POST",
+                "header": [],
                 "body": {
                   "mode": "graphql",
                   "graphql": {
-                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{documentId}}\", ticket: { id: \"{{ticketId}}\", title: \"{{ticketTitle}}\", priority: Critical, assigneeIds: [\"{{agentUserId}}\"] } }) { status } }",
+                    "query": "query GetTicketRepresentation { GetTicketRepresentation(input: { id: \"{{lifecycleClientDocId}}\" }) { id title status priority assigneeIds reporterId comments { id content } } }",
                     "variables": ""
                   }
                 },
-                "url": "{{baseUrl}}/graphql"
+                "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                    {
+                      "key": "key",
+                      "value": "x-authentication-token",
+                      "type": "string"
+                    },
+                    {
+                      "key": "value",
+                      "value": "{{clientToken}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
+                }
               },
+              "response": [],
               "event": [
-                { "listen": "prerequest", "script": { "type": "text/javascript", "exec": ["if (pm.environment.get('managerToken')) { pm.environment.set('token', pm.environment.get('managerToken')); }"] } },
-                { "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Escalation success', function () { pm.expect(((pm.response.json().data || {}).UpdateTicketFromRepresentation || {}).status).to.eql('Success'); });"] } }
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "if (parseInt(pm.environment.get('lcClientWait') || '0', 10) > 0) {",
+                      "  const until = Date.now() + 100;",
+                      "  while (Date.now() < until) { /* spin */ }",
+                      "}"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const rep = json.data && json.data.GetTicketRepresentation;",
+                      "const attempt = parseInt(pm.environment.get('lcClientWait') || '0', 10);",
+                      "const maxAttempts = 50;",
+                      "if (rep && rep.id) {",
+                      "  pm.environment.set('lcClientWait', '0');",
+                      "  pm.test('Client lifecycle document finished loading', function () { pm.expect(rep.id).to.be.a('string').and.not.empty; });",
+                      "} else if (attempt < maxAttempts) {",
+                      "  pm.environment.set('lcClientWait', String(attempt + 1));",
+                      "  postman.setNextRequest('Lifecycle: wait for client document load');",
+                      "} else {",
+                      "  pm.environment.set('lcClientWait', '0');",
+                      "  pm.test('Client lifecycle document finished loading', function () { pm.expect.fail('not readable after ' + maxAttempts + ' polls: ' + JSON.stringify(json)); });",
+                      "}"
+                    ]
+                  }
+                }
               ]
             },
             {
-              "name": "Agent adds handling comment",
+              "name": "Lifecycle: reporter is the client actor",
               "request": {
+                "url": "{{baseUrl}}/graphql",
                 "method": "POST",
+                "header": [],
                 "body": {
                   "mode": "graphql",
                   "graphql": {
-                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{documentId}}\", ticket: { id: \"{{ticketId}}\", title: \"{{ticketTitle}}\", comments: [{ content: \"Agent accepted ticket {{runId}}\" }] } }) { status } }",
+                    "query": "query GetTicketRepresentation { GetTicketRepresentation(input: { id: \"{{lifecycleClientDocId}}\" }) { id title status priority assigneeIds reporterId comments { id content } } }",
                     "variables": ""
                   }
                 },
-                "url": "{{baseUrl}}/graphql"
+                "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                    {
+                      "key": "key",
+                      "value": "x-authentication-token",
+                      "type": "string"
+                    },
+                    {
+                      "key": "value",
+                      "value": "{{clientToken}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
+                }
               },
+              "response": [],
               "event": [
-                { "listen": "prerequest", "script": { "type": "text/javascript", "exec": ["if (pm.environment.get('agentToken')) { pm.environment.set('token', pm.environment.get('agentToken')); }"] } },
-                { "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Agent comment success', function () { pm.expect(((pm.response.json().data || {}).UpdateTicketFromRepresentation || {}).status).to.eql('Success'); });"] } }
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const t = json.data && json.data.GetTicketRepresentation;",
+                      "pm.test('The creating client is recorded as the ticket reporter', function () {",
+                      "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                      "  pm.expect(t, 'representation payload: ' + JSON.stringify(json.data)).to.be.an('object');",
+                      "  pm.expect(t.reporterId, 'reporterId does not match the client actor').to.eql(pm.environment.get('clientUserId'));",
+                      "});"
+                    ]
+                  }
+                }
               ]
             },
             {
-              "name": "Client closes ticket",
+              "name": "Lifecycle: manager opens the ticket",
               "request": {
+                "url": "{{baseUrl}}/graphql",
                 "method": "POST",
+                "header": [],
                 "body": {
                   "mode": "graphql",
                   "graphql": {
-                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{documentId}}\", ticket: { id: \"{{ticketId}}\", title: \"{{ticketTitle}}\", status: Closed, stateReason: Completed } }) { status } }",
+                    "query": "mutation OpenDocument { OpenDocument(input: { collectionId: \"Tickets\", id: \"{{lifecycleTicketId}}\" }) { documentId } }",
                     "variables": ""
                   }
                 },
-                "url": "{{baseUrl}}/graphql"
+                "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                    {
+                      "key": "key",
+                      "value": "x-authentication-token",
+                      "type": "string"
+                    },
+                    {
+                      "key": "value",
+                      "value": "{{managerToken}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
+                }
               },
+              "response": [],
               "event": [
-                { "listen": "prerequest", "script": { "type": "text/javascript", "exec": ["if (pm.environment.get('clientToken')) { pm.environment.set('token', pm.environment.get('clientToken')); }"] } },
-                { "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Client close success', function () { pm.expect(((pm.response.json().data || {}).UpdateTicketFromRepresentation || {}).status).to.eql('Success'); });"] } }
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const info = json.data && json.data.OpenDocument;",
+                      "pm.test('Manager (admin) opens the lifecycle ticket in its own workspace', function () {",
+                      "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                      "  pm.expect(info && info.documentId, 'OpenDocument payload: ' + JSON.stringify(json.data)).to.be.a('string').and.not.empty;",
+                      "});",
+                      "if (info && info.documentId) pm.environment.set('lifecycleManagerDocId', info.documentId);"
+                    ]
+                  }
+                }
               ]
             },
             {
-              "name": "Consistency check",
+              "name": "Lifecycle: wait for manager document load",
               "request": {
+                "url": "{{baseUrl}}/graphql",
                 "method": "POST",
+                "header": [],
                 "body": {
                   "mode": "graphql",
                   "graphql": {
-                    "query": "query GetTicketRepresentation { GetTicketRepresentation(input: { id: \"{{documentId}}\" }) { id status priority assigneeIds comments { id } } }",
+                    "query": "query GetTicketRepresentation { GetTicketRepresentation(input: { id: \"{{lifecycleManagerDocId}}\" }) { id title status priority assigneeIds reporterId comments { id content } } }",
                     "variables": ""
                   }
                 },
-                "url": "{{baseUrl}}/graphql"
+                "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                    {
+                      "key": "key",
+                      "value": "x-authentication-token",
+                      "type": "string"
+                    },
+                    {
+                      "key": "value",
+                      "value": "{{managerToken}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
+                }
               },
-              "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-                "const t = pm.response.json().data && pm.response.json().data.GetTicketRepresentation;",
-                "pm.test('Ticket consistency after lifecycle', function () {",
-                "  pm.expect(t).to.be.an('object');",
-                "  pm.expect(t.id).to.eql(pm.environment.get('ticketId'));",
-                "});"
-              ] } }]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Data-driven",
-      "item": [
-        {
-          "name": "EntityContext matrix probe",
-          "request": {
-            "method": "POST",
-            "body": {
-              "mode": "graphql",
-              "graphql": {
-                "query": "query EntityContextTickets { EntityContextTickets(input: { entityType: \"{{entityType}}\", entityId: \"{{entityId}}\", viewParams: { offset: 0, count: 100 } }) { items { id title } } }",
-                "variables": ""
-              }
-            },
-            "url": "{{baseUrl}}/graphql",
-            "description": "Use with iteration file data/entity_context_matrix.iteration.json in Collection Runner/Newman."
-          },
-          "event": [
-            {
-              "listen": "prerequest",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "const et = pm.iterationData.get('entityType');",
-                  "const eid = pm.iterationData.get('entityId');",
-                  "if (et) pm.environment.set('entityType', et);",
-                  "if (eid) pm.environment.set('entityId', eid);"
-                ]
-              }
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "if (parseInt(pm.environment.get('lcManagerWait') || '0', 10) > 0) {",
+                      "  const until = Date.now() + 100;",
+                      "  while (Date.now() < until) { /* spin */ }",
+                      "}"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const rep = json.data && json.data.GetTicketRepresentation;",
+                      "const attempt = parseInt(pm.environment.get('lcManagerWait') || '0', 10);",
+                      "const maxAttempts = 50;",
+                      "if (rep && rep.id) {",
+                      "  pm.environment.set('lcManagerWait', '0');",
+                      "  pm.test('Manager (admin) lifecycle document finished loading', function () { pm.expect(rep.id).to.be.a('string').and.not.empty; });",
+                      "} else if (attempt < maxAttempts) {",
+                      "  pm.environment.set('lcManagerWait', String(attempt + 1));",
+                      "  postman.setNextRequest('Lifecycle: wait for manager document load');",
+                      "} else {",
+                      "  pm.environment.set('lcManagerWait', '0');",
+                      "  pm.test('Manager (admin) lifecycle document finished loading', function () { pm.expect.fail('not readable after ' + maxAttempts + ' polls: ' + JSON.stringify(json)); });",
+                      "}"
+                    ]
+                  }
+                }
+              ]
             },
             {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "const json = pm.response.json();",
-                  "const items = (json.data && json.data.EntityContextTickets && json.data.EntityContextTickets.items) || [];",
-                  "const min = Number(pm.iterationData.get('expectedMinCount') || 0);",
-                  "pm.test('Matrix probe returns expected minimum', function () {",
-                  "  pm.expect(items.length >= min).to.eql(true);",
-                  "});"
-                ]
-              }
+              "name": "Lifecycle: manager escalates priority and assigns the agent",
+              "request": {
+                "url": "{{baseUrl}}/graphql",
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{lifecycleManagerDocId}}\", ticket: { id: \"{{lifecycleTicketId}}\", title: \"{{lifecycleTitle}}\", priority: Critical, assigneeIds: [\"{{agentUserId}}\"] } }) { status } }",
+                    "variables": ""
+                  }
+                },
+                "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                    {
+                      "key": "key",
+                      "value": "x-authentication-token",
+                      "type": "string"
+                    },
+                    {
+                      "key": "value",
+                      "value": "{{managerToken}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const status = json.data && json.data.UpdateTicketFromRepresentation && json.data.UpdateTicketFromRepresentation.status;",
+                      "pm.test('Administrator can escalate priority and assign an agent', function () {",
+                      "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                      "  pm.expect(status, 'UpdateTicketFromRepresentation payload: ' + JSON.stringify(json.data)).to.eql('Success');",
+                      "});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Lifecycle: agent opens the ticket",
+              "request": {
+                "url": "{{baseUrl}}/graphql",
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "mutation OpenDocument { OpenDocument(input: { collectionId: \"Tickets\", id: \"{{lifecycleTicketId}}\" }) { documentId } }",
+                    "variables": ""
+                  }
+                },
+                "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                    {
+                      "key": "key",
+                      "value": "x-authentication-token",
+                      "type": "string"
+                    },
+                    {
+                      "key": "value",
+                      "value": "{{agentToken}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const info = json.data && json.data.OpenDocument;",
+                      "pm.test('Agent opens the lifecycle ticket in its own workspace', function () {",
+                      "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                      "  pm.expect(info && info.documentId, 'OpenDocument payload: ' + JSON.stringify(json.data)).to.be.a('string').and.not.empty;",
+                      "});",
+                      "if (info && info.documentId) pm.environment.set('lifecycleAgentDocId', info.documentId);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Lifecycle: wait for agent document load",
+              "request": {
+                "url": "{{baseUrl}}/graphql",
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "query GetTicketRepresentation { GetTicketRepresentation(input: { id: \"{{lifecycleAgentDocId}}\" }) { id title status priority assigneeIds reporterId comments { id content } } }",
+                    "variables": ""
+                  }
+                },
+                "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                    {
+                      "key": "key",
+                      "value": "x-authentication-token",
+                      "type": "string"
+                    },
+                    {
+                      "key": "value",
+                      "value": "{{agentToken}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "if (parseInt(pm.environment.get('lcAgentWait') || '0', 10) > 0) {",
+                      "  const until = Date.now() + 100;",
+                      "  while (Date.now() < until) { /* spin */ }",
+                      "}"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const rep = json.data && json.data.GetTicketRepresentation;",
+                      "const attempt = parseInt(pm.environment.get('lcAgentWait') || '0', 10);",
+                      "const maxAttempts = 50;",
+                      "if (rep && rep.id) {",
+                      "  pm.environment.set('lcAgentWait', '0');",
+                      "  pm.test('Agent lifecycle document finished loading', function () { pm.expect(rep.id).to.be.a('string').and.not.empty; });",
+                      "} else if (attempt < maxAttempts) {",
+                      "  pm.environment.set('lcAgentWait', String(attempt + 1));",
+                      "  postman.setNextRequest('Lifecycle: wait for agent document load');",
+                      "} else {",
+                      "  pm.environment.set('lcAgentWait', '0');",
+                      "  pm.test('Agent lifecycle document finished loading', function () { pm.expect.fail('not readable after ' + maxAttempts + ' polls: ' + JSON.stringify(json)); });",
+                      "}"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Lifecycle: agent adds a handling comment",
+              "request": {
+                "url": "{{baseUrl}}/graphql",
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{lifecycleAgentDocId}}\", ticket: { id: \"{{lifecycleTicketId}}\", title: \"{{lifecycleTitle}}\", comments: [{ content: \"Agent accepted the ticket {{runId}}\" }] } }) { status } }",
+                    "variables": ""
+                  }
+                },
+                "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                    {
+                      "key": "key",
+                      "value": "x-authentication-token",
+                      "type": "string"
+                    },
+                    {
+                      "key": "value",
+                      "value": "{{agentToken}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const status = json.data && json.data.UpdateTicketFromRepresentation && json.data.UpdateTicketFromRepresentation.status;",
+                      "pm.test('Assignee can comment on the ticket', function () {",
+                      "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                      "  pm.expect(status, 'UpdateTicketFromRepresentation payload: ' + JSON.stringify(json.data)).to.eql('Success');",
+                      "});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Lifecycle: agent cannot change core fields",
+              "request": {
+                "url": "{{baseUrl}}/graphql",
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{lifecycleAgentDocId}}\", ticket: { id: \"{{lifecycleTicketId}}\", title: \"Agent tries to retitle {{randomInt}}\" } }) { status } }",
+                    "variables": ""
+                  }
+                },
+                "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                    {
+                      "key": "key",
+                      "value": "x-authentication-token",
+                      "type": "string"
+                    },
+                    {
+                      "key": "value",
+                      "value": "{{agentToken}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "// imtdeskgql::CanLockTicket gates title/description/assignees/type/priority to the",
+                      "// reporter or an administrator - an assignee may work the ticket but not retitle it.",
+                      "const json = pm.response.json();",
+                      "const status = json.data && json.data.UpdateTicketFromRepresentation && json.data.UpdateTicketFromRepresentation.status;",
+                      "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
+                      "pm.test('Assignee is refused when editing core ticket fields', function () {",
+                      "  pm.expect(messages, 'expected a permission refusal, got: ' + JSON.stringify(json).slice(0, 300)).to.match(/only reporter or admin can edit ticket fields/i);",
+                      "  pm.expect(status, 'the core-field edit was accepted for an assignee').to.not.eql('Success');",
+                      "});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Lifecycle: client reopens the ticket before closing",
+              "request": {
+                "url": "{{baseUrl}}/graphql",
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "mutation OpenDocument { OpenDocument(input: { collectionId: \"Tickets\", id: \"{{lifecycleTicketId}}\" }) { documentId } }",
+                    "variables": ""
+                  }
+                },
+                "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                    {
+                      "key": "key",
+                      "value": "x-authentication-token",
+                      "type": "string"
+                    },
+                    {
+                      "key": "value",
+                      "value": "{{clientToken}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const info = json.data && json.data.OpenDocument;",
+                      "pm.test('Client opens the lifecycle ticket in its own workspace', function () {",
+                      "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                      "  pm.expect(info && info.documentId, 'OpenDocument payload: ' + JSON.stringify(json.data)).to.be.a('string').and.not.empty;",
+                      "});",
+                      "if (info && info.documentId) pm.environment.set('lifecycleClientDocId2', info.documentId);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Lifecycle: wait for client document reload",
+              "request": {
+                "url": "{{baseUrl}}/graphql",
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "query GetTicketRepresentation { GetTicketRepresentation(input: { id: \"{{lifecycleClientDocId2}}\" }) { id title status priority assigneeIds reporterId comments { id content } } }",
+                    "variables": ""
+                  }
+                },
+                "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                    {
+                      "key": "key",
+                      "value": "x-authentication-token",
+                      "type": "string"
+                    },
+                    {
+                      "key": "value",
+                      "value": "{{clientToken}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "if (parseInt(pm.environment.get('lcClientWait2') || '0', 10) > 0) {",
+                      "  const until = Date.now() + 100;",
+                      "  while (Date.now() < until) { /* spin */ }",
+                      "}"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const rep = json.data && json.data.GetTicketRepresentation;",
+                      "const attempt = parseInt(pm.environment.get('lcClientWait2') || '0', 10);",
+                      "const maxAttempts = 50;",
+                      "if (rep && rep.id) {",
+                      "  pm.environment.set('lcClientWait2', '0');",
+                      "  pm.test('Client lifecycle document finished loading', function () { pm.expect(rep.id).to.be.a('string').and.not.empty; });",
+                      "} else if (attempt < maxAttempts) {",
+                      "  pm.environment.set('lcClientWait2', String(attempt + 1));",
+                      "  postman.setNextRequest('Lifecycle: wait for client document reload');",
+                      "} else {",
+                      "  pm.environment.set('lcClientWait2', '0');",
+                      "  pm.test('Client lifecycle document finished loading', function () { pm.expect.fail('not readable after ' + maxAttempts + ' polls: ' + JSON.stringify(json)); });",
+                      "}"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Lifecycle: client closes the ticket",
+              "request": {
+                "url": "{{baseUrl}}/graphql",
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "mutation UpdateTicketFromRepresentation { UpdateTicketFromRepresentation(input: { documentId: \"{{lifecycleClientDocId2}}\", ticket: { id: \"{{lifecycleTicketId}}\", title: \"{{lifecycleTitle}}\", status: Closed, stateReason: Completed } }) { status } }",
+                    "variables": ""
+                  }
+                },
+                "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                    {
+                      "key": "key",
+                      "value": "x-authentication-token",
+                      "type": "string"
+                    },
+                    {
+                      "key": "value",
+                      "value": "{{clientToken}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const status = json.data && json.data.UpdateTicketFromRepresentation && json.data.UpdateTicketFromRepresentation.status;",
+                      "pm.test('Reporter can close the ticket', function () {",
+                      "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                      "  pm.expect(status, 'UpdateTicketFromRepresentation payload: ' + JSON.stringify(json.data)).to.eql('Success');",
+                      "});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Lifecycle: manager reopens the ticket for the final check",
+              "request": {
+                "url": "{{baseUrl}}/graphql",
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "mutation OpenDocument { OpenDocument(input: { collectionId: \"Tickets\", id: \"{{lifecycleTicketId}}\" }) { documentId } }",
+                    "variables": ""
+                  }
+                },
+                "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                    {
+                      "key": "key",
+                      "value": "x-authentication-token",
+                      "type": "string"
+                    },
+                    {
+                      "key": "value",
+                      "value": "{{managerToken}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const info = json.data && json.data.OpenDocument;",
+                      "pm.test('Manager (admin) opens the lifecycle ticket in its own workspace', function () {",
+                      "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                      "  pm.expect(info && info.documentId, 'OpenDocument payload: ' + JSON.stringify(json.data)).to.be.a('string').and.not.empty;",
+                      "});",
+                      "if (info && info.documentId) pm.environment.set('lifecycleManagerDocId2', info.documentId);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Lifecycle: wait for manager document reload",
+              "request": {
+                "url": "{{baseUrl}}/graphql",
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "query GetTicketRepresentation { GetTicketRepresentation(input: { id: \"{{lifecycleManagerDocId2}}\" }) { id title status priority assigneeIds reporterId comments { id content } } }",
+                    "variables": ""
+                  }
+                },
+                "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                    {
+                      "key": "key",
+                      "value": "x-authentication-token",
+                      "type": "string"
+                    },
+                    {
+                      "key": "value",
+                      "value": "{{managerToken}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "if (parseInt(pm.environment.get('lcManagerWait2') || '0', 10) > 0) {",
+                      "  const until = Date.now() + 100;",
+                      "  while (Date.now() < until) { /* spin */ }",
+                      "}"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const rep = json.data && json.data.GetTicketRepresentation;",
+                      "const attempt = parseInt(pm.environment.get('lcManagerWait2') || '0', 10);",
+                      "const maxAttempts = 50;",
+                      "if (rep && rep.id) {",
+                      "  pm.environment.set('lcManagerWait2', '0');",
+                      "  pm.test('Manager (admin) lifecycle document finished loading', function () { pm.expect(rep.id).to.be.a('string').and.not.empty; });",
+                      "} else if (attempt < maxAttempts) {",
+                      "  pm.environment.set('lcManagerWait2', String(attempt + 1));",
+                      "  postman.setNextRequest('Lifecycle: wait for manager document reload');",
+                      "} else {",
+                      "  pm.environment.set('lcManagerWait2', '0');",
+                      "  pm.test('Manager (admin) lifecycle document finished loading', function () { pm.expect.fail('not readable after ' + maxAttempts + ' polls: ' + JSON.stringify(json)); });",
+                      "}"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Lifecycle: final state carries every step of the flow",
+              "request": {
+                "url": "{{baseUrl}}/graphql",
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "graphql",
+                  "graphql": {
+                    "query": "query GetTicketRepresentation { GetTicketRepresentation(input: { id: \"{{lifecycleManagerDocId2}}\" }) { id title status priority assigneeIds reporterId comments { id content } } }",
+                    "variables": ""
+                  }
+                },
+                "auth": {
+                  "type": "apikey",
+                  "apikey": [
+                    {
+                      "key": "key",
+                      "value": "x-authentication-token",
+                      "type": "string"
+                    },
+                    {
+                      "key": "value",
+                      "value": "{{managerToken}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "const t = json.data && json.data.GetTicketRepresentation;",
+                      "pm.test('The ticket carries the result of every lifecycle step', function () {",
+                      "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
+                      "  pm.expect(t, 'representation payload: ' + JSON.stringify(json.data)).to.be.an('object');",
+                      "  pm.expect(t.id, 'wrong ticket returned').to.eql(pm.environment.get('lifecycleTicketId'));",
+                      "  pm.expect(t.reporterId, 'reporter changed during the flow').to.eql(pm.environment.get('clientUserId'));",
+                      "  pm.expect(t.priority, 'the escalation by the administrator was lost').to.eql('Critical');",
+                      "  pm.expect(t.assigneeIds || [], 'the agent assignment was lost').to.include(pm.environment.get('agentUserId'));",
+                      "  pm.expect(t.status, 'the close by the reporter was lost').to.eql('Closed');",
+                      "  const contents = (t.comments || []).map(function (c) { return c.content || ''; }).join(' | ');",
+                      "  pm.expect(contents, 'the agent comment is missing').to.match(/Agent accepted the ticket/i);",
+                      "  pm.expect(t.title, 'the refused agent retitle was applied anyway').to.eql(pm.environment.get('lifecycleTitle'));",
+                      "});"
+                    ]
+                  }
+                }
+              ]
             }
           ]
         }
