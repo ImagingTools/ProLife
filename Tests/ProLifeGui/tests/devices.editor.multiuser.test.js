@@ -208,20 +208,19 @@ test.describe('Hardware / editor', () => {
     });
 
     // Every field is rendered whatever the permissions; only editability differs. Presence is asserted
-    // for all of them, and a field this user may NOT edit must actually reject typing - checked
-    // behaviourally, since DeviceEditor.qml sets readOnly imperatively in checkPermissions() and a field
+    // for all of them, and a field this user may NOT edit must actually reject the edit - checked
+    // behaviourally (gui.expectReadOnly works out whether it is a text control or a popup-driven one),
+    // since DeviceEditor.qml sets readOnly/changeable imperatively in checkPermissions() and a field
     // that merely LOOKS disabled is indistinguishable from a locked one in a screenshot.
     //
-    // Two limits worth naming rather than hiding. Combo fields gate editability through `changeable`
-    // instead of a text control, so they stay presence-only. And this spec is pinned to devEditor, which
-    // holds the full sensor permission set, so the read-only branch has nothing to check under today's
-    // fixture users - it starts doing real work as soon as a restricted user runs this spec. The
-    // question it cannot answer at all is whether the SERVER refuses a field the GUI locked: ProLife
-    // registers no per-field permission check on the update path, so that one needs an API test.
-    test('fields reflect permissions, and locked ones reject input', async () => {
+    // One limit worth naming rather than hiding: this spec is pinned to devEditor, which holds the full
+    // sensor permission set, so the read-only branch has nothing to check under today's fixture users -
+    // it starts doing real work as soon as a restricted user runs this spec. And the question it cannot
+    // answer at all is whether the SERVER refuses a field the GUI locked: ProLife registers no per-field
+    // permission check on the update path, so that one needs an API test.
+    test('fields reflect permissions, and locked ones reject editing', async () => {
       for (const fieldObjectName of Object.keys(DEVICE_FIELD_PERMISSIONS)) {
         await editor.expectFieldVisible(fieldObjectName);
-        if (fieldObjectName.endsWith('Combo')) continue;
         if (canEditDeviceField(user, fieldObjectName, false)) continue;
         await gui.expectReadOnly(page, [fieldObjectName]);
       }
