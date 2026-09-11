@@ -59,6 +59,15 @@ class OrderEditorPage extends BasePage {
     return this;
   }
 
+  /**
+   * Switch to a MultiPageView sub-page by its addPage id (OrderEditor.qml: "General", "Products",
+   * "History" - ids, not the visible captions, which carry a row count).
+   */
+  async openEditorPage(pageId) {
+    await gui.clickButton(this.page, [`Page_${pageId}`]);
+    return this;
+  }
+
   // --- Products (ProductEditorDialog + OrderProductDelegate rows) -------------------------------
   //
   // ProductEditorDialog reuses the generic "Dialog" objectName (no dialog-specific one) and its
@@ -79,8 +88,15 @@ class OrderEditorPage extends BasePage {
     return this.page.locator('[objectName="OrderProductsListView"] [objectName$="ElementView"][visible]').nth(index);
   }
 
-  /** Number of product rows currently in the order. */
-  productCount() {
+  /**
+   * Number of product rows currently in the order. Switches to the Products sub-page first, but only
+   * when it isn't already showing - this is called from an expect.poll loop, which would otherwise
+   * re-click the nav item on every iteration.
+   */
+  async productCount() {
+    if (!(await gui.dom.isVisible(this.page, ['OrderProductsListView'], 500))) {
+      await this.openEditorPage('Products');
+    }
     return this.page.locator('[objectName="OrderProductsListView"] [objectName$="ElementView"][visible]').count();
   }
 
@@ -111,6 +127,7 @@ class OrderEditorPage extends BasePage {
    * @returns {Promise<boolean>} true if a product was actually added
    */
   async addProduct(category, index) {
+    await this.openEditorPage('Products');
     await gui.clickButton(this.page, ['AddProductButton']);
     await gui.clickButton(this.page, [category === 'hardware' ? 'HardwareButton' : 'SoftwareButton']);
     try {
@@ -144,6 +161,7 @@ class OrderEditorPage extends BasePage {
 
   /** Open the Nth product row's editor (ProductEditorDialog, pre-filled) via its row Edit command. */
   async editProductRow(index) {
+    await this.openEditorPage('Products');
     await gui.clickWithin(this.page, this.productRow(index), 'EditButton');
     return this;
   }

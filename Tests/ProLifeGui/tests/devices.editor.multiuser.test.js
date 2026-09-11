@@ -68,20 +68,17 @@ test.describe('Hardware / editor', () => {
       await gui.checkScreenshot(page, 'device-editor-new-empty');
     });
 
-    // DeviceValidator.qml blocks Save until Device Type AND Configuration are both selected (checked in
-    // that order - Device Type first) - documents that this validation actually runs and surfaces as a
-    // real error dialog (ModalDialogManager.showErrorDialog, the same generic "Dialog" every other
-    // confirm/error dialog in this suite uses), not just a silently-ignored click.
+    // DeviceValidator.qml blocks Save until Device Type AND Configuration are both selected, and it
+    // now surfaces that INLINE - a red message under each unset combo, with Save disabled - rather than
+    // as a modal error dialog on click (same shape the Orders editor already uses for Delivery-ID).
+    // The message Text carries no objectName, so this asserts on its visible text.
     test('save blocked - missing required fields', async () => {
-      // A truly untouched document isn't dirty yet, and Save silently no-ops on it (confirmed live -
-      // no dialog, no error, nothing) rather than running validation at all. Touch a field the
-      // validator does NOT check (Description) first so Save actually attempts to submit, while
-      // Device Type/Configuration stay unset.
+      // A truly untouched document isn't dirty yet, so touch a field the validator does NOT check
+      // (Description) first, leaving Device Type/Configuration unset.
       await editor.setDescription('Touch to dirty');
       await editor.save();
-      await gui.expectVisible(page, ['Dialog'], 'Save on an empty document must raise a validation error dialog');
+      await page.getByText('Please select a device type').first().waitFor({ state: 'visible', timeout: 10000 });
       await gui.checkScreenshot(page, 'device-editor-save-blocked-empty');
-      await gui.dismissDialog(page);
     });
 
     test('fill device information group', async () => {
