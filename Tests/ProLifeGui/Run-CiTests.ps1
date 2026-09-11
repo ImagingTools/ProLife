@@ -122,7 +122,7 @@
     in full regardless of this filter.
 
 .PARAMETER AllUsers
-    By default only fixtures/users.js's DEFAULT_USER_KEYS (su + fullAccess)
+    By default only fixtures/users.js's defaultUserKeys (su + fullAccess)
     get a Playwright project/storageState - fast for iterative runs, but
     doesn't exercise per-user permission restrictions
     (accountsViewer/noAccess/etc. seeing less than fullAccess). Pass
@@ -221,7 +221,7 @@ param(
     # (-PlaywrightArgs '--project=hardwareManager'). Empty by default -> full suite, active projects only.
     [string[]]$PlaywrightArgs = @(),
 
-    # By default only fixtures/users.js's DEFAULT_USER_KEYS (su + fullAccess) get a Playwright project -
+    # By default only fixtures/users.js's defaultUserKeys (su + fullAccess) get a Playwright project -
     # fast for iterative runs, but doesn't validate per-user restrictions. Pass -AllUsers to set
     # PROLIFE_GUI_ALL_USERS=1 and run the complete multi-user permission matrix instead.
     [switch]$AllUsers
