@@ -59,7 +59,7 @@ test.describe('Accounts / collection', () => {
     });
 
     test.afterAll(async () => {
-      if (page) await page.close();
+      if (page) await page.context().close();
     });
 
     test.beforeEach(async () => {

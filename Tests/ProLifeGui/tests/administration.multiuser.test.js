@@ -64,7 +64,7 @@ test.describe('Administration', () => {
     });
 
     test.afterAll(async () => {
-      if (page) await page.close();
+      if (page) await page.context().close();
     });
 
     test.beforeEach(() => {

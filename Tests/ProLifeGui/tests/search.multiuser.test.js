@@ -25,7 +25,9 @@ test.describe.serial('Search', () => {
   });
 
   test.afterAll(async () => {
-    if (page) await page.close();
+    // Close the CONTEXT, not just the page: newUserPage() creates one per describe block, and closing
+      // only the page leaks it for the rest of the run. Closing the context closes its pages too.
+      if (page) await page.context().close();
   });
 
   test.beforeEach(async () => {

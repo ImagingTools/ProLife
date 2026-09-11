@@ -58,7 +58,7 @@ test.describe('Software / editor', () => {
     });
 
     test.afterAll(async () => {
-      if (page) await page.close();
+      if (page) await page.context().close();
     });
 
     test.beforeEach(() => {
@@ -127,7 +127,7 @@ test.describe('Software / editor', () => {
     });
 
     test.afterAll(async () => {
-      if (page) await page.close();
+      if (page) await page.context().close();
     });
 
     test.beforeEach(() => {
@@ -138,11 +138,9 @@ test.describe('Software / editor', () => {
       await gui.checkScreenshot(page, 'software-editor-edit-loaded');
     });
 
-    // Structural permission matrix: exactly which fields this user may edit. This is the machine-
-    // checked companion to the per-user screenshots - a field the user cannot edit must still be
-    // present (visible) but read-only; we assert presence here and rely on the screenshot for the
-    // read-only visual.
-    test('editable fields reflect permissions', async () => {
+    // Presence for every field, plus a real read-only check on the ones this user may not edit - see
+    // devices.editor.multiuser.test.js for the full reasoning and the two limits it carries.
+    test('fields reflect permissions, and locked ones reject input', async () => {
       for (const fieldObjectName of Object.keys(SOFTWARE_FIELD_PERMISSIONS)) {
         // ExpirationDatePicker's VISIBILITY (not just editability) is conditional on this license's own
         // Unlimited toggle - SoftwareEditor.qml hides the date picker entirely for an unlimited license
@@ -155,8 +153,9 @@ test.describe('Software / editor', () => {
           continue;
         }
         await editor.expectFieldVisible(fieldObjectName);
-        // eslint-disable-next-line no-console
-        console.log(`[${user.key}] ${fieldObjectName} editable=${canEditSoftwareField(user, fieldObjectName, false)}`);
+        if (fieldObjectName.endsWith('Combo') || fieldObjectName.endsWith('Picker')) continue;
+        if (canEditSoftwareField(user, fieldObjectName, false)) continue;
+        await gui.expectReadOnly(page, [fieldObjectName]);
       }
     });
 

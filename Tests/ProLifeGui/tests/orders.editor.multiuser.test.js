@@ -76,7 +76,7 @@ test.describe('Orders / editor', () => {
     });
 
     test.afterAll(async () => {
-      if (page) await page.close();
+      if (page) await page.context().close();
     });
 
     test.beforeEach(() => {
@@ -145,7 +145,7 @@ test.describe('Orders / editor', () => {
     });
 
     test.afterAll(async () => {
-      if (page) await page.close();
+      if (page) await page.context().close();
     });
 
     test.beforeEach(() => {
@@ -236,7 +236,7 @@ test.describe('Orders / editor', () => {
     });
 
     test.afterAll(async () => {
-      if (page) await page.close();
+      if (page) await page.context().close();
     });
 
     test.beforeEach(() => {
@@ -247,11 +247,16 @@ test.describe('Orders / editor', () => {
       await gui.checkScreenshot(page, 'orders-editor-edit-loaded');
     });
 
-    test('editable fields reflect permissions', async () => {
+    // Presence for every field, plus a real read-only check on the ones this user may not edit - see
+    // devices.editor.multiuser.test.js for the full reasoning and the two limits it carries. Unlike the
+    // other editor specs this one is not pinned to a single full-rights user (it runs as su and
+    // fullAccess), so the read-only branch here depends on what those two actually hold.
+    test('fields reflect permissions, and locked ones reject input', async () => {
       for (const fieldObjectName of Object.keys(ORDER_FIELD_PERMISSIONS)) {
         await editor.expectFieldVisible(fieldObjectName);
-        // eslint-disable-next-line no-console
-        console.log(`[${user.key}] ${fieldObjectName} editable=${canEditOrderField(user, fieldObjectName, false)}`);
+        if (fieldObjectName.endsWith('Combo')) continue;
+        if (canEditOrderField(user, fieldObjectName, false)) continue;
+        await gui.expectReadOnly(page, [fieldObjectName]);
       }
     });
 

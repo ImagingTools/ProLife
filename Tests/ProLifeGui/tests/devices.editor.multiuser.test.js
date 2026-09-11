@@ -57,7 +57,7 @@ test.describe('Hardware / editor', () => {
     });
 
     test.afterAll(async () => {
-      if (page) await page.close();
+      if (page) await page.context().close();
     });
 
     test.beforeEach(() => {
@@ -196,7 +196,7 @@ test.describe('Hardware / editor', () => {
     });
 
     test.afterAll(async () => {
-      if (page) await page.close();
+      if (page) await page.context().close();
     });
 
     test.beforeEach(() => {
@@ -207,18 +207,23 @@ test.describe('Hardware / editor', () => {
       await gui.checkScreenshot(page, 'device-editor-edit-loaded');
     });
 
-    // Structural permission matrix: exactly which fields this user may edit. This is the machine-
-    // checked companion to the per-user screenshots - a field the user cannot edit must still be
-    // present (visible) but read-only; we assert presence here and rely on the screenshot for the
-    // read-only visual.
-    test('editable fields reflect permissions', async () => {
+    // Every field is rendered whatever the permissions; only editability differs. Presence is asserted
+    // for all of them, and a field this user may NOT edit must actually reject typing - checked
+    // behaviourally, since DeviceEditor.qml sets readOnly imperatively in checkPermissions() and a field
+    // that merely LOOKS disabled is indistinguishable from a locked one in a screenshot.
+    //
+    // Two limits worth naming rather than hiding. Combo fields gate editability through `changeable`
+    // instead of a text control, so they stay presence-only. And this spec is pinned to devEditor, which
+    // holds the full sensor permission set, so the read-only branch has nothing to check under today's
+    // fixture users - it starts doing real work as soon as a restricted user runs this spec. The
+    // question it cannot answer at all is whether the SERVER refuses a field the GUI locked: ProLife
+    // registers no per-field permission check on the update path, so that one needs an API test.
+    test('fields reflect permissions, and locked ones reject input', async () => {
       for (const fieldObjectName of Object.keys(DEVICE_FIELD_PERMISSIONS)) {
-        // The field is always rendered; editability differs. Assert it is present so a missing field
-        // fails loudly (rather than a silent green).
         await editor.expectFieldVisible(fieldObjectName);
-        // Document (via a soft log) whether this user is expected to be able to edit it.
-        // eslint-disable-next-line no-console
-        console.log(`[${user.key}] ${fieldObjectName} editable=${canEditDeviceField(user, fieldObjectName, false)}`);
+        if (fieldObjectName.endsWith('Combo')) continue;
+        if (canEditDeviceField(user, fieldObjectName, false)) continue;
+        await gui.expectReadOnly(page, [fieldObjectName]);
       }
     });
 
