@@ -2,7 +2,7 @@
 
 
 // ImtCore includes
-#include <imtauth/ICompanyInfo.h>
+#include <imtaccount/ICompanyInfo.h>
 #include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Accounts_fwd.h>
 
 // ProLife includes
@@ -68,7 +68,7 @@ private:
 	const iprm::IParamsSet* CreateComplexFilter(const QByteArray& fieldId, const QByteArray& fieldValue) const;
 
 private:
-	I_FACT(imtauth::ICompanyInfo, m_accountInfoFactCompPtr);
+	I_FACT(imtaccount::ICompanyInfo, m_accountInfoFactCompPtr);
 	I_REF(prolifedata::IGroupFilterParamJoiner, m_groupFilterParamJoinerCompPtr);
 	I_REF(imtbase::IObjectCollection, m_softwareCollectionCompPtr);
 };

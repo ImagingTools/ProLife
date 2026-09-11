@@ -7,7 +7,7 @@
 #include <imtlic/IProductInfo.h>
 #include <imtlic/ILicenseDefinition.h>
 #include <imtlic/CHardwareInstanceInfo.h>
-#include <imtauth/CCompanyInfo.h>
+#include <imtaccount/CCompanyInfo.h>
 
 // ProLife includes
 #include <prolifedata/COrderInfo.h>
@@ -208,7 +208,7 @@ QString COrderChangeGeneratorComp::GetAccountName(const QByteArray& accountId) c
 
 	imtbase::IObjectCollection::DataPtr newDataPtr;
 	if (m_accountCollectionCompPtr->GetObjectData(accountId, newDataPtr)){
-		const imtauth::CIdentifiableCompanyInfo* companyInfoPtr = dynamic_cast<const imtauth::CIdentifiableCompanyInfo*>(newDataPtr.GetPtr());
+		const imtaccount::CIdentifiableCompanyInfo* companyInfoPtr = dynamic_cast<const imtaccount::CIdentifiableCompanyInfo*>(newDataPtr.GetPtr());
 		if (companyInfoPtr != nullptr){
 			return companyInfoPtr->GetName();
 		}
