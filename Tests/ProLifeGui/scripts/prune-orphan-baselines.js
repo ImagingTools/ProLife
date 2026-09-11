@@ -57,6 +57,36 @@ function extractScreenshotNames(specSource) {
   return names;
 }
 
+// Which (project, spec) pairs Playwright actually schedules - asked of Playwright itself rather than
+// reimplemented from the config's testIgnore/testMatch/grepInvert rules. Listed with the full matrix
+// enabled, so baselines belonging to users outside the default fast subset are not mistaken for dead.
+// Returns null if no listing can be produced, and the caller then skips this check rather than
+// reporting every baseline in the repo as an orphan.
+function scheduledSpecsByProject() {
+  const { execFileSync } = require('child_process');
+  let output = '';
+  try {
+    output = execFileSync('npx', ['playwright', 'test', '--list'], {
+      cwd: path.resolve(__dirname, '..'),
+      env: { ...process.env, PROLIFE_GUI_ALL_USERS: '1' },
+      encoding: 'utf8',
+      shell: process.platform === 'win32',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    });
+  } catch (err) {
+    output = (err && err.stdout) || '';
+  }
+
+  const byProject = new Map();
+  const re = /^\s*\[([^\]]+)\]\s+›\s+([^:]+):/gm;
+  let m;
+  while ((m = re.exec(output))) {
+    if (!byProject.has(m[1])) byProject.set(m[1], new Set());
+    byProject.get(m[1]).add(m[2].trim().replace(/\\/g, '/'));
+  }
+  return byProject.size ? byProject : null;
+}
+
 function main() {
   if (!fs.existsSync(SCREENSHOTS_DIR)) {
     console.log('No __screenshots__ directory found - nothing to check.');
@@ -65,6 +95,12 @@ function main() {
 
   const orphanSpecDirs = [];
   const orphanScreenshotFiles = [];
+  const unscheduledDirs = [];
+
+  const scheduled = scheduledSpecsByProject();
+  if (!scheduled) {
+    console.log('Could not list the test graph - skipping the "project no longer runs this spec" check.\n');
+  }
 
   for (const project of listDirs(SCREENSHOTS_DIR)) {
     const projectDir = path.join(SCREENSHOTS_DIR, project);
@@ -76,6 +112,17 @@ function main() {
       if (!fs.existsSync(specPath)) {
         orphanSpecDirs.push(dirPath);
         continue;
+      }
+
+      // The spec still exists, but this project no longer runs it - e.g. a user whose permissions put
+      // the spec outside its project (playwright.config.js's SPEC_PAGES). These baselines can never be
+      // compared against anything again.
+      if (scheduled) {
+        const specsHere = scheduled.get(project);
+        if (!specsHere || !specsHere.has(relPath.replace(/\\/g, '/'))) {
+          unscheduledDirs.push(dirPath);
+          continue;
+        }
       }
 
       const specSource = fs.readFileSync(specPath, 'utf8');
@@ -95,17 +142,19 @@ function main() {
   console.log(`Orphaned spec baseline directories (spec file no longer exists): ${orphanSpecDirs.length}`);
   for (const d of orphanSpecDirs) console.log(`  ${path.relative(TESTS_DIR, d)}`);
 
+  console.log(`\nBaseline directories this project no longer runs: ${unscheduledDirs.length}`);
+  for (const d of unscheduledDirs) console.log(`  ${path.relative(TESTS_DIR, d)}`);
+
   console.log(`\nOrphaned individual screenshots (spec exists, this check name doesn't): ${orphanScreenshotFiles.length}`);
   for (const f of orphanScreenshotFiles) console.log(`  ${path.relative(TESTS_DIR, f)}`);
 
+  const total = orphanSpecDirs.length + unscheduledDirs.length + orphanScreenshotFiles.length;
   if (!DELETE) {
-    if (orphanSpecDirs.length + orphanScreenshotFiles.length > 0) {
-      console.log('\nRun with --delete to remove the above.');
-    }
+    if (total > 0) console.log('\nRun with --delete to remove the above.');
     return;
   }
 
-  for (const d of orphanSpecDirs) fs.rmSync(d, { recursive: true, force: true });
+  for (const d of [...orphanSpecDirs, ...unscheduledDirs]) fs.rmSync(d, { recursive: true, force: true });
   for (const f of orphanScreenshotFiles) fs.rmSync(f, { force: true });
   console.log('\nDeleted.');
 }
