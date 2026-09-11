@@ -16,6 +16,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { collectionScreenshotNamesFromSource } = require('imtcore-gui-testkit/specs/collectionSpec');
 
 const TESTS_DIR = path.resolve(__dirname, '..', 'tests');
 const SCREENSHOTS_DIR = path.join(TESTS_DIR, '__screenshots__');
@@ -47,6 +48,8 @@ function findSpecDirs(projectDir, relPath = '') {
 
 // Extract every `checkScreenshot(<page-expr>, 'name'` / `"name"` literal from a spec file's source -
 // good enough for this codebase's convention of always passing a string literal, not a template/var.
+// A DECLARED spec (defineCollectionSpec) has no such literals: its names are asked of the kit module
+// that generates them, so this can never disagree with what the spec actually captures.
 function extractScreenshotNames(specSource) {
   const names = new Set();
   const re = /checkScreenshot\s*\(\s*[^,]+,\s*['"]([^'"]+)['"]/g;
@@ -54,6 +57,7 @@ function extractScreenshotNames(specSource) {
   while ((m = re.exec(specSource))) {
     names.add(m[1]);
   }
+  for (const name of collectionScreenshotNamesFromSource(specSource) || []) names.add(name);
   return names;
 }
 
