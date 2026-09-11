@@ -382,63 +382,63 @@
   "pageCommands": {
     "AccountsPage": {
       "Revision": {
-        "enforcedBy": "client-only"
+        "filteredByServer": false
       }
     },
     "DevicesPage": {
       "Bind": {
-        "enforcedBy": "client-only"
+        "filteredByServer": false
       },
       "CreateLicenseFile": {
-        "enforcedBy": "client-only"
+        "filteredByServer": false
       },
       "DecryptFile": {
-        "enforcedBy": "client-only"
+        "filteredByServer": false
       },
       "ResetTransferCounter": {
-        "enforcedBy": "server",
+        "filteredByServer": true,
         "permissions": [
           "ResetTransferCounter"
         ]
       },
       "Revision": {
-        "enforcedBy": "client-only"
+        "filteredByServer": false
       },
       "TransferLicenses": {
-        "enforcedBy": "client-only"
+        "filteredByServer": false
       }
     },
     "OrdersPage": {
       "Revision": {
-        "enforcedBy": "client-only"
+        "filteredByServer": false
       }
     },
     "SoftwareProductsPage": {
       "Revision": {
-        "enforcedBy": "client-only"
+        "filteredByServer": false
       },
       "Revoke": {
-        "enforcedBy": "client-only"
+        "filteredByServer": false
       },
       "Split": {
-        "enforcedBy": "client-only"
+        "filteredByServer": false
       }
     },
     "WorkspacePage": {
       "Analytics": {
-        "enforcedBy": "client-only"
+        "filteredByServer": false
       },
       "Dashboard": {
-        "enforcedBy": "client-only"
+        "filteredByServer": false
       },
       "Orders": {
-        "enforcedBy": "client-only"
+        "filteredByServer": false
       },
       "Software_Hardware": {
-        "enforcedBy": "client-only"
+        "filteredByServer": false
       },
       "UserActions": {
-        "enforcedBy": "client-only"
+        "filteredByServer": false
       }
     }
   }

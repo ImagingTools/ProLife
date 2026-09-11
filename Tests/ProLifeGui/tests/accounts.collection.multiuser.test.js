@@ -24,26 +24,31 @@ const gui = require('imtcore-gui-testkit/lib/gui');
 const PAGE = 'Accounts';
 
 test.describe('Accounts / collection', () => {
-  test.beforeEach(async ({ page }) => {
-    await new AccountCollectionPage(page).reload();
-  });
+  // Scoped to its own describe so the reload does NOT also fire for the shared-page block(s)
+  // below: an outer beforeEach runs for nested describes too, and requesting the `page` fixture
+  // there created and booted a whole extra app instance per nested test that nothing then used.
+  test.describe('cold load', () => {
+    test.beforeEach(async ({ page }) => {
+      await new AccountCollectionPage(page).reload();
+    });
 
-  test('landing', async ({ page, gui, user }) => {
-    if (canSeePage(user, PAGE)) await new AccountCollectionPage(page).open();
-    await gui.checkScreenshot(page, 'accounts-landing');
-  });
+    test('landing', async ({ page, gui, user }) => {
+      if (canSeePage(user, PAGE)) await new AccountCollectionPage(page).open();
+      await gui.checkScreenshot(page, 'accounts-landing');
+    });
 
-  test('command bar reflects permissions', async ({ page, user }) => {
-    test.skip(!canSeePage(user, PAGE), 'user cannot see Accounts');
-    const accounts = new AccountCollectionPage(page);
-    await accounts.open();
-    for (const cmd of ['New', 'Edit', 'Remove']) {
-      if (canRunAccountCommand(user, cmd)) {
-        await accounts.commands.expectHasCommand(cmd);
-      } else {
-        await accounts.commands.expectNoCommand(cmd);
+    test('command bar reflects permissions', async ({ page, user }) => {
+      test.skip(!canSeePage(user, PAGE), 'user cannot see Accounts');
+      const accounts = new AccountCollectionPage(page);
+      await accounts.open();
+      for (const cmd of ['New', 'Edit', 'Remove']) {
+        if (canRunAccountCommand(user, cmd)) {
+          await accounts.commands.expectHasCommand(cmd);
+        } else {
+          await accounts.commands.expectNoCommand(cmd);
+        }
       }
-    }
+    });
   });
 
   test.describe.serial('interactions', () => {

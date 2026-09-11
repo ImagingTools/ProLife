@@ -35,33 +35,38 @@ async function resetWorkspaceFilters(page) {
 }
 
 test.describe('Workspace', () => {
-  test.beforeEach(async ({ page }) => {
-    const workspace = new WorkspacePage(page);
-    await workspace.reload();
-  });
+  // Scoped to its own describe so the reload does NOT also fire for the shared-page block(s)
+  // below: an outer beforeEach runs for nested describes too, and requesting the `page` fixture
+  // there created and booted a whole extra app instance per nested test that nothing then used.
+  test.describe('cold load', () => {
+    test.beforeEach(async ({ page }) => {
+      const workspace = new WorkspacePage(page);
+      await workspace.reload();
+    });
 
-  // 1. Landing state, per user. Always taken (even for users without ViewWorkspace) so the baseline
-  //    documents exactly what each permission level lands on.
-  test('workspace start', async ({ page, gui, user }) => {
-    if (canSeePage(user, 'Workspace')) {
-      await new WorkspacePage(page).open();
-    }
-    await gui.checkScreenshot(page, 'workspace-start');
-  });
-
-  // 2. Structural permission-matrix check on the navigation menu (cheap, exact, per user). This is
-  //    the one place we assert visibility structurally so the intent is machine-checked, not only
-  //    eyeballed via screenshot.
-  test('menu reflects permissions', async ({ page, user }) => {
-    const workspace = new WorkspacePage(page);
-    const shouldSee = visiblePages(user);
-    for (const pageId of Object.keys(require('../matrix/permissions').PAGE_PERMISSIONS)) {
-      if (shouldSee.includes(pageId)) {
-        await workspace.menu.expectHasPage(pageId);
-      } else {
-        await workspace.menu.expectNoPage(pageId);
+    // 1. Landing state, per user. Always taken (even for users without ViewWorkspace) so the baseline
+    //    documents exactly what each permission level lands on.
+    test('workspace start', async ({ page, gui, user }) => {
+      if (canSeePage(user, 'Workspace')) {
+        await new WorkspacePage(page).open();
       }
-    }
+      await gui.checkScreenshot(page, 'workspace-start');
+    });
+
+    // 2. Structural permission-matrix check on the navigation menu (cheap, exact, per user). This is
+    //    the one place we assert visibility structurally so the intent is machine-checked, not only
+    //    eyeballed via screenshot.
+    test('menu reflects permissions', async ({ page, user }) => {
+      const workspace = new WorkspacePage(page);
+      const shouldSee = visiblePages(user);
+      for (const pageId of Object.keys(require('../matrix/permissions').PAGE_PERMISSIONS)) {
+        if (shouldSee.includes(pageId)) {
+          await workspace.menu.expectHasPage(pageId);
+        } else {
+          await workspace.menu.expectNoPage(pageId);
+        }
+      }
+    });
   });
 
   // The remaining interactions only make sense for users who can actually open the Workspace. One

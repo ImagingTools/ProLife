@@ -62,11 +62,11 @@ function extractScreenshotNames(specSource) {
 // enabled, so baselines belonging to users outside the default fast subset are not mistaken for dead.
 // Returns null if no listing can be produced, and the caller then skips this check rather than
 // reporting every baseline in the repo as an orphan.
-function scheduledSpecsByProject() {
+function scheduledSpecsByProject(extraArgs = []) {
   const { execFileSync } = require('child_process');
   let output = '';
   try {
-    output = execFileSync('npx', ['playwright', 'test', '--list'], {
+    output = execFileSync('npx', ['playwright', 'test', '--list', ...extraArgs], {
       cwd: path.resolve(__dirname, '..'),
       env: { ...process.env, PROLIFE_GUI_ALL_USERS: '1' },
       encoding: 'utf8',
@@ -87,6 +87,24 @@ function scheduledSpecsByProject() {
   return byProject.size ? byProject : null;
 }
 
+// Screenshot names taken inside a test tagged @mutating. A project excluded from the mutating phase
+// (buildProjects' mutatingUserKeys -> a project-level grepInvert) still has that spec scheduled, so the
+// directory-level check above cannot see that these particular baselines are now unreachable.
+function mutatingScreenshotNames(specSource) {
+  const names = new Set();
+  // Split at each test( boundary and keep the blocks whose header carries the tag.
+  const blocks = specSource.split(/\n(?=\s*test\s*\()/);
+  for (const block of blocks) {
+    const arrow = block.indexOf('=>');
+    const header = arrow === -1 ? block : block.slice(0, arrow);
+    if (!header.includes('@mutating')) continue;
+    const re = /checkScreenshot\s*\(\s*[^,]+,\s*['"]([^'"]+)['"]/g;
+    let m;
+    while ((m = re.exec(block))) names.add(m[1]);
+  }
+  return names;
+}
+
 function main() {
   if (!fs.existsSync(SCREENSHOTS_DIR)) {
     console.log('No __screenshots__ directory found - nothing to check.');
@@ -98,6 +116,7 @@ function main() {
   const unscheduledDirs = [];
 
   const scheduled = scheduledSpecsByProject();
+  const mutatingProjects = scheduled ? scheduledSpecsByProject(['--grep', '@mutating']) : null;
   if (!scheduled) {
     console.log('Could not list the test graph - skipping the "project no longer runs this spec" check.\n');
   }
@@ -127,6 +146,10 @@ function main() {
 
       const specSource = fs.readFileSync(specPath, 'utf8');
       const validNames = extractScreenshotNames(specSource);
+      // Drop the names only a @mutating test produces when this project is excluded from that phase.
+      if (mutatingProjects && !(mutatingProjects.get(project) || new Set()).has(relPath.replace(/\\/g, '/'))) {
+        for (const name of mutatingScreenshotNames(specSource)) validNames.delete(name);
+      }
 
       for (const pngFile of pngFiles) {
         // Strip the trailing "-<platform>.png" (e.g. "-linux.png"/"-win32.png") to get the name passed

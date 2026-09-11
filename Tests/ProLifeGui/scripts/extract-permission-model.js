@@ -13,6 +13,18 @@
 // missing from the registry is therefore returned to every user and gated by QML alone - which is
 // exactly the distinction the browser tests need in order to know what they still have to cover.
 //
+// TWO CAVEATS, both deliberate rather than oversights:
+//
+// 1. `pageCommands[*].filteredByServer` is about the BUTTON, not the action behind it. GUI element ids
+//    and service CommandIds are different namespaces - the Software page's `Split` button is not
+//    filtered, while the `SplitLicense` operation it invokes has its own registry entry and is. So a
+//    false there means "this user still sees the button", never "this user can still do it". Closing
+//    that gap needs an API test, not this file.
+//
+// 2. `pages` covers only the entries Pages.acc declares with PagePermissions - 5 of the 9 pages the
+//    menu can show. Workspace/Administration/Search/Tickets are configured elsewhere. So this is a
+//    partial view of the menu rule, not a replacement for matrix/permissions.js yet.
+//
 //   node scripts/extract-permission-model.js            # write matrix/declared.json, report lint
 //   node scripts/extract-permission-model.js --check    # lint only, non-zero exit on findings
 
@@ -218,14 +230,22 @@ function build() {
     }
   }
 
-  // Which GUI commands the server actually filters, and which reach every user regardless.
-  const gating = {};
+  // Whether the COMMAND BAR filters each command server-side. CCommandsControllerComp looks the GUI
+  // element's own id up in this registry, so a command whose id is absent is returned to every user and
+  // is hidden by QML alone.
+  //
+  // "not filtered" is a statement about the BUTTON, not about the operation behind it. The two use
+  // different id namespaces: the Software page's `Split` button is unfiltered, while the `SplitLicense`
+  // operation it invokes has its own registry entry and is enforced. So this says which buttons a user
+  // can still see - not which actions a user can still perform. The gap between the two columns is
+  // exactly what an API test has to close.
+  const commandBar = {};
   for (const [page, ids] of Object.entries(commands)) {
-    gating[page] = {};
+    commandBar[page] = {};
     for (const id of ids) {
-      gating[page][id] = registry[id]
-        ? { enforcedBy: 'server', permissions: registry[id].permissions }
-        : { enforcedBy: 'client-only' };
+      commandBar[page][id] = registry[id]
+        ? { filteredByServer: true, permissions: registry[id].permissions }
+        : { filteredByServer: false };
     }
   }
 
@@ -235,7 +255,7 @@ function build() {
       permissions: Object.fromEntries([...permissions].sort()),
       pages,
       serverCommandRegistry: registry,
-      pageCommands: gating,
+      pageCommands: commandBar,
     },
     findings,
   };
@@ -247,14 +267,14 @@ function main() {
   const clientOnly = [];
   for (const [page, cmds] of Object.entries(model.pageCommands)) {
     for (const [id, info] of Object.entries(cmds)) {
-      if (info.enforcedBy === 'client-only') clientOnly.push(`${page}/${id}`);
+      if (!info.filteredByServer) clientOnly.push(`${page}/${id}`);
     }
   }
 
   console.log(`permissions defined:        ${Object.keys(model.permissions).length}`);
   console.log(`pages with PagePermissions: ${Object.keys(model.pages).length}`);
   console.log(`server-enforced commands:   ${Object.keys(model.serverCommandRegistry).length}`);
-  console.log(`GUI commands, client-only:  ${clientOnly.length}`);
+  console.log(`page commands NOT filtered by the server (QML-only in the command bar): ${clientOnly.length}`);
   for (const c of clientOnly) console.log(`    ${c}`);
 
   if (findings.length) {

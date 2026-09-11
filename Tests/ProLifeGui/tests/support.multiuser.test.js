@@ -19,13 +19,18 @@ const gui = require('imtcore-gui-testkit/lib/gui');
 const PAGE = 'Tickets';
 
 test.describe('Support', () => {
-  test.beforeEach(async ({ page }) => {
-    await new SupportCollectionPage(page).reload();
-  });
+  // Scoped to its own describe so the reload does NOT also fire for the shared-page block(s)
+  // below: an outer beforeEach runs for nested describes too, and requesting the `page` fixture
+  // there created and booted a whole extra app instance per nested test that nothing then used.
+  test.describe('cold load', () => {
+    test.beforeEach(async ({ page }) => {
+      await new SupportCollectionPage(page).reload();
+    });
 
-  test('landing', async ({ page, gui: guiFixture, user }) => {
-    if (canSeePage(user, PAGE)) await new SupportCollectionPage(page).open();
-    await guiFixture.checkScreenshot(page, 'support-landing');
+    test('landing', async ({ page, gui: guiFixture, user }) => {
+      if (canSeePage(user, PAGE)) await new SupportCollectionPage(page).open();
+      await guiFixture.checkScreenshot(page, 'support-landing');
+    });
   });
 
   // New ticket: Title/Description/Type/Priority (Status only appears once the ticket already exists -

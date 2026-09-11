@@ -14,27 +14,32 @@ const gui = require('imtcore-gui-testkit/lib/gui');
 const PAGE = 'Orders';
 
 test.describe('Orders / collection', () => {
-  test.beforeEach(async ({ page }) => {
-    await new OrderCollectionPage(page).reload();
-  });
+  // Scoped to its own describe so the reload does NOT also fire for the shared-page block(s)
+  // below: an outer beforeEach runs for nested describes too, and requesting the `page` fixture
+  // there created and booted a whole extra app instance per nested test that nothing then used.
+  test.describe('cold load', () => {
+    test.beforeEach(async ({ page }) => {
+      await new OrderCollectionPage(page).reload();
+    });
 
-  test('landing', async ({ page, gui, user }) => {
-    const orders = new OrderCollectionPage(page);
-    if (canSeePage(user, PAGE)) await orders.open();
-    await gui.checkScreenshot(page, 'orders-landing', await orders.timestampColumnMasks());
-  });
+    test('landing', async ({ page, gui, user }) => {
+      const orders = new OrderCollectionPage(page);
+      if (canSeePage(user, PAGE)) await orders.open();
+      await gui.checkScreenshot(page, 'orders-landing', await orders.timestampColumnMasks());
+    });
 
-  test('command bar reflects permissions', async ({ page, user }) => {
-    test.skip(!canSeePage(user, PAGE), 'user cannot see Orders');
-    const orders = new OrderCollectionPage(page);
-    await orders.open();
-    for (const cmd of ['New', 'Edit', 'Remove', 'Revision']) {
-      if (canRunOrderCommand(user, cmd)) {
-        await orders.commands.expectHasCommand(cmd);
-      } else {
-        await orders.commands.expectNoCommand(cmd);
+    test('command bar reflects permissions', async ({ page, user }) => {
+      test.skip(!canSeePage(user, PAGE), 'user cannot see Orders');
+      const orders = new OrderCollectionPage(page);
+      await orders.open();
+      for (const cmd of ['New', 'Edit', 'Remove', 'Revision']) {
+        if (canRunOrderCommand(user, cmd)) {
+          await orders.commands.expectHasCommand(cmd);
+        } else {
+          await orders.commands.expectNoCommand(cmd);
+        }
       }
-    }
+    });
   });
 
   test.describe.serial('interactions', () => {

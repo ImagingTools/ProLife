@@ -1,8 +1,10 @@
 // Software (SoftwareProducts) COLLECTION view - full functional coverage, multi-user.
 //
 // Runs once per user-project; screenshots auto-separate per user (see playwright.config.js). Users
-// who cannot see the Software page skip the interaction body but still record a landing screenshot,
-// so the permission difference is captured. Command/field gating comes from matrix/permissions.js.
+// who cannot see the Software page do not run this spec at all (playwright.config.js's SPEC_PAGES):
+// their landing screenshots were byte-identical to every other page's, and the permission difference
+// they were meant to capture is asserted structurally in workspace.multiuser.test.js instead.
+// Command/field gating comes from matrix/permissions.js.
 //
 // 'landing' and 'command bar reflects permissions' keep the default fresh-page-per-test fixture (their
 // whole point is documenting the COLD load state). 'interactions' is `.serial` and shares ONE page
@@ -19,29 +21,34 @@ const gui = require('imtcore-gui-testkit/lib/gui');
 const PAGE = 'SoftwareProducts';
 
 test.describe('Software / collection', () => {
-  test.beforeEach(async ({ page }) => {
-    await new SoftwareCollectionPage(page).reload();
-  });
+  // Scoped to its own describe so the reload does NOT also fire for the shared-page block(s)
+  // below: an outer beforeEach runs for nested describes too, and requesting the `page` fixture
+  // there created and booted a whole extra app instance per nested test that nothing then used.
+  test.describe('cold load', () => {
+    test.beforeEach(async ({ page }) => {
+      await new SoftwareCollectionPage(page).reload();
+    });
 
-  // Landing screenshot for every user (documents what each permission level sees).
-  test('landing', async ({ page, gui, user }) => {
-    const software = new SoftwareCollectionPage(page);
-    if (canSeePage(user, PAGE)) await software.open();
-    await gui.checkScreenshot(page, 'software-landing', await software.timestampColumnMasks());
-  });
+    // Landing screenshot for every user (documents what each permission level sees).
+    test('landing', async ({ page, gui, user }) => {
+      const software = new SoftwareCollectionPage(page);
+      if (canSeePage(user, PAGE)) await software.open();
+      await gui.checkScreenshot(page, 'software-landing', await software.timestampColumnMasks());
+    });
 
-  // Structural gate: which commands each user's command bar exposes.
-  test('command bar reflects permissions', async ({ page, user }) => {
-    test.skip(!canSeePage(user, PAGE), 'user cannot see Software');
-    const software = new SoftwareCollectionPage(page);
-    await software.open();
-    for (const cmd of ['New', 'Edit', 'Remove', 'Revision', 'Split', 'Revoke']) {
-      if (canRunSoftwareCommand(user, cmd)) {
-        await software.commands.expectHasCommand(cmd);
-      } else {
-        await software.commands.expectNoCommand(cmd);
+    // Structural gate: which commands each user's command bar exposes.
+    test('command bar reflects permissions', async ({ page, user }) => {
+      test.skip(!canSeePage(user, PAGE), 'user cannot see Software');
+      const software = new SoftwareCollectionPage(page);
+      await software.open();
+      for (const cmd of ['New', 'Edit', 'Remove', 'Revision', 'Split', 'Revoke']) {
+        if (canRunSoftwareCommand(user, cmd)) {
+          await software.commands.expectHasCommand(cmd);
+        } else {
+          await software.commands.expectNoCommand(cmd);
+        }
       }
-    }
+    });
   });
 
   // Everything below only runs for users who can open the page. One shared page/session for the whole
@@ -130,8 +137,11 @@ test.describe('Software / collection', () => {
         await software.pagination.goToPage(2);
         await gui.checkScreenshot(page, 'software-pagination-page-2', await software.timestampColumnMasks());
       }
-      // Page size is NOT covered by clearAllFilters(), so on a shared page it would leak into every
-      // later test in this block. Put it back so the rest of the chain sees the default.
+      // Neither the page size nor the current page survives clearAllFilters(), so on a shared page both
+      // would leak into every later test in this block - the row-0 dialog tests below would be acting on
+      // page 2. Restoring the size does not reset the page by itself (Pagination.qml only clamps
+      // currentIndex when it exceeds the new page count), so put the page back explicitly first.
+      if (await software.pagination.hasPage(1)) await software.pagination.goToPage(1);
       await software.pagination.setPageSize(25);
     });
 

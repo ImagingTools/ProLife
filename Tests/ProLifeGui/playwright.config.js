@@ -1,7 +1,9 @@
 const { defineConfig } = require('@playwright/test');
 const { buildProjects } = require('imtcore-gui-testkit/playwrightConfig/buildProjects');
-const { GUEST, authFile, activeUsers } = require('./fixtures/users');
-const { canSeePage } = require('./matrix/permissions');
+const { GUEST, USERS, authFile, activeUsers } = require('./fixtures/users');
+const fs = require('fs');
+const path = require('path');
+const { canSeePage, PAGE_PERMISSIONS } = require('./matrix/permissions');
 
 const BASE_URL = process.env.PROLIFE_BASE_URL || 'http://localhost:17778';
 
@@ -41,6 +43,31 @@ const SPEC_PAGES = {
 // path, fullAccess for the real-granted-permission path); every isolatedSpec user keeps its own
 // mutating tests automatically, since its spec runs under that user and nobody else.
 const MUTATING_USER_KEYS = ['su', 'fullAccess'];
+
+// Both maps above are silent when wrong: canSeePage() returns false for an unknown page id, so a typo
+// in SPEC_PAGES drops that spec from every project and the run still goes green; a stale key in
+// MUTATING_USER_KEYS likewise just stops matching. Check them against the real names once, here, where
+// the config is loaded.
+(function validateScheduling() {
+  const knownPages = new Set(Object.keys(PAGE_PERMISSIONS));
+  for (const [spec, pageId] of Object.entries(SPEC_PAGES)) {
+    if (!fs.existsSync(path.join(__dirname, 'tests', spec))) {
+      throw new Error(`playwright.config.js: SPEC_PAGES names a spec that does not exist: ${spec}`);
+    }
+    if (pageId !== null && !knownPages.has(pageId)) {
+      throw new Error(
+        `playwright.config.js: SPEC_PAGES maps ${spec} to unknown page "${pageId}". ` +
+          `Known pages: ${[...knownPages].join(', ')}.`
+      );
+    }
+  }
+  const knownUsers = new Set(USERS.map((u) => u.key));
+  for (const key of MUTATING_USER_KEYS) {
+    if (!knownUsers.has(key)) {
+      throw new Error(`playwright.config.js: MUTATING_USER_KEYS names unknown user "${key}".`);
+    }
+  }
+})();
 
 module.exports = defineConfig({
   testDir: './tests',

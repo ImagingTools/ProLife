@@ -24,23 +24,28 @@ const gui = require('imtcore-gui-testkit/lib/gui');
 const PAGE = 'Administration';
 
 test.describe('Administration', () => {
-  test.beforeEach(async ({ page }) => {
-    await new AdministrationPage(page).reload();
-  });
+  // Scoped to its own describe so the reload does NOT also fire for the shared-page block(s)
+  // below: an outer beforeEach runs for nested describes too, and requesting the `page` fixture
+  // there created and booted a whole extra app instance per nested test that nothing then used.
+  test.describe('cold load', () => {
+    test.beforeEach(async ({ page }) => {
+      await new AdministrationPage(page).reload();
+    });
 
-  // Landing screenshot for every user (users without admin rights land elsewhere - that difference is
-  // the permission check).
-  test('landing', async ({ page, gui, user }) => {
-    if (canSeePage(user, PAGE)) await new AdministrationPage(page).open();
-    await gui.checkScreenshot(page, 'administration-landing');
-  });
+    // Landing screenshot for every user (users without admin rights land elsewhere - that difference is
+    // the permission check).
+    test('landing', async ({ page, gui, user }) => {
+      if (canSeePage(user, PAGE)) await new AdministrationPage(page).open();
+      await gui.checkScreenshot(page, 'administration-landing');
+    });
 
-  test('opens for authorized users', async ({ page, gui, user }) => {
-    test.skip(!canSeePage(user, PAGE), 'user cannot see Administration');
-    const admin = new AdministrationPage(page);
-    await admin.open();
-    await admin.expectLoaded();
-    await gui.checkScreenshot(page, 'administration-view');
+    test('opens for authorized users', async ({ page, gui, user }) => {
+      test.skip(!canSeePage(user, PAGE), 'user cannot see Administration');
+      const admin = new AdministrationPage(page);
+      await admin.open();
+      await admin.expectLoaded();
+      await gui.checkScreenshot(page, 'administration-view');
+    });
   });
 
   // --- Subpages: navigate to each + command bar gating -------------------------------------------

@@ -1,8 +1,10 @@
 // Hardware (Devices) COLLECTION view - full functional coverage, multi-user.
 //
 // Runs once per user-project; screenshots auto-separate per user (see playwright.config.js). Users
-// who cannot see the Hardware page skip the interaction body but still record a landing screenshot,
-// so the permission difference is captured. Command/field gating comes from matrix/permissions.js.
+// who cannot see the Hardware page do not run this spec at all (playwright.config.js's SPEC_PAGES):
+// their landing screenshots were byte-identical to every other page's, and the permission difference
+// they were meant to capture is asserted structurally in workspace.multiuser.test.js instead.
+// Command/field gating comes from matrix/permissions.js.
 //
 // 'landing' and 'command bar reflects permissions' keep the default fresh-page-per-test fixture (their
 // whole point is documenting the COLD load state). 'interactions' and its nested 'column configuration'
@@ -19,32 +21,37 @@ const gui = require('imtcore-gui-testkit/lib/gui');
 const PAGE = 'Devices';
 
 test.describe('Hardware / collection', () => {
-  test.beforeEach(async ({ page }) => {
-    await new DeviceCollectionPage(page).reload();
-  });
+  // Scoped to its own describe so the reload does NOT also fire for the shared-page block(s)
+  // below: an outer beforeEach runs for nested describes too, and requesting the `page` fixture
+  // there created and booted a whole extra app instance per nested test that nothing then used.
+  test.describe('cold load', () => {
+    test.beforeEach(async ({ page }) => {
+      await new DeviceCollectionPage(page).reload();
+    });
 
-  // Landing screenshot for every user (documents what each permission level sees).
-  test('landing', async ({ page, gui, user }) => {
-    const devices = new DeviceCollectionPage(page);
-    if (canSeePage(user, PAGE)) await devices.open();
-    await gui.checkScreenshot(page, 'devices-landing', await devices.timestampColumnMasks());
-  });
+    // Landing screenshot for every user (documents what each permission level sees).
+    test('landing', async ({ page, gui, user }) => {
+      const devices = new DeviceCollectionPage(page);
+      if (canSeePage(user, PAGE)) await devices.open();
+      await gui.checkScreenshot(page, 'devices-landing', await devices.timestampColumnMasks());
+    });
 
-  // Structural gate: which commands each user's command bar exposes.
-  test('command bar reflects permissions', async ({ page, user }) => {
-    test.skip(!canSeePage(user, PAGE), 'user cannot see Hardware');
-    const devices = new DeviceCollectionPage(page);
-    await devices.open();
-    // Support is intentionally excluded here: it only exists on the document EDITOR's command bar
-    // (DeviceCollectionViewCommandsDelegate.qml's deviceEditorComp.commandsDelegateComp), not on this
-    // collection list - see devices.editor.multiuser.test.js's dedicated Support test.
-    for (const cmd of ['New', 'Edit', 'Remove', 'Revision', 'Bind', 'CreateLicenseFile', 'TransferLicenses', 'ResetTransferCounter']) {
-      if (canRunDeviceCommand(user, cmd)) {
-        await devices.commands.expectHasCommand(cmd);
-      } else {
-        await devices.commands.expectNoCommand(cmd);
+    // Structural gate: which commands each user's command bar exposes.
+    test('command bar reflects permissions', async ({ page, user }) => {
+      test.skip(!canSeePage(user, PAGE), 'user cannot see Hardware');
+      const devices = new DeviceCollectionPage(page);
+      await devices.open();
+      // Support is intentionally excluded here: it only exists on the document EDITOR's command bar
+      // (DeviceCollectionViewCommandsDelegate.qml's deviceEditorComp.commandsDelegateComp), not on this
+      // collection list - see devices.editor.multiuser.test.js's dedicated Support test.
+      for (const cmd of ['New', 'Edit', 'Remove', 'Revision', 'Bind', 'CreateLicenseFile', 'TransferLicenses', 'ResetTransferCounter']) {
+        if (canRunDeviceCommand(user, cmd)) {
+          await devices.commands.expectHasCommand(cmd);
+        } else {
+          await devices.commands.expectNoCommand(cmd);
+        }
       }
-    }
+    });
   });
 
   // Everything below only runs for users who can open the page. One shared page/session for the

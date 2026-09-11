@@ -37,7 +37,9 @@ pages/          ProLife's own page objects: Workspace/Device/Software/Order/Acco
                 editor) · Support · index
 matrix/         permissions.js — the hand-written UI element → permission map the specs use
                 declared.json — the same model extracted from the product's OWN configuration by
-                scripts/extract-permission-model.js; when the two disagree, one of them is wrong
+                scripts/extract-permission-model.js. Not a replacement yet: it covers the 5 pages
+                Pages.acc declares with PagePermissions, not all 9, and keys them by Element Id
+                (CustomersPage, not Accounts), so the two are not directly comparable
 tests/          *.collection / *.editor multiuser specs per domain · workspace · administration ·
                 organizations · search · support · login.guest ; per-user baselines in
                 tests/__screenshots__/<user>/
@@ -139,7 +141,9 @@ Two checks need neither a server nor a browser, and are worth running before any
 
 ```bash
 # The permission model the product itself declares, plus a lint over Pages.acc / *Permissions.acc /
-# ProLifeFeatures.xml / fixtures/users.js. --check exits non-zero on findings.
+# ProLifeFeatures.xml / fixtures/users.js. It reports 9 findings today, all pre-existing and all
+# already documented in fixtures/users.js and matrix/permissions.js, so --check (non-zero on ANY
+# finding) is a review aid for now, not a CI gate - it becomes one once those are fixed or waived.
 node scripts/extract-permission-model.js
 
 # Baselines nothing can compare against any more: spec deleted, check renamed, or the project no
