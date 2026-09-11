@@ -15,22 +15,18 @@
 
 const { test, newUserPage } = require('../fixtures/test');
 const { DeviceCollectionPage, DeviceEditorPage } = require('../pages');
-const { canSeePage, canRunDeviceCommand } = require('../matrix/permissions');
 const gui = require('imtcore-gui-testkit/lib/gui');
-
-const PAGE = 'Devices';
 
 test.describe('Concurrent session - remote change banner', () => {
   test('editing a device in one session shows the banner in another', async ({ browser }, testInfo) => {
     const sessionA = await newUserPage(browser, testInfo);
     const sessionB = await newUserPage(browser, testInfo);
     try {
-      test.skip(!canSeePage(sessionA.user, PAGE), 'user cannot see Hardware');
-      test.skip(!canRunDeviceCommand(sessionA.user, 'Edit'), 'user cannot edit a sensor');
-
       const devicesA = new DeviceCollectionPage(sessionA.page);
       await devicesA.reload();
+      test.skip(!(await devicesA.isAvailable()), 'Hardware is not available to this user');
       await devicesA.open();
+      test.skip(!(await devicesA.commands.isAvailable('Edit')), 'Edit is not available to this user');
       await gui.checkScreenshot(sessionA.page, 'concurrent-banner-before');
 
       // Session B edits and saves an existing device WITHOUT session A doing anything - the banner in

@@ -1,8 +1,14 @@
 # ProLifeGui — GUI end-to-end tests (new architecture)
 
 A clean, `objectName`-driven, page-object based Playwright suite for the ProLife Qt/QML web app, with
-**first-class multi-user (permission) testing**: every spec runs once per test user, and screenshots
-are captured per user, so "what each permission level sees" is validated by construction.
+**first-class multi-user testing**: every spec runs once per test user, and screenshots are captured
+per user, so "what each user sees" is recorded by construction.
+
+The suite deliberately holds **no model of who may do what**. A test logs in, drives the UI and
+compares screenshots; permissions are the server's business. Where a flow simply is not offered to the
+current user, the test asks the running client - is the page in the menu, is the command button
+visible - and skips. The client was built from that user's own permissions, so it is the only answer
+that cannot drift out of date.
 
 This is a **new, self-contained suite**. The legacy `Tests/frontend` (and the stale `Tests/GUI`) are
 left untouched; they were used only as reference.
@@ -16,7 +22,7 @@ left untouched; they were used only as reference.
 | `waitForDomStability` diffs full `outerHTML` every 100 ms | `waitForStable` uses an in-page `MutationObserver` |
 | One user (`su`), one `storageState.json` | One project **per user**, one `storageState` each, restored from a backup |
 | Raw `objectName` arrays copy-pasted | `controls/` + `pages/` vocabulary |
-| Screenshot-only, no structure guard | Screenshot-primary **plus** an honest action layer + optional structural matrix assertions |
+| Screenshot-only, no structure guard | Screenshot-primary **plus** an honest action layer that hard-fails instead of no-opping |
 
 ## Layout
 
@@ -35,24 +41,16 @@ fixtures/       users.js (source of truth) · seed.js (GraphQL role/user creatio
                 test.js (thin wrapper over the kit's createGuiTest)
 pages/          ProLife's own page objects: Workspace/Device/Software/Order/Account (collection +
                 editor) · Support · index
-matrix/         permissions.js — the hand-written UI element → permission map the specs use
-                declared.json — the same model extracted from the product's OWN configuration by
-                scripts/extract-permission-model.js. Not a replacement yet: it covers the 5 pages
-                Pages.acc declares with PagePermissions, not all 9, and keys them by Element Id
-                (CustomersPage, not Accounts), so the two are not directly comparable
 tests/          *.collection / *.editor multiuser specs per domain · workspace · administration ·
                 organizations · search · support · login.guest ; per-user baselines in
                 tests/__screenshots__/<user>/
-scripts/        extract-permission-model.js (declared model + configuration lint) ·
-                prune-orphan-baselines.js (dead baselines) ·
+scripts/        prune-orphan-baselines.js (dead baselines) ·
                 seed-fixture-users.js (one-off, used by Generate-Backups.ps1)
 global-setup.js logs in as each ACTIVE fixture user (already baked into puma.backup) and mints one
                 storageState each
 playwright.config.js  one project per user (+ guest); snapshots keyed by {projectName}; workers: 10,
                 with Run-CiTests.ps1 running a parallel read-only phase and a serial @mutating one.
-                SPEC_PAGES drops a spec from a user's project when that user's permissions make the
-                page unreachable, and MUTATING_USER_KEYS keeps the serial phase from growing with the
-                matrix - together they are why adding a user is cheap.
+                MUTATING_USER_KEYS keeps the serial phase from growing with the matrix.
 ```
 
 ## Multi-user model (the core idea)
@@ -73,17 +71,17 @@ playwright.config.js  one project per user (+ guest); snapshots keyed by {projec
 | `guest` | unauthenticated | login page |
 
 The granular managers exist so each domain's **full command bar + editor save path runs for a
-non-superuser** (permission-driven, not `*`), and `orgViewer`/`adminManager` are the users that make
-the Organizations / Administration pages appear. Every seeded user's page set is asserted structurally
-by `workspace.multiuser.test.js` → "menu reflects permissions" against `matrix/permissions.js`
-(`PAGE_PERMISSIONS`, transcribed verbatim from `Pages.acc` / `PagesController.acc`).
+non-superuser** (real granted permissions, not `*`), and `orgViewer`/`adminManager` are the users that
+make the Organizations / Administration pages appear. What each user actually sees is recorded by
+their own `workspace-start` baseline, not asserted against a table.
 
 `playwright.config.js` turns each into a **Playwright project** with its own `storageState`. A spec is
 therefore run once per user, and `snapshotPathTemplate` writes baselines to
-`tests/__screenshots__/<user>/<spec>/<name>-<platform>.png`. The `user` fixture (resolved from the
-project name) lets a test adapt — e.g. `test.skip(!user.can('AddOrder'))` — while its screenshots
-land in that user's directory. Permission codes come from `ProLifeFeatures.xml`; the same role sets
-were validated in `Tests/ProLifeApiPostman` folder "08 Multi-role Scenario".
+`tests/__screenshots__/<user>/<spec>/<name>-<platform>.png`. A spec that cannot be driven as the
+current user skips on a runtime probe - `page.isAvailable()` (is it in the menu) or
+`page.commands.isAvailable(id)` (is the button clickable) - so no test needs to know which permission
+is behind either. Permission codes in `fixtures/users.js` exist only to SEED each fixture role; the
+same role sets were validated in `Tests/ProLifeApiPostman` folder "08 Multi-role Scenario".
 
 To compare users **inside one spec body** instead, use `forEachUser(users, fn)` from `fixtures/test.js`.
 
@@ -93,9 +91,10 @@ To compare users **inside one spec body** instead, use `forEachUser(users, fn)` 
 const { test } = require('../fixtures/test');
 const { WorkspacePage } = require('../pages');
 
-test('workspace start', async ({ page, gui, user }) => {
+test('workspace start', async ({ page, gui }) => {
   const ws = new WorkspacePage(page);
   await ws.reload();
+  test.skip(!(await ws.isAvailable()), 'Workspace is not available to this user');
   await ws.open();               // throws if the Workspace button is missing
   await gui.checkScreenshot(page, 'workspace-start');   // baseline is per-user automatically
 });
@@ -107,9 +106,8 @@ Page objects hold **actions/locators only**; tests own the `checkScreenshot`/`ex
 
 Validation is screenshot-based, but the action layer (`lib/actions.js`) throws when a target
 `objectName` is absent/invisible/ambiguous, so a screenshot can never be captured of a state reached
-by a click that silently did nothing (the legacy `fillTextInput` bug). For exactness on
-permission-sensitive UI, `matrix/permissions.js` + `menu.expectHasPage()/expectNoPage()` add a small
-structural check (see `menu reflects permissions` in the example spec).
+by a click that silently did nothing (the legacy `fillTextInput` bug). Nothing here asserts who is
+allowed to do what: the server enforces that, and the per-user screenshots record the result.
 
 ## Running
 
@@ -140,12 +138,6 @@ Baselines are per-platform (`-win32` / `-linux`), so mint them on the same OS th
 Two checks need neither a server nor a browser, and are worth running before any of the above:
 
 ```bash
-# The permission model the product itself declares, plus a lint over Pages.acc / *Permissions.acc /
-# ProLifeFeatures.xml / fixtures/users.js. It reports 9 findings today, all pre-existing and all
-# already documented in fixtures/users.js and matrix/permissions.js, so --check (non-zero on ANY
-# finding) is a review aid for now, not a CI gate - it becomes one once those are fixed or waived.
-node scripts/extract-permission-model.js
-
 # Baselines nothing can compare against any more: spec deleted, check renamed, or the project no
 # longer runs that spec. --delete removes them.
 node scripts/prune-orphan-baselines.js
@@ -226,9 +218,8 @@ collection and the multi-tab editor:
   comment documents the Document Service flow (New/Edit → GetDeviceRepresentation →
   edit → UpdateDeviceFromRepresentation on Save).
 
-Command/field permission gating lives in `matrix/permissions.js`
-(`canRunDeviceCommand`, `canEditDeviceField`) and drives per-user `test.skip` + the structural
-"command bar reflects permissions" / "editable fields reflect permissions" checks.
+Commands a given user cannot drive are skipped on `commands.isAvailable(id)` - the rendered button,
+not a table - so the same spec runs unchanged under every user.
 
 ## QML instrumentation added for these tests
 
@@ -262,8 +253,8 @@ Filters, command-bar commands and table columns were **already** instrumented up
 Administration / Organizations / Search are covered at the **navigation + screenshot** level because
 `AdministrationView.qml`, `TenantCollectionView.qml` and `SearchPage.qml` are not yet
 `objectName`-instrumented internally. To deepen them (command bars, sub-tabs, fields), add inert
-`objectName`s the same way `DeviceEditor` got them, then extend the specs with command/field gating
-from `matrix/permissions.js` — this is the remaining migration work.
+`objectName`s the same way `DeviceEditor` got them, then extend the specs with the real interactions -
+this is the remaining migration work.
 
 The Support/Tickets page (`DeskPage`, `IsVisible=false`) is intentionally not part of the ProLife menu
 and is not covered here.

@@ -46,10 +46,6 @@ class AccountEditorPage extends BasePage {
     await gui.clickButton(this.page, [header]);
     return this;
   }
-
-  expectFieldVisible(objectName) {
-    return gui.expectVisible(this.page, [objectName]);
-  }
 }
 
 module.exports = { AccountEditorPage };

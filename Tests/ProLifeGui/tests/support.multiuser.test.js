@@ -1,5 +1,5 @@
 // Support (Tickets) page - GENERIC ImtCore feature (imtdeskgui/TicketCollectionView.qml +
-// TicketEditor.qml), previously completely untested. Universal page (PAGE_PERMISSIONS: ['*']), same
+// TicketEditor.qml), previously completely untested. Universal page, same
 // as Search - every authenticated user can reach it, no permission gate needed for basic access.
 //
 // The MenuPanel entry is labelled "Support" in the UI, but its actual registered PageId (and MenuPanel
@@ -13,10 +13,7 @@ const os = require('os');
 const path = require('path');
 const { test, newUserPage } = require('../fixtures/test');
 const { SupportCollectionPage, SupportTicketEditorPage } = require('../pages');
-const { canSeePage } = require('../matrix/permissions');
 const gui = require('imtcore-gui-testkit/lib/gui');
-
-const PAGE = 'Tickets';
 
 test.describe('Support', () => {
   // Scoped to its own describe so the reload does NOT also fire for the shared-page block(s)
@@ -27,8 +24,9 @@ test.describe('Support', () => {
       await new SupportCollectionPage(page).reload();
     });
 
-    test('landing', async ({ page, gui: guiFixture, user }) => {
-      if (canSeePage(user, PAGE)) await new SupportCollectionPage(page).open();
+    test('landing', async ({ page, gui: guiFixture }) => {
+      const support = new SupportCollectionPage(page);
+      if (await support.isAvailable()) await support.open();
       await guiFixture.checkScreenshot(page, 'support-landing');
     });
   });
@@ -38,13 +36,14 @@ test.describe('Support', () => {
   // the command bar itself disappears once saved, since further edits apply immediately with no
   // separate Save step - see SupportTicketEditorPage's own header comment).
   test.describe.serial('ticket lifecycle', () => {
-    let page, user, support, editor;
+    let page, support, editor, available;
 
     test.beforeAll(async ({ browser }, testInfo) => {
-      ({ page, user } = await newUserPage(browser, testInfo));
+      ({ page } = await newUserPage(browser, testInfo));
       support = new SupportCollectionPage(page);
       await support.reload();
-      if (canSeePage(user, PAGE)) {
+      available = await support.isAvailable();
+      if (available) {
         await support.open();
       }
     });
@@ -54,7 +53,7 @@ test.describe('Support', () => {
     });
 
     test.beforeEach(() => {
-      test.skip(!canSeePage(user, PAGE), 'user cannot see Support');
+      test.skip(!available, 'Support is not available to this user');
     });
 
     test('create a new ticket and save', { tag: '@mutating' }, async () => {

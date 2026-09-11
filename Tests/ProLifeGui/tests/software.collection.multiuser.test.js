@@ -1,13 +1,11 @@
 // Software (SoftwareProducts) COLLECTION view - full functional coverage, multi-user.
 //
-// Runs once per user-project; screenshots auto-separate per user (see playwright.config.js). Users
-// who cannot see the Software page do not run this spec at all (playwright.config.js's SPEC_PAGES):
-// their landing screenshots were byte-identical to every other page's, and the permission difference
-// they were meant to capture is asserted structurally in workspace.multiuser.test.js instead.
-// Command/field gating comes from matrix/permissions.js.
+// Runs once per user-project; screenshots auto-separate per user (see playwright.config.js). Whether a
+// flow is available to the current user is asked of the running client - is the page in the menu, is
+// the command button visible - never of a permission table kept in the suite.
 //
-// 'landing' and 'command bar reflects permissions' keep the default fresh-page-per-test fixture (their
-// whole point is documenting the COLD load state). 'interactions' is `.serial` and shares ONE page
+// 'landing' keeps the default fresh-page-per-test fixture (its whole point is documenting the COLD
+// load state). 'interactions' is `.serial` and shares ONE page
 // opened once in beforeAll, exactly as devices.collection does - these tests need a clean filter panel,
 // not a cold load, and clearAllFilters() gives that without a WASM reboot. This file was the largest
 // remaining source of boot tax in the suite: 14 tests, every one of them a full reload.
@@ -15,10 +13,7 @@
 
 const { test, newUserPage } = require('../fixtures/test');
 const { SoftwareCollectionPage } = require('../pages');
-const { canSeePage, canRunSoftwareCommand } = require('../matrix/permissions');
 const gui = require('imtcore-gui-testkit/lib/gui');
-
-const PAGE = 'SoftwareProducts';
 
 test.describe('Software / collection', () => {
   // Scoped to its own describe so the reload does NOT also fire for the shared-page block(s)
@@ -29,39 +24,26 @@ test.describe('Software / collection', () => {
       await new SoftwareCollectionPage(page).reload();
     });
 
-    // Landing screenshot for every user (documents what each permission level sees).
-    test('landing', async ({ page, gui, user }) => {
+    test('landing', async ({ page, gui }) => {
       const software = new SoftwareCollectionPage(page);
-      if (canSeePage(user, PAGE)) await software.open();
-      await gui.checkScreenshot(page, 'software-landing', await software.timestampColumnMasks());
-    });
-
-    // Structural gate: which commands each user's command bar exposes.
-    test('command bar reflects permissions', async ({ page, user }) => {
-      test.skip(!canSeePage(user, PAGE), 'user cannot see Software');
-      const software = new SoftwareCollectionPage(page);
+      test.skip(!(await software.isAvailable()), 'Software is not available to this user');
       await software.open();
-      for (const cmd of ['New', 'Edit', 'Remove', 'Revision', 'Split', 'Revoke']) {
-        if (canRunSoftwareCommand(user, cmd)) {
-          await software.commands.expectHasCommand(cmd);
-        } else {
-          await software.commands.expectNoCommand(cmd);
-        }
-      }
+      await gui.checkScreenshot(page, 'software-landing', await software.timestampColumnMasks());
     });
   });
 
   // Everything below only runs for users who can open the page. One shared page/session for the whole
   // block (see this file's header), reset per-test via clearAllFilters().
   test.describe.serial('interactions', () => {
-    let page, user, software;
+    let page, software, available;
 
     test.beforeAll(async ({ browser }, testInfo) => {
-      ({ page, user } = await newUserPage(browser, testInfo));
+      ({ page } = await newUserPage(browser, testInfo));
       software = new SoftwareCollectionPage(page);
       // newUserPage() only opens a blank page - nothing has navigated to the app yet.
       await software.reload();
-      if (canSeePage(user, PAGE)) await software.open();
+      available = await software.isAvailable();
+      if (available) await software.open();
     });
 
     test.afterAll(async () => {
@@ -69,7 +51,7 @@ test.describe('Software / collection', () => {
     });
 
     test.beforeEach(async () => {
-      test.skip(!canSeePage(user, PAGE), 'user cannot see Software');
+      test.skip(!available, 'Software is not available to this user');
       // A prior test in this block may have left a filter or sort applied - collection view state is
       // server-persisted per user session. clearAllFilters() covers registered filters, the built-in
       // search and sorting (CollectionViewBase.qml's onClearAllFilters), cheaply and without navigation.
@@ -93,9 +75,8 @@ test.describe('Software / collection', () => {
     });
 
     test('filter - customers', async () => {
-      test.skip(!user.can('ViewAccounts'), 'customers filter needs ViewAccounts');
-      // Org-scoped users resolve to zero customers, so the Customers filter has no "QUISS" entry - skip
-      // rather than fail on a missing option (see AccountCollection's org-scoping note).
+      // Org-scoped users resolve to zero customers, so the Customers filter has no "QUISS" entry - and
+      // neither does a user whose role never renders the filter. Both answer the same question here.
       test.skip(
         !(await software.filters.combo('CustomersFilter').hasOption('QUISS')),
         'no QUISS customer visible to this user (org-scoped)'
@@ -147,7 +128,7 @@ test.describe('Software / collection', () => {
 
     // --- row selection + context-sensitive commands --------------------------------------------
     test('revision dialog', async () => {
-      test.skip(!canRunSoftwareCommand(user, 'Revision'), 'no Revision permission');
+      test.skip(!(await software.commands.isAvailable('Revision')), 'Revision is not available to this user');
       test.skip(!(await software.table.hasRows()), 'collection is empty for this user');
       await software.selectRow(0);
       await software.revision();
@@ -156,7 +137,7 @@ test.describe('Software / collection', () => {
     });
 
     test('remove confirmation dialog', async () => {
-      test.skip(!canRunSoftwareCommand(user, 'Remove'), 'no Remove permission');
+      test.skip(!(await software.commands.isAvailable('Remove')), 'Remove is not available to this user');
       test.skip(!(await software.table.hasRows()), 'collection is empty for this user');
       await software.selectRow(0);
       await software.removeItem();
@@ -165,7 +146,7 @@ test.describe('Software / collection', () => {
     });
 
     test('split dialog', async () => {
-      test.skip(!canRunSoftwareCommand(user, 'Split'), 'no Split permission');
+      test.skip(!(await software.commands.isAvailable('Split')), 'Split is not available to this user');
       test.skip(!(await software.table.hasRows()), 'collection is empty for this user');
       await software.selectRow(0);
       await software.split();
@@ -174,7 +155,7 @@ test.describe('Software / collection', () => {
     });
 
     test('revoke dialog', async () => {
-      test.skip(!canRunSoftwareCommand(user, 'Revoke'), 'no Revoke permission');
+      test.skip(!(await software.commands.isAvailable('Revoke')), 'Revoke is not available to this user');
       test.skip(!(await software.table.hasRows()), 'collection is empty for this user');
       await software.selectRow(0);
       await software.revoke();

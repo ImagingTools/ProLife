@@ -133,9 +133,9 @@ function main() {
         continue;
       }
 
-      // The spec still exists, but this project no longer runs it - e.g. a user whose permissions put
-      // the spec outside its project (playwright.config.js's SPEC_PAGES). These baselines can never be
-      // compared against anything again.
+      // The spec still exists, but this project no longer runs it - e.g. a user pinned to its own
+      // isolatedSpec, or one excluded from the @mutating phase. These baselines can never be compared
+      // against anything again.
       if (scheduled) {
         const specsHere = scheduled.get(project);
         if (!specsHere || !specsHere.has(relPath.replace(/\\/g, '/'))) {

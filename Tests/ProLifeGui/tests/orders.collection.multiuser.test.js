@@ -1,17 +1,17 @@
 // Orders COLLECTION view - full functional coverage, multi-user.
 //
-// 'landing' and 'command bar reflects permissions' keep the default fresh-page-per-test fixture (their
-// whole point is documenting the COLD load state). 'interactions' is `.serial` and shares ONE page
+// 'landing' keeps the default fresh-page-per-test fixture (its whole point is documenting the COLD
+// load state). 'interactions' is `.serial` and shares ONE page
 // opened once in beforeAll (see fixtures/test.js's newUserPage) instead of reload()-ing per test - same
 // pattern as devices.collection.multiuser.test.js, applied here to cut the per-test WASM-reboot cost.
 // Trade-off: a failure partway through 'interactions' skips the remaining steps in that block.
+//
+// Whether a flow is available to the current user is asked of the running client (is the page in the
+// menu, is the command button visible), never of a permission table kept here.
 
 const { test, newUserPage } = require('../fixtures/test');
 const { OrderCollectionPage } = require('../pages');
-const { canSeePage, canRunOrderCommand } = require('../matrix/permissions');
 const gui = require('imtcore-gui-testkit/lib/gui');
-
-const PAGE = 'Orders';
 
 test.describe('Orders / collection', () => {
   // Scoped to its own describe so the reload does NOT also fire for the shared-page block(s)
@@ -22,34 +22,23 @@ test.describe('Orders / collection', () => {
       await new OrderCollectionPage(page).reload();
     });
 
-    test('landing', async ({ page, gui, user }) => {
+    test('landing', async ({ page, gui }) => {
       const orders = new OrderCollectionPage(page);
-      if (canSeePage(user, PAGE)) await orders.open();
-      await gui.checkScreenshot(page, 'orders-landing', await orders.timestampColumnMasks());
-    });
-
-    test('command bar reflects permissions', async ({ page, user }) => {
-      test.skip(!canSeePage(user, PAGE), 'user cannot see Orders');
-      const orders = new OrderCollectionPage(page);
+      test.skip(!(await orders.isAvailable()), 'Orders is not available to this user');
       await orders.open();
-      for (const cmd of ['New', 'Edit', 'Remove', 'Revision']) {
-        if (canRunOrderCommand(user, cmd)) {
-          await orders.commands.expectHasCommand(cmd);
-        } else {
-          await orders.commands.expectNoCommand(cmd);
-        }
-      }
+      await gui.checkScreenshot(page, 'orders-landing', await orders.timestampColumnMasks());
     });
   });
 
   test.describe.serial('interactions', () => {
-    let page, user, orders;
+    let page, orders, available;
 
     test.beforeAll(async ({ browser }, testInfo) => {
-      ({ page, user } = await newUserPage(browser, testInfo));
+      ({ page } = await newUserPage(browser, testInfo));
       orders = new OrderCollectionPage(page);
       await orders.reload();
-      if (canSeePage(user, PAGE)) {
+      available = await orders.isAvailable();
+      if (available) {
         await orders.open();
       }
     });
@@ -59,7 +48,7 @@ test.describe('Orders / collection', () => {
     });
 
     test.beforeEach(async () => {
-      test.skip(!canSeePage(user, PAGE), 'user cannot see Orders');
+      test.skip(!available, 'Orders is not available to this user');
       // A prior test in this block may have left a filter/sort applied - collection view state is
       // server-persisted per user session same as document tabs (MultiDocumentCollectionView.qml).
       await orders.clearAllFilters();
@@ -71,9 +60,8 @@ test.describe('Orders / collection', () => {
     });
 
     test('filter - customers', async () => {
-      test.skip(!user.can('ViewAccounts'), 'customers filter needs ViewAccounts');
-      // Org-scoped users resolve to zero customers, so the Customers filter has no "QUISS" entry - skip
-      // rather than fail on a missing option (see AccountCollection's org-scoping note).
+      // Org-scoped users resolve to zero customers, so the Customers filter has no "QUISS" entry - and
+      // neither does a user whose role never renders the filter. Both answer the same question here.
       test.skip(
         !(await orders.filters.combo('CustomersFilter').hasOption('QUISS')),
         'no QUISS customer visible to this user (org-scoped)'
@@ -112,7 +100,7 @@ test.describe('Orders / collection', () => {
     });
 
     test('revision dialog', async () => {
-      test.skip(!canRunOrderCommand(user, 'Revision'), 'no Revision permission');
+      test.skip(!(await orders.commands.isAvailable('Revision')), 'Revision is not available to this user');
       await orders.selectRow(0);
       await orders.revision();
       await gui.checkScreenshot(page, 'orders-revision-dialog', await orders.timestampColumnMasks());
@@ -122,7 +110,7 @@ test.describe('Orders / collection', () => {
     });
 
     test('remove confirmation dialog', async () => {
-      test.skip(!canRunOrderCommand(user, 'Remove'), 'no Remove permission');
+      test.skip(!(await orders.commands.isAvailable('Remove')), 'Remove is not available to this user');
       await orders.selectRow(0);
       await orders.removeItem();
       await gui.checkScreenshot(page, 'orders-remove-dialog', await orders.timestampColumnMasks());

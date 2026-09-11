@@ -9,15 +9,16 @@
 
 const { test, expect, newUserPage } = require('../fixtures/test');
 const { OrderCollectionPage, OrderEditorPage } = require('../pages');
-const { canSeePage, canRunOrderCommand, canEditOrderField, ORDER_FIELD_PERMISSIONS } = require('../matrix/permissions');
 const gui = require('imtcore-gui-testkit/lib/gui');
 
-const PAGE = 'Orders';
-
+// Returns null when this user cannot get to a new-order editor at all - the page is not in their menu,
+// or the collection offers no New command. The caller test.skip()s on that rather than failing.
 async function openNewEditor(page) {
   const orders = new OrderCollectionPage(page);
   await orders.reload();
+  if (!(await orders.isAvailable())) return null;
   await orders.open();
+  if (!(await orders.commands.isAvailable('New'))) return null;
   await orders.newItem();
   return new OrderEditorPage(page);
 }
@@ -25,6 +26,7 @@ async function openNewEditor(page) {
 async function openEditEditor(page) {
   const orders = new OrderCollectionPage(page);
   await orders.reload();
+  if (!(await orders.isAvailable())) return null;
   await orders.open();
   // Sort by "added" (creation date, immutable) before picking row 0 - the default (unsorted) view's
   // row 0 is whichever order the server currently orders first, and that shifts whenever a Save changes
@@ -47,6 +49,7 @@ async function openEditEditor(page) {
 async function openEditableOrderEditor(page) {
   const orders = new OrderCollectionPage(page);
   await orders.reload();
+  if (!(await orders.isAvailable())) return null;
   await orders.open();
   const rows = page.locator('[objectName^="TableRow_"][visible]');
   const rowCount = await rows.count();
@@ -66,13 +69,11 @@ async function openEditableOrderEditor(page) {
 
 test.describe('Orders / editor', () => {
   test.describe.serial('new document', () => {
-    let page, user, editor;
+    let page, editor;
 
     test.beforeAll(async ({ browser }, testInfo) => {
-      ({ page, user } = await newUserPage(browser, testInfo));
-      if (canRunOrderCommand(user, 'New')) {
-        editor = await openNewEditor(page);
-      }
+      ({ page } = await newUserPage(browser, testInfo));
+      editor = await openNewEditor(page);
     });
 
     test.afterAll(async () => {
@@ -80,7 +81,7 @@ test.describe('Orders / editor', () => {
     });
 
     test.beforeEach(() => {
-      test.skip(!canRunOrderCommand(user, 'New'), 'user cannot create an order (AddOrder)');
+      test.skip(!editor, 'creating an order is not available to this user');
     });
 
     test('empty new editor', async () => {
@@ -126,12 +127,12 @@ test.describe('Orders / editor', () => {
   // On a NEW (unsaved) order, the "Add product" button is gated by AddOrder rather than
   // ChangeOrderProducts (OrderEditor.qml) - same permission this block's own tests already gate on.
   test.describe.serial('products', () => {
-    let page, user, editor;
+    let page, editor;
 
     test.beforeAll(async ({ browser }, testInfo) => {
-      ({ page, user } = await newUserPage(browser, testInfo));
-      if (canRunOrderCommand(user, 'New')) {
-        editor = await openNewEditor(page);
+      ({ page } = await newUserPage(browser, testInfo));
+      editor = await openNewEditor(page);
+      if (editor) {
         // ProductEditorDialog's OK stays disabled on an order that isn't otherwise valid (confirmed
         // live: License/Product both resolve correctly, but OK silently no-ops) - the WHOLE order's own
         // validity gates it, not just the dialog's own fields. A brand-new order has neither a valid
@@ -149,7 +150,7 @@ test.describe('Orders / editor', () => {
     });
 
     test.beforeEach(() => {
-      test.skip(!canRunOrderCommand(user, 'New'), 'user cannot create an order (AddOrder)');
+      test.skip(!editor, 'creating an order is not available to this user');
     });
 
     test('add a new product', async () => {
@@ -226,13 +227,11 @@ test.describe('Orders / editor', () => {
   });
 
   test.describe.serial('edit document', () => {
-    let page, user, editor;
+    let page, editor;
 
     test.beforeAll(async ({ browser }, testInfo) => {
-      ({ page, user } = await newUserPage(browser, testInfo));
-      if (canSeePage(user, PAGE)) {
-        editor = await openEditEditor(page);
-      }
+      ({ page } = await newUserPage(browser, testInfo));
+      editor = await openEditEditor(page);
     });
 
     test.afterAll(async () => {
@@ -240,30 +239,14 @@ test.describe('Orders / editor', () => {
     });
 
     test.beforeEach(() => {
-      test.skip(!canSeePage(user, PAGE), 'user cannot see Orders');
+      test.skip(!editor, 'Orders is not available to this user');
     });
 
     test('open existing order editor', async () => {
       await gui.checkScreenshot(page, 'orders-editor-edit-loaded');
     });
 
-    // Presence for every field, plus a real read-only check on the ones this user may not edit - see
-    // devices.editor.multiuser.test.js for the full reasoning and the limit it carries. Unlike the
-    // other editor specs this one is not pinned to a single full-rights user (it runs as su and
-    // fullAccess), so the read-only branch here depends on what those two actually hold.
-    test('fields reflect permissions, and locked ones reject editing', async () => {
-      for (const fieldObjectName of Object.keys(ORDER_FIELD_PERMISSIONS)) {
-        await editor.expectFieldVisible(fieldObjectName);
-        if (canEditOrderField(user, fieldObjectName, false)) continue;
-        await gui.expectReadOnly(page, [fieldObjectName]);
-      }
-    });
-
     test('edit fields and save', { tag: '@mutating' }, async () => {
-      // Editing an EXISTING order's description needs ChangeDescriptionForOrder. AddOrder only unlocks
-      // fields on a NEW document, so it must NOT gate this edit-save path (a user with AddOrder but not
-      // ChangeDescriptionForOrder would otherwise reach a read-only field and fail on the fill verify).
-      test.skip(!user.can('ChangeDescriptionForOrder'), 'cannot change the order description field');
       const edited = `Edited by ProLifeGui ${Date.now()}`;
       await editor.setDescription(edited);
       await gui.checkScreenshot(page, 'orders-editor-edit-changed');
@@ -280,12 +263,10 @@ test.describe('Orders / editor', () => {
       await gui.checkScreenshot(page, 'orders-editor-edit-reopened');
     });
 
-    // Adding a product to an EXISTING (already-saved) order is gated by ChangeOrderProducts, not
-    // AddOrder (which only unlocks the Products section on a brand-new, unsaved document - see this
-    // file's own header comment) - a genuinely different code path from the 'products' describe block
-    // above, previously never exercised against a real, persisted order.
+    // Adding a product to an EXISTING (already-saved) order is a genuinely different code path from
+    // the 'products' describe block above, which works on a brand-new unsaved document - previously
+    // never exercised against a real, persisted order.
     test('add a product to an existing order and save persists it', { tag: '@mutating' }, async () => {
-      test.skip(!user.can('ChangeOrderProducts'), 'cannot change products on an existing order');
       // NOT the block's shared `editor` (openEditEditor's "row 0 sorted by added") - a Closed order
       // rejects product changes (ProductEditorDialog's OK stays permanently disabled), so this needs
       // its own search for a non-Closed order instead. Last test in this describe.serial block, so

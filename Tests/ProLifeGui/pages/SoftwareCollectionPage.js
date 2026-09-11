@@ -16,8 +16,8 @@
 //   CustomersFilter, LicenseCreationDateFilter, DateFilter, DocumentState
 //
 // Commands are permission-gated server-side (New<-AddLicense, Remove<-RemoveLicense,
-// Split<-SplitLicense, Revoke<-RevokeLicense, CreateLicenseFile<-CreateLicenseFile, ...);
-// see matrix/permissions.js.
+// Split<-SplitLicense, Revoke<-RevokeLicense, CreateLicenseFile<-CreateLicenseFile, ...),
+// so a test asks commands.isAvailable(id) rather than predicting who holds what.
 
 const { CollectionPage } = require('imtcore-gui-testkit/pages/CollectionPage');
 const gui = require('imtcore-gui-testkit/lib/gui');

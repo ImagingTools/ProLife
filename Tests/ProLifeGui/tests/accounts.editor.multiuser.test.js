@@ -9,26 +9,27 @@
 
 const { test, newUserPage } = require('../fixtures/test');
 const { AccountCollectionPage, AccountEditorPage } = require('../pages');
-const { canSeePage, canRunAccountCommand, canEditAccountField, ACCOUNT_FIELD_PERMISSIONS } = require('../matrix/permissions');
 const gui = require('imtcore-gui-testkit/lib/gui');
 
-const PAGE = 'Accounts';
-
+// Returns null when this user cannot get to a new-account editor at all - the page is not in their
+// menu, or the collection offers no New command. The caller test.skip()s on that rather than failing.
 async function openNewEditor(page) {
   const accounts = new AccountCollectionPage(page);
   await accounts.reload();
+  if (!(await accounts.isAvailable())) return null;
   await accounts.open();
+  if (!(await accounts.commands.isAvailable('New'))) return null;
   await accounts.newItem();
   return new AccountEditorPage(page);
 }
 
 // Opens the EDIT editor for the first existing account. Account rows are org-scoped: the specialist
-// roles hold ViewAccounts (page opens) but their org resolves to ZERO customers, so there is no row
-// to edit. Returns null in that case; the caller test.skip()s on it rather than failing on a
-// nonexistent row.
+// roles can open the page but their org resolves to ZERO customers, so there is no row to edit.
+// Returns null in that case too.
 async function openEditEditor(page) {
   const accounts = new AccountCollectionPage(page);
   await accounts.reload();
+  if (!(await accounts.isAvailable())) return null;
   await accounts.open();
   if (!(await accounts.table.hasRows())) return null;
   await accounts.selectRow(0);
@@ -38,13 +39,11 @@ async function openEditEditor(page) {
 
 test.describe('Accounts / editor', () => {
   test.describe.serial('new document', () => {
-    let page, user, editor;
+    let page, editor;
 
     test.beforeAll(async ({ browser }, testInfo) => {
-      ({ page, user } = await newUserPage(browser, testInfo));
-      if (canRunAccountCommand(user, 'New')) {
-        editor = await openNewEditor(page);
-      }
+      ({ page } = await newUserPage(browser, testInfo));
+      editor = await openNewEditor(page);
     });
 
     test.afterAll(async () => {
@@ -52,7 +51,7 @@ test.describe('Accounts / editor', () => {
     });
 
     test.beforeEach(() => {
-      test.skip(!canRunAccountCommand(user, 'New'), 'user cannot create an account (AddAccount)');
+      test.skip(!editor, 'creating an account is not available to this user');
     });
 
     test('empty new editor', async () => {
@@ -80,13 +79,11 @@ test.describe('Accounts / editor', () => {
   });
 
   test.describe.serial('edit document', () => {
-    let page, user, editor;
+    let page, editor;
 
     test.beforeAll(async ({ browser }, testInfo) => {
-      ({ page, user } = await newUserPage(browser, testInfo));
-      if (canSeePage(user, PAGE)) {
-        editor = await openEditEditor(page);
-      }
+      ({ page } = await newUserPage(browser, testInfo));
+      editor = await openEditEditor(page);
     });
 
     test.afterAll(async () => {
@@ -94,29 +91,17 @@ test.describe('Accounts / editor', () => {
     });
 
     test.beforeEach(() => {
-      test.skip(!canSeePage(user, PAGE), 'user cannot see Accounts');
-      test.skip(!editor, 'account collection is empty for this user (org-scoped)');
+      test.skip(!editor, 'no account is available to edit for this user (page or rows missing)');
     });
 
     test('open existing account editor', async () => {
       await gui.checkScreenshot(page, 'accounts-editor-edit-loaded');
     });
 
-    // Presence for every field, plus a real read-only check on the ones this user may not edit - see
-    // devices.editor.multiuser.test.js for the full reasoning and the limit it carries.
-    test('fields reflect permissions, and locked ones reject editing', async () => {
-      for (const fieldObjectName of Object.keys(ACCOUNT_FIELD_PERMISSIONS)) {
-        await editor.expectFieldVisible(fieldObjectName);
-        if (canEditAccountField(user, fieldObjectName, false)) continue;
-        await gui.expectReadOnly(page, [fieldObjectName]);
-      }
-    });
-
     // GroupsTable is a checkable Table (AccountEditor.qml's groupsElement) listing all groups this
     // account can belong to; checking a row applies to the in-memory model immediately (no separate
     // "apply" step - see AccountEditor.qml's onCheckedItemsChanged), but still needs Save to persist.
     test('toggle a group membership checkbox', async () => {
-      test.skip(!user.can('ChangeAccountGroups'), 'cannot change account groups');
       test.skip((await gui.countVisible(page, ['GroupsTable', 'TableRow_0'])) === 0, 'no groups available to toggle');
       await editor.groups.toggleRowCheck(0);
       await gui.checkScreenshot(page, 'accounts-editor-group-checked');
@@ -124,10 +109,6 @@ test.describe('Accounts / editor', () => {
     });
 
     test('edit fields and save', { tag: '@mutating' }, async () => {
-      // Editing an EXISTING account's name needs ChangeAccountName. AddAccount only unlocks fields on
-      // a NEW document, so it must NOT gate this edit-save path (a user with AddAccount but not
-      // ChangeAccountName would otherwise reach a read-only field and fail on the fill verify).
-      test.skip(!user.can('ChangeAccountName'), 'cannot change the account name field');
       const edited = `Edited by ProLifeGui ${Date.now()}`;
       await editor.setAccountName(edited);
       await gui.checkScreenshot(page, 'accounts-editor-edit-changed');

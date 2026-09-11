@@ -20,20 +20,6 @@ const { BasePage } = require('imtcore-gui-testkit/pages/BasePage');
 const { ComboBox, TextInput, Switch } = require('imtcore-gui-testkit/controls');
 const gui = require('imtcore-gui-testkit/lib/gui');
 
-const FIELD_PAGE = {
-  ProductCombo: 'General',
-  LicenseCombo: 'General',
-  ArticleInput: 'General',
-  SerialNumberInput: 'General',
-  InternalUseSwitch: 'General',
-  IsMultipleSwitch: 'General',
-  ProductCountSpinBox: 'General',
-  ProjectInput: 'Additional',
-  OrderCombo: 'Additional',
-  UnlimitedSwitch: 'Expiration',
-  ExpirationDatePicker: 'Expiration',
-};
-
 class SoftwareEditorPage extends BasePage {
   constructor(page) {
     // Editor tab, reuse BasePage for command bar.
@@ -61,14 +47,6 @@ class SoftwareEditorPage extends BasePage {
 
   async openEditorPage(pageId) {
     await gui.clickButton(this.page, [`Page_${pageId}`]);
-    return this;
-  }
-
-  async ensureFieldPage(objectName) {
-    const pageId = FIELD_PAGE[objectName];
-    if (pageId) {
-      await this.openEditorPage(pageId);
-    }
     return this;
   }
 
@@ -148,13 +126,6 @@ class SoftwareEditorPage extends BasePage {
     await this.openEditorPage(pageAndHeader.pageId);
     await gui.clickButton(this.page, [pageAndHeader.header]);
     return this;
-  }
-
-  // --- structural expectations (used by permission tests) ---------------------------------------
-
-  async expectFieldVisible(objectName) {
-    await this.ensureFieldPage(objectName);
-    return gui.expectVisible(this.page, [objectName]);
   }
 }
 

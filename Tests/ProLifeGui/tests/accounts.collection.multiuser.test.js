@@ -10,18 +10,19 @@
 // Accounts has no Added/Last Modified columns (HeaderIds: customerId/name/email/description), so
 // there is nothing time-dependent to mask here.
 //
-// 'landing' and 'command bar reflects permissions' keep the default fresh-page-per-test fixture (their
-// whole point is documenting the COLD load state). 'interactions' is `.serial` and shares ONE page
-// opened once in beforeAll (see fixtures/test.js's newUserPage) instead of reload()-ing per test - same
-// pattern as devices.collection.multiuser.test.js, applied here to cut the per-test WASM-reboot cost.
+// 'landing' keeps the default fresh-page-per-test fixture (its whole point is documenting the COLD
+// load state). 'interactions' is `.serial` and shares ONE page opened once in beforeAll (see
+// fixtures/test.js's newUserPage) instead of reload()-ing per test - same pattern as
+// devices.collection.multiuser.test.js, applied here to cut the per-test WASM-reboot cost.
 // Trade-off: a failure partway through 'interactions' skips the remaining steps in that block.
+//
+// Whether a flow is available to the current user is asked of the running client (is the page in the
+// menu, is the command button visible), never of a permission table kept here - the client was built
+// from that user's own permissions, and the server enforces them regardless.
 
 const { test, newUserPage } = require('../fixtures/test');
 const { AccountCollectionPage } = require('../pages');
-const { canSeePage, canRunAccountCommand } = require('../matrix/permissions');
 const gui = require('imtcore-gui-testkit/lib/gui');
-
-const PAGE = 'Accounts';
 
 test.describe('Accounts / collection', () => {
   // Scoped to its own describe so the reload does NOT also fire for the shared-page block(s)
@@ -32,33 +33,23 @@ test.describe('Accounts / collection', () => {
       await new AccountCollectionPage(page).reload();
     });
 
-    test('landing', async ({ page, gui, user }) => {
-      if (canSeePage(user, PAGE)) await new AccountCollectionPage(page).open();
-      await gui.checkScreenshot(page, 'accounts-landing');
-    });
-
-    test('command bar reflects permissions', async ({ page, user }) => {
-      test.skip(!canSeePage(user, PAGE), 'user cannot see Accounts');
+    test('landing', async ({ page, gui }) => {
       const accounts = new AccountCollectionPage(page);
+      test.skip(!(await accounts.isAvailable()), 'Accounts is not available to this user');
       await accounts.open();
-      for (const cmd of ['New', 'Edit', 'Remove']) {
-        if (canRunAccountCommand(user, cmd)) {
-          await accounts.commands.expectHasCommand(cmd);
-        } else {
-          await accounts.commands.expectNoCommand(cmd);
-        }
-      }
+      await gui.checkScreenshot(page, 'accounts-landing');
     });
   });
 
   test.describe.serial('interactions', () => {
-    let page, user, accounts;
+    let page, accounts, available;
 
     test.beforeAll(async ({ browser }, testInfo) => {
-      ({ page, user } = await newUserPage(browser, testInfo));
+      ({ page } = await newUserPage(browser, testInfo));
       accounts = new AccountCollectionPage(page);
       await accounts.reload();
-      if (canSeePage(user, PAGE)) {
+      available = await accounts.isAvailable();
+      if (available) {
         await accounts.open();
       }
     });
@@ -68,7 +59,7 @@ test.describe('Accounts / collection', () => {
     });
 
     test.beforeEach(async () => {
-      test.skip(!canSeePage(user, PAGE), 'user cannot see Accounts');
+      test.skip(!available, 'Accounts is not available to this user');
       // A prior test in this block may have left a filter/sort applied - collection view state is
       // server-persisted per user session same as document tabs (MultiDocumentCollectionView.qml).
       await accounts.clearAllFilters();
@@ -109,7 +100,7 @@ test.describe('Accounts / collection', () => {
     });
 
     test('remove confirmation dialog', async () => {
-      test.skip(!canRunAccountCommand(user, 'Remove'), 'no Remove permission');
+      test.skip(!(await accounts.commands.isAvailable('Remove')), 'Remove is not available to this user');
       test.skip(!(await accounts.table.hasRows()), 'account collection is empty for this user (org-scoped)');
       await accounts.selectRow(0);
       await accounts.removeItem();

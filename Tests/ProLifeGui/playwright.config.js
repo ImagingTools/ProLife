@@ -1,73 +1,24 @@
 const { defineConfig } = require('@playwright/test');
 const { buildProjects } = require('imtcore-gui-testkit/playwrightConfig/buildProjects');
 const { GUEST, USERS, authFile, activeUsers } = require('./fixtures/users');
-const fs = require('fs');
-const path = require('path');
-const { canSeePage, PAGE_PERMISSIONS } = require('./matrix/permissions');
 
 const BASE_URL = process.env.PROLIFE_BASE_URL || 'http://localhost:17778';
 
-// Which page each spec exercises, so a user who cannot open that page never has the spec scheduled at
-// all (see buildProjects' specPages). Verified before enabling: a restricted user's "landing"
-// baselines for pages it cannot see are byte-identical to one another - noAccess's seven were
-// literally one PNG repeated - so nothing is lost by not producing them, while each one costs a full
-// app boot to produce and compare.
-//
-// Specs mapped to null are deliberately universal and stay scheduled for everybody:
-//   workspace  - owns "menu reflects permissions", the structural check that a restricted user sees
-//                LESS; excluding it for those users would remove the very assertion they exist for
-//   support    - the Tickets page is universal ('*' in PAGE_PERMISSIONS)
-//   search / user-profile / session-expiry - no page permission gates them
-// Editor and document-tab specs are absent because their isolatedSpec users already pin them.
-const SPEC_PAGES = {
-  'accounts.collection.multiuser.test.js': 'Accounts',
-  'devices.collection.multiuser.test.js': 'Devices',
-  'orders.collection.multiuser.test.js': 'Orders',
-  // The one editor spec without an isolatedSpec user of its own (see fixtures/users.js's note on
-  // ordEditor), so unlike its siblings it does need mapping here.
-  'orders.editor.multiuser.test.js': 'Orders',
-  'software.collection.multiuser.test.js': 'SoftwareProducts',
-  'administration.multiuser.test.js': 'Administration',
-  'organizations.multiuser.test.js': 'Tenants',
-  'workspace.multiuser.test.js': null,
-  'support.multiuser.test.js': null,
-  'search.multiuser.test.js': null,
-  'user-profile.multiuser.test.js': null,
-  'session-expiry.multiuser.test.js': null,
-};
-
 // @mutating tests run serially against one shared database (Run-CiTests.ps1 phase 2, --workers=1), so
-// their wall clock is linear in the number of users and no worker count helps. Re-running the same
-// save as a seventh user re-proves the FLOW, not the permission - whether that user may save at all is
-// already decided structurally by the command-bar checks. Keep the two broad users (su for the admin
+// their wall clock is linear in the number of users and no worker count helps. Running the same save
+// again as a seventh user re-proves the flow, nothing more. Keep the two broad users (su for the admin
 // path, fullAccess for the real-granted-permission path); every isolatedSpec user keeps its own
 // mutating tests automatically, since its spec runs under that user and nobody else.
 const MUTATING_USER_KEYS = ['su', 'fullAccess'];
 
-// Both maps above are silent when wrong: canSeePage() returns false for an unknown page id, so a typo
-// in SPEC_PAGES drops that spec from every project and the run still goes green; a stale key in
-// MUTATING_USER_KEYS likewise just stops matching. Check them against the real names once, here, where
-// the config is loaded.
-(function validateScheduling() {
-  const knownPages = new Set(Object.keys(PAGE_PERMISSIONS));
-  for (const [spec, pageId] of Object.entries(SPEC_PAGES)) {
-    if (!fs.existsSync(path.join(__dirname, 'tests', spec))) {
-      throw new Error(`playwright.config.js: SPEC_PAGES names a spec that does not exist: ${spec}`);
-    }
-    if (pageId !== null && !knownPages.has(pageId)) {
-      throw new Error(
-        `playwright.config.js: SPEC_PAGES maps ${spec} to unknown page "${pageId}". ` +
-          `Known pages: ${[...knownPages].join(', ')}.`
-      );
-    }
+// A stale or misspelled key matches nobody, every project then gets the grepInvert, and the entire
+// mutating phase vanishes into a green run with nothing to show it went missing.
+const knownUsers = new Set(USERS.map((u) => u.key));
+for (const key of MUTATING_USER_KEYS) {
+  if (!knownUsers.has(key)) {
+    throw new Error(`playwright.config.js: MUTATING_USER_KEYS names unknown user "${key}".`);
   }
-  const knownUsers = new Set(USERS.map((u) => u.key));
-  for (const key of MUTATING_USER_KEYS) {
-    if (!knownUsers.has(key)) {
-      throw new Error(`playwright.config.js: MUTATING_USER_KEYS names unknown user "${key}".`);
-    }
-  }
-})();
+}
 
 module.exports = defineConfig({
   testDir: './tests',
@@ -138,8 +89,6 @@ module.exports = defineConfig({
     users: activeUsers(),
     guest: GUEST,
     authFile,
-    specPages: SPEC_PAGES,
-    canSeePage,
     mutatingUserKeys: MUTATING_USER_KEYS,
   }),
 });

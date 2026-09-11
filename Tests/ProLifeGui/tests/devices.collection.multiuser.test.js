@@ -1,13 +1,13 @@
 // Hardware (Devices) COLLECTION view - full functional coverage, multi-user.
 //
-// Runs once per user-project; screenshots auto-separate per user (see playwright.config.js). Users
-// who cannot see the Hardware page do not run this spec at all (playwright.config.js's SPEC_PAGES):
-// their landing screenshots were byte-identical to every other page's, and the permission difference
-// they were meant to capture is asserted structurally in workspace.multiuser.test.js instead.
-// Command/field gating comes from matrix/permissions.js.
+// Runs once per user-project; screenshots auto-separate per user (see playwright.config.js). Whether a
+// flow is available to the current user is asked of the running client - is the page in the menu, is
+// the command button visible - never of a permission table kept in the suite. The client was built
+// from that user's own permissions, and the server enforces them regardless, so a test that cannot
+// reach a flow skips instead of asserting who should have been able to.
 //
-// 'landing' and 'command bar reflects permissions' keep the default fresh-page-per-test fixture (their
-// whole point is documenting the COLD load state). 'interactions' and its nested 'column configuration'
+// 'landing' keeps the default fresh-page-per-test fixture (its whole point is documenting the COLD
+// load state). 'interactions' and its nested 'column configuration'
 // block are `.serial` and share ONE page opened once in beforeAll (see fixtures/test.js's newUserPage)
 // instead of reload()-ing per test - most of this file's cost was the WASM reboot, and these tests don't
 // need a cold load, just a clean filter panel, which clearAllFilters() gives cheaply without navigation.
@@ -15,10 +15,7 @@
 
 const { test, expect, newUserPage } = require('../fixtures/test');
 const { DeviceCollectionPage } = require('../pages');
-const { canSeePage, canRunDeviceCommand } = require('../matrix/permissions');
 const gui = require('imtcore-gui-testkit/lib/gui');
-
-const PAGE = 'Devices';
 
 test.describe('Hardware / collection', () => {
   // Scoped to its own describe so the reload does NOT also fire for the shared-page block(s)
@@ -29,35 +26,18 @@ test.describe('Hardware / collection', () => {
       await new DeviceCollectionPage(page).reload();
     });
 
-    // Landing screenshot for every user (documents what each permission level sees).
-    test('landing', async ({ page, gui, user }) => {
+    test('landing', async ({ page, gui }) => {
       const devices = new DeviceCollectionPage(page);
-      if (canSeePage(user, PAGE)) await devices.open();
-      await gui.checkScreenshot(page, 'devices-landing', await devices.timestampColumnMasks());
-    });
-
-    // Structural gate: which commands each user's command bar exposes.
-    test('command bar reflects permissions', async ({ page, user }) => {
-      test.skip(!canSeePage(user, PAGE), 'user cannot see Hardware');
-      const devices = new DeviceCollectionPage(page);
+      test.skip(!(await devices.isAvailable()), 'Hardware is not available to this user');
       await devices.open();
-      // Support is intentionally excluded here: it only exists on the document EDITOR's command bar
-      // (DeviceCollectionViewCommandsDelegate.qml's deviceEditorComp.commandsDelegateComp), not on this
-      // collection list - see devices.editor.multiuser.test.js's dedicated Support test.
-      for (const cmd of ['New', 'Edit', 'Remove', 'Revision', 'Bind', 'CreateLicenseFile', 'TransferLicenses', 'ResetTransferCounter']) {
-        if (canRunDeviceCommand(user, cmd)) {
-          await devices.commands.expectHasCommand(cmd);
-        } else {
-          await devices.commands.expectNoCommand(cmd);
-        }
-      }
+      await gui.checkScreenshot(page, 'devices-landing', await devices.timestampColumnMasks());
     });
   });
 
   // Everything below only runs for users who can open the page. One shared page/session for the
   // whole block (see file header) - opened once in beforeAll, filters reset per-test via beforeEach.
   test.describe.serial('interactions', () => {
-    let page, user, devices;
+    let page, user, devices, available;
 
     test.beforeAll(async ({ browser }, testInfo) => {
       ({ page, user } = await newUserPage(browser, testInfo));
@@ -65,7 +45,8 @@ test.describe('Hardware / collection', () => {
       // newUserPage() only opens a blank page - unlike the page fixture, nothing has navigated to the
       // app yet, so load it once here before the very first interaction.
       await devices.reload();
-      if (canSeePage(user, PAGE)) {
+      available = await devices.isAvailable();
+      if (available) {
         await devices.open();
       }
     });
@@ -75,7 +56,7 @@ test.describe('Hardware / collection', () => {
     });
 
     test.beforeEach(async () => {
-      test.skip(!canSeePage(user, PAGE), 'user cannot see Hardware');
+      test.skip(!available, 'Hardware is not available to this user');
       // A prior test in this block may have left a filter/sort applied - collection view state is
       // server-persisted per user session same as document tabs (MultiDocumentCollectionView.qml).
       // Start every interaction from a known-clean filter panel (cheap - no navigation needed).
@@ -107,10 +88,9 @@ test.describe('Hardware / collection', () => {
     });
 
     test('filter - customers', async () => {
-      test.skip(!user.can('ViewAccounts'), 'customers filter needs ViewAccounts');
       // The Customers filter list is populated from the customers this user's org can see; an
-      // org-scoped user (which resolves to zero customers) legitimately has no "QUISS" entry, so skip
-      // rather than fail on a missing option - see AccountCollection's org-scoping note.
+      // org-scoped user (which resolves to zero customers) legitimately has no "QUISS" entry, and so
+      // does a user whose role never renders the filter at all - both answer the same question here.
       test.skip(
         !(await devices.filters.combo('CustomersFilter').hasOption('QUISS')),
         'no QUISS customer visible to this user (org-scoped)'
@@ -152,7 +132,7 @@ test.describe('Hardware / collection', () => {
 
     // --- row selection + context-sensitive commands --------------------------------------------
     test('revision dialog', async () => {
-      test.skip(!canRunDeviceCommand(user, 'Revision'), 'no Revision permission');
+      test.skip(!(await devices.commands.isAvailable('Revision')), 'Revision is not available to this user');
       await devices.selectRow(0);
       await devices.revision();
       await gui.checkScreenshot(page, 'devices-revision-dialog', await devices.timestampColumnMasks());
@@ -162,7 +142,7 @@ test.describe('Hardware / collection', () => {
     });
 
     test('remove confirmation dialog', async () => {
-      test.skip(!canRunDeviceCommand(user, 'Remove'), 'no Remove permission');
+      test.skip(!(await devices.commands.isAvailable('Remove')), 'Remove is not available to this user');
       await devices.selectRow(0);
       await devices.removeItem();
       await gui.checkScreenshot(page, 'devices-remove-dialog', await devices.timestampColumnMasks());
@@ -170,7 +150,7 @@ test.describe('Hardware / collection', () => {
     });
 
     test('bind dialog', async () => {
-      test.skip(!canRunDeviceCommand(user, 'Bind'), 'no Bind permission');
+      test.skip(!(await devices.commands.isAvailable('Bind')), 'Bind is not available to this user');
       // Bind only enables for a row with a non-empty MAC address (updateStateCustomCommands in
       // DeviceCollectionViewCommandsDelegate.qml) - a plain selectRow(0) may land on a row without one
       // and the command would just stay disabled. Finished-status sensors always have a MAC.
@@ -186,8 +166,8 @@ test.describe('Hardware / collection', () => {
     // license, and the Save -> "Apply changes" project-name prompt -> real updateDeviceBindingRequest -
     // was previously untested (HardwareProductBindingDialog.qml / HardwareProductBindingEditor.qml).
     test.describe('bind dialog - full functionality', () => {
-      test.beforeEach(() => {
-        test.skip(!canRunDeviceCommand(user, 'Bind'), 'no Bind permission');
+      test.beforeEach(async () => {
+        test.skip(!(await devices.commands.isAvailable('Bind')), 'Bind is not available to this user');
       });
 
       test('open "Bind New Licenses", then Cancel discards', async () => {
@@ -237,7 +217,6 @@ test.describe('Hardware / collection', () => {
       });
 
       test('unbind an existing license', async () => {
-        test.skip(!user.can('UnbindSensor'), 'needs UnbindSensor');
         // The row filtered by filterFinishedSensorsWithLicense() has at least one used license (see
         // 'create license file' tests above), so its Bind dialog opens with "Used Licenses" pre-filled.
         await devices.filterFinishedSensorsWithLicense();
@@ -252,6 +231,12 @@ test.describe('Hardware / collection', () => {
           test.skip(true, 'sensor has no used license to unbind');
         }
         await devices.selectUsedLicenseRow(0);
+        // Dismiss before skipping either way - this is a shared page and a modal left open blocks the
+        // next test.
+        if (!(await gui.dom.isVisible(page, ['Dialog', 'UnbindButton']))) {
+          await gui.dismissDialog(page);
+          test.skip(true, 'Unbind is not available to this user');
+        }
         await devices.unbindLicense();
         await gui.checkScreenshot(page, 'devices-bind-license-unbound', await devices.timestampColumnMasks());
         // Discard rather than Save - keeps this test independent from the "bind a new license" test
@@ -261,7 +246,7 @@ test.describe('Hardware / collection', () => {
     });
 
     test('create license file - validation (non-superuser)', { tag: '@mutating' }, async () => {
-      test.skip(!canRunDeviceCommand(user, 'CreateLicenseFile'), 'no CreateLicenseFile permission');
+      test.skip(!(await devices.commands.isAvailable('CreateLicenseFile')), 'CreateLicenseFile is not available to this user');
       test.skip(user.key === 'su', 'su sees the Encrypt/Unencrypt choice popup instead - see the dedicated su tests below');
       // CreateLicenseFile's onCommandActivated requires inUse===true, non-empty MAC/serial, and
       // status==="Finished" (DeviceCollectionViewCommandsDelegate.qml:422-445) - filter for a row that
@@ -274,7 +259,7 @@ test.describe('Hardware / collection', () => {
     });
 
     test('create license file - "No license is linked" error (non-superuser)', async () => {
-      test.skip(!canRunDeviceCommand(user, 'CreateLicenseFile'), 'no CreateLicenseFile permission');
+      test.skip(!(await devices.commands.isAvailable('CreateLicenseFile')), 'CreateLicenseFile is not available to this user');
       test.skip(user.key === 'su', 'su sees the Encrypt/Unencrypt choice popup instead - see the dedicated su tests below');
       // The success case above proves the command works; this deliberately picks a row that fails the
       // FIRST validation check (inUse === false) so the "No license is linked" error path itself stays
@@ -315,7 +300,7 @@ test.describe('Hardware / collection', () => {
     });
 
     test('transfer licenses dialog', async () => {
-      test.skip(!canRunDeviceCommand(user, 'TransferLicenses'), 'no TransferLicenses permission');
+      test.skip(!(await devices.commands.isAvailable('TransferLicenses')), 'TransferLicenses is not available to this user');
       // TransferLicenses requires inUse===true (:451-456) - without a license bound it just opens the
       // "No license is linked" error dialog instead of the real transfer dialog.
       await devices.filterSensorsWithLicense();
@@ -326,19 +311,17 @@ test.describe('Hardware / collection', () => {
     });
 
     test('reset transfer counter', { tag: '@mutating' }, async () => {
-      test.skip(!canRunDeviceCommand(user, 'ResetTransferCounter'), 'no ResetTransferCounter permission');
       // No hard data precondition, but a device that actually has a license/transfer history makes the
       // reset meaningful rather than a no-op on an untouched sensor.
       await devices.filterSensorsWithLicense();
       await devices.selectRow(0);
-      // Selecting a row shows the right-hand Licenses panel, which narrows the command bar; for users
-      // with the fullest Hardware command set that pushes the low-priority ResetTransferCounter button
-      // into the "..." overflow menu, where it isn't directly clickable (no addressable More-menu node
-      // on this build). The command itself is verified for the superuser, whose bar fits it - so skip
-      // when it overflowed rather than fail on a hidden button.
+      // Checked AFTER selecting a row, because that shows the right-hand Licenses panel and narrows the
+      // command bar: for users with the fullest Hardware command set it pushes the low-priority
+      // ResetTransferCounter button into the "..." overflow, where it isn't clickable (no addressable
+      // More-menu node on this build). Not drivable is not drivable, whatever the reason.
       test.skip(
-        (await gui.countVisible(page, ['CommandsView', 'ResetTransferCounterButton'])) === 0,
-        'ResetTransferCounter overflowed into the "..." menu for this user'
+        !(await devices.commands.isAvailable('ResetTransferCounter')),
+        'ResetTransferCounter is not available to this user (no permission, or it overflowed into "...")'
       );
       await devices.resetTransferCounter();
       // resetTransferCounter() sends the request immediately (no confirm step) and shows a
@@ -348,7 +331,6 @@ test.describe('Hardware / collection', () => {
     });
 
     test('decrypt file dialog', async () => {
-      test.skip(!user.can('ViewSensors'), 'needs ViewSensors');
       // DecryptFile opens a native file picker; we only verify the command is reachable and the
       // starting state (the OS dialog itself is out of Playwright's DOM).
       await gui.checkScreenshot(page, 'devices-before-decrypt', await devices.timestampColumnMasks());

@@ -59,10 +59,6 @@ class OrderEditorPage extends BasePage {
     return this;
   }
 
-  expectFieldVisible(objectName) {
-    return gui.expectVisible(this.page, [objectName]);
-  }
-
   // --- Products (ProductEditorDialog + OrderProductDelegate rows) -------------------------------
   //
   // ProductEditorDialog reuses the generic "Dialog" objectName (no dialog-specific one) and its

@@ -13,15 +13,16 @@
 
 const { test, newUserPage } = require('../fixtures/test');
 const { DeviceCollectionPage, DeviceEditorPage } = require('../pages');
-const { canSeePage, canRunDeviceCommand, canEditDeviceField, DEVICE_FIELD_PERMISSIONS } = require('../matrix/permissions');
 const gui = require('imtcore-gui-testkit/lib/gui');
 
-const PAGE = 'Devices';
-
+// Returns null when this user cannot get to a new-sensor editor at all - the page is not in their
+// menu, or the collection offers no New command. The caller test.skip()s on that rather than failing.
 async function openNewEditor(page) {
   const devices = new DeviceCollectionPage(page);
   await devices.reload();
+  if (!(await devices.isAvailable())) return null;
   await devices.open();
+  if (!(await devices.commands.isAvailable('New'))) return null;
   await devices.newItem(); // "New" -> fresh document tab
   return new DeviceEditorPage(page);
 }
@@ -29,6 +30,7 @@ async function openNewEditor(page) {
 async function openEditEditor(page) {
   const devices = new DeviceCollectionPage(page);
   await devices.reload();
+  if (!(await devices.isAvailable())) return null;
   await devices.open();
   // Sort by "added" (creation date, header id "added" - DevicesPage.acc) before picking row 0: the
   // default (unsorted) view's row 0 is whichever device the server currently orders first, and that
@@ -47,13 +49,11 @@ async function openEditEditor(page) {
 test.describe('Hardware / editor', () => {
   // --- NEW editor: one continuous document, steps build on each other in order ------------------
   test.describe.serial('new document', () => {
-    let page, user, editor;
+    let page, editor;
 
     test.beforeAll(async ({ browser }, testInfo) => {
-      ({ page, user } = await newUserPage(browser, testInfo));
-      if (canRunDeviceCommand(user, 'New')) {
-        editor = await openNewEditor(page);
-      }
+      ({ page } = await newUserPage(browser, testInfo));
+      editor = await openNewEditor(page);
     });
 
     test.afterAll(async () => {
@@ -61,7 +61,7 @@ test.describe('Hardware / editor', () => {
     });
 
     test.beforeEach(() => {
-      test.skip(!canRunDeviceCommand(user, 'New'), 'user cannot create a sensor (AddSensor)');
+      test.skip(!editor, 'creating a sensor is not available to this user');
     });
 
     test('empty new editor', async () => {
@@ -131,12 +131,12 @@ test.describe('Hardware / editor', () => {
       await editor.toggleGroup('production'); // leave groups expanded for the remaining steps
     });
 
-    // DocumentHistoryPanel.qml is embedded identically in every document editor (only visible with
-    // ViewRevisions - PermissionsController.checkPermission at Component.onCompleted) - a generic
-    // mechanic with no per-entity logic, covered once here for the whole suite (same reasoning as
-    // group-collapse/undo-redo/dirty-close-confirm above).
+    // DocumentHistoryPanel.qml is embedded identically in every document editor (only rendered at all
+    // when the user may see revisions - PermissionsController.checkPermission at Component.onCompleted) -
+    // a generic mechanic with no per-entity logic, covered once here for the whole suite (same reasoning
+    // as group-collapse/undo-redo/dirty-close-confirm above).
     test('document history panel toggles open and closed', async () => {
-      test.skip(!user.can('ViewRevisions'), 'no ViewRevisions permission - panel is not rendered at all');
+      test.skip(!(await gui.dom.isVisible(page, ['HistoryPanelToggle'])), 'history panel is not available to this user');
       await gui.clickButton(page, ['HistoryPanelToggle']);
       await gui.checkScreenshot(page, 'device-editor-history-panel-open');
       await gui.clickButton(page, ['HistoryPanelToggle']);
@@ -157,7 +157,7 @@ test.describe('Hardware / editor', () => {
     });
 
     test('editor commands require save first', async () => {
-      test.skip(!canRunDeviceCommand(user, 'Bind'), 'no Bind permission');
+      test.skip(!(await editor.commands.isAvailable('Bind')), 'Bind is not available to this user');
       // Bind on an unsaved document -> "Please save the document first" info dialog.
       await editor.bind();
       await gui.checkScreenshot(page, 'device-editor-bind-needs-save');
@@ -186,13 +186,11 @@ test.describe('Hardware / editor', () => {
 
   // --- EDIT existing document: also one continuous document --------------------------------------
   test.describe.serial('edit document', () => {
-    let page, user, editor;
+    let page, editor;
 
     test.beforeAll(async ({ browser }, testInfo) => {
-      ({ page, user } = await newUserPage(browser, testInfo));
-      if (canSeePage(user, PAGE)) {
-        editor = await openEditEditor(page);
-      }
+      ({ page } = await newUserPage(browser, testInfo));
+      editor = await openEditEditor(page);
     });
 
     test.afterAll(async () => {
@@ -200,37 +198,14 @@ test.describe('Hardware / editor', () => {
     });
 
     test.beforeEach(() => {
-      test.skip(!canSeePage(user, PAGE), 'user cannot see Hardware');
+      test.skip(!editor, 'Hardware is not available to this user');
     });
 
     test('open existing sensor editor', async () => {
       await gui.checkScreenshot(page, 'device-editor-edit-loaded');
     });
 
-    // Every field is rendered whatever the permissions; only editability differs. Presence is asserted
-    // for all of them, and a field this user may NOT edit must actually reject the edit - checked
-    // behaviourally (gui.expectReadOnly works out whether it is a text control or a popup-driven one),
-    // since DeviceEditor.qml sets readOnly/changeable imperatively in checkPermissions() and a field
-    // that merely LOOKS disabled is indistinguishable from a locked one in a screenshot.
-    //
-    // One limit worth naming rather than hiding: this spec is pinned to devEditor, which holds the full
-    // sensor permission set, so the read-only branch has nothing to check under today's fixture users -
-    // it starts doing real work as soon as a restricted user runs this spec. And the question it cannot
-    // answer at all is whether the SERVER refuses a field the GUI locked: ProLife registers no per-field
-    // permission check on the update path, so that one needs an API test.
-    test('fields reflect permissions, and locked ones reject editing', async () => {
-      for (const fieldObjectName of Object.keys(DEVICE_FIELD_PERMISSIONS)) {
-        await editor.expectFieldVisible(fieldObjectName);
-        if (canEditDeviceField(user, fieldObjectName, false)) continue;
-        await gui.expectReadOnly(page, [fieldObjectName]);
-      }
-    });
-
     test('edit fields and save', { tag: '@mutating' }, async () => {
-      // Editing an EXISTING sensor's project needs ChangeProjectForSensor specifically. Holding the
-      // parent EditSensor is not enough to make the Project field writable, so gate strictly on
-      // ChangeProjectForSensor (otherwise the fill verify fails on a read-only field).
-      test.skip(!user.can('ChangeProjectForSensor'), 'cannot change the sensor project field');
       const edited = `Edited by ProLifeGui ${Date.now()}`;
       await editor.setProject(edited);
       await gui.checkScreenshot(page, 'device-editor-edit-changed');

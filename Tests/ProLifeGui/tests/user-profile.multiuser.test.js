@@ -11,13 +11,12 @@
 
 const { test, expect } = require('../fixtures/test');
 const { WorkspacePage } = require('../pages');
-const { canSeePage } = require('../matrix/permissions');
 
 test.describe('User profile', () => {
-  test.beforeEach(async ({ page, user }) => {
+  test.beforeEach(async ({ page }) => {
     const workspace = new WorkspacePage(page);
     await workspace.reload();
-    if (canSeePage(user, 'Workspace')) await workspace.open();
+    if (await workspace.isAvailable()) await workspace.open();
   });
 
   // UserPanel.qml's account menu is a plain PopupMenuDialog bound to a ListModel, NOT a ComboBox - its

@@ -16,8 +16,8 @@
 //   CustomersFilter, ProductsFilter, LicensesFilter, DateFilter, DocumentState
 //
 // Commands are permission-gated server-side (New<-AddSensor, Remove<-RemoveSensor,
-// Bind<-BindSensor, CreateLicenseFile<-CreateLicenseFile, TransferLicenses<-TransferLicenses, ...);
-// see matrix/permissions.js.
+// Bind<-BindSensor, CreateLicenseFile<-CreateLicenseFile, TransferLicenses<-TransferLicenses, ...),
+// so a test asks commands.isAvailable(id) rather than predicting who holds what.
 
 const { CollectionPage } = require('imtcore-gui-testkit/pages/CollectionPage');
 const { TableConfigDialog } = require('imtcore-gui-testkit/controls');
