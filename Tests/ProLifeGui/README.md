@@ -20,21 +20,37 @@ left untouched; they were used only as reference.
 
 ## Layout
 
+The framework itself lives in **`imtcore-gui-testkit`** (`ImtCore/Tests/GuiTestKit`), shared with the
+other Imt-based apps: `lib/` (the gui barrel + dom, actions, stability, screenshot), `controls/`
+(Button, CommandBar, MenuPanel, ComboBox, TextInput, FilterPanel, Table, Dialog), the generic
+page-object bases, and the fixture / global-setup / config factories. It is consumed as a `file:`
+dependency, which npm COPIES rather than symlinks, so `Run-CiTests.ps1` re-mirrors it before every run —
+an edit to the kit is otherwise invisible here.
+
+What lives in this folder:
+
 ```
-lib/            gui.js (barrel = the "utils.js replacement") + dom, actions, stability, screenshot
 fixtures/       users.js (source of truth) · seed.js (GraphQL role/user creation, used to BAKE fixture
                 users into puma.backup - see Generate-Backups.ps1, not called at test-run time) ·
-                test.js (fixtures)
-controls/       Button, CommandBar, MenuPanel, ComboBox, TextInput, FilterPanel, Table, Dialog
-pages/          BasePage · CollectionPage · Workspace/Device/Software/Order/Account (collection+editor)
-                · Administration/Organizations/Search (navigation + screenshot) · index
-matrix/         permissions.js — UI element → required permission codes (mirrors Pages.acc / ProLifeFeatures.xml)
+                test.js (thin wrapper over the kit's createGuiTest)
+pages/          ProLife's own page objects: Workspace/Device/Software/Order/Account (collection +
+                editor) · Support · index
+matrix/         permissions.js — the hand-written UI element → permission map the specs use
+                declared.json — the same model extracted from the product's OWN configuration by
+                scripts/extract-permission-model.js; when the two disagree, one of them is wrong
 tests/          *.collection / *.editor multiuser specs per domain · workspace · administration ·
-                organizations · search · login.guest ; per-user baselines in tests/__screenshots__/<user>/
-scripts/        seed-fixture-users.js — one-off seeding script used by Generate-Backups.ps1 (see below)
-global-setup.js logs in as each fixture user (already baked into puma.backup) and mints one storageState
-playwright.config.js  one project per user (+ guest); snapshots keyed by {projectName}; workers: 1
-                (the app is a single shared server instance - see Run-CiTests.ps1)
+                organizations · search · support · login.guest ; per-user baselines in
+                tests/__screenshots__/<user>/
+scripts/        extract-permission-model.js (declared model + configuration lint) ·
+                prune-orphan-baselines.js (dead baselines) ·
+                seed-fixture-users.js (one-off, used by Generate-Backups.ps1)
+global-setup.js logs in as each ACTIVE fixture user (already baked into puma.backup) and mints one
+                storageState each
+playwright.config.js  one project per user (+ guest); snapshots keyed by {projectName}; workers: 10,
+                with Run-CiTests.ps1 running a parallel read-only phase and a serial @mutating one.
+                SPEC_PAGES drops a spec from a user's project when that user's permissions make the
+                page unreachable, and MUTATING_USER_KEYS keeps the serial phase from growing with the
+                matrix - together they are why adding a user is cheap.
 ```
 
 ## Multi-user model (the core idea)
@@ -119,6 +135,18 @@ npx playwright test --list
 
 Baselines are per-platform (`-win32` / `-linux`), so mint them on the same OS the CI uses.
 
+Two checks need neither a server nor a browser, and are worth running before any of the above:
+
+```bash
+# The permission model the product itself declares, plus a lint over Pages.acc / *Permissions.acc /
+# ProLifeFeatures.xml / fixtures/users.js. --check exits non-zero on findings.
+node scripts/extract-permission-model.js
+
+# Baselines nothing can compare against any more: spec deleted, check renamed, or the project no
+# longer runs that spec. --delete removes them.
+node scripts/prune-orphan-baselines.js
+```
+
 ## CI (`Run-CiTests.ps1`)
 
 ```powershell
@@ -152,11 +180,13 @@ exports, re-copy them (or Generate-Backups.ps1's output, for puma.backup) if the
 
 `npm install` and `npx playwright install chromium` run automatically if needed, then `npx playwright
 test` runs with `CI=true` (switching `playwright.config.js` to the junit reporter, `junit-report.xml`)
-and `PROLIFE_BASE_URL` pointed at the just-started `ProLifeServerTest.exe`. `workers: 1` in
-`playwright.config.js` matters here: this is a *single shared* server instance, and running multiple
-user-projects' sessions against it concurrently produced real `"Authorization server connection error"`
-failures under load - the whole suite runs serially instead. Teardown stops all three servers in reverse
-order. Puma/Lisa checkouts are located via the `PUMADIR`/`LISADIR` environment variables (falling back
+and `PROLIFE_BASE_URL` pointed at the just-started `ProLifeServerTest.exe`. It invokes `npx playwright
+test` **twice**: a read-only phase at the config's `workers` (10), then an `@mutating` phase at
+`--workers=1`. The split exists because all three servers are one shared instance over one database -
+mutations must not run against a collection another worker is screenshotting, and early attempts at
+full parallelism produced real `"Authorization server connection error"` failures under load. The
+serial phase is therefore the expensive one, which is what `MUTATING_USER_KEYS` in
+`playwright.config.js` is there to bound. Teardown stops all three servers in reverse order. Puma/Lisa checkouts are located via the `PUMADIR`/`LISADIR` environment variables (falling back
 to `Puma`/`Lisa` siblings of the ProLife checkout) — pass `-PumaRepoRoot`/`-LisaRepoRoot` explicitly if
 your agent lays checkouts out differently.
 

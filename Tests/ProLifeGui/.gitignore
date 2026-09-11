@@ -5,6 +5,8 @@ test-results/
 test-results-phase1-readonly/
 test-results-phase2-mutating/
 playwright-report/
+playwright-report-phase1-readonly/
+playwright-report-phase2-mutating/
 junit-report.xml
 junit-report-phase1-readonly.xml
 junit-report-phase2-mutating.xml
