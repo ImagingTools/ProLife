@@ -43,7 +43,11 @@ const FILTERS = {
 
 class DeviceCollectionPage extends CollectionPage {
   constructor(page) {
-    super(page, 'Devices');
+    // Declared to the base class rather than reimplemented here: CollectionPage.filterId() turns a
+    // short key ('status') into the real objectName ('SensorStatusFilter'), and masks() covers the
+    // timestamp columns. Without these every filter key falls through as its own objectName and
+    // nothing resolves - which is exactly what a live hardwareManager run caught.
+    super(page, 'Devices', { filters: FILTERS, maskColumns: TIMESTAMP_HEADER_IDS });
   }
 
   // --- custom commands (each throws if the command button is missing/hidden) --------------------
