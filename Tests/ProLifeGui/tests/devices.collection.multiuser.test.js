@@ -255,17 +255,25 @@ defineCollectionSpec({ ...fixtures, defineTest: (...args) => fixtures.test(...ar
         await ctx.gui.expectVisible(ctx.page, ['TableHeaders', 'timeStamp'], 'Cancel must not apply the unchecked column');
       });
 
+      // Asserts the header ORDER, not the x of one header. The pixel version measured "Last Modified",
+      // the rightmost column - and by the time this block runs an earlier test has selected a row,
+      // which opens the licences panel beside the table and narrows it enough to push that column out
+      // of view. The measurement then waited for a header that was never going to appear and burned
+      // the whole 60s test timeout on a table that was working correctly.
       ctx.test('reorder columns with Up/Down', async () => {
         const devices = ctx.collection;
-        const before = await ctx.gui.dom.byPath(ctx.page, ['TableHeaders', 'timeStamp']).boundingBox();
+        const before = await devices.table.headerOrder();
 
         const dialog = await devices.openColumnConfig('status');
-        await dialog.selectColumn((await dialog.rowCount()) - 1);
+        // Row 1 is the second column, so Move Up makes it the first. Chosen over the last row because
+        // the leftmost columns stay on screen whatever else is open beside the table.
+        await dialog.selectColumn(1);
         await dialog.moveUp();
         await dialog.apply();
 
-        const after = await ctx.gui.dom.byPath(ctx.page, ['TableHeaders', 'timeStamp']).boundingBox();
-        expect(after.x, '"Last Modified" should have moved left after Move Up + Apply').toBeLessThan(before.x);
+        const after = await devices.table.headerOrder();
+        expect(after[0], 'Move Up + Apply should put the second column first').toBe(before[1]);
+        expect(after[1], '... and push the first one after it').toBe(before[0]);
         await ctx.gui.checkScreenshot(ctx.page, 'devices-column-reordered', await devices.masks());
       });
 
