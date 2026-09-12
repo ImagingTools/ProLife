@@ -5,11 +5,10 @@ const fixtures = require('../fixtures/test');
 const { defineCollectionSpec } = require('imtcore-gui-testkit/specs/collectionSpec');
 const { OrderCollectionPage } = require('../pages');
 
-// defineTest must be declared HERE - Playwright files a test under the source location that called
-// test(), and that decides where snapshotPathTemplate puts this spec's baselines.
-defineCollectionSpec({ ...fixtures, defineTest: (title, body) => fixtures.test(title, body) }, {
+defineCollectionSpec({ ...fixtures, defineTest: (t, b) => fixtures.test(t, b) }, {
   title: 'Orders / collection',
   pageId: 'Orders',
+  requires: 'ViewOrders',
   prefix: 'orders',
   createPage: (page) => new OrderCollectionPage(page),
   scenarios: [
@@ -22,7 +21,7 @@ defineCollectionSpec({ ...fixtures, defineTest: (title, body) => fixtures.test(t
     // "orderId" is the id behind the "Delivery-ID" caption.
     { name: 'sort-delivery-id', title: 'sort by delivery-id column', sort: 'orderId' },
     { name: 'pagination', title: 'pagination - page size and navigation', pagination: { size: 50, page: 2 } },
-    { name: 'revision-dialog', title: 'revision dialog', command: 'Revision' },
-    { name: 'remove-dialog', title: 'remove confirmation dialog', command: 'Remove' },
+    { name: 'revision-dialog', title: 'revision dialog', command: 'Revision', requires: 'ViewRevisions' },
+    { name: 'remove-dialog', title: 'remove confirmation dialog', command: 'Remove', requires: 'RemoveOrder' },
   ],
 });

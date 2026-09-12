@@ -4,11 +4,10 @@ const fixtures = require('../fixtures/test');
 const { defineCollectionSpec } = require('imtcore-gui-testkit/specs/collectionSpec');
 const { SoftwareCollectionPage } = require('../pages');
 
-// defineTest must be declared HERE - Playwright files a test under the source location that called
-// test(), and that decides where snapshotPathTemplate puts this spec's baselines.
-defineCollectionSpec({ ...fixtures, defineTest: (title, body) => fixtures.test(title, body) }, {
+defineCollectionSpec({ ...fixtures, defineTest: (t, b) => fixtures.test(t, b) }, {
   title: 'Software / collection',
   pageId: 'SoftwareProducts',
+  requires: 'ViewLicenses',
   prefix: 'software',
   createPage: (page) => new SoftwareCollectionPage(page),
   scenarios: [
@@ -28,9 +27,9 @@ defineCollectionSpec({ ...fixtures, defineTest: (title, body) => fixtures.test(t
     // restore: this is the only collection whose later scenarios would otherwise act on page 2 at
     // size 50 - clearAllFilters() resets neither.
     { name: 'pagination', title: 'pagination - page size and navigation', pagination: { size: 50, page: 2, restore: true } },
-    { name: 'revision-dialog', title: 'revision dialog', command: 'Revision' },
-    { name: 'remove-dialog', title: 'remove confirmation dialog', command: 'Remove' },
-    { name: 'split-dialog', title: 'split dialog', command: 'Split' },
-    { name: 'revoke-dialog', title: 'revoke dialog', command: 'Revoke' },
+    { name: 'revision-dialog', title: 'revision dialog', command: 'Revision', requires: 'ViewRevisions' },
+    { name: 'remove-dialog', title: 'remove confirmation dialog', command: 'Remove', requires: 'RemoveLicense' },
+    { name: 'split-dialog', title: 'split dialog', command: 'Split', requires: 'SplitLicense' },
+    { name: 'revoke-dialog', title: 'revoke dialog', command: 'Revoke', requires: 'RevokeLicense' },
   ],
 });
