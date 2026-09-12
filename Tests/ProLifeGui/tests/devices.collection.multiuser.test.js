@@ -84,8 +84,12 @@ defineCollectionSpec({ ...fixtures, defineTest: (...args) => fixtures.test(...ar
         await devices.openBindNewLicenses();
         await ctx.gui.checkScreenshot(ctx.page, 'devices-bind-available-licenses-dialog', await devices.masks());
         await devices.cancelBindNewLicenses();
-        // Back on the unchanged Bind dialog: "RowCheckBox" exists only on the nested editor's table.
-        await ctx.gui.expectHidden(ctx.page, ['Dialog', 'RowCheckBox'], 'nested editor should be closed after Cancel');
+        // Back on the bound list: the checkable rows belong to the picker's own list.
+        await ctx.gui.expectHidden(
+          ctx.page,
+          ['AvailableLicensesCollection', 'RowCheckBox'],
+          'the licence picker should no longer be showing after going back'
+        );
         await ctx.gui.dismissDialog(ctx.page);
       });
 
@@ -98,7 +102,7 @@ defineCollectionSpec({ ...fixtures, defineTest: (...args) => fixtures.test(...ar
         // "Available Licenses" lists the product's licenses NOT already bound to a device; for some
         // sensors - and once earlier binds in this phase consumed the spares - it is legitimately empty.
         // Dismiss both dialogs before skipping: this is a shared page and a modal blocks the next test.
-        if ((await ctx.gui.countAny(ctx.page, ['Dialog', 'TableRow_0', 'RowCheckBox'])) === 0) {
+        if ((await ctx.gui.countAny(ctx.page, ['AvailableLicensesCollection', 'TableRow_0', 'RowCheckBox'])) === 0) {
           await devices.cancelBindNewLicenses();
           await ctx.gui.dismissDialog(ctx.page);
           test.skip(true, 'no available (unbound) licenses to bind for this sensor');
@@ -123,12 +127,11 @@ defineCollectionSpec({ ...fixtures, defineTest: (...args) => fixtures.test(...ar
         // Which sensor lands at row 0 is data-dependent per user, and prior binds/unbinds in the run can
         // change it, so a given sensor can open with no used-license row. Nothing to unbind is a data
         // state, not a failure - dismiss and skip, keeping the shared page clean.
-        if ((await ctx.gui.countAny(ctx.page, ['Dialog', 'TableRow_0'])) === 0) {
+        if ((await ctx.gui.countAny(ctx.page, ['BoundLicensesTable', 'TableRow_0'])) === 0) {
           await ctx.gui.dismissDialog(ctx.page);
           test.skip(true, 'sensor has no used license to unbind');
         }
-        await devices.selectUsedLicenseRow(0);
-        await devices.unbindLicense();
+        await devices.unbindLicense(0);
         await ctx.gui.checkScreenshot(ctx.page, 'devices-bind-license-unbound', await devices.masks());
         // Discard rather than Save - keeps this independent of the bind test above instead of
         // compounding mutations to the same device across the run.

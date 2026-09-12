@@ -401,6 +401,10 @@ Dialog {
 
 							Button {
 								id: openAvailableButton
+								// Named explicitly rather than left to the caption-derived default: the
+								// GUI suite addresses this, and it already broke once when the caption
+								// changed from "Bind New Licenses" to "Bind Licenses".
+								objectName: "OpenAvailableLicensesButton"
 
 								anchors.right: parent.right
 								anchors.verticalCenter: parent.verticalCenter
@@ -419,6 +423,8 @@ Dialog {
 
 						Table {
 							id: boundTable
+							// The licences already bound to this device.
+							objectName: "BoundLicensesTable"
 
 							anchors.top: boundHeader.bottom
 							anchors.left: parent.left
@@ -479,6 +485,9 @@ Dialog {
 
 						ToolButton {
 							id: backButton
+							// Returns from the licence picker to the bound list. Icon-only, so it has no
+							// caption to derive a name from at all.
+							objectName: "BackToBoundLicensesButton"
 
 							anchors.left: parent.left
 							anchors.verticalCenter: parent.verticalCenter
@@ -508,6 +517,10 @@ Dialog {
 
 						Button {
 							id: confirmBindButton
+							// The caption carries the selection count ("Bind" -> "Bind (2)"), so a
+							// caption-derived name would change as rows are checked - unusable as an
+							// address. Fixed name instead.
+							objectName: "ConfirmBindLicensesButton"
 
 							anchors.right: parent.right
 							anchors.verticalCenter: parent.verticalCenter
@@ -562,6 +575,10 @@ Dialog {
 
 				SoftwareProductCollectionView {
 					id: availableCollection
+					// Both pages of this dialog live in one sliding row, so this list and the bound
+					// table can be in the scene at the same time - each needs its own name for a row
+					// index to mean anything.
+					objectName: "AvailableLicensesCollection"
 
 					anchors.top: parent.top
 					anchors.left: parent.left
@@ -816,6 +833,9 @@ Dialog {
 
 					ToolButton {
 						id: unbindRowButton
+					// Per-row unbind, inside the bound-licences table. Icon-only, so there is no
+					// caption to derive a name from.
+					objectName: "UnbindLicenseButton"
 
 						anchors.verticalCenter: unbindCellDelegate.verticalCenter
 						anchors.horizontalCenter: unbindCellDelegate.horizontalCenter

@@ -86,49 +86,42 @@ class DeviceCollectionPage extends CollectionPage {
   }
 
   // --- Bind dialog (HardwareProductBindingDialog.qml) --------------------------------------------
-  // Opened by bind(). Its own footer is Save/Close ("SaveButton"/"CloseButton", Enums.ok/cancel).
-  // "Bind New Licenses" opens a SECOND Dialog (HardwareProductBindingEditor.qml, "Available
-  // Licenses") on top of it - NOT nested inside it in the DOM (confirmed live: both dialogs' roots
-  // carry objectName "Dialog" as PARALLEL/sibling overlays, each with exactly one "Dialog" ancestor in
-  // its own controls' chain, not two), so a single ['Dialog', ...] scope already reaches whichever
-  // dialog's own control it names - it just needs to not collide with an IDENTICALLY-named control
-  // elsewhere. The nested editor's footer is Bind/Cancel ("BindButton"/"CancelButton"); the command
-  // bar's own "Bind" command is ALSO "BindButton" but has NO Dialog ancestor at all, so scoping to
-  // ['Dialog', 'BindButton'] unambiguously reaches the nested editor's confirm button, never the
-  // command bar's. The outer dialog's own footer (Save/Close) never collides with the nested editor's
-  // (Bind/Cancel), since the two dialogs are only ever open one-at-a-time from each other's own
-  // controls' perspective in the flows below.
+  // Opened by bind(). ONE dialog with two pages that slide: the bound-licence list, and a "Select
+  // Licenses" picker. It used to be two separate dialogs (the picker lived in its own
+  // HardwareProductBindingEditor.qml, since removed), which is why the flows below read as if they
+  // opened and closed a nested window - they now just move between pages.
+  //
+  // Both pages are in the scene at once, so a bare ['Dialog', 'TableRow_0'] is ambiguous between the
+  // two lists: each is addressed through its own name instead. The controls carry explicit objectNames
+  // added for these tests - the captions they would otherwise be named after either change with the
+  // selection ("Bind" -> "Bind (2)") or do not exist at all on the icon-only buttons.
+  // Its own footer is still Save/Close ("SaveButton"/"CloseButton", Enums.ok/cancel).
 
-  /** Row index in the (outer dialog's) "Used Licenses" table. */
+  /** Row index in the bound-licences table (the dialog's first page). */
   selectUsedLicenseRow(index) {
-    return gui.click(this.page, ['Dialog', `TableRow_${index}`], { what: `used license row ${index}` });
+    return gui.click(this.page, ['BoundLicensesTable', `TableRow_${index}`], { what: `bound licence row ${index}` });
   }
-  unbindLicense() {
-    return gui.clickButton(this.page, ['Dialog', 'UnbindButton']);
+  /** Unbind is a per-ROW button in that table, not a dialog-level command. */
+  unbindLicense(index = 0) {
+    return gui.clickButton(this.page, ['BoundLicensesTable', `TableRow_${index}`, 'UnbindLicenseButton']);
   }
-  /**
-   * Opens the "Select Licenses" section (HardwareProductBindingDialog.qml's openAvailableButton).
-   *
-   * Labelled "Bind Licenses" since the dialog was rebuilt; it used to read "Bind New Licenses", and an
-   * imtcontrols Button derives its objectName from its own caption, so renaming the caption renamed
-   * this target and the test could no longer find it.
-   */
+  /** Slides to the licence picker ("Select Licenses"). */
   openBindNewLicenses() {
-    return gui.clickButton(this.page, ['Dialog', 'BindLicensesButton']);
+    return gui.clickButton(this.page, ['Dialog', 'OpenAvailableLicensesButton']);
   }
-  /** Toggle a license's checkbox by row index in the nested "Available Licenses" dialog's table. */
+  /** Toggle a licence's checkbox by row index in the picker's own list. */
   checkAvailableLicense(index) {
-    return gui.click(this.page, ['Dialog', `TableRow_${index}`, 'RowCheckBox'], {
-      what: `available license row ${index} checkbox`,
+    return gui.click(this.page, ['AvailableLicensesCollection', `TableRow_${index}`, 'RowCheckBox'], {
+      what: `available licence row ${index} checkbox`,
     });
   }
-  /** Confirms the nested dialog (Enums.ok, "Bind") - binds the checked license(s) and closes it. */
+  /** Binds the checked licences and slides back to the bound list. */
   confirmBindNewLicenses() {
-    return gui.clickButton(this.page, ['Dialog', 'BindButton']);
+    return gui.clickButton(this.page, ['Dialog', 'ConfirmBindLicensesButton']);
   }
-  /** Cancels the nested dialog (Enums.cancel, "Cancel") without binding anything. */
+  /** Returns to the bound list without binding anything. */
   cancelBindNewLicenses() {
-    return gui.clickButton(this.page, ['Dialog', 'CancelButton']);
+    return gui.clickButton(this.page, ['Dialog', 'BackToBoundLicensesButton']);
   }
   /** Save (Enums.ok) - opens the "Apply changes" project-name prompt (notClosingButtons keeps the
    * Bind dialog itself open underneath). Only enabled once a product is selected and the binding
