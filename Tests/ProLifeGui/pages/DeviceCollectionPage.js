@@ -170,43 +170,6 @@ class DeviceCollectionPage extends CollectionPage {
 
   // --- filters ----------------------------------------------------------------------------------
 
-  /** Pick an option in a registered field filter by its option text (e.g. status "None"). */
-  async selectFilterOption(filterKey, optionText) {
-    const filterId = FILTERS[filterKey] || filterKey;
-    await this.filters.combo(filterId).select(optionText);
-    return this;
-  }
-
-  /**
-   * Pick an option in a registered field filter BY POSITION (see DeviceCollectionView.qml for the
-   * source-defined option order backing each filterKey - e.g. 'status' is
-   * None/Accepted/InProgress/Canceled/OnHold/Finished/Defect/InRepair/Decommissioned, indices 0-8;
-   * 'license' is WithoutLicense/WithLicense, indices 0-1, per LicenseFilterDelegate.qml).
-   */
-  async selectFilterOptionByIndex(filterKey, index) {
-    const filterId = FILTERS[filterKey] || filterKey;
-    await this.filters.combo(filterId).selectIndex(index);
-    return this;
-  }
-
-  /** Open the built-in creation-date filter and pick a preset ('Month_Current', 'Year_Last', ...). */
-  async setCreationDate(preset) {
-    await this.filters.dateFilter(FILTERS.creationDate, preset);
-    return this;
-  }
-
-  /** Clear one registered filter. */
-  async clearFilter(filterKey) {
-    await this.filters.clearFilter(FILTERS[filterKey] || filterKey);
-    return this;
-  }
-
-  /** Clear every active filter. */
-  async clearAllFilters() {
-    await this.filters.clearAllFilters();
-    return this;
-  }
-
   // --- precondition filters for context-sensitive commands --------------------------------------
   // Bind/CreateLicenseFile/TransferLicenses/ResetTransferCounter only actually DO something on a row
   // that satisfies a server-side data precondition (DeviceCollectionViewCommandsDelegate.qml); a bare

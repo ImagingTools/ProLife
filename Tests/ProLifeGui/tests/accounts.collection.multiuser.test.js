@@ -9,7 +9,7 @@ const fixtures = require('../fixtures/test');
 const { defineCollectionSpec } = require('imtcore-gui-testkit/specs/collectionSpec');
 const { AccountCollectionPage } = require('../pages');
 
-defineCollectionSpec({ ...fixtures, defineTest: (t, b) => fixtures.test(t, b) }, {
+defineCollectionSpec({ ...fixtures, defineTest: (...args) => fixtures.test(...args) }, {
   title: 'Accounts / collection',
   pageId: 'Accounts',
   requires: 'ViewAccounts',

@@ -4,7 +4,7 @@ const fixtures = require('../fixtures/test');
 const { defineCollectionSpec } = require('imtcore-gui-testkit/specs/collectionSpec');
 const { SoftwareCollectionPage } = require('../pages');
 
-defineCollectionSpec({ ...fixtures, defineTest: (t, b) => fixtures.test(t, b) }, {
+defineCollectionSpec({ ...fixtures, defineTest: (...args) => fixtures.test(...args) }, {
   title: 'Software / collection',
   pageId: 'SoftwareProducts',
   requires: 'ViewLicenses',
