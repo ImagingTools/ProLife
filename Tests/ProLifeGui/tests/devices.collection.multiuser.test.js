@@ -56,7 +56,7 @@ defineCollectionSpec({ ...fixtures, defineTest: (...args) => fixtures.test(...ar
     // exercised. Each flow below filters for a qualifying row first.
 
     ctx.test('bind dialog', async () => {
-      test.skip(ctx.user.can('BindSensor') === false, 'needs BindSensor');
+      ctx.requires('BindSensor');
       const devices = ctx.collection;
       // Bind only enables for a row with a non-empty MAC address; Finished sensors always have one.
       await devices.filterFinishedSensors();
@@ -71,7 +71,7 @@ defineCollectionSpec({ ...fixtures, defineTest: (...args) => fixtures.test(...ar
     // a real updateDeviceBindingRequest - is HardwareProductBindingDialog.qml / ...Editor.qml.
     test.describe('bind dialog - full functionality', () => {
       test.beforeEach(() => {
-        test.skip(ctx.user.can('BindSensor') === false, 'needs BindSensor');
+        ctx.requires('BindSensor');
       });
 
       ctx.test('open "Bind New Licenses", then Cancel discards', async () => {
@@ -115,7 +115,7 @@ defineCollectionSpec({ ...fixtures, defineTest: (...args) => fixtures.test(...ar
       });
 
       ctx.test('unbind an existing license', async () => {
-        test.skip(ctx.user.can('UnbindSensor') === false, 'needs UnbindSensor');
+        ctx.requires('UnbindSensor');
         const devices = ctx.collection;
         await devices.filterFinishedSensorsWithLicense();
         await devices.selectRow(0);
@@ -137,7 +137,7 @@ defineCollectionSpec({ ...fixtures, defineTest: (...args) => fixtures.test(...ar
     });
 
     ctx.test('create license file - validation (non-superuser)', { tag: '@mutating' }, async () => {
-      test.skip(ctx.user.can('CreateLicenseFile') === false, 'needs CreateLicenseFile');
+      ctx.requires('CreateLicenseFile');
       test.skip(ctx.user.key === 'su', 'su gets the Encrypt/Unencrypt popup - covered separately below');
       const devices = ctx.collection;
       // CreateLicenseFile requires inUse, a non-empty MAC and serial, and status "Finished".
@@ -149,7 +149,7 @@ defineCollectionSpec({ ...fixtures, defineTest: (...args) => fixtures.test(...ar
     });
 
     ctx.test('create license file - "No license is linked" error (non-superuser)', async () => {
-      test.skip(ctx.user.can('CreateLicenseFile') === false, 'needs CreateLicenseFile');
+      ctx.requires('CreateLicenseFile');
       test.skip(ctx.user.key === 'su', 'su gets the Encrypt/Unencrypt popup - covered separately below');
       const devices = ctx.collection;
       // Deliberately a row that fails the FIRST validation check (inUse === false), so the error path
@@ -190,7 +190,7 @@ defineCollectionSpec({ ...fixtures, defineTest: (...args) => fixtures.test(...ar
     });
 
     ctx.test('transfer licenses dialog', async () => {
-      test.skip(ctx.user.can('TransferLicenses') === false, 'needs TransferLicenses');
+      ctx.requires('TransferLicenses');
       const devices = ctx.collection;
       // Requires inUse - without a bound license this opens the "No license is linked" error instead.
       await devices.filterSensorsWithLicense();
@@ -201,7 +201,7 @@ defineCollectionSpec({ ...fixtures, defineTest: (...args) => fixtures.test(...ar
     });
 
     ctx.test('reset transfer counter', { tag: '@mutating' }, async () => {
-      test.skip(ctx.user.can('ResetTransferCounter') === false, 'needs ResetTransferCounter');
+      ctx.requires('ResetTransferCounter');
       const devices = ctx.collection;
       // No hard precondition, but a device with a license/transfer history makes the reset meaningful
       // rather than a no-op on an untouched sensor.
