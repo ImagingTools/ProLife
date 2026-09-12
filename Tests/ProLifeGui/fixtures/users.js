@@ -6,8 +6,13 @@
 //   - fixtures/test.js      -> exposes the current user (resolved from the project name) to tests
 //
 // `permissions` is what gets GRANTED to this fixture user's role when seeding (fixtures/seed.js joins
-// it into the ';'-delimited string the server stores). It is NOT consulted by any test: a test asks the
-// running client whether a flow is available, and the server enforces the rules. Codes are the exact
+// it into the ';'-delimited string the server stores). A test does not read it - `requires()` compares
+// against the list the SERVER returned at login, which storageState already carries.
+//
+// The one exception is '*'. The superuser bypasses permission checks server-side and is therefore sent
+// an EMPTY list, indistinguishable from a user granted nothing; '*' here is what tells the two apart,
+// and defineUsers refuses a superuser without it - otherwise su would silently skip every
+// permission-gated test in the suite. Codes are the exact
 // FeatureId strings from Impl/ProLifeServer/ProLifeFeatures.xml, except SplitLicense/RevokeLicense,
 // which are CommandPermissions declared in SoftwareProductsPage.acc - a role can be granted the raw
 // string either way. Mirrors the role model validated in Tests/ProLifeApiPostman ("08 Multi-role
