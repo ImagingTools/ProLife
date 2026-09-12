@@ -106,9 +106,15 @@ class DeviceCollectionPage extends CollectionPage {
   unbindLicense() {
     return gui.clickButton(this.page, ['Dialog', 'UnbindButton']);
   }
-  /** Opens the nested "Available Licenses" (Bind New Licenses) dialog. */
+  /**
+   * Opens the "Select Licenses" section (HardwareProductBindingDialog.qml's openAvailableButton).
+   *
+   * Labelled "Bind Licenses" since the dialog was rebuilt; it used to read "Bind New Licenses", and an
+   * imtcontrols Button derives its objectName from its own caption, so renaming the caption renamed
+   * this target and the test could no longer find it.
+   */
   openBindNewLicenses() {
-    return gui.clickButton(this.page, ['Dialog', 'BindNewLicensesButton']);
+    return gui.clickButton(this.page, ['Dialog', 'BindLicensesButton']);
   }
   /** Toggle a license's checkbox by row index in the nested "Available Licenses" dialog's table. */
   checkAvailableLicense(index) {
