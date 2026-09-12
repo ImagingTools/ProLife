@@ -9,7 +9,6 @@ const { CollectionPage } = require('imtcore-gui-testkit/pages/CollectionPage');
 const FILTERS = {
   customers: 'CustomersFilter',
   creationDate: 'CreationDateFilter',
-  documentState: 'DocumentState',
 };
 
 class OrderCollectionPage extends CollectionPage {

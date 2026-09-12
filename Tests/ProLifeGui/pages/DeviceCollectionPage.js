@@ -11,9 +11,9 @@
 //   ResetTransferCounter, DecryptFile, Support            Bind also needs a non-empty MAC)
 //
 // Filters (FilterPanel -> "<filterId>", options are text-keyed, each has a ClearButton; the panel has
-// ClearAllFilters and a built-in CreationDateFilter + DocumentState + SearchTextInput):
+// ClearAllFilters and a built-in CreationDateFilter + SearchTextInput):
 //   SensorStatusFilter, UsageFilter, LicenseFilter, LicenseCreationDateFilter,
-//   CustomersFilter, ProductsFilter, LicensesFilter, DateFilter, DocumentState
+//   CustomersFilter, ProductsFilter, LicensesFilter
 //
 // Commands are permission-gated server-side (New<-AddSensor, Remove<-RemoveSensor,
 // Bind<-BindSensor, CreateLicenseFile<-CreateLicenseFile, TransferLicenses<-TransferLicenses, ...),
@@ -38,7 +38,6 @@ const FILTERS = {
   products: 'ProductsFilter',
   licenses: 'LicensesFilter',
   creationDate: 'CreationDateFilter',
-  documentState: 'DocumentState',
 };
 
 class DeviceCollectionPage extends CollectionPage {

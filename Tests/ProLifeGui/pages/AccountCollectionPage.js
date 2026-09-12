@@ -7,7 +7,6 @@ const { CollectionPage } = require('imtcore-gui-testkit/pages/CollectionPage');
 
 const FILTERS = {
   creationDate: 'CreationDateFilter',
-  documentState: 'DocumentState',
 };
 
 class AccountCollectionPage extends CollectionPage {

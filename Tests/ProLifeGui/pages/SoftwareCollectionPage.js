@@ -14,7 +14,6 @@ const FILTERS = {
   customers: 'CustomersFilter',
   licenseCreationDate: 'LicenseCreationDateFilter',
   creationDate: 'CreationDateFilter',
-  documentState: 'DocumentState',
 };
 
 class SoftwareCollectionPage extends CollectionPage {

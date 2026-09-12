@@ -77,13 +77,18 @@ test.describe('User profile', () => {
     // expiration combo next - also proves that combo is a real, working control, not just a default.
     await gui.select(page, ['ComboBox'], '30Days');
 
-    // Click through the permissions tree for real (not just "Check All") - expand it, then check two
-    // individual rows. Row content is data-dependent per user, but su/fullAccess always has a large
-    // permission set, so rows 0 and 1 are reliably present.
+    // Click through the permissions tree for real (not just "Check All") - expand it and check the top
+    // row, which is a GROUP and therefore selects its children with it.
+    //
+    // It used to check rows 0 AND 1, assuming both are always present and independent. They are for su,
+    // whose tree is large. A user holding ONE permission has a tree of exactly two rows - the group and
+    // its single child - so the second click unchecked the child and with it the group, leaving nothing
+    // selected. "Select at least one permission" stayed up, Generate Token stayed disabled, and the
+    // failure surfaced much later as "the dialog should open". One group row is what this needs, and it
+    // holds for any user.
     await gui.clickButton(page, ['ExpandAllButton']);
     await gui.checkScreenshot(page, 'access-tokens-new-dialog-tree-expanded');
-    await gui.click(page, ['TreeRow_0', 'RowCheckBox'], { what: 'first permission row checkbox' });
-    await gui.click(page, ['TreeRow_1', 'RowCheckBox'], { what: 'second permission row checkbox' });
+    await gui.click(page, ['TreeRow_0', 'RowCheckBox'], { what: 'first permission group checkbox' });
     await gui.checkScreenshot(page, 'access-tokens-new-dialog-filled');
 
     // Generate Token is disabled until name + expiration + at least one scope are all set - clicking
