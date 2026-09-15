@@ -203,11 +203,11 @@ const USERS = [
     isolatedSpec: 'software.editor.multiuser.test.js',
   },
   {
-    // Drives concurrent-session-banner.multiuser.test.js - opens TWO simultaneous sessions of this
-    // SAME user on purpose (that's the whole point of the test: observe RemoteCollectionView.qml's
-    // "modified from another computer" banner, which only fires when a SECOND session of the SAME user
-    // changes a row the FIRST session is looking at). Still needs its own isolated user so it doesn't
-    // collide with some OTHER spec file's own document-tab activity under a shared matrix user.
+    // Drives concurrent-session-banner.multiuser.test.js: this is the WATCHING session, looking at the
+    // Hardware table while `su` changes a row from its own session. The banner fires on a change made by
+    // a different USER (RemoteCollectionChangeListener.qml compares ownerId to the current user), so the
+    // watcher must not be su - hence a user of its own, which also keeps it clear of any other spec's
+    // document-tab activity under a shared matrix user.
     key: 'bannerEditor',
     title: 'Concurrent Session Banner (isolated)',
     login: 'prolifegui_bannereditor',

@@ -123,6 +123,21 @@ class DeviceCollectionPage extends CollectionPage {
   cancelBindNewLicenses() {
     return gui.clickButton(this.page, ['Dialog', 'BackToBoundLicensesButton']);
   }
+  /**
+   * Whether the dialog is showing the licence PICKER rather than the bound list.
+   *
+   * Both pages live in one sliding row (HardwareProductBindingDialog.qml), so the picker is never
+   * hidden - it is slid out of the dialog's clipped area. Its `visible` flag stays true on both pages
+   * and says nothing about which one you are looking at; where it sits does. Overlap, not a side, so
+   * this does not care which way the row slides.
+   */
+  async isAvailableLicensesShowing() {
+    const dialog = await this.page.locator('[objectName="Dialog"][visible]').first().boundingBox();
+    const picker = await this.page.locator('[objectName="AvailableLicensesCollection"]').first().boundingBox();
+    if (!dialog || !picker || !picker.width) return false;
+    const overlap = Math.min(dialog.x + dialog.width, picker.x + picker.width) - Math.max(dialog.x, picker.x);
+    return overlap > picker.width / 2;
+  }
   /** Save (Enums.ok) - opens the "Apply changes" project-name prompt (notClosingButtons keeps the
    * Bind dialog itself open underneath). Only enabled once a product is selected and the binding
    * model actually changed (HardwareProductBindingDialog.qml's onModelChanged handler). */

@@ -26,7 +26,6 @@ class AccountEditorPage extends BasePage {
     this.groups = new Table(page, ['GroupsTable']);
   }
 
-  save() { return this.runCommand('Save'); }
   undo() { return this.runCommand('Undo'); }
   redo() { return this.runCommand('Redo'); }
 

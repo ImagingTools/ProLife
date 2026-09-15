@@ -127,7 +127,7 @@ test.describe('Orders / editor', () => {
   // On a NEW (unsaved) order, the "Add product" button is gated by AddOrder rather than
   // ChangeOrderProducts (OrderEditor.qml) - same permission this block's own tests already gate on.
   test.describe.serial('products', () => {
-    let page, editor;
+    let page, editor, hasCustomer;
 
     test.beforeAll(async ({ browser }, testInfo) => {
       ({ page } = await newUserPage(browser, testInfo));
@@ -141,7 +141,12 @@ test.describe('Orders / editor', () => {
         // position-based (live seeded Accounts data, no stable caption) - same convention as the
         // product catalogue combos themselves.
         await editor.setDeliveryId('12345');
-        await editor.setCustomerByIndex(0);
+        // The Customer list is built from the accounts this user's org can see, and for an org-scoped
+        // user it resolves to none - the combo then never opens a popup at all (ComboBox.qml returns
+        // early on an empty model), which surfaced as "did not open its popup after 3 attempts" in
+        // beforeAll and took the whole block down. No customer to pick is a data state, not a fault.
+        hasCustomer = (await editor.customer.optionCount()) > 0;
+        if (hasCustomer) await editor.setCustomerByIndex(0);
       }
     });
 
@@ -151,6 +156,8 @@ test.describe('Orders / editor', () => {
 
     test.beforeEach(() => {
       test.skip(!editor, 'creating an order is not available to this user');
+      // Adding a product needs an otherwise-valid order, and that needs a customer.
+      test.skip(!hasCustomer, 'no customer is visible to this user, so no valid order can be built');
     });
 
     test('add a new product', async () => {
@@ -159,40 +166,47 @@ test.describe('Orders / editor', () => {
       test.skip(!added, 'no seeded software product in this catalogue currently has a linkable license');
       await expect
         .poll(() => editor.productCount(), { message: 'expected a new product row to appear' })
-        .toBe(before + 1);
-      await gui.checkScreenshot(page, 'orders-editor-product-added');
+        // Greater than, not exactly one more: linking an existing instance can bring several lines in
+        // at once (confirmed live - one pick added four), and what this test is about is that a line
+        // was really added, not how the server expands the link.
+        .toBeGreaterThan(before);
+      await gui.checkScreenshot(page, 'orders-editor-product-added', await editor.productMasks());
     });
 
-    // Hardware follows the exact same shape as Software (an existing-device link via
-    // HardwareProductEditor.qml's "ProductDeviceCombo", mirroring "ProductLicenseCombo") - previously
-    // completely unexercised by any test (addProduct() used to skip the device combo entirely for
-    // 'hardware', which would have silently left OK disabled - see OrderEditorPage.js's own comment).
+    // Hardware follows the exact same shape as Software - the same [Software|Hardware] toggle and the
+    // same instance picker, just listing devices instead of licenses.
     test('add a new hardware product', async () => {
       const before = await editor.productCount();
       const added = await editor.addAnyProduct('hardware');
       test.skip(!added, 'no seeded hardware product in this catalogue currently has a linkable device');
       await expect
         .poll(() => editor.productCount(), { message: 'expected a new product row to appear' })
-        .toBe(before + 1);
-      await gui.checkScreenshot(page, 'orders-editor-hardware-product-added');
+        // Greater than, not exactly one more: linking an existing instance can bring several lines in
+        // at once (confirmed live - one pick added four), and what this test is about is that a line
+        // was really added, not how the server expands the link.
+        .toBeGreaterThan(before);
+      await gui.checkScreenshot(page, 'orders-editor-hardware-product-added', await editor.productMasks());
     });
 
-    // A genuine EDIT (not just Cancel, see the test below): re-opens the row "add a new product" left
-    // behind, re-selects a license (proving the combo and OK are both live/interactive on an EXISTING
-    // row, not only a freshly-added one), and confirms via OK rather than discarding.
-    test('edit existing product row, change license, then OK applies it', async () => {
+    // Re-opens the row "add a new product" left behind. A LINKED line is read-only in this dialog
+    // (ProductEditor.qml locks the chrome while editing, so the instance picker is gone and the nested
+    // editor is a viewer) - there is no license left to re-pick, so what this proves is that the row's
+    // own Edit command opens the dialog on that line and the primary button closes it again.
+    test('open an existing product row, then close it again', async () => {
       test.skip((await editor.productCount()) === 0, 'no product row available (see "add a new product" above)');
       await editor.editProductRow(0);
-      await gui.checkScreenshot(page, 'orders-editor-product-edit-dialog-open');
-      await gui.selectIndex(page, ['ProductLicenseCombo'], 0);
-      await editor.confirmProductDialog();
-      await gui.expectHidden(page, ['ProductLicenseCombo'], 'ProductEditorDialog should close after OK');
-      await gui.checkScreenshot(page, 'orders-editor-product-edited');
+      await gui.expectVisible(page, ['ProductCategorySegmented'], 'the product dialog should open on this row');
+      await gui.checkScreenshot(page, 'orders-editor-product-edit-dialog-open', await editor.productMasks());
+      // Closed with Cancel, not the primary button: a linked line is read-only here (the chrome is
+      // locked while editing), so there is nothing for the primary button to apply and it stays put.
+      await editor.cancelProductDialog();
+      await gui.expectHidden(page, ['ProductCategorySegmented'], 'the product dialog should close again');
+      await gui.checkScreenshot(page, 'orders-editor-product-edited', await editor.productMasks());
     });
 
     test('expand product view (detailed card)', async () => {
       await editor.toggleProductsExpanded();
-      await gui.checkScreenshot(page, 'orders-editor-product-expanded');
+      await gui.checkScreenshot(page, 'orders-editor-product-expanded', await editor.productMasks());
       await editor.toggleProductsExpanded(); // back to compact for the remaining steps
     });
 
@@ -217,12 +231,15 @@ test.describe('Orders / editor', () => {
       test.skip(!added, 'no seeded software product in this catalogue currently has a linkable license');
       await expect
         .poll(() => editor.productCount(), { message: 'expected a new product row to appear' })
-        .toBe(before + 1);
+        // Greater than, not exactly one more: linking an existing instance can bring several lines in
+        // at once (confirmed live - one pick added four), and what this test is about is that a line
+        // was really added, not how the server expands the link.
+        .toBeGreaterThan(before);
 
       await editor.removeProductRow(0);
-      await gui.checkScreenshot(page, 'orders-editor-product-remove-confirm');
+      await gui.checkScreenshot(page, 'orders-editor-product-remove-confirm', await editor.productMasks());
       await gui.clickButton(page, ['YesButton']);
-      await gui.checkScreenshot(page, 'orders-editor-product-removed');
+      await gui.checkScreenshot(page, 'orders-editor-product-removed', await editor.productMasks());
     });
   });
 
@@ -231,7 +248,11 @@ test.describe('Orders / editor', () => {
 
     test.beforeAll(async ({ browser }, testInfo) => {
       ({ page } = await newUserPage(browser, testInfo));
-      editor = await openEditEditor(page);
+      // A CLOSED order cannot be saved at all - the server refuses the whole update ("Product ... cannot
+      // be inserted to collection for order", surfaced as an Internal error toast), so editing row 0 was
+      // testing a flow the product does not support. Pick a non-Closed one, as the products test below
+      // already does.
+      editor = await openEditableOrderEditor(page);
     });
 
     test.afterAll(async () => {
@@ -239,7 +260,7 @@ test.describe('Orders / editor', () => {
     });
 
     test.beforeEach(() => {
-      test.skip(!editor, 'Orders is not available to this user');
+      test.skip(!editor, 'no open order is available to this user to edit');
     });
 
     test('open existing order editor', async () => {
@@ -247,7 +268,21 @@ test.describe('Orders / editor', () => {
     });
 
     test('edit fields and save', { tag: '@mutating' }, async () => {
-      const edited = `Edited by ProLifeGui ${Date.now()}`;
+      // Closing the document and booting the collection again to reopen it is a second full app
+      // round-trip on top of this test's own edits - more than the suite-wide 60s cap allows.
+      test.setTimeout(150_000);
+      // Keyed to the user, not to the clock: this value is typed into a field that several screenshots
+      // then capture, so a per-run number guarantees they never match their baseline. Per-user keeps it
+      // unique between projects, which the edit needs - re-typing the SAME value changes nothing and
+      // leaves the document clean, and then there is nothing for Save to commit.
+      const edited = `Edited by ProLifeGui (${test.info().project.name})`;
+      // Read before editing: this is what relocates the SAME order after the reopen below.
+      // Back to General first: adding the product left the editor on its Products sub-page, where this
+      // field is not visible - and an unreadable field now answers null rather than hanging, which
+      // reached the search as a non-string.
+      await editor.openEditorPage('General');
+      const deliveryId = await editor.deliveryId.value();
+      expect(deliveryId, 'the order needs a Delivery-ID to be found again after reopening').toBeTruthy();
       await editor.setDescription(edited);
       await gui.checkScreenshot(page, 'orders-editor-edit-changed');
       await editor.save();
@@ -258,7 +293,16 @@ test.describe('Orders / editor', () => {
       // and reopening the SAME document from a clean collection reload proves the new value was really
       // written, not just held in this still-open document's in-memory representation.
       await editor.closeDocument();
-      editor = await openEditEditor(page);
+      // Relocate THIS order by its Delivery-ID rather than by row position: the Save just changed its
+      // Last Modified, and openEditableOrderEditor scans in whatever order the collection is currently
+      // in, so "the first non-Closed row" need not be the order this test just edited.
+      const orders = new OrderCollectionPage(page);
+      await orders.reload();
+      await orders.open();
+      await orders.search(deliveryId);
+      await orders.selectRow(0);
+      await orders.editItem();
+      editor = new OrderEditorPage(page);
       await editor.description.waitForValue(edited);
       await gui.checkScreenshot(page, 'orders-editor-edit-reopened');
     });
@@ -267,6 +311,9 @@ test.describe('Orders / editor', () => {
     // the 'products' describe block above, which works on a brand-new unsaved document - previously
     // never exercised against a real, persisted order.
     test('add a product to an existing order and save persists it', { tag: '@mutating' }, async () => {
+      // The longest flow in the suite: a product dialog, a save, then a full close-reload-search-reopen
+      // round trip - two complete app boots on top of everything else.
+      test.setTimeout(240_000);
       // NOT the block's shared `editor` (openEditEditor's "row 0 sorted by added") - a Closed order
       // rejects product changes (ProductEditorDialog's OK stays permanently disabled), so this needs
       // its own search for a non-Closed order instead. Last test in this describe.serial block, so
@@ -279,17 +326,24 @@ test.describe('Orders / editor', () => {
       test.skip(!added, 'no seeded software product in this catalogue currently has a linkable license');
       await expect
         .poll(() => editor.productCount(), { message: 'expected a new product row to appear' })
-        .toBe(before + 1);
-      await gui.checkScreenshot(page, 'orders-editor-existing-order-product-added');
+        // Greater than, not exactly one more: linking an existing instance can bring several lines in
+        // at once (confirmed live - one pick added four), and what this test is about is that a line
+        // was really added, not how the server expands the link.
+        .toBeGreaterThan(before);
+      await gui.checkScreenshot(page, 'orders-editor-existing-order-product-added', await editor.productMasks());
 
       // Delivery-ID uniquely identifies this specific order (unlike openEditEditor's "row 0 sorted by
       // added", which has no way to target the SAME non-Closed order this test deliberately searched
       // for above) - read it now, before closing, so the reopen step below can search for it directly.
-      const deliveryIdInput = page.locator('[objectName="DeliveryIdInput"] input, [objectName="DeliveryIdInput"] [objectName="TextInput"]').first();
-      const deliveryId = await deliveryIdInput.evaluate((el) => (el.tagName === 'INPUT' ? el.value : el.textContent)).then((v) => v.trim());
+      // Back to General first: adding the product left the editor on its Products sub-page, where this
+      // field is not visible - and an unreadable field answers null, which reached the search as a
+      // non-string ("keyboard.type: expected string, got object").
+      await editor.openEditorPage('General');
+      const deliveryId = await editor.deliveryId.value();
+      expect(deliveryId, 'the order needs a Delivery-ID to be found again after reopening').toBeTruthy();
 
       await editor.save();
-      await gui.checkScreenshot(page, 'orders-editor-existing-order-product-saved');
+      await gui.checkScreenshot(page, 'orders-editor-existing-order-product-saved', await editor.productMasks());
 
       // Persistence check - same reasoning as 'edit fields and save' above: close and reopen from a
       // clean collection reload, proving the product row survives a real server round-trip.
@@ -303,8 +357,8 @@ test.describe('Orders / editor', () => {
       editor = new OrderEditorPage(page);
       await expect
         .poll(() => editor.productCount(), { message: 'expected the added product row to survive reopening' })
-        .toBe(before + 1);
-      await gui.checkScreenshot(page, 'orders-editor-existing-order-product-reopened');
+        .toBeGreaterThan(before);
+      await gui.checkScreenshot(page, 'orders-editor-existing-order-product-reopened', await editor.productMasks());
     });
   });
 });

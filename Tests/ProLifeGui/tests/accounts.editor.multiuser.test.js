@@ -102,6 +102,10 @@ test.describe('Accounts / editor', () => {
     // account can belong to; checking a row applies to the in-memory model immediately (no separate
     // "apply" step - see AccountEditor.qml's onCheckedItemsChanged), but still needs Save to persist.
     test('toggle a group membership checkbox', async () => {
+      // The groups table is on the editor's own "Groups" sub-page and the editor opens on Customer, so
+      // without switching pages first the guard below always counted 0 rows and the test skipped for
+      // every user - green, and testing nothing.
+      await editor.openGroups();
       test.skip((await gui.countVisible(page, ['GroupsTable', 'TableRow_0'])) === 0, 'no groups available to toggle');
       await editor.groups.toggleRowCheck(0);
       await gui.checkScreenshot(page, 'accounts-editor-group-checked');
@@ -109,7 +113,14 @@ test.describe('Accounts / editor', () => {
     });
 
     test('edit fields and save', { tag: '@mutating' }, async () => {
-      const edited = `Edited by ProLifeGui ${Date.now()}`;
+      // Closing the document and booting the collection again to reopen it is a second full app
+      // round-trip on top of this test's own edits - more than the suite-wide 60s cap allows.
+      test.setTimeout(240_000);
+      // Keyed to the user, not to the clock: this value is typed into a field that several screenshots
+      // then capture, so a per-run number guarantees they never match their baseline. Per-user keeps it
+      // unique between projects, which the edit needs - re-typing the SAME value changes nothing and
+      // leaves the document clean, and then there is nothing for Save to commit.
+      const edited = `Edited by ProLifeGui (${test.info().project.name})`;
       await editor.setAccountName(edited);
       await gui.checkScreenshot(page, 'accounts-editor-edit-changed');
       await editor.save();
@@ -130,6 +141,8 @@ test.describe('Accounts / editor', () => {
       await accounts.selectRow(0);
       await accounts.editItem();
       editor = new AccountEditorPage(page);
+      // Account Name is on the editor's "Account" sub-page and a reopened editor lands on Customer.
+      await editor.openEditorPage('AccountInformation');
       await editor.accountName.waitForValue(edited);
       await gui.checkScreenshot(page, 'accounts-editor-edit-reopened');
     });

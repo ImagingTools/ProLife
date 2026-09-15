@@ -17,7 +17,6 @@ class OrderEditorPage extends BasePage {
     this.orderStatus = new ComboBox(page, ['OrderStatusCombo']);
   }
 
-  save() { return this.runCommand('Save'); }
   undo() { return this.runCommand('Undo'); }
   redo() { return this.runCommand('Redo'); }
 
@@ -70,10 +69,10 @@ class OrderEditorPage extends BasePage {
 
   // --- Products (ProductEditorDialog + OrderProductDelegate rows) -------------------------------
   //
-  // ProductEditorDialog reuses the generic "Dialog" objectName (no dialog-specific one) and its
-  // fields: category toggle SoftwareButton/HardwareButton, catalogue picker "ProductCatalogueCombo"
-  // (NOT the bare "ComboBox" fallback every combo box's inner control carries by default - see
-  // ProductEditor.qml's own comment), confirm OKButton, cancel CancelButton. Removing a row raises a
+  // ProductEditorDialog reuses the generic "Dialog" objectName (no dialog-specific one). Its parts:
+  // category toggle SoftwareButton/HardwareButton, source toggle ProductSourceSegmented (Link existing
+  // by default), the instance picker ProductLinkSelectButton -> FilterableSelectItem_<i>, and a primary
+  // button named for what it does ("Add" / "Save") next to CancelButton. Removing a row raises a
   // Yes/No MessageDialog (YesButton/NoButton) - callers handle that confirm step themselves so they
   // can screenshot the confirm state before deciding.
 
@@ -101,43 +100,52 @@ class OrderEditorPage extends BasePage {
   }
 
   /**
-   * Add a new product: opens ProductEditorDialog, picks the Software or Hardware category, selects
-   * the Nth catalogue entry, and confirms. Position-based selection (not by caption): the combo is
-   * populated from live seeded catalogue data with no stable text to assert on - same convention as
-   * DeviceEditorPage's setDeviceTypeByIndex.
+   * Add a product line by LINKING an existing instance.
    *
-   * Selecting a Software product loads a nested sub-form (SoftwareProductEditor.qml) requiring a
-   * SECOND selection - an existing license to link (ProductLicenseCombo) - before OK enables; this is
-   * unchecked ("link an existing license", not "create a new one") by default for a freshly-added
-   * product (confirmed live: OK stays disabled and a "Please select a license" error shows otherwise).
-   * Selecting a Hardware product is the exact same shape via HardwareProductEditor.qml's own
-   * "ProductDeviceCombo" (link an EXISTING device; switchNewSensor unchecked by default) - previously
-   * UNHANDLED here (this method used to skip straight to OK for 'hardware', which would have silently
-   * no-opped on a disabled OK button the same way the software gap once did, just never exercised by
-   * any test). Not every catalogue product has a linkable license/device in the seeded test data
-   * (confirmed live for software: the combo simply has nothing to open) - same data-adaptive reasoning
-   * as DeviceCollectionPage's filterFinishedSensorsWithLicense. `index` can also simply exceed the
-   * catalogue's real size (it's live seeded data with no stable count) - confirmed live: addAnyProduct's
-   * retry loop can walk past the last real entry, throwing "combo item not found ... at index N" from
-   * the CATALOGUE combo itself rather than the license/device one. All these cases return `false`
-   * (dialog cancelled, nothing added) rather than throwing, so the caller can `test.skip()` instead of
-   * failing on a data state.
+   * ProductEditorDialog was rebuilt: the old "pick a catalogue entry, then pick a license/device to
+   * link" pair of combos (ProductCatalogueCombo + ProductLicenseCombo/ProductDeviceCombo) is gone. The
+   * dialog now has a [Software|Hardware] segment, a [Link existing|Create new] segment (ProductEditor.qml
+   * defaults to Link existing, `isCreateMode: false`), and ONE picker in the top bar -
+   * ProductLinkSelectButton, which opens a FilterableSelectPopup of the linkable instances. This method
+   * went on driving the combos that no longer exist, so every attempt threw, cancelled, and the retry
+   * loop below simply repeated that until the test timed out.
+   *
+   * Selection is positional: the list is live seeded data with no stable caption - same convention as
+   * DeviceEditorPage.setDeviceTypeByIndex. `index` may simply exceed what this catalogue currently
+   * offers, which is a data state and not a fault: that returns false (dialog cancelled, nothing added)
+   * so the caller can test.skip() rather than fail.
    * @param {'software'|'hardware'} category
    * @param {number} index
-   * @returns {Promise<boolean>} true if a product was actually added
+   * @returns {Promise<boolean>} true if a product line was actually added
    */
+  /**
+   * Screenshot masks for the product rows. What is IN them - the linked licence's Software-ID and
+   * expiry - depends on which instance was still free when the test ran, i.e. on what earlier mutating
+   * tests consumed; these shots document the dialog and the flow, not that particular licence.
+   */
+  productMasks() {
+    return gui.masksForPrefix(this.page, 'OrderProductsListView');
+  }
+
   async addProduct(category, index) {
     await this.openEditorPage('Products');
     await gui.clickButton(this.page, ['AddProductButton']);
     await gui.clickButton(this.page, [category === 'hardware' ? 'HardwareButton' : 'SoftwareButton']);
     try {
-      await gui.selectIndex(this.page, ['ProductCatalogueCombo'], index);
-      await gui.selectIndex(this.page, [category === 'hardware' ? 'ProductDeviceCombo' : 'ProductLicenseCombo'], 0);
+      // The dialog opens in Create-new mode, so switch to Link existing first - that is what reveals
+      // the picker (ProductEditor.qml: showLinkPicker requires !isCreateMode).
+      await gui.clickButton(this.page, ['LinkexistingButton']);
+      await gui.clickButton(this.page, ['ProductLinkSelectButton']);
+      // clickSelf: this popup's rows carry a MouseArea that the bridge never marks visible, so the
+      // usual nested-MouseArea click waits for something that never comes.
+      await gui.clickSelf(this.page, [`FilterableSelectItem_${index}`], { what: `linkable ${category} instance ${index}` });
     } catch (_) {
-      await gui.clickButton(this.page, ['CancelButton']);
+      // The popup may or may not have opened; close whichever is on top, then leave the dialog.
+      await this.page.keyboard.press('Escape').catch(() => {});
+      await gui.clickButton(this.page, ['CancelButton']).catch(() => {});
       return false;
     }
-    await gui.clickButton(this.page, ['OKButton']);
+    await this.confirmProductDialog();
     return true;
   }
 
@@ -168,7 +176,11 @@ class OrderEditorPage extends BasePage {
 
   /** Confirm the currently open ProductEditorDialog (OK). */
   async confirmProductDialog() {
-    await gui.clickButton(this.page, ['OKButton']);
+    // The primary button is "Add" for a new line and "Save" when editing one (ProductEditorDialog.qml
+    // renames it on activeProductIndexChanged), and imtcontrols derives the objectName from that text -
+    // so it is not one fixed name, and the old "OKButton" matches neither.
+    const isAdd = (await gui.countVisible(this.page, ['AddButton'])) > 0;
+    await gui.clickButton(this.page, [isAdd ? 'AddButton' : 'SaveButton']);
     return this;
   }
 

@@ -102,15 +102,10 @@
     this explicitly if the CI agent has Postgres installed somewhere
     non-standard. Also used to resolve pg_restore.exe (same bin folder).
 
-.PARAMETER JUnitReportPath
-    Base name for Playwright's junit XML reports (see playwright.config.js -
-    active whenever the CI env var is set, which this script sets before
-    invoking Playwright). The suite runs in two phases (see
-    Invoke-PlaywrightSuite), each writing its OWN report so the second phase
-    never overwrites the first's: "<name>-phase1-readonly.xml" and
-    "<name>-phase2-mutating.xml", derived from this path by replacing its
-    ".xml" suffix. Point TeamCity's "XML Report Processing" (JUnit) build
-    feature at a glob covering both, e.g. "junit-report-phase*.xml".
+.PARAMETER OutputRoot
+    Root for the universal GUI-test output layout. Each phase writes
+    "<root>\<phase>\artifacts", "junit.xml", and the optional "html" report.
+    The root is cleared once before phase 1, so only the current run remains.
 
 .PARAMETER PlaywrightArgs
     Extra arguments appended verbatim to "npx playwright test" - e.g. a spec
@@ -143,13 +138,13 @@
     flag already works today with no script changes - this only matters once `workers` in
     playwright.config.js is raised above 1 again (currently 1, so a single agent has no
     within-process parallelism to speed up; splitting the PROJECT list across agents is what actually
-    cuts wall-clock time for the full permission matrix). Each agent needs its own -JUnitReportPath
+    cuts wall-clock time for the full permission matrix). Each agent needs its own -OutputRoot
     (and its own db/port set if run against the SAME Postgres instance) so the two runs' artifacts
     don't collide.
         Agent 1: powershell -ExecutionPolicy Bypass -File Run-CiTests.ps1 -AllUsers `
-            -PlaywrightArgs "--shard=1/2" -JUnitReportPath ".\junit-report-shard1.xml"
+            -PlaywrightArgs "--shard=1/2" -OutputRoot ".\test-output-shard1"
         Agent 2: powershell -ExecutionPolicy Bypass -File Run-CiTests.ps1 -AllUsers `
-            -PlaywrightArgs "--shard=2/2" -JUnitReportPath ".\junit-report-shard2.xml"
+            -PlaywrightArgs "--shard=2/2" -OutputRoot ".\test-output-shard2"
 #>
 
 [CmdletBinding()]
@@ -213,7 +208,7 @@ param(
     [string]$SuPassword = "1",
 
     [string]$PsqlPath = "",
-    [string]$JUnitReportPath = (Join-Path $ScriptDir "junit-report.xml"),
+    [string]$OutputRoot = (Join-Path $ScriptDir "test-output"),
     [int]$StartupTimeoutSeconds = 60,
 
     # Extra args appended verbatim to "npx playwright test", e.g. a spec path to scope the run to one
@@ -531,14 +526,17 @@ function Invoke-PlaywrightSuite {
     Install-PlaywrightIfNeeded
     Sync-GuiTestKit
 
+    & node (Join-Path $ScriptDir "node_modules\imtcore-gui-testkit\scripts\prepare-output.js") $OutputRoot | Out-Host
+    if ($LASTEXITCODE -ne 0) { throw "Failed to prepare GUI test output (exit $LASTEXITCODE)" }
+
     Write-Step "Running Playwright suite"
     Push-Location $ScriptDir
     try {
-        # playwright.config.js switches its reporter to junit (writing $env:PLAYWRIGHT_JUNIT_OUTPUT, set
-        # per-phase below) whenever CI is set, and also turns on forbidOnly - matching how this suite is
-        # meant to run unattended.
+        # playwright.config.js switches to CI reporters and derives their paths from the shared
+        # output root + phase contract.
         $env:CI = "true"
         $env:PROLIFE_BASE_URL = "http://localhost:$HttpPort"
+        $env:PLAYWRIGHT_OUTPUT_ROOT = $OutputRoot
         if ($AllUsers) { $env:PROLIFE_GUI_ALL_USERS = "1" }
         try {
             # TWO PHASES against the one running server, to keep workers:10 while eliminating
@@ -556,22 +554,13 @@ function Invoke-PlaywrightSuite {
             # The suite "passes" only if BOTH phases pass. --grep/--grep-invert compose with any
             # -PlaywrightArgs the caller passed (e.g. --update-snapshots, a spec path, --project=...).
             #
-            # Each phase gets its OWN output dir + junit file (playwright.config.js reads
-            # PLAYWRIGHT_OUTPUT_DIR / PLAYWRIGHT_JUNIT_OUTPUT). Playwright clears its output dir and
-            # truncates the junit file at the START of every "npx playwright test" invocation, so
-            # without this, phase 2 silently wiped phase 1's screenshots/diffs/traces/junit results
-            # before anyone could look at them - confirmed live: a run with real phase-1 failures ended
-            # with an empty test-results/ and a junit report showing only the all-green phase 2.
-            $env:PLAYWRIGHT_OUTPUT_DIR = Join-Path $ScriptDir "test-results-phase1-readonly"
-            $env:PLAYWRIGHT_JUNIT_OUTPUT = $JUnitReportPath -replace '\.xml$', '-phase1-readonly.xml'
-            $env:PLAYWRIGHT_HTML_OUTPUT_DIR = Join-Path $ScriptDir "playwright-report-phase1-readonly"
+            # ImtCore's createGuiConfig derives every path from the shared root + phase contract.
+            $env:PLAYWRIGHT_OUTPUT_PHASE = "phase1-readonly"
             Write-Step "Playwright phase 1/2: read-only tests (parallel, workers from config)"
             & npx playwright test @PlaywrightArgs --grep-invert '@mutating' | Out-Host
             $phase1 = $LASTEXITCODE
 
-            $env:PLAYWRIGHT_OUTPUT_DIR = Join-Path $ScriptDir "test-results-phase2-mutating"
-            $env:PLAYWRIGHT_JUNIT_OUTPUT = $JUnitReportPath -replace '\.xml$', '-phase2-mutating.xml'
-            $env:PLAYWRIGHT_HTML_OUTPUT_DIR = Join-Path $ScriptDir "playwright-report-phase2-mutating"
+            $env:PLAYWRIGHT_OUTPUT_PHASE = "phase2-mutating"
             Write-Step "Playwright phase 2/2: @mutating tests (serial, --workers=1)"
             # global-setup runs again on this second "npx playwright test" invocation (Playwright has no
             # memory across separate CLI invocations); PROLIFE_GUI_REUSE_AUTH tells it to skip re-logging
@@ -591,9 +580,8 @@ function Invoke-PlaywrightSuite {
             Remove-Item Env:\CI -ErrorAction SilentlyContinue
             Remove-Item Env:\PROLIFE_BASE_URL -ErrorAction SilentlyContinue
             Remove-Item Env:\PROLIFE_GUI_ALL_USERS -ErrorAction SilentlyContinue
-            Remove-Item Env:\PLAYWRIGHT_OUTPUT_DIR -ErrorAction SilentlyContinue
-            Remove-Item Env:\PLAYWRIGHT_JUNIT_OUTPUT -ErrorAction SilentlyContinue
-            Remove-Item Env:\PLAYWRIGHT_HTML_OUTPUT_DIR -ErrorAction SilentlyContinue
+            Remove-Item Env:\PLAYWRIGHT_OUTPUT_ROOT -ErrorAction SilentlyContinue
+            Remove-Item Env:\PLAYWRIGHT_OUTPUT_PHASE -ErrorAction SilentlyContinue
         }
     }
     finally {
@@ -617,8 +605,7 @@ Write-Host "LisaServerExePath: $LisaServerExePath"
 Write-Host "PumaBackupPath:    $PumaBackupPath"
 Write-Host "LisaBackupPath:    $LisaBackupPath"
 Write-Host "ProLifeBackupPath: $ProLifeBackupPath"
-Write-Host "JUnitReportPath:   $($JUnitReportPath -replace '\.xml$', '-phase1-readonly.xml')"
-Write-Host "                   $($JUnitReportPath -replace '\.xml$', '-phase2-mutating.xml')"
+Write-Host "OutputRoot:        $OutputRoot"
 
 try {
     # Stop stale processes from a previous, possibly-crashed run before

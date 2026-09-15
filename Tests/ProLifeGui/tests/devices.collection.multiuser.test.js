@@ -62,7 +62,7 @@ defineCollectionSpec({ ...fixtures, defineTest: (...args) => fixtures.test(...ar
       await devices.filterFinishedSensors();
       await devices.selectRow(0);
       await devices.bind();
-      await ctx.gui.checkScreenshot(ctx.page, 'devices-bind-dialog', await devices.masks());
+      await ctx.gui.checkScreenshot(ctx.page, 'devices-bind-dialog', [...(await devices.masks()), { path: ['BoundLicensesTable'] }]);
       await ctx.gui.dismissDialog(ctx.page);
     });
 
@@ -82,14 +82,15 @@ defineCollectionSpec({ ...fixtures, defineTest: (...args) => fixtures.test(...ar
         await devices.selectRow(0);
         await devices.bind();
         await devices.openBindNewLicenses();
-        await ctx.gui.checkScreenshot(ctx.page, 'devices-bind-available-licenses-dialog', await devices.masks());
+        await ctx.gui.checkScreenshot(ctx.page, 'devices-bind-available-licenses-dialog', [...(await devices.masks()), { path: ['BoundLicensesTable'] }]);
         await devices.cancelBindNewLicenses();
-        // Back on the bound list: the checkable rows belong to the picker's own list.
-        await ctx.gui.expectHidden(
-          ctx.page,
-          ['AvailableLicensesCollection', 'RowCheckBox'],
+        // Asked geometrically, not by visibility: both pages of this dialog stay in the scene (see
+        // isAvailableLicensesShowing), so the picker's rows never stop being `visible` and an
+        // expectHidden on them could not pass however well Cancel worked.
+        expect(
+          await devices.isAvailableLicensesShowing(),
           'the licence picker should no longer be showing after going back'
-        );
+        ).toBe(false);
         await ctx.gui.dismissDialog(ctx.page);
       });
 
@@ -109,7 +110,7 @@ defineCollectionSpec({ ...fixtures, defineTest: (...args) => fixtures.test(...ar
         }
         await devices.checkAvailableLicense(0);
         await devices.confirmBindNewLicenses();
-        await ctx.gui.checkScreenshot(ctx.page, 'devices-bind-license-added', await devices.masks());
+        await ctx.gui.checkScreenshot(ctx.page, 'devices-bind-license-added', [...(await devices.masks()), { path: ['BoundLicensesTable'] }]);
         await devices.saveBinding();
         await ctx.gui.checkScreenshot(ctx.page, 'devices-bind-apply-changes-prompt');
         await devices.confirmProjectPrompt('GUI test project');
@@ -132,7 +133,7 @@ defineCollectionSpec({ ...fixtures, defineTest: (...args) => fixtures.test(...ar
           test.skip(true, 'sensor has no used license to unbind');
         }
         await devices.unbindLicense(0);
-        await ctx.gui.checkScreenshot(ctx.page, 'devices-bind-license-unbound', await devices.masks());
+        await ctx.gui.checkScreenshot(ctx.page, 'devices-bind-license-unbound', [...(await devices.masks()), { path: ['BoundLicensesTable'] }]);
         // Discard rather than Save - keeps this independent of the bind test above instead of
         // compounding mutations to the same device across the run.
         await ctx.gui.dismissDialog(ctx.page);

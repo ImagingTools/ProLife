@@ -1,12 +1,6 @@
 node_modules/
 npm-debug.log*
 .auth/
-test-results/
-test-results-phase1-readonly/
-test-results-phase2-mutating/
-playwright-report/
-playwright-report-phase1-readonly/
-playwright-report-phase2-mutating/
-junit-report.xml
-junit-report-phase1-readonly.xml
-junit-report-phase2-mutating.xml
+# Everything a run writes: test-output/<phase>/{artifacts,junit.xml}, and test-output/artifacts
+# for an ad hoc `npx playwright test` that sets no phase of its own.
+test-output/

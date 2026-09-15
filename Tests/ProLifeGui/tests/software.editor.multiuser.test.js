@@ -99,14 +99,13 @@ test.describe('Software / editor', () => {
     });
 
     test('expiration - unlimited and date', async () => {
-      // A new license starts limited (expiration date picker visible). Toggle Unlimited ON first: that
-      // hides the date picker (an unlimited license has no expiry) - capture that state.
-      await editor.setUnlimited();
+      // Unlimited ON hides the date picker (an unlimited license has no expiry) - capture that state.
+      // Asked for by state, not toggled blindly: whichever way a new license starts, both halves of
+      // this test then get the state they describe.
+      await editor.setUnlimited(true);
       await gui.checkScreenshot(page, 'software-editor-unlimited');
-      // To set a concrete expiration date the license must NOT be unlimited, so toggle Unlimited back
-      // OFF - that re-shows the date picker - before filling it. Setting a date while Unlimited is ON
-      // would target a hidden picker (the previous cause of this test's failure).
-      await editor.setUnlimited();
+      // A concrete expiration date needs Unlimited OFF, which re-shows the picker.
+      await editor.setUnlimited(false);
       await editor.setExpiration('31.12.2027');
       await gui.checkScreenshot(page, 'software-editor-expiration');
     });
@@ -137,7 +136,14 @@ test.describe('Software / editor', () => {
     });
 
     test('edit fields and save', { tag: '@mutating' }, async () => {
-      const edited = `Edited by ProLifeGui ${Date.now()}`;
+      // Closing the document and booting the collection again to reopen it is a second full app
+      // round-trip on top of this test's own edits - more than the suite-wide 60s cap allows.
+      test.setTimeout(150_000);
+      // Keyed to the user, not to the clock: this value is typed into a field that several screenshots
+      // then capture, so a per-run number guarantees they never match their baseline. Per-user keeps it
+      // unique between projects, which the edit needs - re-typing the SAME value changes nothing and
+      // leaves the document clean, and then there is nothing for Save to commit.
+      const edited = `Edited by ProLifeGui (${test.info().project.name})`;
       await editor.setProject(edited);
       await gui.checkScreenshot(page, 'software-editor-edit-changed');
       await editor.save();
@@ -151,6 +157,9 @@ test.describe('Software / editor', () => {
       // by this Save's Last Modified bump).
       await editor.closeDocument();
       editor = await openEditEditor(page);
+      // Project lives on the Additional sub-page and a reopened editor lands on General - see the
+      // identical note in devices.editor.multiuser.test.js.
+      await editor.openEditorPage("Additional");
       await editor.project.waitForValue(edited);
       await gui.checkScreenshot(page, 'software-editor-edit-reopened');
     });

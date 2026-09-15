@@ -13,7 +13,8 @@ const { CollectionPage } = require('imtcore-gui-testkit/pages/CollectionPage');
 
 class SupportCollectionPage extends CollectionPage {
   constructor(page) {
-    super(page, 'Tickets');
+    // The list is sorted by creation time and shows it - masked, or every shot of it carries a date.
+    super(page, 'Tickets', { maskColumns: ['createdAt'] });
   }
 
   async clearAllFilters() {

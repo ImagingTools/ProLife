@@ -54,9 +54,6 @@ class DeviceEditorPage extends BasePage {
 
   // --- editor commands --------------------------------------------------------------------------
 
-  save() {
-    return this.runCommand('Save');
-  }
   undo() {
     return this.runCommand('Undo');
   }
@@ -72,8 +69,13 @@ class DeviceEditorPage extends BasePage {
   transferLicenses() {
     return this.runCommand('TransferLicenses');
   }
-  support() {
-    return this.runCommand('Support');
+  /**
+   * Open the editor's Support sub-page. It used to be a command-bar command opening a dialog; it is a
+   * MultiPageView page now (DeviceEditor.qml's supportPageComp), and on an unsaved document it shows
+   * "Tickets are available after saving" instead of a ticket panel.
+   */
+  openSupport() {
+    return this.openEditorPage('Support');
   }
 
   // --- field helpers ----------------------------------------------------------------------------

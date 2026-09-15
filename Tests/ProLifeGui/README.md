@@ -175,8 +175,9 @@ exports, re-copy them (or Generate-Backups.ps1's output, for puma.backup) if the
    to no-op with "Superuser already exists" since `puma.backup` already has one.
 
 `npm install` and `npx playwright install chromium` run automatically if needed, then `npx playwright
-test` runs with `CI=true` (switching `playwright.config.js` to the junit reporter, `junit-report.xml`)
-and `PROLIFE_BASE_URL` pointed at the just-started `ProLifeServerTest.exe`. It invokes `npx playwright
+test` runs with `CI=true`, `PROLIFE_BASE_URL` pointed at the just-started `ProLifeServerTest.exe`, and
+the ImtCore testkit writing `test-output/<phase>/{artifacts,junit.xml}`. The output root is cleared
+before phase 1. It invokes `npx playwright
 test` **twice**: a read-only phase at the config's `workers` (10), then an `@mutating` phase at
 `--workers=1`. The split exists because all three servers are one shared instance over one database -
 mutations must not run against a collection another worker is screenshotting, and early attempts at

@@ -23,14 +23,26 @@ class SupportTicketEditorPage extends BasePage {
     this.status = new ComboBox(page, ['TicketStatusCombo']);
   }
 
-  save() { return this.runCommand('Save'); }
+  /**
+   * Screenshot masks for everything in this editor that differs run to run: each comment carries the
+   * clock time it was posted at (CommentTimestamp_<i>, named in TicketEditor.qml for exactly this).
+   */
+  masks() {
+    return gui.masksForPrefix(this.page, 'CommentTimestamp_');
+  }
 
   async setTitle(text) {
     await this.title.fill(text);
     return this;
   }
+  // The description commits to the document on editingFinished AND on its own 1s idle timer
+  // (TicketEditor.qml's descriptionAutoSaveTimer) - Tab covers the first, the wait covers the second.
+  // Without it the document could still be unedited when Save was clicked, and Save does nothing then.
   async setDescription(text) {
     await this.description.fill(text);
+    await this.page.keyboard.press('Tab');
+    await this.page.waitForTimeout(1100);
+    await gui.waitForStable(this.page);
     return this;
   }
   async setType(text) {
@@ -78,14 +90,22 @@ class SupportTicketEditorPage extends BasePage {
     return this;
   }
 
+  /** Removing an assignee asks first (TicketEditor.qml's confirmRemoveAssigneeDialogComp). */
   async removeAssignee(index = 0) {
     await gui.click(this.page, [`AssigneeChip_${index}`, 'RemoveButton'], { what: 'remove assignee chip' });
+    await gui.clickButton(this.page, ['YesButton']);
     return this;
   }
 
   /** Lock Issue - reporter/admin only (FullAccess); hides the comment box for EVERYONE once set. */
+  /**
+   * Lock the ticket. Ticking the box asks for confirmation first (TicketEditor.qml's
+   * confirmLockTicketDialogComp), and the reason field only appears once the box is actually checked -
+   * so filling it straight after the click looked for a field the confirmation was still holding back.
+   */
   async lockIssue(reason) {
     await gui.click(this.page, ['LockIssueCheckBox']);
+    await gui.clickButton(this.page, ['YesButton']);
     if (reason) await gui.fill(this.page, ['LockReasonInput'], reason);
     return this;
   }
@@ -122,8 +142,10 @@ class SupportTicketEditorPage extends BasePage {
     return this;
   }
 
+  /** Removing a context reference asks first, like removing an assignee does. */
   async removeContext(index = 0) {
     await gui.click(this.page, [`ContextChip_${index}`, 'RemoveButton'], { what: 'remove context chip' });
+    await gui.clickButton(this.page, ['YesButton']);
     return this;
   }
 

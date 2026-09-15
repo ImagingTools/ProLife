@@ -230,7 +230,14 @@ test.describe('Administration / editors', () => {
     // based selection (not by name): the picker's option list is live seeded data with no stable text
     // to assert on - same convention as DeviceEditorPage's setDeviceTypeByIndex. The assigned item then
     // shows up as a removable chip (AssignedItem_<index>, RemoveButton within it).
-    async function addFirstOption(addButtonName) {
+    // The add button lives on its OWN sub-page of the editor (MultiPageView's "Page_<id>" nav), and
+    // the editor opens on General - so the page has to be switched to first. Without that the button
+    // is simply not on screen, which is how this read as "AddGroups MISSING" rather than as being one
+    // click away. Scoped to the editor's OWN nav: it opens inside AdministrationView, whose nav uses
+    // the same Roles/Groups ids, and an unscoped "Page_Groups" clicked that one instead - navigating
+    // away from the editor to the Groups collection (hence UserView.qml's "UserEditorPages" name).
+    async function addFirstOption(subPageId, addButtonName) {
+      await gui.clickButton(page, ['UserEditorPages', `Page_${subPageId}`]);
       await gui.clickButton(page, [addButtonName]);
       await gui.expectVisible(page, ['FilterableSelectPopup'], 'picker should open');
       await gui.click(page, ['FilterableSelectItem_0'], { what: 'first picker result' });
@@ -238,7 +245,7 @@ test.describe('Administration / editors', () => {
     }
 
     test('add group: pick the first result, it appears as a chip, then remove it', async () => {
-      await addFirstOption('AddGroups');
+      await addFirstOption('Groups', 'AddGroups');
       await gui.expectVisible(page, ['AssignedItem_0'], 'the picked group should appear as an assigned chip');
       await gui.checkScreenshot(page, 'user-editor-group-assigned');
 
@@ -247,7 +254,7 @@ test.describe('Administration / editors', () => {
     });
 
     test('add role: pick the first result, it appears as a chip, then remove it', async () => {
-      await addFirstOption('AddRoles');
+      await addFirstOption('Roles', 'AddRoles');
       await gui.expectVisible(page, ['AssignedItem_0'], 'the picked role should appear as an assigned chip');
       await gui.checkScreenshot(page, 'user-editor-role-assigned');
 

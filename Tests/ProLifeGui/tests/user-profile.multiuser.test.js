@@ -61,7 +61,10 @@ test.describe('User profile', () => {
   // a non-default expiration), read the generated secret, copy it, confirm it lands in the table, then
   // revoke and delete it (cleanup, so repeat runs don't accumulate orphaned tokens).
   test('access tokens: generate, copy, appears in the list, revoke, then delete', async ({ page, gui }) => {
-    const tokenName = `gui-test-token-${Date.now()}`;
+    // Keyed to the user, not the clock: the name is typed into a field several screenshots capture, so
+    // a per-run number means they never match. Per-user because this spec runs for EVERY user against
+    // one database, in parallel - the names still must not collide.
+    const tokenName = `gui-test-token-${test.info().project.name}`;
 
     await gui.openComboPopup(page, ['UserPanelButton']);
     await gui.clickPopupItemByIndex(page, 0); // Profile
@@ -72,10 +75,15 @@ test.describe('User profile', () => {
     await gui.expectVisible(page, ['TokenNameInput'], '"New Personal Access Token" dialog should open');
 
     // A token has to be granted at least one permission, and the tree offers only the permissions its
-    // owner actually holds - so a user granted none has an empty tree, no group to expand and no scope
-    // to check. There is no token for them to create; that is the product working, not a failure.
+    // owner actually holds - so a user granted none gets "No permissions available to assign to this
+    // token" and ProfileTokensPage.qml hides the whole PermissionsTableView (scopesEmpty), toolbar
+    // included. There is no token for them to create; that is the product working, not a failure.
+    //
+    // The scope list loads asynchronously, so this waits for the toolbar rather than counting rows in
+    // the same tick - and it asks about the TOOLBAR, not about "TreeRow_0" anywhere on the page, which
+    // also matched a row of the profile's own permissions tree behind the dialog and so never skipped.
     test.skip(
-      (await gui.countVisible(page, ['TreeRow_0'])) === 0,
+      !(await gui.dom.isVisible(page, ['ExpandAllButton'], 10000)),
       'this user holds no permissions, so a scoped token cannot be created'
     );
 
@@ -111,13 +119,15 @@ test.describe('User profile', () => {
     const tokenValueInput = gui.dom.byPath(page, ['TokenValueField', 'TextInput']);
     const tokenValue = await tokenValueInput.evaluate((el) => el.textContent.trim());
     expect(tokenValue, 'the generated token secret should be non-empty').toBeTruthy();
-    await gui.checkScreenshot(page, 'access-tokens-token-created');
+    await gui.checkScreenshot(page, 'access-tokens-token-created', { path: ['TokenValueField'] });
 
     // Copy: no structural "was it copied" signal exposed (the icon just swaps to a checkmark and the
     // button disables itself), so the click succeeding without error plus a screenshot of the changed
     // icon state is the check here - same reasoning as this suite's own RememberMeCheckBox convention.
+    // The generated secret is random per run - masked out of both shots of it, or the comparison is
+    // against a value that can never match.
     await gui.clickButton(page, ['CopyTokenButton']);
-    await gui.checkScreenshot(page, 'access-tokens-token-copied');
+    await gui.checkScreenshot(page, 'access-tokens-token-copied', { path: ['TokenValueField'] });
 
     await gui.clickButton(page, ['OKButton']);
     await gui.expectHidden(page, ['TokenValueField'], '"Token Created" dialog should close after OK');
