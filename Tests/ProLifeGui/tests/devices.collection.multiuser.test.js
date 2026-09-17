@@ -58,11 +58,13 @@ defineCollectionSpec({ ...fixtures, defineTest: (...args) => fixtures.test(...ar
     ctx.test('bind dialog', async () => {
       ctx.requires('BindSensor');
       const devices = ctx.collection;
-      // Bind only enables for a row with a non-empty MAC address; Finished sensors always have one.
       await devices.filterFinishedSensors();
-      await devices.selectRow(0);
+      const selected = await devices.selectSensorByMac('70:b3:d5:e3:0b:17');
+      test.skip(!selected, 'the seeded binding-dialog sensor is not available');
       await devices.bind();
-      await ctx.gui.checkScreenshot(ctx.page, 'devices-bind-dialog', [...(await devices.masks()), { path: ['BoundLicensesTable'] }]);
+      const dialog = ctx.page.locator('[objectName="Dialog"][visible]').first();
+      await expect(dialog.getByText('RTV Software', { exact: true }).first()).toBeVisible();
+      await ctx.gui.checkElementScreenshot(ctx.page, ['Dialog'], 'devices-bind-dialog', { path: ['BoundLicensesTable'] });
       await ctx.gui.dismissDialog(ctx.page);
     });
 
@@ -175,18 +177,18 @@ defineCollectionSpec({ ...fixtures, defineTest: (...args) => fixtures.test(...ar
 
       ctx.test('choose Encrypted', { tag: '@mutating' }, async () => {
         const devices = ctx.collection;
-        await devices.filterFinishedSensorsWithLicense();
-        await devices.selectRow(0);
+        const selected = await devices.selectCompleteLicensedSensor();
+        test.skip(!selected, 'no finished licensed sensor has both serial number and MAC address');
         await devices.createLicenseFile();
-        await ctx.gui.checkScreenshot(ctx.page, 'devices-create-license-file-encrypt-popup');
+        await ctx.gui.checkScreenshot(ctx.page, 'devices-create-license-file-encrypt-popup', await devices.masks());
         await devices.chooseEncrypted();
         await ctx.gui.checkScreenshot(ctx.page, 'devices-create-license-file-encrypted', await devices.masks());
       });
 
       ctx.test('choose Unencrypted', { tag: '@mutating' }, async () => {
         const devices = ctx.collection;
-        await devices.filterFinishedSensorsWithLicense();
-        await devices.selectRow(0);
+        const selected = await devices.selectCompleteLicensedSensor();
+        test.skip(!selected, 'no finished licensed sensor has both serial number and MAC address');
         await devices.createLicenseFile();
         await devices.chooseNotEncrypted();
         await ctx.gui.checkScreenshot(ctx.page, 'devices-create-license-file-not-encrypted', await devices.masks());

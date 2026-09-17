@@ -11,6 +11,7 @@
 
 const { test, expect } = require('../fixtures/test');
 const { WorkspacePage } = require('../pages');
+const { Table } = require('imtcore-gui-testkit/controls');
 
 test.describe('User profile', () => {
   test.beforeEach(async ({ page }) => {
@@ -50,7 +51,7 @@ test.describe('User profile', () => {
 
     await gui.clickButton(page, ['ChangeButton']);
     await gui.expectVisible(page, ['NewPasswordInput'], 'password card should expand');
-    await gui.checkScreenshot(page, 'user-profile-general-password-card');
+    await gui.checkElementScreenshot(page, ['Dialog'], 'user-profile-general-password-card');
 
     await gui.clickButton(page, ['CancelButton']);
     await gui.expectHidden(page, ['NewPasswordInput'], 'password card should collapse after Cancel');
@@ -119,7 +120,7 @@ test.describe('User profile', () => {
     const tokenValueInput = gui.dom.byPath(page, ['TokenValueField', 'TextInput']);
     const tokenValue = await tokenValueInput.evaluate((el) => el.textContent.trim());
     expect(tokenValue, 'the generated token secret should be non-empty').toBeTruthy();
-    await gui.checkScreenshot(page, 'access-tokens-token-created', { path: ['TokenValueField'] });
+    await gui.checkElementScreenshot(page, ['Dialog'], 'access-tokens-token-created', { path: ['TokenValueField'] });
 
     // Copy: no structural "was it copied" signal exposed (the icon just swaps to a checkmark and the
     // button disables itself), so the click succeeding without error plus a screenshot of the changed
@@ -127,7 +128,7 @@ test.describe('User profile', () => {
     // The generated secret is random per run - masked out of both shots of it, or the comparison is
     // against a value that can never match.
     await gui.clickButton(page, ['CopyTokenButton']);
-    await gui.checkScreenshot(page, 'access-tokens-token-copied', { path: ['TokenValueField'] });
+    await gui.checkElementScreenshot(page, ['Dialog'], 'access-tokens-token-copied', { path: ['TokenValueField'] });
 
     await gui.clickButton(page, ['OKButton']);
     await gui.expectHidden(page, ['TokenValueField'], '"Token Created" dialog should close after OK');
@@ -136,13 +137,14 @@ test.describe('User profile', () => {
     // position (a fresh token's row position depends on the list's own sort order).
     const tokenRow = page.locator('[objectName^="TableRow_"][visible]').filter({ hasText: tokenName }).first();
     await tokenRow.waitFor({ state: 'visible', timeout: 10000 });
-    await gui.checkScreenshot(page, 'access-tokens-list-with-new-token');
+    const expirationMasks = await new Table(page).columnMasks(['expiresAt']);
+    await gui.checkScreenshot(page, 'access-tokens-list-with-new-token', expirationMasks);
 
     // Revoke, then delete (cleanup) - both scoped to THIS token's own row so a same-named leftover
     // from a previous failed run can't be affected instead.
     await gui.clickWithin(page, tokenRow, 'RevokeTokenButton');
     await gui.waitForStable(page);
-    await gui.checkScreenshot(page, 'access-tokens-token-revoked');
+    await gui.checkScreenshot(page, 'access-tokens-token-revoked', expirationMasks);
 
     await gui.clickWithin(page, tokenRow, 'DeleteTokenButton');
     await gui.expectVisible(page, ['YesButton'], 'delete should ask for confirmation');

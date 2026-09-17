@@ -297,13 +297,15 @@ const USERS = [
   },
 ];
 
-// Fast default subset for iterative/local runs: `su` (superuser baseline) + `fullAccess` (broadest
-// non-superuser coverage - every page/command via real granted permissions, not '*', so editor
-// save-paths etc. still get exercised without needing the full matrix). This does NOT exercise what
-// the restricted users see - set PROLIFE_GUI_ALL_USERS=1 (or Run-CiTests.ps1 -AllUsers) for that.
+// Fast default subset for iterative/local runs: `fullAccess` (broadest non-superuser coverage - every
+// page/command via real granted permissions, not '*', so editor save-paths etc. still get exercised
+// without needing the full matrix) + `accEditor` for the Accounts editor. Naming an isolated user here
+// makes the list authoritative (see defineUsers): the OTHER isolated specs - devices/software/
+// administration editors, document tabs, the concurrent-session banner - and every restricted user run
+// only under the full matrix, PROLIFE_GUI_ALL_USERS=1 (or Run-CiTests.ps1 -AllUsers).
 module.exports = defineUsers({
   users: USERS,
-  defaultUserKeys: ['su', 'fullAccess'],
+  defaultUserKeys: ['fullAccess', 'accEditor'],
   allUsersEnv: 'PROLIFE_GUI_ALL_USERS',
 });
 module.exports.PASSWORD = PASSWORD;

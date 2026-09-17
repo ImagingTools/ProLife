@@ -85,6 +85,19 @@ class DeviceCollectionPage extends CollectionPage {
     return gui.clickPopupItemByIndex(this.page, 1);
   }
 
+  async selectSensorByMac(macAddress) {
+    const rows = this.page.locator('[objectName^="TableRow_"][visible]');
+    const count = await rows.count();
+    for (let index = 0; index < count; index++) {
+      const value = await rows.nth(index).locator('[objectName="macAddress"][visible]').first().textContent().catch(() => '');
+      if (value.trim() === macAddress) {
+        await this.selectRow(index);
+        return true;
+      }
+    }
+    return false;
+  }
+
   // --- Bind dialog (HardwareProductBindingDialog.qml) --------------------------------------------
   // Opened by bind(). ONE dialog with two pages that slide: the bound-licence list, and a "Select
   // Licenses" picker. It used to be two separate dialogs (the picker lived in its own
@@ -223,6 +236,23 @@ class DeviceCollectionPage extends CollectionPage {
     await this.selectFilterOptionByIndex('status', 5);
     await this.selectFilterOptionByIndex('license', 1);
     return this;
+  }
+
+  /** Select the first row satisfying every CreateLicenseFile server precondition. */
+  async selectCompleteLicensedSensor() {
+    await this.filterFinishedSensorsWithLicense();
+    const rows = this.page.locator('[objectName^="TableRow_"][visible]');
+    const count = await rows.count();
+    for (let index = 0; index < count; index++) {
+      const row = rows.nth(index);
+      const serialNumber = await row.locator('[objectName="serialNumber"][visible]').first().textContent().catch(() => '');
+      const macAddress = await row.locator('[objectName="macAddress"][visible]').first().textContent().catch(() => '');
+      if (serialNumber.trim() && macAddress.trim()) {
+        await this.selectRow(index);
+        return true;
+      }
+    }
+    return false;
   }
 
   static get FILTERS() {

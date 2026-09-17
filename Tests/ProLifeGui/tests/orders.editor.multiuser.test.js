@@ -162,30 +162,38 @@ test.describe('Orders / editor', () => {
 
     test('add a new product', async () => {
       const before = await editor.productCount();
-      const added = await editor.addAnyProduct('software');
-      test.skip(!added, 'no seeded software product in this catalogue currently has a linkable license');
+      const added = await editor.addProduct('software', '12.10177');
+      test.skip(!added, 'the seeded 12.10177 software product has no linkable license');
       await expect
         .poll(() => editor.productCount(), { message: 'expected a new product row to appear' })
         // Greater than, not exactly one more: linking an existing instance can bring several lines in
         // at once (confirmed live - one pick added four), and what this test is about is that a line
         // was really added, not how the server expands the link.
         .toBeGreaterThan(before);
-      await gui.checkScreenshot(page, 'orders-editor-product-added', await editor.productMasks());
+      await expect(editor.productRowByCategory('software')).toHaveScreenshot('orders-editor-product-added.png', {
+        threshold: 0.05,
+        maxDiffPixels: 0,
+      });
     });
 
     // Hardware follows the exact same shape as Software - the same [Software|Hardware] toggle and the
     // same instance picker, just listing devices instead of licenses.
     test('add a new hardware product', async () => {
       const before = await editor.productCount();
-      const added = await editor.addAnyProduct('hardware');
-      test.skip(!added, 'no seeded hardware product in this catalogue currently has a linkable device');
+      const added = await editor.addProduct('hardware', '60.11226');
+      test.skip(!added, 'the seeded 60.11226 hardware product has no linkable device');
       await expect
         .poll(() => editor.productCount(), { message: 'expected a new product row to appear' })
         // Greater than, not exactly one more: linking an existing instance can bring several lines in
         // at once (confirmed live - one pick added four), and what this test is about is that a line
         // was really added, not how the server expands the link.
         .toBeGreaterThan(before);
-      await gui.checkScreenshot(page, 'orders-editor-hardware-product-added', await editor.productMasks());
+      const hardwareRow = editor.productRowByCategory('hardware');
+      await expect(hardwareRow).toHaveScreenshot('orders-editor-hardware-product-added.png', {
+        mask: [hardwareRow.getByText(/^([0-9a-f]{2}:){5}[0-9a-f]{2}$/i).locator('..')],
+        threshold: 0.05,
+        maxDiffPixels: 0,
+      });
     });
 
     // Re-opens the row "add a new product" left behind. A LINKED line is read-only in this dialog
@@ -194,9 +202,14 @@ test.describe('Orders / editor', () => {
     // own Edit command opens the dialog on that line and the primary button closes it again.
     test('open an existing product row, then close it again', async () => {
       test.skip((await editor.productCount()) === 0, 'no product row available (see "add a new product" above)');
-      await editor.editProductRow(0);
+      await editor.editProductRowByCategory('hardware');
       await gui.expectVisible(page, ['ProductCategorySegmented'], 'the product dialog should open on this row');
-      await gui.checkScreenshot(page, 'orders-editor-product-edit-dialog-open', await editor.productMasks());
+      const dialog = page.locator('[objectName="Dialog"][visible]').first();
+      await expect(dialog).toHaveScreenshot('orders-editor-product-edit-dialog-open.png', {
+        mask: [dialog.getByText(/^([0-9a-f]{2}:){5}[0-9a-f]{2}$/i).locator('..')],
+        threshold: 0.05,
+        maxDiffPixels: 0,
+      });
       // Closed with Cancel, not the primary button: a linked line is read-only here (the chrome is
       // locked while editing), so there is nothing for the primary button to apply and it stays put.
       await editor.cancelProductDialog();
@@ -204,21 +217,13 @@ test.describe('Orders / editor', () => {
       await gui.checkScreenshot(page, 'orders-editor-product-edited', await editor.productMasks());
     });
 
-    test('expand product view (detailed card)', async () => {
+    test('collapse product view (compact card)', async () => {
       await editor.toggleProductsExpanded();
-      await gui.checkScreenshot(page, 'orders-editor-product-expanded', await editor.productMasks());
-      await editor.toggleProductsExpanded(); // back to compact for the remaining steps
-    });
-
-    test('open existing product row, then Cancel discards', async () => {
-      // Depends on "add a new product" above having actually added a row - that test itself
-      // test.skip()s when no seeded catalogue product currently has a linkable license (a data state,
-      // not a failure), which leaves nothing here to open. Check the live count rather than a shared
-      // flag so this holds regardless of test order/reruns.
-      test.skip((await editor.productCount()) === 0, 'no product row available (see "add a new product" above)');
-      await editor.editProductRow(0);
-      await gui.checkScreenshot(page, 'orders-editor-product-edit-dialog');
-      await editor.cancelProductDialog();
+      await expect(editor.productRowByCategory('hardware')).toHaveScreenshot('orders-editor-product-expanded.png', {
+        threshold: 0.05,
+        maxDiffPixels: 0,
+      });
+      await editor.toggleProductsExpanded(); // back to detailed for the remaining steps
     });
 
     test('remove a product row', { tag: '@mutating' }, async () => {

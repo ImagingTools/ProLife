@@ -26,7 +26,10 @@ test.describe('Support', () => {
 
     test('landing', async ({ page, gui: guiFixture }) => {
       const support = new SupportCollectionPage(page);
-      if (await support.isAvailable()) await support.open();
+      if (await support.isAvailable()) {
+        await support.open();
+        await support.expectOpen();
+      }
       await guiFixture.checkScreenshot(page, 'support-landing');
     });
   });
@@ -118,7 +121,8 @@ test.describe('Support', () => {
     // same picker/chip pattern already covered for Roles/Groups in administration.editor.multiuser.test.js.
     test('add context, then remove it', { tag: '@mutating' }, async () => {
       test.skip(!editor, 'no ticket was created above to add context to');
-      await editor.addContext(0, '');
+      const added = await editor.addContext('');
+      test.skip(!added, 'no context entity type has selectable fixture rows');
       await gui.expectVisible(page, ['ContextChip_0'], 'the picked entity should appear as a context chip');
       await gui.checkScreenshot(page, 'support-ticket-context-added', await editor.masks());
       await editor.removeContext(0);

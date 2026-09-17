@@ -21,6 +21,7 @@ class SupportTicketEditorPage extends BasePage {
     this.type = new ComboBox(page, ['TicketTypeCombo']);
     this.priority = new ComboBox(page, ['TicketPriorityCombo']);
     this.status = new ComboBox(page, ['TicketStatusCombo']);
+    this.contextEntityType = new ComboBox(page, ['ContextEntityTypeCombo']);
   }
 
   /**
@@ -122,24 +123,28 @@ class SupportTicketEditorPage extends BasePage {
    * that would silently drift out of sync with the catalogue - same reasoning selectIndex's own doc
    * comment gives for device-type/hardware-configuration combos elsewhere in this suite.
    */
-  async addContext(entityTypeIndex, searchText) {
+  async addContext(searchText) {
     await gui.click(this.page, ['AddContextButton'], { what: '"Add context"' });
     // The per-entity-type FilterableSelectPopup is created by a Loader (recreated on entity-type
     // change, but also mounted for the first time asynchronously when the dialog opens) - give it a
     // beat to settle before addressing anything inside it.
     await gui.waitForStable(this.page);
-    await gui.selectIndex(this.page, ['ContextEntityTypeCombo'], entityTypeIndex);
-    await gui.waitForStable(this.page);
-    await gui.fill(this.page, ['FilterableSelectPopup'], searchText);
-    // FilterableSelectPopup debounces the filter text (500ms - FilterableSelectPopup.qml's
-    // debounceInterval) before re-querying, so the row list right after fill() still reflects the
-    // PRE-filter results; clicking row 0 immediately can select an unrelated item. Outwait the
-    // debounce, then let the resulting GraphQL round-trip settle before addressing row 0.
-    await this.page.waitForTimeout(700);
-    await gui.waitForStable(this.page);
-    await gui.click(this.page, ['FilterableSelectItem_0'], { what: 'first context search result' });
-    await this.page.keyboard.press('Escape');
-    return this;
+    const typeCount = await this.contextEntityType.optionCount();
+    for (let index = 0; index < typeCount; index++) {
+      await this.contextEntityType.selectIndex(index);
+      await gui.waitForStable(this.page);
+      await gui.fill(this.page, ['FilterableSelectPopup'], searchText);
+      // FilterableSelectPopup debounces filtering before its GraphQL round-trip.
+      await this.page.waitForTimeout(700);
+      await gui.waitForStable(this.page);
+      if ((await gui.countVisible(this.page, ['FilterableSelectItem_0'])) > 0) {
+        await gui.click(this.page, ['FilterableSelectItem_0'], { what: 'first context search result' });
+        await this.page.keyboard.press('Escape');
+        return true;
+      }
+    }
+    await gui.dismissDialog(this.page);
+    return false;
   }
 
   /** Removing a context reference asks first, like removing an assignee does. */

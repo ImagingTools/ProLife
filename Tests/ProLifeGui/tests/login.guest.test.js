@@ -9,6 +9,13 @@
 const { test } = require('../fixtures/test');
 const { byKey } = require('../fixtures/users');
 
+// Every shot of the form goes through gui.settleLoginFocus first. AuthorizationPage.qml re-asserts
+// focus on the username field from a 500ms PauseAnimation, and Qt paints the focus ring only for a
+// window that has been clicked - neither reaches the DOM, so "wait for it to settle" cannot pin
+// either. Without this the ring appears under a different field (or not at all) run to run.
+const USERNAME_FOCUS = { field: ['LoginInput'] };
+const PASSWORD_FOCUS = { field: ['PasswordInput'] };
+
 test.describe('Guest / login', () => {
   test.beforeEach(async ({ page, gui }) => {
     await gui.reload(page);
@@ -19,6 +26,8 @@ test.describe('Guest / login', () => {
     await gui.expectVisible(page, ['LoginInput'], 'login field should be visible for a guest');
     await gui.expectVisible(page, ['PasswordInput'], 'password field should be visible for a guest');
     await gui.expectVisible(page, ['LoginButton'], 'sign-in button should be visible for a guest');
+    // Username: the field the form focuses itself, so this stays "the form as it greets a visitor".
+    await gui.settleLoginFocus(page, USERNAME_FOCUS);
     await gui.checkScreenshot(page, 'login-form');
   });
 
@@ -26,6 +35,18 @@ test.describe('Guest / login', () => {
   test('invalid credentials keep the user on the login page', async ({ page, gui }) => {
     await gui.login(page, 'definitely-not-a-user', 'wrong-password');
     await gui.expectVisible(page, ['LoginInput'], 'still on the login page after a failed sign-in');
+    // The error popup closes itself 5s after it appears (imtgui/View/PopupContainer.qml,
+    // autoCloseInterval), so whether it is still on screen here is a matter of how fast the run got
+    // this far - measured live as a 33093-pixel difference between two runs of the same build. Wait it
+    // out rather than race it: the settled end state is the login form, which is what this test is
+    // about. The popup carries no objectName, so it is addressed by its own text.
+    await page
+      .locator('.impl')
+      .filter({ hasText: /invalid login or password/i })
+      .first()
+      .waitFor({ state: 'hidden', timeout: 15000 });
+    // onLoginFailed clears the password and focuses that field - shoot the form as the user finds it.
+    await gui.settleLoginFocus(page, PASSWORD_FOCUS);
     await gui.checkScreenshot(page, 'login-invalid');
   });
 
@@ -45,13 +66,16 @@ test.describe('Guest / login', () => {
   // "remember me" below.
   test('eye button toggles password visibility', async ({ page, gui }) => {
     await gui.fill(page, ['PasswordInput'], 'SomeSecret123');
+    await gui.settleLoginFocus(page, PASSWORD_FOCUS);
     await gui.checkScreenshot(page, 'login-password-masked');
 
     await gui.clickButton(page, ['EyeButton']);
+    await gui.settleLoginFocus(page, PASSWORD_FOCUS);
     await gui.checkScreenshot(page, 'login-password-visible');
 
     // Toggle back - leaves the form in its default (masked) state, matching every other test in this file.
     await gui.clickButton(page, ['EyeButton']);
+    await gui.settleLoginFocus(page, PASSWORD_FOCUS);
     await gui.checkScreenshot(page, 'login-password-masked-again');
   });
 
@@ -62,6 +86,7 @@ test.describe('Guest / login', () => {
   // the before/after screenshots ARE the check here, matching this suite's own screenshot-first
   // convention for this class of control.
   test('remember me is checked by default and can be toggled', async ({ page, gui }) => {
+    await gui.settleLoginFocus(page, USERNAME_FOCUS);
     await gui.checkScreenshot(page, 'login-remember-me-default');
     await gui.clickButton(page, ['RememberMeCheckBox']);
     await gui.checkScreenshot(page, 'login-remember-me-unchecked');
@@ -81,6 +106,9 @@ test.describe('Guest / login', () => {
     // nested [objectName="MouseArea"] child), so clickButton()/click() throws "has no visible
     // MouseArea" here (confirmed live) - clickSelf() clicks the addressed node's own bounding box
     // instead, exactly for this control shape.
+    // Settle first: decoratorPause would otherwise fire with the dialog already up and move the focus
+    // ring on the form behind it.
+    await gui.settleLoginFocus(page);
     await gui.clickSelf(page, ['PasswordRecoveryLink']);
     await gui.expectVisible(page, ['Dialog'], 'password recovery dialog should open');
 
@@ -100,7 +128,9 @@ test.describe('Guest / login', () => {
   // (a real account-creation request). Same auto-derived-objectName reasoning as Cancel above:
   // "Close" -> "CloseButton".
   test('sign up link opens the registration dialog, Close dismisses it without registering', async ({ page, gui }) => {
-    // RegisterUser is also a bare, self-named MouseArea - see clickSelf's own comment above.
+    // RegisterUser is also a bare, self-named MouseArea - see clickSelf's own comment above. Same
+    // settle-before-opening reason as the recovery dialog above.
+    await gui.settleLoginFocus(page);
     await gui.clickSelf(page, ['RegisterUser']);
     await gui.expectVisible(page, ['Dialog'], 'registration dialog should open');
 

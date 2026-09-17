@@ -87,6 +87,14 @@ class OrderEditorPage extends BasePage {
     return this.page.locator('[objectName="OrderProductsListView"] [objectName$="ElementView"][visible]').nth(index);
   }
 
+  productRowByCategory(category) {
+    const categoryLabel = category === 'hardware' ? 'Hardware' : 'Software';
+    return this.page
+      .locator('[objectName="OrderProductsListView"] [objectName$="ElementView"][visible]')
+      .filter({ has: this.page.getByText(categoryLabel, { exact: true }) })
+      .first();
+  }
+
   /**
    * Number of product rows currently in the order. Switches to the Products sub-page first, but only
    * when it isn't already showing - this is called from an expect.poll loop, which would otherwise
@@ -115,7 +123,7 @@ class OrderEditorPage extends BasePage {
    * offers, which is a data state and not a fault: that returns false (dialog cancelled, nothing added)
    * so the caller can test.skip() rather than fail.
    * @param {'software'|'hardware'} category
-   * @param {number} index
+    * @param {number|string} selection item index, or stable text contained in the item
    * @returns {Promise<boolean>} true if a product line was actually added
    */
   /**
@@ -127,7 +135,7 @@ class OrderEditorPage extends BasePage {
     return gui.masksForPrefix(this.page, 'OrderProductsListView');
   }
 
-  async addProduct(category, index) {
+  async addProduct(category, selection) {
     await this.openEditorPage('Products');
     await gui.clickButton(this.page, ['AddProductButton']);
     await gui.clickButton(this.page, [category === 'hardware' ? 'HardwareButton' : 'SoftwareButton']);
@@ -136,9 +144,27 @@ class OrderEditorPage extends BasePage {
       // the picker (ProductEditor.qml: showLinkPicker requires !isCreateMode).
       await gui.clickButton(this.page, ['LinkexistingButton']);
       await gui.clickButton(this.page, ['ProductLinkSelectButton']);
-      // clickSelf: this popup's rows carry a MouseArea that the bridge never marks visible, so the
-      // usual nested-MouseArea click waits for something that never comes.
-      await gui.clickSelf(this.page, [`FilterableSelectItem_${index}`], { what: `linkable ${category} instance ${index}` });
+      if (typeof selection === 'number') {
+        // clickSelf: this popup's rows carry a MouseArea that the bridge never marks visible, so the
+        // usual nested-MouseArea click waits for something that never comes.
+        await gui.clickSelf(this.page, [`FilterableSelectItem_${selection}`], { what: `linkable ${category} instance ${selection}` });
+      } else {
+        const items = this.page.locator('[objectName^="FilterableSelectItem_"][visible]');
+        await items.first().waitFor({ state: 'visible', timeout: 5000 });
+        const count = await items.count();
+        let objectName = '';
+        for (let index = 0; index < count; index++) {
+          const item = items.nth(index);
+          // eslint-disable-next-line no-await-in-loop
+          if ((await item.textContent()).includes(selection)) {
+            // eslint-disable-next-line no-await-in-loop
+            objectName = await item.getAttribute('objectName');
+            break;
+          }
+        }
+        if (!objectName) throw new Error(`No linkable ${category} instance contains "${selection}"`);
+        await gui.clickSelf(this.page, [objectName], { what: `linkable ${category} instance ${selection}` });
+      }
     } catch (_) {
       // The popup may or may not have opened; close whichever is on top, then leave the dialog.
       await this.page.keyboard.press('Escape').catch(() => {});
@@ -171,6 +197,12 @@ class OrderEditorPage extends BasePage {
   async editProductRow(index) {
     await this.openEditorPage('Products');
     await gui.clickWithin(this.page, this.productRow(index), 'EditButton');
+    return this;
+  }
+
+  async editProductRowByCategory(category) {
+    await this.openEditorPage('Products');
+    await gui.clickWithin(this.page, this.productRowByCategory(category), 'EditButton');
     return this;
   }
 

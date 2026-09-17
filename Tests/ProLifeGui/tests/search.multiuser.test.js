@@ -4,7 +4,7 @@
 // and its per-user landing screenshot is the baseline for the minimal-rights UI. SearchPage.qml is not
 // objectName-instrumented internally yet, so coverage is navigation + screenshot.
 
-const { test, newUserPage } = require('../fixtures/test');
+const { test, expect, newUserPage } = require('../fixtures/test');
 const { SearchPage, WorkspacePage } = require('../pages');
 const gui = require('imtcore-gui-testkit/lib/gui');
 
@@ -92,6 +92,8 @@ test.describe.serial('Search', () => {
     test.skip((await firstRow.count()) === 0, 'no result rows rendered for the active tab');
     await gui.clickWithin(page, firstRow, 'Button');
     await gui.waitForStable(page);
+    const deviceType = page.locator('[objectName="DeviceTypeCombo"][visible]').first();
+    await expect(deviceType.getByText('RTV.t Hardware', { exact: true }).first()).toBeVisible();
 
     // No single structural marker reliably proves "we left Search AND landed somewhere real": the
     // destination is one of several entity types depending on what matched "Test" for this user, and
