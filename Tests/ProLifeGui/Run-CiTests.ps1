@@ -173,6 +173,9 @@ param(
         }
     ),
     [string]$ScriptDir = (Join-Path $RepoRoot "Tests\ProLifeGui"),
+
+    # Release, matching TeamCity (which builds only Release) and the other suites' CI scripts. Locally:
+    # -BuildConfig Debug_Qt6_VC17_x64.
     [string]$BuildConfig = "Release_Qt6_VC17_x64",
 
     # Lisa/Puma/ProLife are checked out as siblings (e.g. D:\...\Git\Lisa,
