@@ -2,7 +2,7 @@
 // generic ImtCore feature
 // (imtdeskgui/TicketCollectionView.qml) hosted inside DeskPage.qml, which also has its own
 // Tickets/Conversations toggle (Support lands on Tickets by default - index 0, toggled true on
-// Component.onCompleted). Universal page (PAGE_PERMISSIONS: ['*']), same as Search - every
+// Component.onCompleted). Universal page, same as Search - every
 // authenticated user can reach it.
 //
 // Standard RemoteCollectionView conventions apply (Table/FilterPanel/CommandsView, TableRow_<index>),
@@ -13,7 +13,8 @@ const { CollectionPage } = require('imtcore-gui-testkit/pages/CollectionPage');
 
 class SupportCollectionPage extends CollectionPage {
   constructor(page) {
-    super(page, 'Tickets');
+    // The list is sorted by creation time and shows it - masked, or every shot of it carries a date.
+    super(page, 'Tickets', { maskColumns: ['createdAt'] });
   }
 
   async clearAllFilters() {

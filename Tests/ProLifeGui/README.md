@@ -1,8 +1,14 @@
 # ProLifeGui — GUI end-to-end tests (new architecture)
 
 A clean, `objectName`-driven, page-object based Playwright suite for the ProLife Qt/QML web app, with
-**first-class multi-user (permission) testing**: every spec runs once per test user, and screenshots
-are captured per user, so "what each permission level sees" is validated by construction.
+**first-class multi-user testing**: every spec runs once per test user, and screenshots are captured
+per user, so "what each user sees" is recorded by construction.
+
+The suite deliberately holds **no model of who may do what**. A test logs in, drives the UI and
+compares screenshots; permissions are the server's business. Where a flow simply is not offered to the
+current user, the test asks the running client - is the page in the menu, is the command button
+visible - and skips. The client was built from that user's own permissions, so it is the only answer
+that cannot drift out of date.
 
 This is a **new, self-contained suite**. The legacy `Tests/frontend` (and the stale `Tests/GUI`) are
 left untouched; they were used only as reference.
@@ -16,25 +22,35 @@ left untouched; they were used only as reference.
 | `waitForDomStability` diffs full `outerHTML` every 100 ms | `waitForStable` uses an in-page `MutationObserver` |
 | One user (`su`), one `storageState.json` | One project **per user**, one `storageState` each, restored from a backup |
 | Raw `objectName` arrays copy-pasted | `controls/` + `pages/` vocabulary |
-| Screenshot-only, no structure guard | Screenshot-primary **plus** an honest action layer + optional structural matrix assertions |
+| Screenshot-only, no structure guard | Screenshot-primary **plus** an honest action layer that hard-fails instead of no-opping |
 
 ## Layout
 
+The framework itself lives in **`imtcore-gui-testkit`** (`ImtCore/Tests/GuiTestKit`), shared with the
+other Imt-based apps: `lib/` (the gui barrel + dom, actions, stability, screenshot), `controls/`
+(Button, CommandBar, MenuPanel, ComboBox, TextInput, FilterPanel, Table, Dialog), the generic
+page-object bases, and the fixture / global-setup / config factories. It is consumed as a `file:`
+dependency, which npm COPIES rather than symlinks, so `Run-CiTests.ps1` re-mirrors it before every run —
+an edit to the kit is otherwise invisible here.
+
+What lives in this folder:
+
 ```
-lib/            gui.js (barrel = the "utils.js replacement") + dom, actions, stability, screenshot
 fixtures/       users.js (source of truth) · seed.js (GraphQL role/user creation, used to BAKE fixture
                 users into puma.backup - see Generate-Backups.ps1, not called at test-run time) ·
-                test.js (fixtures)
-controls/       Button, CommandBar, MenuPanel, ComboBox, TextInput, FilterPanel, Table, Dialog
-pages/          BasePage · CollectionPage · Workspace/Device/Software/Order/Account (collection+editor)
-                · Administration/Organizations/Search (navigation + screenshot) · index
-matrix/         permissions.js — UI element → required permission codes (mirrors Pages.acc / ProLifeFeatures.xml)
+                test.js (thin wrapper over the kit's createGuiTest)
+pages/          ProLife's own page objects: Workspace/Device/Software/Order/Account (collection +
+                editor) · Support · index
 tests/          *.collection / *.editor multiuser specs per domain · workspace · administration ·
-                organizations · search · login.guest ; per-user baselines in tests/__screenshots__/<user>/
-scripts/        seed-fixture-users.js — one-off seeding script used by Generate-Backups.ps1 (see below)
-global-setup.js logs in as each fixture user (already baked into puma.backup) and mints one storageState
-playwright.config.js  one project per user (+ guest); snapshots keyed by {projectName}; workers: 1
-                (the app is a single shared server instance - see Run-CiTests.ps1)
+                organizations · search · support · login.guest ; per-user baselines in
+                tests/__screenshots__/<user>/
+scripts/        prune-orphan-baselines.js (dead baselines) ·
+                seed-fixture-users.js (one-off, used by Generate-Backups.ps1)
+global-setup.js logs in as each ACTIVE fixture user (already baked into puma.backup) and mints one
+                storageState each
+playwright.config.js  one project per user (+ guest); snapshots keyed by {projectName}; workers: 10,
+                with Run-CiTests.ps1 running a parallel read-only phase and a serial @mutating one.
+                MUTATING_USER_KEYS keeps the serial phase from growing with the matrix.
 ```
 
 ## Multi-user model (the core idea)
@@ -55,17 +71,17 @@ playwright.config.js  one project per user (+ guest); snapshots keyed by {projec
 | `guest` | unauthenticated | login page |
 
 The granular managers exist so each domain's **full command bar + editor save path runs for a
-non-superuser** (permission-driven, not `*`), and `orgViewer`/`adminManager` are the users that make
-the Organizations / Administration pages appear. Every seeded user's page set is asserted structurally
-by `workspace.multiuser.test.js` → "menu reflects permissions" against `matrix/permissions.js`
-(`PAGE_PERMISSIONS`, transcribed verbatim from `Pages.acc` / `PagesController.acc`).
+non-superuser** (real granted permissions, not `*`), and `orgViewer`/`adminManager` are the users that
+make the Organizations / Administration pages appear. What each user actually sees is recorded by
+their own `workspace-start` baseline, not asserted against a table.
 
 `playwright.config.js` turns each into a **Playwright project** with its own `storageState`. A spec is
 therefore run once per user, and `snapshotPathTemplate` writes baselines to
-`tests/__screenshots__/<user>/<spec>/<name>-<platform>.png`. The `user` fixture (resolved from the
-project name) lets a test adapt — e.g. `test.skip(!user.can('AddOrder'))` — while its screenshots
-land in that user's directory. Permission codes come from `ProLifeFeatures.xml`; the same role sets
-were validated in `Tests/ProLifeApiPostman` folder "08 Multi-role Scenario".
+`tests/__screenshots__/<user>/<spec>/<name>-<platform>.png`. A spec that cannot be driven as the
+current user skips on a runtime probe - `page.isAvailable()` (is it in the menu) or
+`page.commands.isAvailable(id)` (is the button clickable) - so no test needs to know which permission
+is behind either. Permission codes in `fixtures/users.js` exist only to SEED each fixture role; the
+same role sets were validated in `Tests/ProLifeApiPostman` folder "08 Multi-role Scenario".
 
 To compare users **inside one spec body** instead, use `forEachUser(users, fn)` from `fixtures/test.js`.
 
@@ -75,9 +91,10 @@ To compare users **inside one spec body** instead, use `forEachUser(users, fn)` 
 const { test } = require('../fixtures/test');
 const { WorkspacePage } = require('../pages');
 
-test('workspace start', async ({ page, gui, user }) => {
+test('workspace start', async ({ page, gui }) => {
   const ws = new WorkspacePage(page);
   await ws.reload();
+  test.skip(!(await ws.isAvailable()), 'Workspace is not available to this user');
   await ws.open();               // throws if the Workspace button is missing
   await gui.checkScreenshot(page, 'workspace-start');   // baseline is per-user automatically
 });
@@ -89,9 +106,8 @@ Page objects hold **actions/locators only**; tests own the `checkScreenshot`/`ex
 
 Validation is screenshot-based, but the action layer (`lib/actions.js`) throws when a target
 `objectName` is absent/invisible/ambiguous, so a screenshot can never be captured of a state reached
-by a click that silently did nothing (the legacy `fillTextInput` bug). For exactness on
-permission-sensitive UI, `matrix/permissions.js` + `menu.expectHasPage()/expectNoPage()` add a small
-structural check (see `menu reflects permissions` in the example spec).
+by a click that silently did nothing (the legacy `fillTextInput` bug). Nothing here asserts who is
+allowed to do what: the server enforces that, and the per-user screenshots record the result.
 
 ## Running
 
@@ -118,6 +134,14 @@ npx playwright test --list
 ```
 
 Baselines are per-platform (`-win32` / `-linux`), so mint them on the same OS the CI uses.
+
+Two checks need neither a server nor a browser, and are worth running before any of the above:
+
+```bash
+# Baselines nothing can compare against any more: spec deleted, check renamed, or the project no
+# longer runs that spec. --delete removes them.
+node scripts/prune-orphan-baselines.js
+```
 
 ## CI (`Run-CiTests.ps1`)
 
@@ -151,12 +175,15 @@ exports, re-copy them (or Generate-Backups.ps1's output, for puma.backup) if the
    to no-op with "Superuser already exists" since `puma.backup` already has one.
 
 `npm install` and `npx playwright install chromium` run automatically if needed, then `npx playwright
-test` runs with `CI=true` (switching `playwright.config.js` to the junit reporter, `junit-report.xml`)
-and `PROLIFE_BASE_URL` pointed at the just-started `ProLifeServerTest.exe`. `workers: 1` in
-`playwright.config.js` matters here: this is a *single shared* server instance, and running multiple
-user-projects' sessions against it concurrently produced real `"Authorization server connection error"`
-failures under load - the whole suite runs serially instead. Teardown stops all three servers in reverse
-order. Puma/Lisa checkouts are located via the `PUMADIR`/`LISADIR` environment variables (falling back
+test` runs with `CI=true`, `PROLIFE_BASE_URL` pointed at the just-started `ProLifeServerTest.exe`, and
+the ImtCore testkit writing `test-output/<phase>/{artifacts,junit.xml}`. The output root is cleared
+before phase 1. It invokes `npx playwright
+test` **twice**: a read-only phase at the config's `workers` (10), then an `@mutating` phase at
+`--workers=1`. The split exists because all three servers are one shared instance over one database -
+mutations must not run against a collection another worker is screenshotting, and early attempts at
+full parallelism produced real `"Authorization server connection error"` failures under load. The
+serial phase is therefore the expensive one, which is what `MUTATING_USER_KEYS` in
+`playwright.config.js` is there to bound. Teardown stops all three servers in reverse order. Puma/Lisa checkouts are located via the `PUMADIR`/`LISADIR` environment variables (falling back
 to `Puma`/`Lisa` siblings of the ProLife checkout) — pass `-PumaRepoRoot`/`-LisaRepoRoot` explicitly if
 your agent lays checkouts out differently.
 
@@ -192,9 +219,8 @@ collection and the multi-tab editor:
   comment documents the Document Service flow (New/Edit → GetDeviceRepresentation →
   edit → UpdateDeviceFromRepresentation on Save).
 
-Command/field permission gating lives in `matrix/permissions.js`
-(`canRunDeviceCommand`, `canEditDeviceField`) and drives per-user `test.skip` + the structural
-"command bar reflects permissions" / "editable fields reflect permissions" checks.
+Commands a given user cannot drive are skipped on `commands.isAvailable(id)` - the rendered button,
+not a table - so the same spec runs unchanged under every user.
 
 ## QML instrumentation added for these tests
 
@@ -228,8 +254,8 @@ Filters, command-bar commands and table columns were **already** instrumented up
 Administration / Organizations / Search are covered at the **navigation + screenshot** level because
 `AdministrationView.qml`, `TenantCollectionView.qml` and `SearchPage.qml` are not yet
 `objectName`-instrumented internally. To deepen them (command bars, sub-tabs, fields), add inert
-`objectName`s the same way `DeviceEditor` got them, then extend the specs with command/field gating
-from `matrix/permissions.js` — this is the remaining migration work.
+`objectName`s the same way `DeviceEditor` got them, then extend the specs with the real interactions -
+this is the remaining migration work.
 
 The Support/Tickets page (`DeskPage`, `IsVisible=false`) is intentionally not part of the ProLife menu
 and is not covered here.

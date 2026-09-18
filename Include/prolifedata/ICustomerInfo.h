@@ -16,7 +16,7 @@ public:
 	{
 		MIT_CUSTOMER_ID = IContactBaseInfo::MIT_GROUPS + 1
 	};
-	
+
 	/**
 		Get customer-ID.
 	*/

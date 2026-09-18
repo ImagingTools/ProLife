@@ -13,15 +13,16 @@
 
 const { test, newUserPage } = require('../fixtures/test');
 const { DeviceCollectionPage, DeviceEditorPage } = require('../pages');
-const { canSeePage, canRunDeviceCommand, canEditDeviceField, DEVICE_FIELD_PERMISSIONS } = require('../matrix/permissions');
 const gui = require('imtcore-gui-testkit/lib/gui');
 
-const PAGE = 'Devices';
-
+// Returns null when this user cannot get to a new-sensor editor at all - the page is not in their
+// menu, or the collection offers no New command. The caller test.skip()s on that rather than failing.
 async function openNewEditor(page) {
   const devices = new DeviceCollectionPage(page);
   await devices.reload();
+  if (!(await devices.isAvailable())) return null;
   await devices.open();
+  if (!(await devices.commands.isAvailable('New'))) return null;
   await devices.newItem(); // "New" -> fresh document tab
   return new DeviceEditorPage(page);
 }
@@ -29,6 +30,7 @@ async function openNewEditor(page) {
 async function openEditEditor(page) {
   const devices = new DeviceCollectionPage(page);
   await devices.reload();
+  if (!(await devices.isAvailable())) return null;
   await devices.open();
   // Sort by "added" (creation date, header id "added" - DevicesPage.acc) before picking row 0: the
   // default (unsorted) view's row 0 is whichever device the server currently orders first, and that
@@ -47,41 +49,38 @@ async function openEditEditor(page) {
 test.describe('Hardware / editor', () => {
   // --- NEW editor: one continuous document, steps build on each other in order ------------------
   test.describe.serial('new document', () => {
-    let page, user, editor;
+    let page, editor;
 
     test.beforeAll(async ({ browser }, testInfo) => {
-      ({ page, user } = await newUserPage(browser, testInfo));
-      if (canRunDeviceCommand(user, 'New')) {
-        editor = await openNewEditor(page);
-      }
+      ({ page } = await newUserPage(browser, testInfo));
+      editor = await openNewEditor(page);
     });
 
     test.afterAll(async () => {
-      if (page) await page.close();
+      if (page) await page.context().close();
     });
 
     test.beforeEach(() => {
-      test.skip(!canRunDeviceCommand(user, 'New'), 'user cannot create a sensor (AddSensor)');
+      test.skip(!editor, 'creating a sensor is not available to this user');
     });
 
     test('empty new editor', async () => {
       await gui.checkScreenshot(page, 'device-editor-new-empty');
     });
 
-    // DeviceValidator.qml blocks Save until Device Type AND Configuration are both selected (checked in
-    // that order - Device Type first) - documents that this validation actually runs and surfaces as a
-    // real error dialog (ModalDialogManager.showErrorDialog, the same generic "Dialog" every other
-    // confirm/error dialog in this suite uses), not just a silently-ignored click.
+    // DeviceValidator.qml blocks Save until Device Type AND Configuration are both selected, and it
+    // now surfaces that INLINE - a red message under each unset combo, with Save disabled - rather than
+    // as a modal error dialog on click (same shape the Orders editor already uses for Delivery-ID).
+    // The message Text carries no objectName, so this asserts on its visible text.
     test('save blocked - missing required fields', async () => {
-      // A truly untouched document isn't dirty yet, and Save silently no-ops on it (confirmed live -
-      // no dialog, no error, nothing) rather than running validation at all. Touch a field the
-      // validator does NOT check (Description) first so Save actually attempts to submit, while
-      // Device Type/Configuration stay unset.
+      // A truly untouched document isn't dirty yet, so touch a field the validator does NOT check
+      // (Description) first, leaving Device Type/Configuration unset.
       await editor.setDescription('Touch to dirty');
-      await editor.save();
-      await gui.expectVisible(page, ['Dialog'], 'Save on an empty document must raise a validation error dialog');
+      // clickSave, not save(): the point here is that Save is REFUSED, and save() drives to a committed
+      // document and fails if it never gets one.
+      await editor.clickSave();
+      await page.getByText('Please select a device type').first().waitFor({ state: 'visible', timeout: 10000 });
       await gui.checkScreenshot(page, 'device-editor-save-blocked-empty');
-      await gui.dismissDialog(page);
     });
 
     test('fill device information group', async () => {
@@ -131,12 +130,12 @@ test.describe('Hardware / editor', () => {
       await editor.toggleGroup('production'); // leave groups expanded for the remaining steps
     });
 
-    // DocumentHistoryPanel.qml is embedded identically in every document editor (only visible with
-    // ViewRevisions - PermissionsController.checkPermission at Component.onCompleted) - a generic
-    // mechanic with no per-entity logic, covered once here for the whole suite (same reasoning as
-    // group-collapse/undo-redo/dirty-close-confirm above).
+    // DocumentHistoryPanel.qml is embedded identically in every document editor (only rendered at all
+    // when the user may see revisions - PermissionsController.checkPermission at Component.onCompleted) -
+    // a generic mechanic with no per-entity logic, covered once here for the whole suite (same reasoning
+    // as group-collapse/undo-redo/dirty-close-confirm above).
     test('document history panel toggles open and closed', async () => {
-      test.skip(!user.can('ViewRevisions'), 'no ViewRevisions permission - panel is not rendered at all');
+      test.skip(!(await gui.dom.isVisible(page, ['HistoryPanelToggle'])), 'history panel is not available to this user');
       await gui.clickButton(page, ['HistoryPanelToggle']);
       await gui.checkScreenshot(page, 'device-editor-history-panel-open');
       await gui.clickButton(page, ['HistoryPanelToggle']);
@@ -144,12 +143,16 @@ test.describe('Hardware / editor', () => {
     });
 
     test('undo / redo', async () => {
+      // Undo steps back ONE edit, and this block shares one document with the steps above - so the
+      // field reverts to whatever they left in it, not to empty. Read it first rather than assuming.
+      await editor.openEditorPage('Production');
+      const before = await editor.project.value();
       await editor.setProject('Undo me');
       await editor.undo();
       // Undo's field-value revert can lag its own command-settle under concurrent-worker load (a
       // screenshot taken right after can stably still show the pre-undo text) - wait for the actual
       // reverted value rather than trusting generic DOM-quiet. See TextInput.waitForValue's comment.
-      await editor.project.waitForValue('');
+      await editor.project.waitForValue(before);
       await gui.checkScreenshot(page, 'device-editor-after-undo');
       await editor.redo();
       await editor.project.waitForValue('Undo me');
@@ -157,7 +160,7 @@ test.describe('Hardware / editor', () => {
     });
 
     test('editor commands require save first', async () => {
-      test.skip(!canRunDeviceCommand(user, 'Bind'), 'no Bind permission');
+      test.skip(!(await editor.commands.isAvailable('Bind')), 'Bind is not available to this user');
       // Bind on an unsaved document -> "Please save the document first" info dialog.
       await editor.bind();
       await gui.checkScreenshot(page, 'device-editor-bind-needs-save');
@@ -166,14 +169,13 @@ test.describe('Hardware / editor', () => {
       await gui.dismissDialog(page);
     });
 
-    // Support only exists on the EDITOR's command bar (DeviceCollectionViewCommandsDelegate.qml's
-    // deviceEditorComp.commandsDelegateComp), not on the collection list - unlike Bind/CreateLicenseFile/
-    // TransferLicenses it returns before the "please save first" check, so it works on this still-unsaved
-    // document too.
-    test('support (entity ticket) dialog', async () => {
-      await editor.support();
-      await gui.checkScreenshot(page, 'device-editor-support-dialog');
-      await gui.dismissDialog(page);
+    // Support is a sub-page of the editor now, not a command-bar command opening a dialog. On a document
+    // that has never been saved it has no ticket panel to show - a ticket hangs off the saved device
+    // record - so what it shows instead is the reason why, which is what this captures.
+    test('support sub-page explains that tickets need a saved device', async () => {
+      await editor.openSupport();
+      await page.getByText('Tickets are available after saving').first().waitFor({ state: 'visible', timeout: 10000 });
+      await gui.checkScreenshot(page, 'device-editor-support-page-unsaved');
     });
 
     // Last step: closes the document tab, ending this chain.
@@ -186,48 +188,34 @@ test.describe('Hardware / editor', () => {
 
   // --- EDIT existing document: also one continuous document --------------------------------------
   test.describe.serial('edit document', () => {
-    let page, user, editor;
+    let page, editor;
 
     test.beforeAll(async ({ browser }, testInfo) => {
-      ({ page, user } = await newUserPage(browser, testInfo));
-      if (canSeePage(user, PAGE)) {
-        editor = await openEditEditor(page);
-      }
+      ({ page } = await newUserPage(browser, testInfo));
+      editor = await openEditEditor(page);
     });
 
     test.afterAll(async () => {
-      if (page) await page.close();
+      if (page) await page.context().close();
     });
 
     test.beforeEach(() => {
-      test.skip(!canSeePage(user, PAGE), 'user cannot see Hardware');
+      test.skip(!editor, 'Hardware is not available to this user');
     });
 
     test('open existing sensor editor', async () => {
       await gui.checkScreenshot(page, 'device-editor-edit-loaded');
     });
 
-    // Structural permission matrix: exactly which fields this user may edit. This is the machine-
-    // checked companion to the per-user screenshots - a field the user cannot edit must still be
-    // present (visible) but read-only; we assert presence here and rely on the screenshot for the
-    // read-only visual.
-    test('editable fields reflect permissions', async () => {
-      for (const fieldObjectName of Object.keys(DEVICE_FIELD_PERMISSIONS)) {
-        // The field is always rendered; editability differs. Assert it is present so a missing field
-        // fails loudly (rather than a silent green).
-        await editor.expectFieldVisible(fieldObjectName);
-        // Document (via a soft log) whether this user is expected to be able to edit it.
-        // eslint-disable-next-line no-console
-        console.log(`[${user.key}] ${fieldObjectName} editable=${canEditDeviceField(user, fieldObjectName, false)}`);
-      }
-    });
-
     test('edit fields and save', { tag: '@mutating' }, async () => {
-      // Editing an EXISTING sensor's project needs ChangeProjectForSensor specifically. Holding the
-      // parent EditSensor is not enough to make the Project field writable, so gate strictly on
-      // ChangeProjectForSensor (otherwise the fill verify fails on a read-only field).
-      test.skip(!user.can('ChangeProjectForSensor'), 'cannot change the sensor project field');
-      const edited = `Edited by ProLifeGui ${Date.now()}`;
+      // Closing the document and booting the collection again to reopen it is a second full app
+      // round-trip on top of this test's own edits - more than the suite-wide 60s cap allows.
+      test.setTimeout(150_000);
+      // Keyed to the user, not to the clock: this value is typed into a field that several screenshots
+      // then capture, so a per-run number guarantees they never match their baseline. Per-user keeps it
+      // unique between projects, which the edit needs - re-typing the SAME value changes nothing and
+      // leaves the document clean, and then there is nothing for Save to commit.
+      const edited = `Edited by ProLifeGui (${test.info().project.name})`;
       await editor.setProject(edited);
       await gui.checkScreenshot(page, 'device-editor-edit-changed');
 
@@ -245,6 +233,10 @@ test.describe('Hardware / editor', () => {
       // written, not just held in this still-open document's in-memory representation.
       await editor.closeDocument();
       editor = await openEditEditor(page);
+      // Project lives on the Production sub-page and a reopened editor lands on Device, so without
+      // this the field was invisible - and waitForValue used to treat "not there" as nothing to wait
+      // for, passing a persistence check that had read nothing at all.
+      await editor.openEditorPage("Production");
       await editor.project.waitForValue(edited);
       await gui.checkScreenshot(page, 'device-editor-edit-reopened');
     });

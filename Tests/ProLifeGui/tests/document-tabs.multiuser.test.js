@@ -12,26 +12,27 @@
 
 const { test, newUserPage } = require('../fixtures/test');
 const { DeviceCollectionPage, DeviceEditorPage } = require('../pages');
-const { canRunDeviceCommand } = require('../matrix/permissions');
 const gui = require('imtcore-gui-testkit/lib/gui');
 
 test.describe('Document tabs', () => {
   test.describe.serial('multiple open documents', () => {
-    let page, user, devices;
+    let page, devices, canCreate;
 
     test.beforeAll(async ({ browser }, testInfo) => {
-      ({ page, user } = await newUserPage(browser, testInfo));
+      ({ page } = await newUserPage(browser, testInfo));
       devices = new DeviceCollectionPage(page);
       await devices.reload();
+      if (!(await devices.isAvailable())) return;
       await devices.open();
+      canCreate = await devices.commands.isAvailable('New');
     });
 
     test.afterAll(async () => {
-      if (page) await page.close();
+      if (page) await page.context().close();
     });
 
     test.beforeEach(() => {
-      test.skip(!canRunDeviceCommand(user, 'New'), 'user cannot create a sensor (AddSensor)');
+      test.skip(!canCreate, 'creating a sensor is not available to this user');
     });
 
     test('two documents keep independent state across tab switches', async () => {

@@ -1,5 +1,5 @@
 // Support (Tickets) page - GENERIC ImtCore feature (imtdeskgui/TicketCollectionView.qml +
-// TicketEditor.qml), previously completely untested. Universal page (PAGE_PERMISSIONS: ['*']), same
+// TicketEditor.qml), previously completely untested. Universal page, same
 // as Search - every authenticated user can reach it, no permission gate needed for basic access.
 //
 // The MenuPanel entry is labelled "Support" in the UI, but its actual registered PageId (and MenuPanel
@@ -13,19 +13,25 @@ const os = require('os');
 const path = require('path');
 const { test, newUserPage } = require('../fixtures/test');
 const { SupportCollectionPage, SupportTicketEditorPage } = require('../pages');
-const { canSeePage } = require('../matrix/permissions');
 const gui = require('imtcore-gui-testkit/lib/gui');
 
-const PAGE = 'Tickets';
-
 test.describe('Support', () => {
-  test.beforeEach(async ({ page }) => {
-    await new SupportCollectionPage(page).reload();
-  });
+  // Scoped to its own describe so the reload does NOT also fire for the shared-page block(s)
+  // below: an outer beforeEach runs for nested describes too, and requesting the `page` fixture
+  // there created and booted a whole extra app instance per nested test that nothing then used.
+  test.describe('cold load', () => {
+    test.beforeEach(async ({ page }) => {
+      await new SupportCollectionPage(page).reload();
+    });
 
-  test('landing', async ({ page, gui: guiFixture, user }) => {
-    if (canSeePage(user, PAGE)) await new SupportCollectionPage(page).open();
-    await guiFixture.checkScreenshot(page, 'support-landing');
+    test('landing', async ({ page, gui: guiFixture }) => {
+      const support = new SupportCollectionPage(page);
+      if (await support.isAvailable()) {
+        await support.open();
+        await support.expectOpen();
+      }
+      await guiFixture.checkScreenshot(page, 'support-landing');
+    });
   });
 
   // New ticket: Title/Description/Type/Priority (Status only appears once the ticket already exists -
@@ -33,30 +39,34 @@ test.describe('Support', () => {
   // the command bar itself disappears once saved, since further edits apply immediately with no
   // separate Save step - see SupportTicketEditorPage's own header comment).
   test.describe.serial('ticket lifecycle', () => {
-    let page, user, support, editor;
+    let page, support, editor, available;
 
     test.beforeAll(async ({ browser }, testInfo) => {
-      ({ page, user } = await newUserPage(browser, testInfo));
+      ({ page } = await newUserPage(browser, testInfo));
       support = new SupportCollectionPage(page);
       await support.reload();
-      if (canSeePage(user, PAGE)) {
+      available = await support.isAvailable();
+      if (available) {
         await support.open();
       }
     });
 
     test.afterAll(async () => {
-      if (page) await page.close();
+      if (page) await page.context().close();
     });
 
     test.beforeEach(() => {
-      test.skip(!canSeePage(user, PAGE), 'user cannot see Support');
+      test.skip(!available, 'Support is not available to this user');
     });
 
     test('create a new ticket and save', { tag: '@mutating' }, async () => {
       await support.newItem();
       editor = new SupportTicketEditorPage(page);
 
-      const title = `GUI test ticket ${Date.now()}`;
+      // Fixed, not timestamped: the database is restored before every run, so nothing here needs to be
+      // unique across runs - and a per-run number in the title made the ticket's own screenshots differ
+      // from their baseline every single time.
+      const title = 'GUI test ticket';
       await editor.setTitle(title);
       await editor.setDescription('Created by the GUI test suite.');
       await editor.setType('BugReport');
@@ -68,7 +78,7 @@ test.describe('Support', () => {
       // The command bar hides once the ticket is no longer new (commandsPanelVisible: isNewIssue), and
       // the title switches from its edit field to a read-only "#<number> <title>" display - the
       // screenshot is the check here rather than a structural assertion on that transition.
-      await gui.checkScreenshot(page, 'support-new-ticket-saved');
+      await gui.checkScreenshot(page, 'support-new-ticket-saved', await editor.masks());
     });
 
     // Adding a comment applies immediately (no Save step for an existing ticket) - the comment's own
@@ -78,10 +88,10 @@ test.describe('Support', () => {
     // field - so the check targets ".impl" directly rather than a bare getByText().
     test('add a comment to the ticket', { tag: '@mutating' }, async () => {
       test.skip(!editor, 'no ticket was created above to comment on');
-      const commentText = `Comment from GUI test ${Date.now()}`;
+      const commentText = 'Comment from the GUI test suite';
       await editor.addComment(commentText);
       await page.locator('.impl').filter({ hasText: commentText }).first().waitFor({ state: 'visible', timeout: 10000 });
-      await gui.checkScreenshot(page, 'support-ticket-comment-added');
+      await gui.checkScreenshot(page, 'support-ticket-comment-added', await editor.masks());
     });
 
     // Status only appears once the ticket is no longer new - closing it here proves the combo is live
@@ -90,7 +100,7 @@ test.describe('Support', () => {
       test.skip(!editor, 'no ticket was created above to change status on');
       await gui.expectVisible(page, ['TicketStatusCombo'], 'Status should be visible on an existing ticket');
       await editor.setStatus('Closed');
-      await gui.checkScreenshot(page, 'support-ticket-status-closed');
+      await gui.checkScreenshot(page, 'support-ticket-status-closed', await editor.masks());
     });
 
     // Assignee - editor-UI coverage only (open the picker, pick a row, see the chip, remove it via the
@@ -101,7 +111,7 @@ test.describe('Support', () => {
       test.skip(!editor, 'no ticket was created above to assign');
       await editor.addAssignee('');
       await gui.expectVisible(page, ['AssigneeChip_0'], 'the picked user should appear as an assignee chip');
-      await gui.checkScreenshot(page, 'support-ticket-assignee-added');
+      await gui.checkScreenshot(page, 'support-ticket-assignee-added', await editor.masks());
       await editor.removeAssignee(0);
       await gui.expectHidden(page, ['AssigneeChip_0'], 'the chip should be gone after Remove');
     });
@@ -111,9 +121,10 @@ test.describe('Support', () => {
     // same picker/chip pattern already covered for Roles/Groups in administration.editor.multiuser.test.js.
     test('add context, then remove it', { tag: '@mutating' }, async () => {
       test.skip(!editor, 'no ticket was created above to add context to');
-      await editor.addContext(0, '');
+      const added = await editor.addContext('');
+      test.skip(!added, 'no context entity type has selectable fixture rows');
       await gui.expectVisible(page, ['ContextChip_0'], 'the picked entity should appear as a context chip');
-      await gui.checkScreenshot(page, 'support-ticket-context-added');
+      await gui.checkScreenshot(page, 'support-ticket-context-added', await editor.masks());
       await editor.removeContext(0);
       await gui.expectHidden(page, ['ContextChip_0'], 'the chip should be gone after Remove');
     });
@@ -128,18 +139,27 @@ test.describe('Support', () => {
         'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
         'base64'
       );
-      const filePath = path.join(os.tmpdir(), `support-attachment-${Date.now()}.png`);
+      // Fixed name, like the ticket title above: it ends up in the comment and in the ticket's own
+      // screenshots, so a per-run number there means those shots never match their baseline.
+      const filePath = path.join(os.tmpdir(), 'support-attachment.png');
       fs.writeFileSync(filePath, pngBytes);
 
       await editor.attachFile(filePath);
       await gui.expectVisible(page, ['CommentInput'], 'composer should still be visible while the attachment uploads');
-      await page.getByText('support-attachment-', { exact: false }).first().waitFor({ state: 'visible', timeout: 15000 });
-      await gui.checkScreenshot(page, 'support-ticket-attachment-pending');
+      // Matched on ".impl", not getByText: the bridge renders every Text as an invisible layout wrapper
+      // plus an inner ".impl" that holds the actual content, so a plain text match waits on a node that
+      // never becomes visible - exactly the reasoning already spelled out for the comment check above.
+      await page
+        .locator('.impl')
+        .filter({ hasText: 'support-attachment' })
+        .first()
+        .waitFor({ state: 'visible', timeout: 15000 });
+      await gui.checkScreenshot(page, 'support-ticket-attachment-pending', await editor.masks());
 
-      const commentText = `Comment with attachment ${Date.now()}`;
+      const commentText = 'Comment with attachment';
       await editor.addComment(commentText);
       await page.locator('.impl').filter({ hasText: commentText }).first().waitFor({ state: 'visible', timeout: 10000 });
-      await gui.checkScreenshot(page, 'support-ticket-attachment-sent');
+      await gui.checkScreenshot(page, 'support-ticket-attachment-sent', await editor.masks());
 
       fs.unlinkSync(filePath);
     });
@@ -152,7 +172,7 @@ test.describe('Support', () => {
       await gui.expectVisible(page, ['CommentInput'], 'comment box should be visible before locking');
       await editor.lockIssue('Locked by the GUI test suite');
       await gui.expectHidden(page, ['CommentInput'], 'comment box should hide once the issue is locked');
-      await gui.checkScreenshot(page, 'support-ticket-locked');
+      await gui.checkScreenshot(page, 'support-ticket-locked', await editor.masks());
     });
   });
 });

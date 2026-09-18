@@ -1,158 +1,35 @@
-// Software (SoftwareProducts) COLLECTION view - full functional coverage, multi-user.
-//
-// Runs once per user-project; screenshots auto-separate per user (see playwright.config.js). Users
-// who cannot see the Software page skip the interaction body but still record a landing screenshot,
-// so the permission difference is captured. Command/field gating comes from matrix/permissions.js.
+// Software (SoftwareProducts) COLLECTION view - declared, not written (see the kit's collection spec).
 
-const { test } = require('../fixtures/test');
+const fixtures = require('../fixtures/test');
+const { defineCollectionSpec } = require('imtcore-gui-testkit/specs/collectionSpec');
 const { SoftwareCollectionPage } = require('../pages');
-const { canSeePage, canRunSoftwareCommand } = require('../matrix/permissions');
 
-const PAGE = 'SoftwareProducts';
-
-test.describe('Software / collection', () => {
-  test.beforeEach(async ({ page }) => {
-    await new SoftwareCollectionPage(page).reload();
-  });
-
-  // Landing screenshot for every user (documents what each permission level sees).
-  test('landing', async ({ page, gui, user }) => {
-    const software = new SoftwareCollectionPage(page);
-    if (canSeePage(user, PAGE)) await software.open();
-    await gui.checkScreenshot(page, 'software-landing', await software.timestampColumnMasks());
-  });
-
-  // Structural gate: which commands each user's command bar exposes.
-  test('command bar reflects permissions', async ({ page, user }) => {
-    test.skip(!canSeePage(user, PAGE), 'user cannot see Software');
-    const software = new SoftwareCollectionPage(page);
-    await software.open();
-    for (const cmd of ['New', 'Edit', 'Remove', 'Revision', 'Split', 'Revoke']) {
-      if (canRunSoftwareCommand(user, cmd)) {
-        await software.commands.expectHasCommand(cmd);
-      } else {
-        await software.commands.expectNoCommand(cmd);
-      }
-    }
-  });
-
-  // Everything below only runs for users who can open the page.
-  test.describe('interactions', () => {
-    test.beforeEach(async ({ page, user }) => {
-      test.skip(!canSeePage(user, PAGE), 'user cannot see Software');
-      await new SoftwareCollectionPage(page).open();
-    });
-
-    // --- filters (each registered filter + built-ins) ------------------------------------------
-    test('filter - text search', async ({ page, gui }) => {
-      const software = new SoftwareCollectionPage(page);
-      await software.search('test');
-      await gui.checkScreenshot(page, 'software-filter-text', await software.timestampColumnMasks());
-    });
-
-    test('filter - license status', async ({ page, gui }) => {
-      const software = new SoftwareCollectionPage(page);
-      await software.selectFilterOption('licenseStatus', 'Show only paired licenses');
-      await gui.checkScreenshot(page, 'software-filter-license-status-paired', await software.timestampColumnMasks());
-    });
-
-    test('filter - usage (internal use)', async ({ page, gui }) => {
-      const software = new SoftwareCollectionPage(page);
-      await software.selectFilterOption('usage', 'For Internal Purposes');
-      await gui.checkScreenshot(page, 'software-filter-usage-internal', await software.timestampColumnMasks());
-    });
-
-    test('filter - customers', async ({ page, gui, user }) => {
-      test.skip(!user.can('ViewAccounts'), 'customers filter needs ViewAccounts');
-      const software = new SoftwareCollectionPage(page);
-      // Org-scoped users resolve to zero customers, so the Customers filter has no "QUISS" entry - skip
-      // rather than fail on a missing option (see AccountCollection's org-scoping note).
-      test.skip(
-        !(await software.filters.combo('CustomersFilter').hasOption('QUISS')),
-        'no QUISS customer visible to this user (org-scoped)'
-      );
-      await software.selectFilterOption('customers', 'QUISS');
-      await gui.checkScreenshot(page, 'software-filter-customer-quiss', await software.timestampColumnMasks());
-    });
-
-    test('filter - creation date preset', async ({ page, gui }) => {
-      const software = new SoftwareCollectionPage(page);
-      await software.setCreationDate('Year_Last');
-      await gui.checkScreenshot(page, 'software-filter-creation-date', await software.timestampColumnMasks());
-    });
-
-    test('filter - clear all', async ({ page, gui }) => {
-      const software = new SoftwareCollectionPage(page);
-      await software.search('test');
-      await software.selectFilterOption('licenseStatus', 'Show only paired licenses');
-      await software.clearAllFilters();
-      await gui.checkScreenshot(page, 'software-filter-cleared', await software.timestampColumnMasks());
-    });
-
-    // --- sorting -------------------------------------------------------------------------------
-    // Table.sortBy() addresses columns by their objectName, which is the HeaderIds entry (the field
-    // key), NOT the visible HeaderNames caption - the two lists are independently ordered in
-    // SoftwareProductsPage.acc. "Name" (caption) -> "licenseName" (id).
-    test('sort by name column', async ({ page, gui }) => {
-      const software = new SoftwareCollectionPage(page);
-      await software.table.sortBy('licenseName');
-      await gui.checkScreenshot(page, 'software-sort-name-1', await software.timestampColumnMasks());
-      await software.table.sortBy('licenseName');
-      await gui.checkScreenshot(page, 'software-sort-name-2', await software.timestampColumnMasks());
-    });
-
-    // --- pagination ----------------------------------------------------------------------------
-    test('pagination - page size and navigation', async ({ page, gui }) => {
-      const software = new SoftwareCollectionPage(page);
-      await software.pagination.setPageSize(50);
-      await gui.checkScreenshot(page, 'software-pagination-50', await software.timestampColumnMasks());
-      // Navigate to page 2 only if the collection actually spans more than one page at this size -
-      // a collection that fits on a single page legitimately has no page-2 button (data-adaptive).
-      if (await software.pagination.hasPage(2)) {
-        await software.pagination.goToPage(2);
-        await gui.checkScreenshot(page, 'software-pagination-page-2', await software.timestampColumnMasks());
-      }
-    });
-
-    // --- row selection + context-sensitive commands --------------------------------------------
-    test('revision dialog', async ({ page, gui, user }) => {
-      test.skip(!canRunSoftwareCommand(user, 'Revision'), 'no Revision permission');
-      const software = new SoftwareCollectionPage(page);
-      test.skip(!(await software.table.hasRows()), 'collection is empty for this user');
-      await software.selectRow(0);
-      await software.revision();
-      await gui.checkScreenshot(page, 'software-revision-dialog', await software.timestampColumnMasks());
-      await gui.dismissDialog(page);
-    });
-
-    test('remove confirmation dialog', async ({ page, gui, user }) => {
-      test.skip(!canRunSoftwareCommand(user, 'Remove'), 'no Remove permission');
-      const software = new SoftwareCollectionPage(page);
-      test.skip(!(await software.table.hasRows()), 'collection is empty for this user');
-      await software.selectRow(0);
-      await software.removeItem();
-      await gui.checkScreenshot(page, 'software-remove-dialog', await software.timestampColumnMasks());
-      await gui.dismissDialog(page);
-    });
-
-    test('split dialog', async ({ page, gui, user }) => {
-      test.skip(!canRunSoftwareCommand(user, 'Split'), 'no Split permission');
-      const software = new SoftwareCollectionPage(page);
-      test.skip(!(await software.table.hasRows()), 'collection is empty for this user');
-      await software.selectRow(0);
-      await software.split();
-      await gui.checkScreenshot(page, 'software-split-dialog', await software.timestampColumnMasks());
-      await gui.dismissDialog(page);
-    });
-
-    test('revoke dialog', async ({ page, gui, user }) => {
-      test.skip(!canRunSoftwareCommand(user, 'Revoke'), 'no Revoke permission');
-      const software = new SoftwareCollectionPage(page);
-      test.skip(!(await software.table.hasRows()), 'collection is empty for this user');
-      await software.selectRow(0);
-      await software.revoke();
-      await gui.checkScreenshot(page, 'software-revoke-dialog', await software.timestampColumnMasks());
-      await gui.dismissDialog(page);
-    });
-  });
+defineCollectionSpec({ ...fixtures, defineTest: (...args) => fixtures.test(...args) }, {
+  title: 'Software / collection',
+  pageId: 'SoftwareProducts',
+  requires: 'ViewLicenses',
+  prefix: 'software',
+  createPage: (page) => new SoftwareCollectionPage(page),
+  scenarios: [
+    { name: 'filter-text', title: 'filter - text search', search: 'test' },
+    { name: 'filter-license-status-paired', title: 'filter - license status', filter: 'licenseStatus', option: 'Show only paired licenses' },
+    { name: 'filter-usage-internal', title: 'filter - usage (internal use)', filter: 'usage', option: 'For Internal Purposes' },
+    { name: 'filter-customer-quiss', title: 'filter - customers', filter: 'customers', option: 'QUISS', optional: true },
+    { name: 'filter-creation-date', title: 'filter - creation date preset', dateFilter: 'creationDate', preset: 'Year_Last' },
+    {
+      name: 'filter-cleared',
+      title: 'filter - clear all',
+      clearAll: true,
+      apply: [{ search: 'test' }, { filter: 'licenseStatus', option: 'Show only paired licenses' }],
+    },
+    // sortBy() addresses columns by header id, not by the visible caption: "Name" -> "licenseName".
+    { name: 'sort-name', title: 'sort by name column', sort: 'licenseName' },
+    // restore: this is the only collection whose later scenarios would otherwise act on page 2 at
+    // size 50 - clearAllFilters() resets neither.
+    { name: 'pagination', title: 'pagination - page size and navigation', pagination: { size: 50, page: 2, restore: true } },
+    { name: 'revision-dialog', title: 'revision dialog', command: 'Revision', requires: 'ViewRevisions' },
+    { name: 'remove-dialog', title: 'remove confirmation dialog', command: 'Remove', requires: 'RemoveLicense' },
+    { name: 'split-dialog', title: 'split dialog', command: 'Split', requires: 'SplitLicense' },
+    { name: 'revoke-dialog', title: 'revoke dialog', command: 'Revoke', requires: 'RevokeLicense' },
+  ],
 });

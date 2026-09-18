@@ -19,7 +19,6 @@ const {
   GroupCollectionPage,
   GroupEditorPage,
 } = require('../pages');
-const { canRunRoleCommand, canRunUserCommand, canRunGroupCommand } = require('../matrix/permissions');
 const gui = require('imtcore-gui-testkit/lib/gui');
 
 // search()'s own settle wait (gui.fill's internal waitForStable, 400ms DOM-quiet) can resolve DURING
@@ -87,26 +86,27 @@ async function removeSearchResult(page, collectionPage) {
 test.describe('Administration / editors', () => {
   // --- Role editor: one continuous new document ---------------------------------------------------
   test.describe.serial('Role editor', () => {
-    let page, user, editor, createdRoleName;
+    let page, editor, createdRoleName;
 
     test.beforeAll(async ({ browser }, testInfo) => {
-      ({ page, user } = await newUserPage(browser, testInfo));
-      if (canRunRoleCommand(user, 'New')) {
-        const admin = new AdministrationPage(page);
-        await admin.reload();
-        await admin.open();
-        await admin.openSubPage('Roles');
-        await new RoleCollectionPage(page).newItem();
-        editor = new RoleEditorPage(page);
-      }
+      ({ page } = await newUserPage(browser, testInfo));
+      const admin = new AdministrationPage(page);
+      await admin.reload();
+      if (!(await admin.isAvailable())) return;
+      await admin.open();
+      await admin.openSubPage('Roles');
+      const roles = new RoleCollectionPage(page);
+      if (!(await roles.commands.isAvailable('New'))) return;
+      await roles.newItem();
+      editor = new RoleEditorPage(page);
     });
 
     test.afterAll(async () => {
-      if (page) await page.close();
+      if (page) await page.context().close();
     });
 
     test.beforeEach(() => {
-      test.skip(!canRunRoleCommand(user, 'New'), 'cannot create a role (ChangeRole)');
+      test.skip(!editor, 'creating a role is not available to this user');
     });
 
     test('empty new editor', async () => {
@@ -154,12 +154,12 @@ test.describe('Administration / editors', () => {
 
     test('remove confirmation dialog', { tag: '@mutating' }, async () => {
       test.skip(!createdRoleName, 'no role was created above to remove');
-      test.skip(!canRunRoleCommand(user, 'Remove'), 'no Remove permission');
       const roles = new RoleCollectionPage(page);
       const admin = new AdministrationPage(page);
       await admin.reload();
       await admin.open();
       await admin.openSubPage('Roles');
+      test.skip(!(await roles.commands.isAvailable('Remove')), 'Remove is not available to this user');
       await roles.search(createdRoleName);
       await waitForSearchResult(page, createdRoleName);
       await removeSearchResult(page, roles);
@@ -171,31 +171,32 @@ test.describe('Administration / editors', () => {
 
   // --- User editor: one continuous new document ---------------------------------------------------
   test.describe.serial('User editor', () => {
-    let page, user, editor, createdUsername;
+    let page, editor, createdUsername;
 
     test.beforeAll(async ({ browser }, testInfo) => {
-      ({ page, user } = await newUserPage(browser, testInfo));
-      if (canRunUserCommand(user, 'New')) {
-        const admin = new AdministrationPage(page);
-        await admin.reload();
-        await admin.open();
-        await admin.openSubPage('Users');
-        await new UserCollectionPage(page).newItem();
-        editor = new UserEditorPage(page);
-        // Computed here (not inside 'fill general information') because that test has no @mutating
-        // tag and never runs in the @mutating-only phase - leaving createdUsername unset there would
-        // silently skip the Edit/Remove tests below in that phase (test.skip(!createdUsername, ...)),
-        // exactly the way it did before this was hoisted out.
-        createdUsername = `prolifegui_test_user_${Date.now()}`;
-      }
+      ({ page } = await newUserPage(browser, testInfo));
+      const admin = new AdministrationPage(page);
+      await admin.reload();
+      if (!(await admin.isAvailable())) return;
+      await admin.open();
+      await admin.openSubPage('Users');
+      const users = new UserCollectionPage(page);
+      if (!(await users.commands.isAvailable('New'))) return;
+      await users.newItem();
+      editor = new UserEditorPage(page);
+      // Computed here (not inside 'fill general information') because that test has no @mutating
+      // tag and never runs in the @mutating-only phase - leaving createdUsername unset there would
+      // silently skip the Edit/Remove tests below in that phase (test.skip(!createdUsername, ...)),
+      // exactly the way it did before this was hoisted out.
+      createdUsername = `prolifegui_test_user_${Date.now()}`;
     });
 
     test.afterAll(async () => {
-      if (page) await page.close();
+      if (page) await page.context().close();
     });
 
     test.beforeEach(() => {
-      test.skip(!canRunUserCommand(user, 'New'), 'cannot create a user (ChangeUser)');
+      test.skip(!editor, 'creating a user is not available to this user');
     });
 
     test('empty new editor', async () => {
@@ -229,7 +230,14 @@ test.describe('Administration / editors', () => {
     // based selection (not by name): the picker's option list is live seeded data with no stable text
     // to assert on - same convention as DeviceEditorPage's setDeviceTypeByIndex. The assigned item then
     // shows up as a removable chip (AssignedItem_<index>, RemoveButton within it).
-    async function addFirstOption(addButtonName) {
+    // The add button lives on its OWN sub-page of the editor (MultiPageView's "Page_<id>" nav), and
+    // the editor opens on General - so the page has to be switched to first. Without that the button
+    // is simply not on screen, which is how this read as "AddGroups MISSING" rather than as being one
+    // click away. Scoped to the editor's OWN nav: it opens inside AdministrationView, whose nav uses
+    // the same Roles/Groups ids, and an unscoped "Page_Groups" clicked that one instead - navigating
+    // away from the editor to the Groups collection (hence UserView.qml's "UserEditorPages" name).
+    async function addFirstOption(subPageId, addButtonName) {
+      await gui.clickButton(page, ['UserEditorPages', `Page_${subPageId}`]);
       await gui.clickButton(page, [addButtonName]);
       await gui.expectVisible(page, ['FilterableSelectPopup'], 'picker should open');
       await gui.click(page, ['FilterableSelectItem_0'], { what: 'first picker result' });
@@ -237,7 +245,7 @@ test.describe('Administration / editors', () => {
     }
 
     test('add group: pick the first result, it appears as a chip, then remove it', async () => {
-      await addFirstOption('AddGroups');
+      await addFirstOption('Groups', 'AddGroups');
       await gui.expectVisible(page, ['AssignedItem_0'], 'the picked group should appear as an assigned chip');
       await gui.checkScreenshot(page, 'user-editor-group-assigned');
 
@@ -246,7 +254,7 @@ test.describe('Administration / editors', () => {
     });
 
     test('add role: pick the first result, it appears as a chip, then remove it', async () => {
-      await addFirstOption('AddRoles');
+      await addFirstOption('Roles', 'AddRoles');
       await gui.expectVisible(page, ['AssignedItem_0'], 'the picked role should appear as an assigned chip');
       await gui.checkScreenshot(page, 'user-editor-role-assigned');
 
@@ -288,12 +296,12 @@ test.describe('Administration / editors', () => {
 
     test('remove confirmation dialog', { tag: '@mutating' }, async () => {
       test.skip(!createdUsername, 'no user was created above to remove');
-      test.skip(!canRunUserCommand(user, 'Remove'), 'no Remove permission');
       const users = new UserCollectionPage(page);
       const admin = new AdministrationPage(page);
       await admin.reload();
       await admin.open();
       await admin.openSubPage('Users');
+      test.skip(!(await users.commands.isAvailable('Remove')), 'Remove is not available to this user');
       await users.search(createdUsername);
       await waitForSearchResult(page, createdUsername);
       await removeSearchResult(page, users);
@@ -305,26 +313,27 @@ test.describe('Administration / editors', () => {
 
   // --- Group editor: one continuous new document --------------------------------------------------
   test.describe.serial('Group editor', () => {
-    let page, user, editor, createdGroupName;
+    let page, editor, createdGroupName;
 
     test.beforeAll(async ({ browser }, testInfo) => {
-      ({ page, user } = await newUserPage(browser, testInfo));
-      if (canRunGroupCommand(user, 'New')) {
-        const admin = new AdministrationPage(page);
-        await admin.reload();
-        await admin.open();
-        await admin.openSubPage('Groups');
-        await new GroupCollectionPage(page).newItem();
-        editor = new GroupEditorPage(page);
-      }
+      ({ page } = await newUserPage(browser, testInfo));
+      const admin = new AdministrationPage(page);
+      await admin.reload();
+      if (!(await admin.isAvailable())) return;
+      await admin.open();
+      await admin.openSubPage('Groups');
+      const groups = new GroupCollectionPage(page);
+      if (!(await groups.commands.isAvailable('New'))) return;
+      await groups.newItem();
+      editor = new GroupEditorPage(page);
     });
 
     test.afterAll(async () => {
-      if (page) await page.close();
+      if (page) await page.context().close();
     });
 
     test.beforeEach(() => {
-      test.skip(!canRunGroupCommand(user, 'New'), 'cannot create a group (ChangeGroups)');
+      test.skip(!editor, 'creating a group is not available to this user');
     });
 
     test('empty new editor', async () => {
@@ -368,12 +377,12 @@ test.describe('Administration / editors', () => {
 
     test('remove confirmation dialog', { tag: '@mutating' }, async () => {
       test.skip(!createdGroupName, 'no group was created above to remove');
-      test.skip(!canRunGroupCommand(user, 'Remove'), 'no Remove permission');
       const groups = new GroupCollectionPage(page);
       const admin = new AdministrationPage(page);
       await admin.reload();
       await admin.open();
       await admin.openSubPage('Groups');
+      test.skip(!(await groups.commands.isAvailable('Remove')), 'Remove is not available to this user');
       await groups.search(createdGroupName);
       await waitForSearchResult(page, createdGroupName);
       await removeSearchResult(page, groups);

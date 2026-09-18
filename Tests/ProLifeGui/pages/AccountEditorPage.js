@@ -1,5 +1,8 @@
 // AccountEditorPage - the editor for Accounts (New/Edit).
-// Fields for customer info, account info, company address, groups table.
+//
+// The editor is a MultiPageView: each field lives on one of its sub-pages, and a field on a sub-page
+// that is not open is present-but-invisible (or absent). Ids come from AccountEditor.qml's addPage
+// calls and are NOT the visible captions - "AccountInformation" is labelled "Account".
 
 const { BasePage } = require('imtcore-gui-testkit/pages/BasePage');
 const { TextInput, Table } = require('imtcore-gui-testkit/controls');
@@ -23,18 +26,29 @@ class AccountEditorPage extends BasePage {
     this.groups = new Table(page, ['GroupsTable']);
   }
 
-  save() { return this.runCommand('Save'); }
   undo() { return this.runCommand('Undo'); }
   redo() { return this.runCommand('Redo'); }
 
-  async setCustomerId(text) { await this.customerId.fill(text); return this; }
-  async setAccountName(text) { await this.accountName.fill(text); return this; }
-  async setAccountDescription(text) { await this.accountDescription.fill(text); return this; }
-  async setEmail(text) { await this.email.fill(text); return this; }
-  async setCountry(text) { await this.country.fill(text); return this; }
-  async setCity(text) { await this.city.fill(text); return this; }
-  async setPostalCode(text) { await this.postalCode.fill(text); return this; }
-  async setStreet(text) { await this.street.fill(text); return this; }
+  /** Switch to a MultiPageView sub-page by its addPage id (see this file's header). */
+  async openEditorPage(pageId) {
+    await gui.clickButton(this.page, [`Page_${pageId}`]);
+    return this;
+  }
+
+  async setCustomerId(text) { await this.openEditorPage('CustomerInformation'); await this.customerId.fill(text); return this; }
+  async setAccountName(text) { await this.openEditorPage('AccountInformation'); await this.accountName.fill(text); return this; }
+  async setAccountDescription(text) { await this.openEditorPage('AccountInformation'); await this.accountDescription.fill(text); return this; }
+  async setEmail(text) { await this.openEditorPage('AccountInformation'); await this.email.fill(text); return this; }
+  async setCountry(text) { await this.openEditorPage('CompanyAddress'); await this.country.fill(text); return this; }
+  async setCity(text) { await this.openEditorPage('CompanyAddress'); await this.city.fill(text); return this; }
+  async setPostalCode(text) { await this.openEditorPage('CompanyAddress'); await this.postalCode.fill(text); return this; }
+  async setStreet(text) { await this.openEditorPage('CompanyAddress'); await this.street.fill(text); return this; }
+
+  /** The groups table lives on its own sub-page. */
+  async openGroups() {
+    await this.openEditorPage('Groups');
+    return this;
+  }
 
   async toggleGroup(which) {
     const header = {
@@ -45,10 +59,6 @@ class AccountEditorPage extends BasePage {
     if (!header) throw new Error(`Unknown editor group "${which}"`);
     await gui.clickButton(this.page, [header]);
     return this;
-  }
-
-  expectFieldVisible(objectName) {
-    return gui.expectVisible(this.page, [objectName]);
   }
 }
 
