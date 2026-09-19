@@ -30,6 +30,9 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(imtcolguiqml);
 	Q_INIT_RESOURCE(imtstyle);
 	Q_INIT_RESOURCE(imtstylecontrolsqml);
+	Q_INIT_RESOURCE(imtstyleqml);
+	Q_INIT_RESOURCE(imtqmlutilsqml);
+	Q_INIT_RESOURCE(imtgraphics2dqml);
 	Q_INIT_RESOURCE(imtcontrolsqml);
 	Q_INIT_RESOURCE(imtguiqml);
 	Q_INIT_RESOURCE(imtdocguiqml);
