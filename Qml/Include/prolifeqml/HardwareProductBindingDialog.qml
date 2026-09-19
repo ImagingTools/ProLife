@@ -1000,6 +1000,7 @@ Dialog {
 		id: getDeviceBindingRequest
 
 		gqlCommandId: ProlifeSensorsSdlCommandIds.s_getDeviceBinding
+		permissionPath: "/SensorManagement/BindSensor"
 
 		inputObjectComp: Component {
 			GetDeviceBindingInput {
@@ -1025,6 +1026,7 @@ Dialog {
 
 		requestType: 1
 		gqlCommandId: ProlifeSensorsSdlCommandIds.s_updateDeviceBinding
+		permissionPath: "/SensorManagement/BindSensor"
 
 		sdlObjectComp: Component {
 			UpdatedNotificationPayload {

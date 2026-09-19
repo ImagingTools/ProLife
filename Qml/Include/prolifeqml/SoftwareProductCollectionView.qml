@@ -15,6 +15,11 @@ RemoteCollectionView {
 	id: container;
 
 	documentCollectionFilter: null
+
+	permissionPaths: ({
+		"SoftwareProductsList": "/LicenseManagement/ViewLicenses"
+	})
+
 	additionalFieldIds: [
 		SoftwareProductItemTypeMetaInfo.s_inUse,
 		SoftwareProductItemTypeMetaInfo.s_productUuid
@@ -123,6 +128,10 @@ RemoteCollectionView {
 			gqlGetCommandId: ProlifeLicensesSdlCommandIds.s_softwareProductItem;
 			gqlUpdateCommandId: ProlifeLicensesSdlCommandIds.s_softwareProductUpdate;
 			gqlAddCommandId: ProlifeLicensesSdlCommandIds.s_softwareProductAdd;
+			
+			getPermissionPath: "/LicenseManagement/ViewLicenses";
+			addPermissionPath: "/LicenseManagement/EditLicense/AddLicense";
+			updatePermissionPath: "/LicenseManagement/EditLicense/ChangeLicense";
 			
 			typeId: "SoftwareProduct";
 			documentName: softwareProductData ? softwareProductData.m_serialNumber : ""

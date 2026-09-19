@@ -70,6 +70,7 @@ DocCollectionViewDelegate {
 			property DocumentId documentIdInput: DocumentId {}
 			property GqlSdlRequestSender getDeviceRequest: GqlSdlRequestSender {
 				gqlCommandId: ProlifeDeviceCollectionDocumentServiceSdlCommandIds.s_getDeviceRepresentation
+				permissionPath: "/SensorManagement/ViewSensors"
 				sdlObjectComp: Component {
 					DeviceData {
 						onFinished: {
@@ -83,6 +84,7 @@ DocCollectionViewDelegate {
 			property UpdateDeviceInput updateDeviceInput: UpdateDeviceInput {}
 			property GqlSdlRequestSender updateDeviceRequest: GqlSdlRequestSender {
 				gqlCommandId: ProlifeDeviceCollectionDocumentServiceSdlCommandIds.s_updateDeviceFromRepresentation
+				permissionPath: "/SensorManagement/EditSensor/ChangeSensor"
 				requestType: 1
 				sdlObjectComp: Component {
 					DocumentOperationStatus {
