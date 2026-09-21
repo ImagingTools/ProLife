@@ -173,7 +173,22 @@ param(
         }
     ),
     [string]$ScriptDir = (Join-Path $RepoRoot "Tests\ProLifeGui"),
+
+    # Release, matching TeamCity (which builds only Release) and the other suites' CI scripts. Locally:
+    # -BuildConfig Debug_Qt6_VC17_x64.
     [string]$BuildConfig = "Release_Qt6_VC17_x64",
+    # Playwright drives the Chrome ALREADY INSTALLED on the machine instead of downloading its own.
+    #
+    # This is what the suite is pinned to, not a fallback: the build agent cannot reach
+    # cdn.playwright.dev (the download times out however long the timeout is) and runs as SYSTEM, so
+    # hand-seeding a cache into a user profile is invisible to it either.
+    #
+    # It has to be the DEFAULT rather than a CI-only flag, because the screenshot baselines are
+    # generated with it: another browser shifts font antialiasing far enough to fail every shot.
+    # "msedge" works on a machine with no Chrome; "" goes back to Playwright's own Chromium.
+    # Changing this means regenerating the baselines.
+    [string]$BrowserChannel = "chrome",
+
 
     # Lisa/Puma/ProLife are checked out as siblings (e.g. D:\...\Git\Lisa,
     # D:\...\Git\Puma, D:\...\Git\ProLife) - same convention PUMADIR/
@@ -478,13 +493,53 @@ function Install-PlaywrightIfNeeded {
         }
 
         Write-Step "Ensuring Playwright's Chromium browser is installed"
-        Push-Location $ScriptDir
-        try {
-            & npx playwright install chromium 2>&1 | Out-Host
-            if ($LASTEXITCODE -ne 0) { throw "playwright install failed (exit $LASTEXITCODE)" }
+
+        # A channel means "use a browser already installed on this machine" - nothing to download at
+        # all. That is the answer for an agent that can reach the npm registry but not
+        # cdn.playwright.dev; msedge is on every Windows box and tracks the same Chromium release.
+        if ($BrowserChannel) {
+            $env:PLAYWRIGHT_BROWSER_CHANNEL = $BrowserChannel
+            Write-Host "Using the installed '$BrowserChannel' browser - skipping Playwright's browser download"
+            return
         }
-        finally {
-            Pop-Location
+
+        # Skip the download entirely when a browser is already cached. That is not just a speed-up: a
+        # build agent behind a proxy can reach the npm registry and still not reach
+        # cdn.playwright.dev, which fails the whole step after four 30s timeouts. Seeding the cache
+        # once on such an agent then makes every later run work offline.
+        $browsersRoot = if ($env:PLAYWRIGHT_BROWSERS_PATH) { $env:PLAYWRIGHT_BROWSERS_PATH } else { Join-Path $env:LOCALAPPDATA "ms-playwright" }
+        $cached = @(Get-ChildItem -Path $browsersRoot -Directory -Filter "chromium*" -ErrorAction SilentlyContinue)
+        if ($cached.Count -gt 0) {
+            Write-Host "Chromium already present in $browsersRoot ($($cached[0].Name)) - skipping download"
+        }
+        else {
+            # The default per-request timeout is 30s, which a slow or throttled link loses to.
+            if (-not $env:PLAYWRIGHT_DOWNLOAD_CONNECTION_TIMEOUT) { $env:PLAYWRIGHT_DOWNLOAD_CONNECTION_TIMEOUT = "180000" }
+            Push-Location $ScriptDir
+            try {
+                & npx playwright install chromium 2>&1 | Out-Host
+                if ($LASTEXITCODE -ne 0) {
+                    throw @"
+playwright install failed (exit $LASTEXITCODE) and no Chromium was found in $browsersRoot.
+This agent cannot reach cdn.playwright.dev - the connection is refused within seconds, so raising the
+timeout does not help. Fix it once, on the agent, in any of these ways:
+  - pass -BrowserChannel chrome (or msedge) to drive a browser already installed on the machine and
+    download NOTHING. Cheapest fix, but it renders ~100px differently from Playwright's bundled
+    Chromium, so the screenshot baselines have to be regenerated with it and everyone then has to
+    use the same one;
+  - allow cdn.playwright.dev through the proxy/firewall;
+  - run 'npx playwright install chromium' on the agent while it does have access. Mind the profile:
+    the path above is the SYSTEM account's, because the build agent runs as SYSTEM - installing as
+    your own user puts the browser somewhere this step will never look;
+  - point PLAYWRIGHT_BROWSERS_PATH at a machine-wide directory holding a chromium-* build, which
+    sidesteps the profile problem entirely.
+Once a browser is cached this step stops downloading anything at all.
+"@
+                }
+            }
+            finally {
+                Pop-Location
+            }
         }
     }
     finally {
@@ -582,6 +637,7 @@ function Invoke-PlaywrightSuite {
             Remove-Item Env:\PROLIFE_GUI_ALL_USERS -ErrorAction SilentlyContinue
             Remove-Item Env:\PLAYWRIGHT_OUTPUT_ROOT -ErrorAction SilentlyContinue
             Remove-Item Env:\PLAYWRIGHT_OUTPUT_PHASE -ErrorAction SilentlyContinue
+            Remove-Item Env:\PLAYWRIGHT_BROWSER_CHANNEL -ErrorAction SilentlyContinue
         }
     }
     finally {
