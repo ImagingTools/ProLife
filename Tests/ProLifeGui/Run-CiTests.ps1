@@ -229,6 +229,16 @@ param(
     # Extra args appended verbatim to "npx playwright test", e.g. a spec path to scope the run to one
     # page's tests (-PlaywrightArgs 'tests/devices.collection.multiuser.test.js') or a project filter
     # (-PlaywrightArgs '--project=hardwareManager'). Empty by default -> full suite, active projects only.
+    # Re-mint every baseline from THIS run instead of comparing against the stored ones.
+    #
+    # Baselines have to be produced on the machine that will compare them: browsers rasterise text
+    # differently from one build to the next, so a baseline minted elsewhere fails on rendering alone.
+    # On CI a build parameter drives this and the refreshed images are published as an artifact.
+    #
+    # Deliberately "=all", not plain --update-snapshots: that only rewrites a baseline whose
+    # comparison FAILED, leaving the ones that passed inside the tolerance minted by the old browser.
+    [switch]$UpdateSnapshots,
+
     [string[]]$PlaywrightArgs = @(),
 
     # By default only fixtures/users.js's defaultUserKeys (su + fullAccess) get a Playwright project -
@@ -610,6 +620,11 @@ function Invoke-PlaywrightSuite {
             # -PlaywrightArgs the caller passed (e.g. --update-snapshots, a spec path, --project=...).
             #
             # ImtCore's createGuiConfig derives every path from the shared root + phase contract.
+            if ($UpdateSnapshots -and ($PlaywrightArgs -notcontains '--update-snapshots=all')) {
+                $PlaywrightArgs = @('--update-snapshots=all') + $PlaywrightArgs
+                Write-Host "Refreshing every screenshot baseline from this run (-UpdateSnapshots)"
+            }
+
             $env:PLAYWRIGHT_OUTPUT_PHASE = "phase1-readonly"
             Write-Step "Playwright phase 1/2: read-only tests (parallel, workers from config)"
             & npx playwright test @PlaywrightArgs --grep-invert '@mutating' | Out-Host
