@@ -27,9 +27,13 @@ class SupportTicketEditorPage extends BasePage {
   /**
    * Screenshot masks for everything in this editor that differs run to run: each comment carries the
    * clock time it was posted at (CommentTimestamp_<i>, named in TicketEditor.qml for exactly this).
+   * formatTimestamp renders "d MMM yyyy HH:mm" - the day-of-month has no leading zero, so its width
+   * shifts by a digit depending on which day the test runs. Pin the mask to a fixed width comfortably
+   * wider than the longest realistic value instead of the element's own (variable) rendered width, or
+   * a run on a different day than the baseline leaves a mismatched sliver at the mask's edge.
    */
   masks() {
-    return gui.masksForPrefix(this.page, 'CommentTimestamp_');
+    return gui.masksForPrefix(this.page, 'CommentTimestamp_', 3, 200);
   }
 
   async setTitle(text) {
