@@ -177,17 +177,21 @@ param(
     # Release, matching TeamCity (which builds only Release) and the other suites' CI scripts. Locally:
     # -BuildConfig Debug_Qt6_VC17_x64.
     [string]$BuildConfig = "Release_Qt6_VC17_x64",
-    # Playwright drives the Chrome ALREADY INSTALLED on the machine instead of downloading its own.
+    # Playwright's OWN Chromium, not a browser installed on the machine. Empty on purpose.
     #
-    # This is what the suite is pinned to, not a fallback: the build agent cannot reach
-    # cdn.playwright.dev (the download times out however long the timeout is) and runs as SYSTEM, so
-    # hand-seeding a cache into a user profile is invisible to it either.
+    # Screenshot baselines are only stable if the browser is PINNED, and the bundled Chromium is the
+    # only one that is: it moves with the Playwright dependency, so only when someone upgrades it
+    # deliberately. An installed Chrome auto-updates on its own schedule and the machines drift -
+    # measured 2026-09-21, the build agent had reached Chrome 154 while the developer box was still
+    # on 153, which put 16 Lisa screenshots 101-191px apart on text rasterisation alone, on pages
+    # that are visually identical.
     #
-    # It has to be the DEFAULT rather than a CI-only flag, because the screenshot baselines are
-    # generated with it: another browser shifts font antialiasing far enough to fail every shot.
-    # "msedge" works on a machine with no Chrome; "" goes back to Playwright's own Chromium.
-    # Changing this means regenerating the baselines.
-    [string]$BrowserChannel = "chrome",
+    # The cost is that the agent cannot reach cdn.playwright.dev, so its cache has to be seeded by
+    # hand ONCE - and it runs as SYSTEM, so the cache belongs in
+    # C:Windowssystem32configsystemprofileAppDataLocalms-playwright, not a user profile.
+    #
+    # Pass "chrome" or "msedge" to drive an installed browser instead; that needs its own baselines.
+    [string]$BrowserChannel = "",
 
 
     # Lisa/Puma/ProLife are checked out as siblings (e.g. D:\...\Git\Lisa,
@@ -508,9 +512,25 @@ function Install-PlaywrightIfNeeded {
         # cdn.playwright.dev, which fails the whole step after four 30s timeouts. Seeding the cache
         # once on such an agent then makes every later run work offline.
         $browsersRoot = if ($env:PLAYWRIGHT_BROWSERS_PATH) { $env:PLAYWRIGHT_BROWSERS_PATH } else { Join-Path $env:LOCALAPPDATA "ms-playwright" }
-        $cached = @(Get-ChildItem -Path $browsersRoot -Directory -Filter "chromium*" -ErrorAction SilentlyContinue)
-        if ($cached.Count -gt 0) {
-            Write-Host "Chromium already present in $browsersRoot ($($cached[0].Name)) - skipping download"
+        # Ask Playwright which build IT wants rather than accepting any chromium-* directory: a stale
+        # build satisfies a loose check, the download is skipped, and the run dies later with
+        # "Executable doesn't exist at ...chromium-<pinned>". That bites hardest on an agent whose
+        # cache was seeded by hand. --dry-run is local, needs no network, and names the headless
+        # shell as well as the browser.
+        $wanted = @()
+        Push-Location $ScriptDir
+        try {
+            $wanted = @(& npx playwright install chromium --dry-run 2>&1 |
+                Select-String -Pattern 'Install location:' |
+                ForEach-Object { ($_.Line -replace '^.*Install location:s*', '').Trim() } |
+                Where-Object { $_ -match 'chromium' })
+        }
+        finally { Pop-Location }
+
+        $missing = @($wanted | Where-Object { -not (Test-Path $_) })
+        if ($wanted.Count -gt 0 -and $missing.Count -eq 0) {
+            $names = ($wanted | ForEach-Object { Split-Path $_ -Leaf }) -join ', '
+            Write-Host "Chromium already present in $browsersRoot ($names) - skipping download"
         }
         else {
             # The default per-request timeout is 30s, which a slow or throttled link loses to.
