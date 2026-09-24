@@ -73,11 +73,11 @@ class SupportTicketEditorPage extends BasePage {
 
   /**
    * Assign a user (multi-select FilterableSelectPopup over the Users collection, same picker
-   * component AddGroups/AddRoles already use in administration.editor.multiuser.test.js). Editor-UI
+   * component AddGroups/AddRoles already use in administration.editor.test.js). Editor-UI
    * coverage only (open the picker, pick whichever row search resolves to, see the chip, remove it) -
    * NOT a cross-user visibility check. Which specific user gets picked is not asserted; the ProLifeGui
    * fixture users are excluded from this particular picker's results (confirmed live: a real,
-   * loggable-in fixture user like "fullAccess" returns "No items found" even for an exact-name search
+   * loggable-in fixture user like "prolifegui_support" returns "No items found" even for an exact-name search
    * - root cause not fully pinned down, likely a Puma-side filter this repo doesn't have source for),
    * so leave searchText empty to just pick row 0 of whatever real users the picker does return.
    */

@@ -1,15 +1,10 @@
-// Global setup: produce one storageState per ACTIVE fixture user by logging in - nothing gets
-// CREATED here.
+// Global setup: produce one storageState per fixture user by logging in - nothing gets CREATED here.
 //
-// The 8 fixture roles/users (fixtures/users.js) and the "su" superuser are all baked into
+// The fixture roles/users (fixtures/users.js, one per spec file) and the "su" superuser are baked into
 // Tests\ProLifeGui\puma.backup ahead of time (see Generate-Backups.ps1 + scripts/seed-fixture-users.js,
-// which run the exact same fixtures/seed.js logic once against a live server and dump the result), and
-// Run-CiTests.ps1 restores that backup before every run. So global-setup here only needs to UI-login as
-// each user in turn and save its storageState - no GraphQL RoleAdd/UserAdd calls at run time.
-//
-// Only logs in users fixtures/users.js's activeUsers() actually returns (fullAccess + accEditor by default;
-// every user when PROLIFE_GUI_ALL_USERS=1) - skipping the rest here, not just at the project level,
-// is what makes the fast default subset actually fast (each login is a full page reload + UI flow).
+// which run fixtures/seed.js once against a live server and dump the result), and Run-CiTests.ps1
+// restores that backup before every run. So global-setup here only needs to UI-login as each user in
+// turn and save its storageState - no GraphQL RoleAdd/UserAdd calls at run time.
 //
 // Regenerate Tests\ProLifeGui\puma.backup (via Generate-Backups.ps1) whenever fixtures/users.js changes.
 //

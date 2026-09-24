@@ -3,10 +3,12 @@
 .SYNOPSIS
     One-off (re)generator for Tests\ProLifeGui\puma.backup: restores the real,
     populated legacy backups (Tests\ProLifeApiPostman\{puma,lisa,prolife}.backup)
-    into puma_test/lisa_test/prolife_test, boots all three test servers, bakes
-    in the 8 ProLifeGui fixture roles/users (fixtures/users.js, via
-    scripts/seed-fixture-users.js) on top of the real ~725 existing Puma
-    users, then dumps puma_test back out to Tests\ProLifeGui\puma.backup.
+    into puma_test/lisa_test/prolife_test, strips every Puma user except
+    "su" (Remove-UnneededPumaUsers), boots all three test servers, bakes in
+    the ProLifeGui fixture roles/users (fixtures/users.js - one per spec
+    file - via scripts/seed-fixture-users.js), then dumps puma_test back out
+    to Tests\ProLifeGui\puma.backup. The result holds su and the fixture
+    users and nobody else.
 
     Only puma_test needs a ProLifeGui-specific derived backup: prolife_test's
     Roles/Users/UserGroups/UserSessions are FOREIGN TABLES (postgres_fdw)
@@ -180,6 +182,45 @@ ALTER SERVER "PumaServer" OPTIONS (SET host '$DbHost', SET dbname '$PumaDbName')
     }
 }
 
+function Remove-UnneededPumaUsers {
+    # The legacy export carries ~100 real people and retired ProLifeGui users
+    # (plus every revision of each). None of them is signed in by the suite,
+    # and they leak into every screenshot that lists users. Keep "su" only -
+    # the fixture users are seeded right after the servers come up. Roles the
+    # earlier fixture sets created go too, sessions/connections of the removed
+    # users with them, and the customer groups lose their member lists, which
+    # would otherwise point at users that no longer exist. Runs before Puma
+    # starts, so no server caches any of it.
+    Write-Step "Removing every Puma user except 'su' from '$PumaDbName'"
+    $psql = Resolve-PsqlPath
+    $sqlFile = New-TemporaryFile
+    try {
+        @"
+DELETE FROM "Users" WHERE "DocumentId" NOT IN (SELECT "DocumentId" FROM "Users" WHERE "Document"->>'Id' = 'su');
+DELETE FROM "Roles" WHERE "Document"->>'RoleId' LIKE 'ProLifeGui%';
+DELETE FROM "UserSessions";
+DELETE FROM "UserConnections";
+UPDATE "UserGroups" SET "Document" = jsonb_set("Document", '{Users}', '[]'::jsonb) WHERE "Document" ? 'Users';
+SELECT 'users left: ' || count(DISTINCT "DocumentId") FROM "Users";
+"@ | Set-Content -Path $sqlFile -Encoding ASCII
+
+        $env:PGPASSWORD = $DbPassword
+        $previousEap = $ErrorActionPreference
+        $ErrorActionPreference = "Continue"
+        try {
+            & $psql -h $DbHost -p $DbPort -U $DbUser -d $PumaDbName -v ON_ERROR_STOP=1 -f $sqlFile.FullName 2>&1 | Write-Host
+            if ($LASTEXITCODE -ne 0) { throw "Failed to remove Puma users (exit $LASTEXITCODE)" }
+        }
+        finally {
+            $ErrorActionPreference = $previousEap
+            Remove-Item Env:\PGPASSWORD -ErrorAction SilentlyContinue
+        }
+    }
+    finally {
+        Remove-Item $sqlFile -Force -ErrorAction SilentlyContinue
+    }
+}
+
 function Wait-ForPort([string]$serverLabel, [System.Diagnostics.Process]$process, [int]$port) {
     $deadline = (Get-Date).AddSeconds($StartupTimeoutSeconds)
     while ((Get-Date) -lt $deadline) {
@@ -196,6 +237,7 @@ try {
     Stop-ServerProcess "PumaServerPgTest"
 
     Restore-DatabaseFromBackup $PumaDbName $PumaBackupPath
+    Remove-UnneededPumaUsers
     Write-Step "Starting PumaServerPgTest.exe"
     $pumaProcess = Start-Process -FilePath $PumaServerExePath -WorkingDirectory (Split-Path -Parent $PumaServerExePath) -PassThru -WindowStyle Hidden
     Wait-ForPort "PumaServerPgTest.exe" $pumaProcess $PumaHttpPort

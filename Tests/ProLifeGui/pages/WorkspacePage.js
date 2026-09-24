@@ -23,7 +23,7 @@ class WorkspacePage extends BasePage {
   /**
    * Explicitly switch to the Dashboard tab (the default landing tab). NOT a no-op when already on
    * Dashboard - safe to call unconditionally as a reset. Confirmed live: re-navigating to Workspace via
-   * the menu while ALREADY on Workspace (e.g. tests/workspace.multiuser.test.js's shared-session
+   * the menu while ALREADY on Workspace (e.g. tests/workspace.test.js's shared-session
    * 'interactions' block, where most tests never actually leave Workspace) does NOT reset the active
    * tab back to Dashboard - WorkspacePage.qml's NavigableItem.onParentActivated (which calls
    * checkCurrentPage("Dashboard")) only fires when the PARENT segment is freshly activated, i.e.

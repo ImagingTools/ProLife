@@ -73,10 +73,11 @@
     entries) ProLife's own DeviceAdd/SoftwareProductAdd depend on - see the
     identical, more detailed note in Tests\ProLifeApiPostman\Run-CiTests.ps1.
     -PumaBackupPath is instead a ProLifeGui-specific DERIVED backup (see
-    Generate-Backups.ps1, which writes its output here) that
-    layers the 8 fixture roles/users from fixtures/users.js on top of the
-    same real Puma export, so global-setup.js only ever needs to log in
-    (never create them via GraphQL - see fixtures/seed.js's header comment).
+    Generate-Backups.ps1, which writes its output here): the real Puma
+    export stripped down to "su" plus the fixture roles/users from
+    fixtures/users.js (one per spec file), so global-setup.js only ever
+    needs to log in (never create them via GraphQL - see fixtures/seed.js's
+    header comment).
     Regenerate it with Generate-Backups.ps1 whenever fixtures/users.js
     changes. prolife_test doesn't need its own derived copy: its Roles/
     Users/UserGroups/UserSessions are postgres_fdw FOREIGN TABLES that read
@@ -88,7 +89,7 @@
     Password used to bootstrap the "su" superuser (via the CreateSuperuser
     GraphQL mutation) once ProLifeServerTest.exe is up - a safety net only.
     Tests\ProLifeGui\puma.backup already contains a working "su" account
-    (baked in by the same Generate-Backups.ps1 pipeline, alongside the 8
+    (baked in by the same Generate-Backups.ps1 pipeline, alongside the
     fixture users), so this call is expected to no-op with "Superuser
     already exists" in normal operation; it only matters if -PumaBackupPath
     is pointed at a backup that doesn't have "su" yet. Must match the `su`
@@ -110,20 +111,17 @@
 .PARAMETER PlaywrightArgs
     Extra arguments appended verbatim to "npx playwright test" - e.g. a spec
     path to scope the run to one page (-PlaywrightArgs
-    "tests/devices.collection.multiuser.test.js") or a project filter
-    (-PlaywrightArgs "--project=hardwareManager"). Empty by default, which
-    runs the full suite across every ACTIVE project (see -AllUsers). The
+    "tests/devices.collection.test.js") or a project filter
+    (-PlaywrightArgs "--project=devicesCollection" - every spec file runs as
+    its own user, so a project is one page). Empty by default, which runs
+    the full suite. The
     environment (Puma/Lisa/ProLife servers, databases) is always brought up
     in full regardless of this filter.
 
 .PARAMETER AllUsers
-    By default only fixtures/users.js's defaultUserKeys (su + fullAccess)
-    get a Playwright project/storageState - fast for iterative runs, but
-    doesn't exercise per-user permission restrictions
-    (accountsViewer/noAccess/etc. seeing less than fullAccess). Pass
-    -AllUsers to run the complete multi-user permission matrix (sets
-    PROLIFE_GUI_ALL_USERS=1, which playwright.config.js and global-setup.js
-    both read).
+    Obsolete, accepted so existing build steps keep working. There is no
+    per-user permission matrix any more: every user in fixtures/users.js is
+    pinned to one spec file and always runs.
 
 .EXAMPLE
     powershell -ExecutionPolicy Bypass -File Run-CiTests.ps1
@@ -133,17 +131,14 @@
         -BuildConfig "Release_Qt6_VC17_x64" -DbPassword "%db.password%"
 
 .EXAMPLE
-    Sharding a -AllUsers run across two CI agents. -PlaywrightArgs is passed straight through to
+    Sharding a run across two CI agents. -PlaywrightArgs is passed straight through to
     "npx playwright test" on BOTH phases (see Invoke-PlaywrightSuite), so Playwright's own --shard
-    flag already works today with no script changes - this only matters once `workers` in
-    playwright.config.js is raised above 1 again (currently 1, so a single agent has no
-    within-process parallelism to speed up; splitting the PROJECT list across agents is what actually
-    cuts wall-clock time for the full permission matrix). Each agent needs its own -OutputRoot
+    flag already works today with no script changes. Each agent needs its own -OutputRoot
     (and its own db/port set if run against the SAME Postgres instance) so the two runs' artifacts
     don't collide.
-        Agent 1: powershell -ExecutionPolicy Bypass -File Run-CiTests.ps1 -AllUsers `
+        Agent 1: powershell -ExecutionPolicy Bypass -File Run-CiTests.ps1 `
             -PlaywrightArgs "--shard=1/2" -OutputRoot ".\test-output-shard1"
-        Agent 2: powershell -ExecutionPolicy Bypass -File Run-CiTests.ps1 -AllUsers `
+        Agent 2: powershell -ExecutionPolicy Bypass -File Run-CiTests.ps1 `
             -PlaywrightArgs "--shard=2/2" -OutputRoot ".\test-output-shard2"
 #>
 
@@ -227,8 +222,8 @@ param(
     [int]$StartupTimeoutSeconds = 60,
 
     # Extra args appended verbatim to "npx playwright test", e.g. a spec path to scope the run to one
-    # page's tests (-PlaywrightArgs 'tests/devices.collection.multiuser.test.js') or a project filter
-    # (-PlaywrightArgs '--project=hardwareManager'). Empty by default -> full suite, active projects only.
+    # page's tests (-PlaywrightArgs 'tests/devices.collection.test.js') or a project filter
+    # (-PlaywrightArgs '--project=devicesCollection'). Empty by default -> full suite.
     # Re-mint every baseline from THIS run instead of comparing against the stored ones.
     #
     # Baselines have to be produced on the machine that will compare them: browsers rasterise text
@@ -241,9 +236,7 @@ param(
 
     [string[]]$PlaywrightArgs = @(),
 
-    # By default only fixtures/users.js's defaultUserKeys (su + fullAccess) get a Playwright project -
-    # fast for iterative runs, but doesn't validate per-user restrictions. Pass -AllUsers to set
-    # PROLIFE_GUI_ALL_USERS=1 and run the complete multi-user permission matrix instead.
+    # Obsolete - see .PARAMETER AllUsers. Every fixture user always runs.
     [switch]$AllUsers
 )
 
@@ -596,23 +589,28 @@ function Invoke-PlaywrightSuite {
 
     Write-Step "Running Playwright suite"
     Push-Location $ScriptDir
+    # Same stderr/NativeCommandError pitfall as psql and pg_restore above: node writes warnings to
+    # stderr for things that are not failures at all ("The 'NO_COLOR' env is ignored due to the
+    # 'FORCE_COLOR' env being set"), and $ErrorActionPreference = "Stop" turns any such line into a
+    # TERMINATING error that kills the run mid-phase. Judge these by $LASTEXITCODE only.
+    $previousEap = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
     try {
         # playwright.config.js switches to CI reporters and derives their paths from the shared
         # output root + phase contract.
         $env:CI = "true"
         $env:PROLIFE_BASE_URL = "http://localhost:$HttpPort"
         $env:PLAYWRIGHT_OUTPUT_ROOT = $OutputRoot
-        if ($AllUsers) { $env:PROLIFE_GUI_ALL_USERS = "1" }
         try {
-            # TWO PHASES against the one running server, to keep workers:10 while eliminating
-            # cross-user data races. Every fixture user is its own Playwright project, and all projects
-            # hit ONE shared prolife_test DB; a test that MUTATES data (create-license-file, bind+save,
+            # TWO PHASES against the one running server, to allow parallel workers while eliminating
+            # cross-user data races. Every spec file runs as its own fixture user (its own Playwright
+            # project), and all projects hit ONE shared prolife_test DB; a test that MUTATES data (create-license-file, bind+save,
             # reset-transfer-counter, editor edit+save - tagged @mutating) therefore changes rows that
             # OTHER users' read-only collection views are looking at right then, which surfaces as
             # "This table has been modified from another computer" banners, command-bar reflow into the
             # "..." overflow, changing row counts and dropped selections - i.e. nondeterministic
             # failures that are artifacts of concurrency against shared mutable state, not real bugs.
-            #   Phase 1: everything EXCEPT @mutating, at the config's workers (10) - pure reads run
+            #   Phase 1: everything EXCEPT @mutating, at the config's workers (sized to the machine by the kit; PLAYWRIGHT_WORKERS overrides) - pure reads run
             #            fully parallel and never observe a concurrent mutation (nothing mutates).
             #   Phase 2: ONLY @mutating, --workers=1 - mutations run one at a time with no other test
             #            (read or write) touching the DB concurrently, so no cross-user interference.
@@ -649,13 +647,13 @@ function Invoke-PlaywrightSuite {
         finally {
             Remove-Item Env:\CI -ErrorAction SilentlyContinue
             Remove-Item Env:\PROLIFE_BASE_URL -ErrorAction SilentlyContinue
-            Remove-Item Env:\PROLIFE_GUI_ALL_USERS -ErrorAction SilentlyContinue
             Remove-Item Env:\PLAYWRIGHT_OUTPUT_ROOT -ErrorAction SilentlyContinue
             Remove-Item Env:\PLAYWRIGHT_OUTPUT_PHASE -ErrorAction SilentlyContinue
             Remove-Item Env:\PLAYWRIGHT_BROWSER_CHANNEL -ErrorAction SilentlyContinue
         }
     }
     finally {
+        $ErrorActionPreference = $previousEap
         Pop-Location
     }
 }
