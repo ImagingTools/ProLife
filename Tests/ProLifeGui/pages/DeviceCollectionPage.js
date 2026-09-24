@@ -45,7 +45,7 @@ class DeviceCollectionPage extends CollectionPage {
     // Declared to the base class rather than reimplemented here: CollectionPage.filterId() turns a
     // short key ('status') into the real objectName ('SensorStatusFilter'), and masks() covers the
     // timestamp columns. Without these every filter key falls through as its own objectName and
-    // nothing resolves - which is exactly what a live hardwareManager run caught.
+    // nothing resolves - which is exactly what a live run as a non-superuser caught.
     super(page, 'Devices', { filters: FILTERS, maskColumns: TIMESTAMP_HEADER_IDS });
   }
 

@@ -1,61 +1,69 @@
-// Single source of truth for the GUI test users.
+// Single source of truth for the ProLife GUI test users.
 //
 // Consumed by:
 //   - playwright.config.js  -> one Playwright *project* per user (each with its own storageState)
-//   - global-setup.js       -> UI-logs-in each active user and mints its storageState
+//   - global-setup.js       -> UI-logs-in each user and mints its storageState
 //   - fixtures/test.js      -> exposes the current user (resolved from the project name) to tests
+//   - scripts/seed-fixture-users.js (via fixtures/seed.js) -> bakes the roles/users into puma.backup
 //
-// `permissions` is what gets GRANTED to this fixture user's role when seeding (fixtures/seed.js joins
-// it into the ';'-delimited string the server stores). A test does not read it - `requires()` compares
-// against the list the SERVER returned at login, which storageState already carries.
+// One spec file, one user - the same model as Lisa/Tests/LisaGui. Playwright runs different FILES on
+// different workers (fullyParallel is off, so a file is never split), but the server keeps a lot of
+// state PER USER: the open-documents workspace (CCollectionDocumentServiceControllerComp keys it by
+// userId and fans every open/close out to all of that user's sessions), filters, sort, the selected
+// row, column layout, the last-open page. Two spec files driving the same user at the same time close
+// each other's documents and change each other's screenshots. `isolatedSpec` pins every user below to
+// exactly one file (see the kit's buildProjects.js), so no two files ever share a user.
 //
-// The one exception is '*'. The superuser bypasses permission checks server-side and is therefore sent
-// an EMPTY list, indistinguishable from a user granted nothing; '*' here is what tells the two apart,
-// and defineUsers refuses a superuser without it - otherwise su would silently skip every
-// permission-gated test in the suite. Codes are the exact
-// FeatureId strings from Impl/ProLifeServer/ProLifeFeatures.xml, except SplitLicense/RevokeLicense,
-// which are CommandPermissions declared in SoftwareProductsPage.acc - a role can be granted the raw
-// string either way. Mirrors the role model validated in Tests/ProLifeApiPostman ("08 Multi-role
-// Scenario").
+// Every seeded user gets the SAME full ProLife permission set on purpose: a missing permission makes
+// its tests skip green instead of fail, and a per-user permission matrix is not what these specs are
+// for. `permissions` is what gets GRANTED to the user's role when seeding (fixtures/seed.js joins it
+// into the ';'-delimited string the server stores). Codes are the FeatureId strings from
+// Impl/ProLifeServer/ProLifeFeatures.xml, except SplitLicense/RevokeLicense, which are
+// CommandPermissions declared in SoftwareProductsPage.acc - a role can be granted the raw string
+// either way.
+//
+// The superuser bypasses permission checks server-side and is therefore sent an EMPTY list,
+// indistinguishable from a user granted nothing; `permissions: ['*']` is what tells the two apart, and
+// defineUsers refuses a superuser without it.
+//
+// Changing this list means regenerating puma.backup (Generate-Backups.ps1): the users are baked in
+// there, global-setup.js only logs them in.
 
 const { defineUsers } = require('imtcore-gui-testkit/fixtures/defineUsers');
 
 const PASSWORD = 'ProLifeGui_2026!';
 
-// --- reusable permission bundles (kept close to ProLifeFeatures.xml groupings) -------------------
-
-const SENSOR_FULL = [
+const FULL_ACCESS = [
+  // WorkspaceManagement
+  'ViewWorkspace', 'ViewUserActions', 'ViewAllUserActions', 'ViewAnalytics',
+  // AccountManagement
+  'ViewAccounts', 'ViewAllAccounts', 'ViewAccountHistory',
+  'AddAccount', 'RemoveAccount', 'EditAccount', 'ChangeAccount',
+  'ChangeAccountGroups', 'ChangeCompanyAddress', 'ChangeAccountEmail',
+  'ChangeAccountDescription', 'ChangeAccountName', 'ChangeCustomerId',
+  // SensorManagement
   'ViewSensors', 'ViewAllSensors', 'ViewSensorHistory',
   'AddSensor', 'RemoveSensor', 'EditSensor', 'ChangeSensor',
   'ChangeOrderForSensor', 'ChangeProductionStatus', 'ChangeHardwareConfiguration',
   'ChangeDeviceType', 'ChangeDescriptionForSensor', 'ChangeSerialNumberForSensor',
   'ChangeMacAddress', 'ChangeProjectForSensor',
   'BindSensor', 'UnbindSensor', 'CreateLicenseFile', 'TransferLicenses', 'ResetTransferCounter',
-];
-
-const ORDER_FULL = [
+  // OrderManagement
   'ViewOrders', 'ViewAllOrders', 'ViewOrderHistory',
   'AddOrder', 'RemoveOrder', 'EditOrder', 'ChangeOrder',
   'ChangeOrderProducts', 'ChangeOrderStatus', 'ChangeCustomer',
   'ChangeDescriptionForOrder', 'ChangePurchaseOrderId', 'ChangeDeliveryId',
-];
-
-const LICENSE_FULL = [
+  // LicenseManagement (+ the SplitLicense/RevokeLicense command permissions, see the header)
   'ViewLicenses', 'ViewAllLicenses', 'ViewLicenseHistory',
   'AddLicense', 'RemoveLicense', 'EditLicense', 'ChangeLicense',
   'ChangeLicenseNumber', 'ChangeExpiration', 'ChangeProductLicenses',
   'ChangeProductForLicense', 'ChangeOrderForLicense', 'ChangeProjectForLicense',
-  'SplitLicense', 'RevokeLicense', 'CreateLicenseFile', // command-permission ids (see header)
-];
-
-const ACCOUNT_FULL = [
-  'ViewAccounts', 'ViewAllAccounts', 'ViewAccountHistory',
-  'AddAccount', 'RemoveAccount', 'EditAccount', 'ChangeAccount',
-  'ChangeAccountGroups', 'ChangeCompanyAddress', 'ChangeAccountEmail',
-  'ChangeAccountDescription', 'ChangeAccountName', 'ChangeCustomerId',
-];
-
-const ADMIN_FULL = [
+  'SplitLicense', 'RevokeLicense',
+  // OrganizationManagement
+  'ViewOrganizations',
+  // RevisionManagement - the Revision command is gated by ViewRevisions, not by the View*History ones
+  'ViewRevisions',
+  // Administration
   'ViewUsers', 'ViewRoles', 'ViewGroups',
   'ViewUserHistory', 'ViewRoleHistory', 'ViewGroupHistory',
   'ChangeUser', 'EditUser', 'AddUser', 'RemoveUser',
@@ -63,249 +71,59 @@ const ADMIN_FULL = [
   'ChangeGroup', 'EditGroup', 'AddGroup', 'RemoveGroup',
 ];
 
-const WORKSPACE_FULL = ['ViewWorkspace', 'ViewUserActions', 'ViewAllUserActions', 'ViewAnalytics'];
+// A seeded user pinned to one spec file. The login, the role name and the role code all derive from
+// the key, so the three can never drift apart.
+function specUser(key, title, spec) {
+  return {
+    key,
+    title: `${title} (isolated)`,
+    login: `prolifegui_${key.toLowerCase()}`,
+    password: PASSWORD,
+    seed: true,
+    roleName: `ProLifeGui ${title}`,
+    roleId: `ProLifeGui${key.charAt(0).toUpperCase()}${key.slice(1)}`,
+    permissions: FULL_ACCESS,
+    isolatedSpec: spec,
+  };
+}
 
-/**
- * @typedef {Object} TestUser
- * @property {string} key            Stable id -> Playwright project name + .auth/<key>.json
- * @property {string} title          Human label
- * @property {string} login          Username used at the login screen
- * @property {string} password       Password used at the login screen
- * @property {boolean} seed          If true, global-setup creates this user via GraphQL
- * @property {string} [roleName]     Role name created for this user (seeded users only)
- * @property {string} [roleId]       Stable role code (seeded users only)
- * @property {string[]} permissions  Granted permission codes ('*' => superuser, everything)
- */
-
-/** @type {TestUser[]} */
 const USERS = [
   {
     key: 'su',
     title: 'Superuser',
     login: 'su',
-    password: '1', // pre-existing superuser (bootstrapped via CreateSuperuser by Run-CiTests.ps1)
+    // Pre-existing superuser: baked into puma.backup, and bootstrapped via CreateSuperuser by
+    // Run-CiTests.ps1 as a safety net.
+    password: '1',
     seed: false,
     permissions: ['*'],
+    // "Create license file" offers the Encrypt/Unencrypt choice to the superuser only, so that flow is
+    // su's spec. su is also the peer that edits a device in concurrent-session-banner.test.js and the
+    // account login.guest.test.js signs in with; both are fresh sessions that open no documents while
+    // this file runs.
+    isolatedSpec: 'devices.license-file.test.js',
   },
-  {
-    // Genuine "everything for the ProLife domain" power user: sees every page and can edit every
-    // field (so the *editor* "edit and save" paths actually run for a non-superuser too).
-    key: 'fullAccess',
-    title: 'Full Access',
-    login: 'prolifegui_full',
-    password: PASSWORD,
-    seed: true,
-    roleName: 'ProLifeGui Full Access',
-    roleId: 'ProLifeGuiFullAccess',
-    permissions: [
-      ...WORKSPACE_FULL,
-      ...ACCOUNT_FULL,
-      ...SENSOR_FULL,
-      ...ORDER_FULL,
-      ...LICENSE_FULL,
-      'ViewOrganizations',
-      ...ADMIN_FULL,
-    ],
-  },
-  {
-    // Hardware specialist: full sensor rights (every command bar button + editable fields + revision
-    // + bind/transfer/reset/license-file) plus ViewAccounts so customer filters / order combos work.
-    // Exercises the whole Devices command bar and the device editor save path without being '*'.
-    key: 'hardwareManager',
-    title: 'Hardware Manager',
-    login: 'prolifegui_hw',
-    password: PASSWORD,
-    seed: true,
-    roleName: 'ProLifeGui Hardware Manager',
-    roleId: 'ProLifeGuiHardwareManager',
-    permissions: [...SENSOR_FULL, 'ViewAccounts', 'ViewRevisions'],
-  },
-  {
-    // License specialist: full license rights incl. Split/Revoke command permissions, so the Software
-    // Split/Revoke dialogs and the software editor save path run for a non-superuser.
-    key: 'licenseManager',
-    title: 'License Manager',
-    login: 'prolifegui_lic',
-    password: PASSWORD,
-    seed: true,
-    roleName: 'ProLifeGui License Manager',
-    roleId: 'ProLifeGuiLicenseManager',
-    permissions: [...LICENSE_FULL, 'ViewAccounts', 'ViewRevisions'],
-  },
-  {
-    // Order specialist: full order rights + revision, plus ViewAccounts for the customer filter/combo.
-    key: 'orderManager',
-    title: 'Order Manager',
-    login: 'prolifegui_ord',
-    password: PASSWORD,
-    seed: true,
-    roleName: 'ProLifeGui Order Manager',
-    roleId: 'ProLifeGuiOrderManager',
-    permissions: [...ORDER_FULL, 'ViewAccounts', 'ViewRevisions'],
-  },
-  // --- Editor-isolation users --------------------------------------------------------------------
-  //
-  // The Collection Document Service keys a user's OPEN-DOCUMENTS workspace by userId ONLY (server-side;
-  // see CCollectionDocumentServiceControllerComp.cpp - GetOpenedDocumentList(userId), and the
-  // On<Collection>DocumentChanged subscription that fans every open/close out to ALL of that user's
-  // live sessions). So two DIFFERENT editor spec files driving document tabs as the SAME user at the
-  // same time (Playwright runs different files on different workers in parallel) corrupt one shared
-  // workspace: one file's navigation/closeAllDocumentTabs closes a tab another file is mid-test on, and
-  // the victim's fields vanish from the DOM ("DescriptionInput ... no element with this objectName
-  // path exists"). Intra-file blocks don't collide (fullyParallel is off -> one file = one worker,
-  // sequential), so the fix is purely: give each document-editor spec its OWN dedicated user, so no two
-  // of them ever share a server workspace. `isolatedSpec` pins the user to exactly one spec file (see
-  // buildProjects.js): that user runs ONLY that file, and every OTHER project testIgnores it. Each
-  // carries the full domain edit rights its editor needs to exercise create/edit/save (a superset of
-  // the matching domain-manager role) - the per-user permission MATRIX for these editors is
-  // deliberately traded away for determinism (collection specs still cover per-user gating).
-  {
-    key: 'devEditor',
-    title: 'Device Editor (isolated)',
-    login: 'prolifegui_deveditor',
-    password: PASSWORD,
-    seed: true,
-    roleName: 'ProLifeGui Device Editor',
-    roleId: 'ProLifeGuiDeviceEditor',
-    permissions: [...SENSOR_FULL, 'ViewAccounts', 'ViewRevisions'],
-    isolatedSpec: 'devices.editor.multiuser.test.js',
-  },
-  // ordEditor (the isolated Order Editor fixture user) used to own orders.editor.multiuser.test.js
-  // exclusively via isolatedSpec, like its siblings below. By explicit request that spec now runs as
-  // `su` (and `fullAccess`) instead, so it's covered by the default `su` validation pass rather than
-  // needing a separate --project=ordEditor invocation - accepting the cross-file document-tab-
-  // collision risk described in the block comment above, on the basis that no OTHER spec currently
-  // opens a document tab as `su`/`fullAccess` in the same phase (su/fullAccess run collection-level
-  // specs only, plus Support's own tab-opening tests are all @mutating/phase-2-serial, so there's no
-  // actual concurrent pair right now). Revisit this if a future spec starts opening document tabs
-  // under su/fullAccess too - see the isolation rationale above for what breaks.
-
-  {
-    key: 'accEditor',
-    title: 'Account Editor (isolated)',
-    login: 'prolifegui_acceditor',
-    password: PASSWORD,
-    seed: true,
-    roleName: 'ProLifeGui Account Editor',
-    roleId: 'ProLifeGuiAccountEditor',
-    permissions: [...ACCOUNT_FULL, 'ViewRevisions'],
-    isolatedSpec: 'accounts.editor.multiuser.test.js',
-  },
-  {
-    key: 'swEditor',
-    title: 'Software Editor (isolated)',
-    login: 'prolifegui_sweditor',
-    password: PASSWORD,
-    seed: true,
-    roleName: 'ProLifeGui Software Editor',
-    roleId: 'ProLifeGuiSoftwareEditor',
-    permissions: [...LICENSE_FULL, 'ViewAccounts', 'ViewRevisions'],
-    isolatedSpec: 'software.editor.multiuser.test.js',
-  },
-  {
-    // Drives concurrent-session-banner.multiuser.test.js: this is the WATCHING session, looking at the
-    // Hardware table while `su` changes a row from its own session. The banner fires on a change made by
-    // a different USER (RemoteCollectionChangeListener.qml compares ownerId to the current user), so the
-    // watcher must not be su - hence a user of its own, which also keeps it clear of any other spec's
-    // document-tab activity under a shared matrix user.
-    key: 'bannerEditor',
-    title: 'Concurrent Session Banner (isolated)',
-    login: 'prolifegui_bannereditor',
-    password: PASSWORD,
-    seed: true,
-    roleName: 'ProLifeGui Concurrent Session Banner',
-    roleId: 'ProLifeGuiConcurrentSessionBanner',
-    permissions: [...SENSOR_FULL],
-    isolatedSpec: 'concurrent-session-banner.multiuser.test.js',
-  },
-  {
-    // Drives document-tabs.multiuser.test.js - the GENERIC multi-tab document workspace mechanism
-    // (MultiDocumentCollectionView.qml/TabDelegate.qml), exercised via Devices purely as a convenient,
-    // already-well-instrumented vehicle - the behavior under test isn't Devices-specific. Same
-    // cross-file workspace-collision class as the other isolated editor users (opens document tabs).
-    key: 'tabsEditor',
-    title: 'Document Tabs (isolated)',
-    login: 'prolifegui_tabseditor',
-    password: PASSWORD,
-    seed: true,
-    roleName: 'ProLifeGui Document Tabs',
-    roleId: 'ProLifeGuiDocumentTabs',
-    permissions: [...SENSOR_FULL],
-    isolatedSpec: 'document-tabs.multiuser.test.js',
-  },
-  {
-    // Same cross-file workspace-collision class as devEditor/accEditor/swEditor above, but for
-    // administration.editor.multiuser.test.js's Role/User/Group "New document" blocks - those also open
-    // document tabs via the SAME server-side Collection Document Service, and administration.multiuser
-    // .test.js's own collection-navigation tests (run under su/fullAccess/adminManager) call
-    // closeAllDocumentTabs() on every openPage(), which can close a tab this spec is mid-test on.
-    key: 'admEditor',
-    title: 'Administration Editor (isolated)',
-    login: 'prolifegui_admeditor',
-    password: PASSWORD,
-    seed: true,
-    roleName: 'ProLifeGui Administration Editor',
-    roleId: 'ProLifeGuiAdministrationEditor',
-    permissions: [...ADMIN_FULL],
-    isolatedSpec: 'administration.editor.multiuser.test.js',
-  },
-  {
-    // Administration user: sees ONLY the Administration page (+ the universal Search). Validates that
-    // the Admin area is reachable/gated and that no domain page leaks in for an admin-only role.
-    key: 'adminManager',
-    title: 'Administration Manager',
-    login: 'prolifegui_admin',
-    password: PASSWORD,
-    seed: true,
-    roleName: 'ProLifeGui Administration Manager',
-    roleId: 'ProLifeGuiAdministrationManager',
-    permissions: [...ADMIN_FULL],
-  },
-  {
-    // Organizations viewer: sees ONLY the Organizations (Tenants) page (+ Search). This is the only
-    // user that makes the Organizations page appear, so its baseline documents that page.
-    key: 'orgViewer',
-    title: 'Organizations Viewer',
-    login: 'prolifegui_org',
-    password: PASSWORD,
-    seed: true,
-    roleName: 'ProLifeGui Organizations Viewer',
-    roleId: 'ProLifeGuiOrganizationsViewer',
-    permissions: ['ViewOrganizations'],
-  },
-  {
-    // Read-only Accounts: sees Accounts + Search; no New/Remove commands, every field read-only.
-    key: 'accountsViewer',
-    title: 'Accounts Viewer',
-    login: 'prolifegui_accviewer',
-    password: PASSWORD,
-    seed: true,
-    roleName: 'ProLifeGui Accounts Viewer',
-    roleId: 'ProLifeGuiAccountsViewer',
-    permissions: ['ViewAccounts'],
-  },
-  {
-    // No domain permissions at all: only the universal Search page is reachable.
-    key: 'noAccess',
-    title: 'No Access',
-    login: 'prolifegui_noaccess',
-    password: PASSWORD,
-    seed: true,
-    roleName: 'ProLifeGui No Access',
-    roleId: 'ProLifeGuiNoAccess',
-    permissions: [],
-  },
+  specUser('accountsCollection', 'Accounts Collection', 'accounts.collection.test.js'),
+  specUser('accountsEditor', 'Accounts Editor', 'accounts.editor.test.js'),
+  specUser('administration', 'Administration', 'administration.test.js'),
+  specUser('administrationEditor', 'Administration Editor', 'administration.editor.test.js'),
+  // The WATCHING session of the banner spec. The banner fires only on a change made by a different
+  // USER (RemoteCollectionChangeListener.qml compares ownerId to the current user), so the change is
+  // made by `su`.
+  specUser('concurrentSessionBanner', 'Concurrent Session Banner', 'concurrent-session-banner.test.js'),
+  specUser('devicesCollection', 'Devices Collection', 'devices.collection.test.js'),
+  specUser('devicesEditor', 'Devices Editor', 'devices.editor.test.js'),
+  specUser('ordersCollection', 'Orders Collection', 'orders.collection.test.js'),
+  specUser('ordersEditor', 'Orders Editor', 'orders.editor.test.js'),
+  specUser('organizations', 'Organizations', 'organizations.test.js'),
+  specUser('search', 'Search', 'search.test.js'),
+  specUser('sessionExpiry', 'Session Expiry', 'session-expiry.test.js'),
+  specUser('softwareCollection', 'Software Collection', 'software.collection.test.js'),
+  specUser('softwareEditor', 'Software Editor', 'software.editor.test.js'),
+  specUser('support', 'Support', 'support.test.js'),
+  specUser('userProfile', 'User Profile', 'user-profile.test.js'),
+  specUser('workspace', 'Workspace', 'workspace.test.js'),
 ];
 
-// Fast default subset for iterative/local runs: `fullAccess` (broadest non-superuser coverage - every
-// page/command via real granted permissions, not '*', so editor save-paths etc. still get exercised
-// without needing the full matrix) + `accEditor` for the Accounts editor. Naming an isolated user here
-// makes the list authoritative (see defineUsers): the OTHER isolated specs - devices/software/
-// administration editors, document tabs, the concurrent-session banner - and every restricted user run
-// only under the full matrix, PROLIFE_GUI_ALL_USERS=1 (or Run-CiTests.ps1 -AllUsers).
-module.exports = defineUsers({
-  users: USERS,
-  defaultUserKeys: ['fullAccess', 'accEditor'],
-  allUsersEnv: 'PROLIFE_GUI_ALL_USERS',
-});
+module.exports = defineUsers({ users: USERS });
 module.exports.PASSWORD = PASSWORD;

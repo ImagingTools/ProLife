@@ -82,6 +82,22 @@ DocumentViewBase {
 		multiPageView.updatePages()
 	}
 
+	// CachedProductCollection refills hardwareProductsModel in place, so productCB.model
+	// keeps its identity and onModelChanged never fires a second time. Without this the
+	// combo boxes stay empty whenever the products arrive after the representation.
+	Timer {
+		id: productsArrivedTimer
+		interval: 0
+		onTriggered: deviceEditorContainer.doUpdateGui()
+	}
+
+	Connections {
+		target: CachedProductCollection
+		function onHardwareProductsModelReady() {
+			productsArrivedTimer.restart()
+		}
+	}
+
 	Connections {
 		target: deviceEditorContainer.deviceData
 		function onFinished() {
@@ -429,7 +445,11 @@ DocumentViewBase {
 				deviceEditorContainer.checkPermissions()
 			if (pageId === "Device" || pageId === "Production" || pageId === "Licenses") {
 				if (pageItem && pageItem.updateGui) {
+					// Combo boxes push their currentIndex back into doUpdateModel(), so a
+					// bare updateGui() writes the half-filled GUI into the representation.
+					deviceEditorContainer.setBlockingUpdateModel(true)
 					pageItem.updateGui()
+					deviceEditorContainer.setBlockingUpdateModel(false)
 				}
 			}
 			if (deviceEditorContainer.readOnly)
@@ -559,13 +579,17 @@ DocumentViewBase {
 					return
 				}
 
+				// Snapshot first: assigning productCB.currentIndex below can re-enter
+				// updateModel() and overwrite m_licenseName before it is read.
+				let productId = deviceEditorContainer.deviceData.m_deviceType
+				let licenseName = deviceEditorContainer.deviceData.m_licenseName
+
 				descriptionInput.text = deviceEditorContainer.deviceData.m_description
 				serialNumberInput.text = deviceEditorContainer.deviceData.m_serialNumber
 				macAddressInput.text = deviceEditorContainer.deviceData.m_macAddress
 
 				productCB.currentIndex = -1
 
-				let productId = deviceEditorContainer.deviceData.m_deviceType
 				let productModel = productCB.model
 				if (productModel) {
 					for (let i = 0; i < productModel.getItemsCount(); i++) {
@@ -579,7 +603,6 @@ DocumentViewBase {
 
 				configurationCB.currentIndex = -1
 
-				let licenseName = deviceEditorContainer.deviceData.m_licenseName
 				let model = configurationCB.model
 				if (model) {
 					for (let i = 0; i < model.getItemsCount(); i++) {
@@ -818,11 +841,15 @@ DocumentViewBase {
 					return
 				}
 
+				// Snapshot first, see devicePage.updateGui().
+				let status = deviceEditorContainer.deviceData.m_productionStatus
+				let orderId = deviceEditorContainer.deviceData.m_orderId
+				let internalUse = deviceEditorContainer.deviceData.m_internalUse
+
 				projectInput.text = deviceEditorContainer.deviceData.m_project
 
 				statusCB.currentIndex = -1
 
-				let status = deviceEditorContainer.deviceData.m_productionStatus
 				let statusModel = statusCB.model
 				if (statusModel) {
 					let index = productionStatus.getStatusIndex(status)
@@ -833,7 +860,6 @@ DocumentViewBase {
 
 				orderCB.currentIndex = -1
 
-				let orderId = deviceEditorContainer.deviceData.m_orderId
 				let ordersModel = orderCB.sourceModel
 				if (ordersModel) {
 					for (let i = 0; i < ordersModel.getItemsCount(); i++) {
@@ -845,7 +871,7 @@ DocumentViewBase {
 					}
 				}
 
-				internalUseSwitchElementView.checked = deviceEditorContainer.deviceData.m_internalUse
+				internalUseSwitchElementView.checked = internalUse
 			}
 
 			function updateModel() {

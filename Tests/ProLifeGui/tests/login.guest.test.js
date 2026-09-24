@@ -138,7 +138,7 @@ test.describe('Guest / login', () => {
     // (Enums.save), the button whose onFinished fires the real registerUser(userData) request.
     // Field objectNames come from UserGeneralEditor.qml (this dialog reuses that same component,
     // already instrumented for the Administration "New user" editor - see administration.editor
-    // .multiuser.test.js). Scoped under ['Dialog', ...]: UserGeneralEditor's own "PasswordInput"
+    // .test.js). Scoped under ['Dialog', ...]: UserGeneralEditor's own "PasswordInput"
     // collides with AuthorizationPage's login-form field of the same name, which is still in the DOM
     // (just visually covered) behind this modal - the Dialog scope disambiguates which one gets filled.
     await gui.fill(page, ['Dialog', 'UsernameInput'], 'guest_test_signup');

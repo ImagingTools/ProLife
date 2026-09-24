@@ -60,8 +60,7 @@ function mutatingScreenshotNamesIn(specSource) {
 
 /**
  * Which (project, spec) pairs Playwright schedules - asked of Playwright rather than reimplemented from
- * testIgnore/testMatch/grepInvert. Listed with the full matrix on, so baselines belonging to users
- * outside the default subset are not mistaken for dead. Null when no listing can be produced, and the
+ * testIgnore/testMatch/grepInvert. Null when no listing can be produced, and the
  * caller then skips the checks that depend on it rather than calling everything an orphan.
  */
 function scheduledSpecsByProject(extraArgs = []) {
@@ -69,7 +68,6 @@ function scheduledSpecsByProject(extraArgs = []) {
   try {
     output = execFileSync('npx', ['playwright', 'test', '--list', ...extraArgs], {
       cwd: path.resolve(__dirname, '..'),
-      env: { ...process.env, PROLIFE_GUI_ALL_USERS: '1' },
       encoding: 'utf8',
       shell: process.platform === 'win32',
       stdio: ['ignore', 'pipe', 'ignore'],

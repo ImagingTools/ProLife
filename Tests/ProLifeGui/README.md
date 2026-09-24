@@ -1,8 +1,7 @@
 # ProLifeGui — GUI end-to-end tests (new architecture)
 
 A clean, `objectName`-driven, page-object based Playwright suite for the ProLife Qt/QML web app, with
-**first-class multi-user testing**: every spec runs once per test user, and screenshots are captured
-per user, so "what each user sees" is recorded by construction.
+**one fixture user per spec file**, so no two files ever share server-side per-user state.
 
 The suite deliberately holds **no model of who may do what**. A test logs in, drives the UI and
 compares screenshots; permissions are the server's business. Where a flow simply is not offered to the
@@ -20,7 +19,7 @@ left untouched; they were used only as reference.
 | Mostly `clickAt(page, x, y)` coordinates — brittle | `objectName` paths + page objects — layout-independent |
 | `utils.js` `fillTextInput` silently no-ops on a missing field | Every action **hard-fails** if its target is missing/invisible/ambiguous |
 | `waitForDomStability` diffs full `outerHTML` every 100 ms | `waitForStable` uses an in-page `MutationObserver` |
-| One user (`su`), one `storageState.json` | One project **per user**, one `storageState` each, restored from a backup |
+| One user (`su`), one `storageState.json` | One user **per spec file**, one `storageState` each, restored from a backup |
 | Raw `objectName` arrays copy-pasted | `controls/` + `pages/` vocabulary |
 | Screenshot-only, no structure guard | Screenshot-primary **plus** an honest action layer that hard-fails instead of no-opping |
 
@@ -41,49 +40,54 @@ fixtures/       users.js (source of truth) · seed.js (GraphQL role/user creatio
                 test.js (thin wrapper over the kit's createGuiTest)
 pages/          ProLife's own page objects: Workspace/Device/Software/Order/Account (collection +
                 editor) · Support · index
-tests/          *.collection / *.editor multiuser specs per domain · workspace · administration ·
-                organizations · search · support · login.guest ; per-user baselines in
-                tests/__screenshots__/<user>/
+tests/          *.collection / *.editor specs per domain · workspace · administration ·
+                organizations · search · support · login.guest ; baselines in
+                tests/__screenshots__/<user>/ (one user per spec file)
 scripts/        prune-orphan-baselines.js (dead baselines) ·
                 seed-fixture-users.js (one-off, used by Generate-Backups.ps1)
-global-setup.js logs in as each ACTIVE fixture user (already baked into puma.backup) and mints one
+global-setup.js logs in as each fixture user (already baked into puma.backup) and mints one
                 storageState each
-playwright.config.js  one project per user (+ guest); snapshots keyed by {projectName}; workers: 10,
-                with Run-CiTests.ps1 running a parallel read-only phase and a serial @mutating one.
-                MUTATING_USER_KEYS keeps the serial phase from growing with the matrix.
+playwright.config.js  one project per user (+ guest); snapshots keyed by {projectName}; workers sized to the machine by the kit
+                (PLAYWRIGHT_WORKERS overrides),
+                with Run-CiTests.ps1 running a read-only phase and a serial @mutating one.
 ```
 
-## Multi-user model (the core idea)
+## Users: one spec file, one user
 
-`fixtures/users.js` is the single source of truth. Today it defines:
+The same model as `Lisa/Tests/LisaGui`. `fixtures/users.js` is the single source of truth: `su` plus
+one seeded user per spec file, each pinned to that file with `isolatedSpec` (the kit's
+`buildProjects.js` gives the user a project that runs ONLY that file, and keeps the file out of every
+other project).
 
-| key | role / permissions | expected to see |
-|---|---|---|
-| `su` | superuser (`*`) | everything |
-| `fullAccess` | full View/Add/Edit/Change/Remove for Accounts/Sensors/Orders/Licenses + Workspace + ViewOrganizations + admin views | all pages (edits & saves everywhere) |
-| `hardwareManager` | full Sensor rights (Bind/Transfer/Reset/CreateLicenseFile/Revision/all Change*) + ViewAccounts | Hardware + Accounts + Search |
-| `licenseManager` | full License rights incl. `SplitLicense`/`RevokeLicense` command perms + ViewAccounts | Software + Accounts + Search |
-| `orderManager` | full Order rights + ViewRevisions + ViewAccounts | Orders + Accounts + Search |
-| `adminManager` | ViewUsers/Roles/Groups + Change/Edit/Add/Remove User/Role/Group | Administration + Search |
-| `orgViewer` | `ViewOrganizations` only | Organizations + Search |
-| `accountsViewer` | `ViewAccounts` only (read-only) | Accounts + Search |
-| `noAccess` | (none) | Search only |
-| `guest` | unauthenticated | login page |
+| key | spec |
+|---|---|
+| `su` (superuser, `*`) | `devices.license-file.test.js` - the Encrypt/Unencrypt choice only the superuser gets |
+| `accountsCollection` / `accountsEditor` | `accounts.collection` / `accounts.editor` |
+| `administration` / `administrationEditor` | `administration` / `administration.editor` |
+| `concurrentSessionBanner` | `concurrent-session-banner` (the watcher; `su` makes the change) |
+| `devicesCollection` / `devicesEditor` | `devices.collection` / `devices.editor` |
+| `ordersCollection` / `ordersEditor` | `orders.collection` / `orders.editor` |
+| `organizations` · `search` · `sessionExpiry` · `support` · `userProfile` · `workspace` | the spec of the same name |
+| `softwareCollection` / `softwareEditor` | `software.collection` / `software.editor` |
+| `guest` | unauthenticated, `*.guest.test.js` |
 
-The granular managers exist so each domain's **full command bar + editor save path runs for a
-non-superuser** (real granted permissions, not `*`), and `orgViewer`/`adminManager` are the users that
-make the Organizations / Administration pages appear. What each user actually sees is recorded by
-their own `workspace-start` baseline, not asserted against a table.
+Why one user per file: the server keeps a lot of state **per user** - the open-documents workspace
+(every open/close is fanned out to all of that user's sessions), filters, sort, the selected row, the
+column layout, the last-open page. Two files driving the same user at the same time close each
+other's documents and change each other's screenshots.
 
-`playwright.config.js` turns each into a **Playwright project** with its own `storageState`. A spec is
-therefore run once per user, and `snapshotPathTemplate` writes baselines to
-`tests/__screenshots__/<user>/<spec>/<name>-<platform>.png`. A spec that cannot be driven as the
-current user skips on a runtime probe - `page.isAvailable()` (is it in the menu) or
-`page.commands.isAvailable(id)` (is the button clickable) - so no test needs to know which permission
-is behind either. Permission codes in `fixtures/users.js` exist only to SEED each fixture role; the
-same role sets were validated in `Tests/ProLifeApiPostman` folder "08 Multi-role Scenario".
+Every seeded user holds the **same full ProLife permission set** (`FULL_ACCESS` in `fixtures/users.js`).
+There is no per-user permission matrix: a missing permission makes tests skip green instead of fail,
+and permission gating is the server's business. Where a flow is not offered, a test still asks the
+running client - `page.isAvailable()` (is it in the menu) or `page.commands.isAvailable(id)` (is the
+button clickable) - and skips.
 
-To compare users **inside one spec body** instead, use `forEachUser(users, fn)` from `fixtures/test.js`.
+Baselines land in `tests/__screenshots__/<user>/<name>-<platform>.png`; since a user runs one file, that
+is one folder per page.
+
+The users are **baked into `puma.backup`** (see [Regenerating `puma.backup`](#regenerating-pumabackup-generate-backupsps1)),
+which holds `su` and these users and nobody else. `global-setup.js` only logs them in. Adding a spec
+file therefore means adding a user here and regenerating the backup.
 
 ## Writing a test
 
@@ -96,7 +100,7 @@ test('workspace start', async ({ page, gui }) => {
   await ws.reload();
   test.skip(!(await ws.isAvailable()), 'Workspace is not available to this user');
   await ws.open();               // throws if the Workspace button is missing
-  await gui.checkScreenshot(page, 'workspace-start');   // baseline is per-user automatically
+  await gui.checkScreenshot(page, 'workspace-start');   // lands in the spec user's baseline folder
 });
 ```
 
@@ -107,7 +111,7 @@ Page objects hold **actions/locators only**; tests own the `checkScreenshot`/`ex
 Validation is screenshot-based, but the action layer (`lib/actions.js`) throws when a target
 `objectName` is absent/invisible/ambiguous, so a screenshot can never be captured of a state reached
 by a click that silently did nothing (the legacy `fillTextInput` bug). Nothing here asserts who is
-allowed to do what: the server enforces that, and the per-user screenshots record the result.
+allowed to do what: the server enforces that, and the screenshots record the result.
 
 ## Running
 
@@ -120,14 +124,14 @@ reproducing the same restores yourself.
 cd Tests/ProLifeGui
 npm install
 
-# First run on a platform: create baselines for every user
+# First run on a platform: create the baselines
 npx playwright test --update-snapshots
 
 # Normal run
 npx playwright test
 
-# One user only
-npx playwright test --project=accountsViewer
+# One page (= one user)
+npx playwright test --project=devicesCollection
 
 # List the test graph without a running app (parse/plumbing check)
 npx playwright test --list
@@ -158,7 +162,7 @@ exports, re-copy them (or Generate-Backups.ps1's output, for puma.backup) if the
 
 1. `PumaServerPgTest.exe` (database `puma_test`, HTTP port `17788`) — restored from **`puma.backup`
    right here in this folder**, not the plain one `ProLifeApiPostman` uses. It's a derived backup: the
-   real ~725-user Puma export plus the 8 `fixtures/users.js` roles/users baked in on top (see
+   real Puma export stripped down to `su` plus the `fixtures/users.js` roles/users - nobody else (see
    `Generate-Backups.ps1` below). This is what lets `global-setup.js` just log in instead of creating
    anything at run time.
 2. `LisaServerTest.exe` (database `lisa_test`, HTTP port `17776`) — restored from **`lisa.backup`
@@ -178,24 +182,24 @@ exports, re-copy them (or Generate-Backups.ps1's output, for puma.backup) if the
 test` runs with `CI=true`, `PROLIFE_BASE_URL` pointed at the just-started `ProLifeServerTest.exe`, and
 the ImtCore testkit writing `test-output/<phase>/{artifacts,junit.xml}`. The output root is cleared
 before phase 1. It invokes `npx playwright
-test` **twice**: a read-only phase at the config's `workers` (10), then an `@mutating` phase at
+test` **twice**: a read-only phase at the config's `workers`, then an `@mutating` phase at
 `--workers=1`. The split exists because all three servers are one shared instance over one database -
 mutations must not run against a collection another worker is screenshotting, and early attempts at
-full parallelism produced real `"Authorization server connection error"` failures under load. The
-serial phase is therefore the expensive one, which is what `MUTATING_USER_KEYS` in
-`playwright.config.js` is there to bound. Teardown stops all three servers in reverse order. Puma/Lisa checkouts are located via the `PUMADIR`/`LISADIR` environment variables (falling back
+full parallelism produced real `"Authorization server connection error"` failures under load. Teardown stops all three servers in reverse order. Puma/Lisa checkouts are located via the `PUMADIR`/`LISADIR` environment variables (falling back
 to `Puma`/`Lisa` siblings of the ProLife checkout) — pass `-PumaRepoRoot`/`-LisaRepoRoot` explicitly if
 your agent lays checkouts out differently.
 
 ### Regenerating `puma.backup` (`Generate-Backups.ps1`)
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File Generate-Backups.ps1
+powershell -ExecutionPolicy Bypass -File Generate-Backups.ps1 -RepoRoot <ProLife checkout>
 ```
 
 Re-run this whenever `fixtures/users.js` changes (new fixture user, renamed permission set, different
 password, ...) to keep `puma.backup` in sync. It restores the plain `puma`/`lisa`/`prolife` backups from
-`Tests\ProLifeApiPostman`, boots all three servers, bootstraps `su`, runs `scripts/seed-fixture-users.js`
+`Tests\ProLifeApiPostman`, removes every Puma user except `su` (together with the roles earlier fixture
+sets left behind, their sessions, and the customer groups' member lists), boots all three servers,
+bootstraps `su`, runs `scripts/seed-fixture-users.js`
 (the exact same `fixtures/seed.js` logic `global-setup.js` used to call directly, before it was baked
 into the backup) against the live server, then `pg_dump`s `puma_test` back out to
 `Tests\ProLifeGui\puma.backup`. Only `puma_test` needs a ProLifeGui-specific derived backup:
@@ -211,11 +215,11 @@ collection and the multi-tab editor:
 
 - `pages/DeviceCollectionPage.js` — commands (New/Edit/Remove/Revision/Bind/CreateLicenseFile/
   TransferLicenses/ResetTransferCounter/DecryptFile/Support), all registered filters, sorting,
-  pagination, row selection; `tests/devices.collection.multiuser.test.js`.
+  pagination, row selection; `tests/devices.collection.test.js`.
 - `pages/DeviceEditorPage.js` — every field (Device Type, Hardware Configuration, Article,
   Description, Serial Number, MAC Address, Order-ID, Production Status, Project, Internal Use),
   MAC validation, the Finished-status confirm dialog, group collapse/expand, Undo/Redo/Save,
-  "save first" gating, close-dirty confirm; `tests/devices.editor.multiuser.test.js`. The header
+  "save first" gating, close-dirty confirm; `tests/devices.editor.test.js`. The header
   comment documents the Document Service flow (New/Edit → GetDeviceRepresentation →
   edit → UpdateDeviceFromRepresentation on Save).
 
@@ -246,9 +250,9 @@ Filters, command-bar commands and table columns were **already** instrumented up
 | Workspace | tabs, filters, collection cards | already instrumented |
 | Hardware (Devices) | full collection + editor (commands, filters, sort, pagination, every field, dialogs) | `DeviceEditor` objectNames |
 | Software / Orders / Accounts | full collection + editor | editor field objectNames |
-| **Administration** | navigate + `AdministrationView` visible + per-user screenshot | root objectName only |
-| **Organizations (Tenants)** | navigate + per-user screenshot | menu button only |
-| **Search** | navigate + per-user screenshot | menu button only |
+| **Administration** | navigate + `AdministrationView` visible + screenshot | root objectName only |
+| **Organizations (Tenants)** | navigate + screenshot | menu button only |
+| **Search** | navigate + screenshot | menu button only |
 | **Guest / login** | login form shown, invalid login rejected, superuser sign-in reaches the menu | `LoginInput`/`PasswordInput`/`LoginButton` |
 
 Administration / Organizations / Search are covered at the **navigation + screenshot** level because
