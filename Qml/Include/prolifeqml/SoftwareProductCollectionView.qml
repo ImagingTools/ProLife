@@ -17,7 +17,8 @@ RemoteCollectionView {
 	documentCollectionFilter: null
 	additionalFieldIds: [
 		SoftwareProductItemTypeMetaInfo.s_inUse,
-		SoftwareProductItemTypeMetaInfo.s_productUuid
+		SoftwareProductItemTypeMetaInfo.s_productUuid,
+		SoftwareProductItemTypeMetaInfo.s_isPaired
 	]
 	
 	commandsDelegateComp: Component {SoftwareProductsCollectionViewCommandsDelegate {
