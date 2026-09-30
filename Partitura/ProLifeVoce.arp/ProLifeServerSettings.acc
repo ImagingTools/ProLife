@@ -187,16 +187,7 @@
                     <AttributeInfo Id="LisaHttpPort" Type="Integer" ExportId="LisaHttpPort">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="LisaWebSocketPort" Type="Integer" ExportId="LisaWebSocketPort">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="PumaHttpPort" Type="Integer" ExportId="PumaHttpPort">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PumaWebSocketPort" Type="Integer" ExportId="PumaWebSocketPort">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="WebSocketPort" Type="Integer" ExportId="WebSocketPort">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
@@ -422,9 +413,6 @@
                                 <AttributeInfo Id="DefaultHttpPort" Type="Integer" ExportId="LisaHttpPort">
                                     <Data IsEnabled="true" Value="7776"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="DefaultWebSocketPort" Type="Integer" ExportId="LisaWebSocketPort">
-                                    <Data IsEnabled="true" Value="8776"/>
-                                </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
                     </Element>
@@ -436,9 +424,6 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="DefaultHttpPort" Type="Integer" ExportId="PumaHttpPort">
                                     <Data IsEnabled="true" Value="7788"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DefaultWebSocketPort" Type="Integer" ExportId="PumaWebSocketPort">
-                                    <Data IsEnabled="true" Value="8788"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -479,9 +464,6 @@
                                 <AttributeInfo Id="DefaultHttpPort" Type="Integer" ExportId="HttpPort">
                                     <Data IsEnabled="true" Value="7778"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="DefaultWebSocketPort" Type="Integer" ExportId="WebSocketPort">
-                                    <Data IsEnabled="true" Value="8778"/>
-                                </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
                     </Element>
@@ -493,12 +475,6 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="DefaultPumaHttpPort" Type="Integer" ExportId="">
                                     <Data IsEnabled="true" Value="7788"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DefaultPumaWebSocketPort" Type="Integer" ExportId="">
-                                    <Data IsEnabled="true" Value="8788"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DefaultWebSocketPort" Type="Integer" ExportId="">
-                                    <Data IsEnabled="true" Value="8778"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -517,7 +493,6 @@
                     <Component ExportedId="LisaConnectionInterface" ComponentId="LisaConnectionInterface"/>
                     <Component ExportedId="PumaConnectionInterface" ComponentId="PumaConnectionInterface"/>
                     <Component ExportedId="PumaUrl" ComponentId="ServerConnectionParams/PumaUrl"/>
-                    <Component ExportedId="PumaWebSocketPort" ComponentId="ServerConnectionParams/PumaWebSocketPort"/>
                     <Component ExportedId="ServerConnectionInterface" ComponentId="ServerConnectionInterface"/>
                     <Component ExportedId="ServerPort" ComponentId="ServerConnectionParams/ServerPort"/>
                     <Component ExportedId="WebSocketServerPort" ComponentId="ServerConnectionParams/WebSocketServerPort"/>
