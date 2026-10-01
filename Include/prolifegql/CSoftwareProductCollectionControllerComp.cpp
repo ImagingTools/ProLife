@@ -31,7 +31,8 @@ sdl::V1_0::imtbase::CVisualStatus CSoftwareProductCollectionControllerComp::OnGe
 	const ::imtgql::CGqlRequest& gqlRequest,
 	QString& errorMessage) const
 {
-	if (!m_objectCollectionCompPtr.IsValid()){
+	imtbase::IObjectCollection* collectionPtr = GetRequestCollection(gqlRequest);
+	if (collectionPtr == nullptr){
 		Q_ASSERT_X(false, "Attribute 'ObjectCollection' was not set", "CSoftwareProductCollectionControllerComp");
 		return sdl::V1_0::imtbase::CVisualStatus();
 	}
@@ -42,7 +43,7 @@ sdl::V1_0::imtbase::CVisualStatus CSoftwareProductCollectionControllerComp::OnGe
 	}
 	
 	imtbase::IObjectCollection::DataPtr dataPtr;
-	if (m_objectCollectionCompPtr->GetObjectData(*response.objectId, dataPtr)){
+	if (collectionPtr->GetObjectData(*response.objectId, dataPtr)){
 		prolifedata::COrderedIdentifiableSoftwareInstanceInfo* softwareInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(dataPtr.GetPtr());
 		if (softwareInfoPtr != nullptr){
 			QByteArray productId = softwareInfoPtr->GetProductId();
@@ -77,6 +78,8 @@ bool CSoftwareProductCollectionControllerComp::OnBeforeRemoveElements(
 			const imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
+	imtbase::IObjectCollection* collectionPtr = GetRequestCollection(gqlRequest);
+
 	const imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
 	if (gqlContextPtr == nullptr) {
 		errorMessage = QString("Unable to remove software elements. Error: request context is missing");
@@ -92,7 +95,7 @@ bool CSoftwareProductCollectionControllerComp::OnBeforeRemoveElements(
 	bool isAdmin = userInfoPtr->IsAdmin();
 	if (!isAdmin){
 		for (const QByteArray& objectId : elementIds){
-			idoc::MetaInfoPtr metaInfo = m_objectCollectionCompPtr->GetDataMetaInfo(objectId);
+			idoc::MetaInfoPtr metaInfo = collectionPtr->GetDataMetaInfo(objectId);
 			if (metaInfo.IsValid()){
 				bool inUse = metaInfo->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_IN_USE).toBool();
 				if (inUse){
@@ -160,6 +163,8 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	sdl::V1_0::prolife::CSoftwareProductItem& representationObject,
 	QString& errorMessage) const
 {
+	imtbase::IObjectCollection* collectionPtr = GetContextCollection(softwareProductsListRequest.GetRequestContext());
+
 	sdl::V1_0::prolife::SoftwareProductsListRequestInfo requestInfo = softwareProductsListRequest.GetRequestInfo();
 	
 	QByteArray objectId = objectCollectionIterator.GetObjectId();
@@ -192,7 +197,7 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	}
 	
 	if (requestInfo.items.isTypeIdRequested){
-		QByteArray collectionObjectId = m_objectCollectionCompPtr->GetObjectTypeId(objectId);
+		QByteArray collectionObjectId = collectionPtr->GetObjectTypeId(objectId);
 		representationObject.typeId = (collectionObjectId);
 	}
 	
@@ -417,7 +422,8 @@ istd::IChangeableUniquePtr CSoftwareProductCollectionControllerComp::CreateObjec
 	
 	softwareInfoPtr->SetObjectUuid(newObjectId);
 	
-	if (!FillObjectFromRepresentation(softwareProductDataRepresentation, *softwareInfoPtr, newObjectId, errorMessage)){
+	// the creation hook carries no request: uniqueness is checked against the collection without organization
+	if (!FillObjectFromRepresentation(m_objectCollectionCompPtr.GetPtr(), softwareProductDataRepresentation, *softwareInfoPtr, newObjectId, errorMessage)){
 		errorMessage = QString("Unable to create software. Error: '%1'").arg(errorMessage);
 		
 		return nullptr;
@@ -473,6 +479,8 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	sdl::V1_0::prolife::CSoftwareProductData& representationPayload,
 	QString& errorMessage) const
 {
+	imtbase::IObjectCollection* collectionPtr = GetContextCollection(softwareProductItemRequest.GetRequestContext());
+
 	const prolifedata::COrderedIdentifiableSoftwareInstanceInfo* softwareInfoPtr = dynamic_cast<const prolifedata::COrderedIdentifiableSoftwareInstanceInfo*>(&data);
 	if (softwareInfoPtr == nullptr){
 		errorMessage = QString("Unable to create representation from object. Error: Object is invalid");
@@ -536,7 +544,7 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	representationPayload.hasParent = !parentInstanceId.isEmpty();
 
 	// Check if this license has children
-	if (m_objectCollectionCompPtr.IsValid()){
+	if (collectionPtr != nullptr){
 		imtbase::IComplexCollectionFilter::FieldFilter childFilter;
 		childFilter.fieldId = "ParentInstanceId";
 		childFilter.filterValue = id;
@@ -547,7 +555,7 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		iprm::CParamsSet childFilterParam;
 		childFilterParam.SetEditableParameter("ComplexFilter", &childComplexFilter);
 
-		int childCount = m_objectCollectionCompPtr->GetElementsCount(&childFilterParam);
+		int childCount = collectionPtr->GetElementsCount(&childFilterParam);
 		representationPayload.hasChildren = (childCount > 0);
 	}
 	else {
@@ -559,7 +567,7 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 		QString treeError;
 		sdl::V1_0::prolife::CLicenseTreeNode rootNode = prolifedata::BuildLicenseTreeFromActions(
 			id,
-			*m_objectCollectionCompPtr.GetPtr(),
+			*collectionPtr,
 			*m_userActionManagerCompPtr.GetPtr(),
 			treeError,
 			true);
@@ -579,12 +587,13 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 // private methods
 
 bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
+	const imtbase::IObjectCollection* collectionPtr,
 	const sdl::V1_0::prolife::CSoftwareProductData& representation,
 	istd::IChangeable& object,
 	QByteArray& objectId,
 	QString& errorMessage) const
 {
-	if (!m_objectCollectionCompPtr.IsValid()){
+	if (collectionPtr == nullptr){
 		Q_ASSERT_X(false, "Attribute 'ObjectCollection' was not set", "CSoftwareProductCollectionControllerComp");
 		return false;
 	}
@@ -615,7 +624,7 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 	}
 	
 	if (!serialNumber.isEmpty()){
-		bool ok = prolifedata::CheckSoftwareSerialNumberExists(objectId, serialNumber, *m_objectCollectionCompPtr);
+		bool ok = prolifedata::CheckSoftwareSerialNumberExists(objectId, serialNumber, *collectionPtr);
 		if (!ok){
 			errorMessage = QString("Serial Number '%1' already exists").arg(serialNumber);
 			SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
@@ -717,7 +726,7 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 	QByteArray parentInstanceId = softwareInfoPtr->GetParentInstanceId();
 	hasParent = !parentInstanceId.isEmpty();
 
-	if (m_objectCollectionCompPtr.IsValid()){
+	if (collectionPtr != nullptr){
 		imtbase::IComplexCollectionFilter::FieldFilter childFilter;
 		childFilter.fieldId = "ParentInstanceId";
 		childFilter.filterValue = objectId;
@@ -728,7 +737,7 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 		iprm::CParamsSet childFilterParam;
 		childFilterParam.SetEditableParameter("ComplexFilter", &childComplexFilter);
 
-		int childCount = m_objectCollectionCompPtr->GetElementsCount(&childFilterParam);
+		int childCount = collectionPtr->GetElementsCount(&childFilterParam);
 		hasChildren = (childCount > 0);
 	}
 
@@ -784,12 +793,13 @@ void CSoftwareProductCollectionControllerComp::OnComponentCreated()
 
 
 bool CSoftwareProductCollectionControllerComp::UpdateObjectFromRepresentationRequest(
-	const imtgql::CGqlRequest& /*rawGqlRequest*/,
+	const imtgql::CGqlRequest& rawGqlRequest,
 	const sdl::V1_0::prolife::CSoftwareProductUpdateGqlRequest& softwareProductUpdateRequest,
 	istd::IChangeable& object,
 	QString& errorMessage) const
 {
-	if (!m_objectCollectionCompPtr.IsValid()){
+	imtbase::IObjectCollection* collectionPtr = GetRequestCollection(rawGqlRequest);
+	if (collectionPtr == nullptr){
 		Q_ASSERT_X(false, "Attribute 'ObjectCollection' was not set", "CSoftwareProductCollectionControllerComp");
 		return false;
 	}
@@ -825,7 +835,7 @@ bool CSoftwareProductCollectionControllerComp::UpdateObjectFromRepresentationReq
 	// ResetData clear UUID 
 	softwareInfoPtr->SetObjectUuid(objectId);
 	
-	if (!FillObjectFromRepresentation(softwareData, object, objectId, errorMessage)){
+	if (!FillObjectFromRepresentation(collectionPtr, softwareData, object, objectId, errorMessage)){
 		errorMessage = QString("Unable to update software. Error: '%1'").arg(errorMessage);
 		return false;
 	}

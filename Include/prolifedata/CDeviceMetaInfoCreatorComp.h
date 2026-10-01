@@ -29,6 +29,7 @@ public:
 protected:
 	// reimplemented (imtbase::IMetaInfoCreator)
 	virtual bool CreateMetaInfo(const istd::IChangeable* dataPtr, const QByteArray& typeId, idoc::MetaInfoPtr& metaInfoPtr) const override;
+	virtual bool CreateMetaInfoInOperation(const istd::IChangeable* dataPtr, const QByteArray& typeId, idoc::MetaInfoPtr& metaInfoPtr, const imtbase::IOperationContext* operationContextPtr) const override;
 
 private:
 	class MetaInfo: public idoc::CStandardDocumentMetaInfo

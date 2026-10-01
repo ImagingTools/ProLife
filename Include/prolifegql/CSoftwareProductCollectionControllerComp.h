@@ -69,6 +69,7 @@ protected:
 
 private:
 	bool FillObjectFromRepresentation(
+				const imtbase::IObjectCollection* collectionPtr,
 				const sdl::V1_0::prolife::CSoftwareProductData& representation,
 				istd::IChangeable& object,
 				QByteArray& objectId,

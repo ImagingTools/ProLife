@@ -23,7 +23,8 @@ void CCustomerCollectionControllerComp::OnAfterSetObjectDescription(
 			const QString& description,
 			const imtgql::CGqlRequest& gqlRequest) const
 {
-	if (!m_objectCollectionCompPtr.IsValid()){
+	imtbase::IObjectCollection* collectionPtr = GetRequestCollection(gqlRequest);
+	if (collectionPtr == nullptr){
 		Q_ASSERT(false);
 		return;
 	}
@@ -31,7 +32,7 @@ void CCustomerCollectionControllerComp::OnAfterSetObjectDescription(
 	// The description is mirrored into the document body, so this update needs its own operation context,
 	// otherwise the resulting revision would show up in the history without initiator and description.
 	imtbase::IObjectCollection::DataPtr dataPtr;
-	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
+	if (collectionPtr->GetObjectData(objectId, dataPtr)){
 		prolifedata::ICustomerInfo* customerInfoPtr = dynamic_cast<prolifedata::ICustomerInfo*>(dataPtr.GetPtr());
 		if (customerInfoPtr != nullptr){
 			customerInfoPtr->SetDescription(description);
@@ -41,7 +42,7 @@ void CCustomerCollectionControllerComp::OnAfterSetObjectDescription(
 				operationContextPtr = m_operationContextControllerCompPtr->CreateOperationContext("Update", objectId, dataPtr.GetPtr());
 			}
 
-			if (!m_objectCollectionCompPtr->SetObjectData(objectId, *customerInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
+			if (!collectionPtr->SetObjectData(objectId, *customerInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
 				SendWarningMessage(0, QString("Unable to set description for object '%1'. Error: Set object data failed").arg(QString::fromUtf8(objectId)));
 			}
 		}
@@ -94,7 +95,8 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 			sdl::V1_0::prolife::CAccountItem& representationObject,
 			QString& errorMessage) const
 {
-	if (!m_objectCollectionCompPtr.IsValid()){
+	imtbase::IObjectCollection* collectionPtr = GetContextCollection(accountsListRequest.GetRequestContext());
+	if (collectionPtr == nullptr){
 		errorMessage = QString("Unable to create representation from object. Error: Attribute 'm_objectCollectionCompPtr' was not set");
 		SendErrorMessage(0, errorMessage, "CCustomerCollectionControllerComp");
 
@@ -123,7 +125,7 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isTypeIdRequested){
-		QByteArray collectionObjectId = m_objectCollectionCompPtr->GetObjectTypeId(objectId);
+		QByteArray collectionObjectId = collectionPtr->GetObjectTypeId(objectId);
 		representationObject.typeId = (collectionObjectId);
 	}
 
@@ -191,7 +193,8 @@ istd::IChangeableUniquePtr CCustomerCollectionControllerComp::CreateObjectFromRe
 		return nullptr;
 	}
 
-	if (!FillObjectFromRepresentation(accountDataRepresentation, *customerInfoPtr, newObjectId, errorMessage)){
+	// the creation hook carries no request: uniqueness is checked against the collection without organization
+	if (!FillObjectFromRepresentation(m_objectCollectionCompPtr.GetPtr(), accountDataRepresentation, *customerInfoPtr, newObjectId, errorMessage)){
 		errorMessage = QString("Unable to create customer. Error: '%1'").arg(errorMessage);
 		return nullptr;
 	}
@@ -290,11 +293,13 @@ void CCustomerCollectionControllerComp::SetAdditionalFilters(
 
 
 bool CCustomerCollectionControllerComp::UpdateObjectFromRepresentationRequest(
-			const imtgql::CGqlRequest& /*rawGqlRequest*/,
+			const imtgql::CGqlRequest& rawGqlRequest,
 			const sdl::V1_0::prolife::CAccountUpdateGqlRequest& accountUpdateRequest,
 			istd::IChangeable& object,
 			QString& errorMessage) const
 {
+	imtbase::IObjectCollection* collectionPtr = GetRequestCollection(rawGqlRequest);
+
 	sdl::V1_0::prolife::AccountUpdateRequestArguments requestArguments = accountUpdateRequest.GetRequestedArguments();
 	if (!requestArguments.input){
 		I_CRITICAL();
@@ -323,7 +328,7 @@ bool CCustomerCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 
 	customerInfoPtr->ResetData();
 
-	if (!FillObjectFromRepresentation(accountData, object, objectId, errorMessage)){
+	if (!FillObjectFromRepresentation(collectionPtr, accountData, object, objectId, errorMessage)){
 		errorMessage = QString("Unable to update customer. Error: '%1'").arg(errorMessage);
 		return false;
 	}
@@ -335,6 +340,7 @@ bool CCustomerCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 // private methods
 
 bool CCustomerCollectionControllerComp::FillObjectFromRepresentation(
+			const imtbase::IObjectCollection* collectionPtr,
 			const sdl::V1_0::prolife::CAccountData& accountDataRepresentation,
 			istd::IChangeable& object,
 			QByteArray& objectId,
@@ -368,12 +374,12 @@ bool CCustomerCollectionControllerComp::FillObjectFromRepresentation(
 	
 	istd::TDelPtr<const iprm::IParamsSet> filterParamPtr = CreateComplexFilter("Name", accountName.toUtf8());
 	if (filterParamPtr.IsValid()){
-		imtbase::ICollectionInfo::Ids collectionIds = m_objectCollectionCompPtr->GetElementIds(0, -1, filterParamPtr.GetPtr());
+		imtbase::ICollectionInfo::Ids collectionIds = collectionPtr->GetElementIds(0, -1, filterParamPtr.GetPtr());
 		if (!collectionIds.isEmpty()){
 			QByteArray collectionId = collectionIds[0];
 			if (objectId != collectionId){
 				imtbase::IObjectCollection::DataPtr dataPtr;
-				if (m_objectCollectionCompPtr->GetObjectData(collectionId, dataPtr)){
+				if (collectionPtr->GetObjectData(collectionId, dataPtr)){
 					const prolifedata::CCustomerInfo* foundCustomerInfoPtr = dynamic_cast<const prolifedata::CCustomerInfo*>(dataPtr.GetPtr());
 					if (foundCustomerInfoPtr != nullptr){
 						QString foundCustomerName = foundCustomerInfoPtr->GetName();
@@ -415,12 +421,12 @@ bool CCustomerCollectionControllerComp::FillObjectFromRepresentation(
 		if (!accountCustomerId.isEmpty()){
 			istd::TDelPtr<const iprm::IParamsSet> customerIdFilterParamPtr = CreateComplexFilter("CustomerId", accountCustomerId);
 			if (customerIdFilterParamPtr.IsValid()){
-				imtbase::ICollectionInfo::Ids collectionIds = m_objectCollectionCompPtr->GetElementIds(0, -1, customerIdFilterParamPtr.GetPtr());
+				imtbase::ICollectionInfo::Ids collectionIds = collectionPtr->GetElementIds(0, -1, customerIdFilterParamPtr.GetPtr());
 				if (!collectionIds.isEmpty()){
 					QByteArray collectionId = collectionIds[0];
 					if (objectId != collectionId){
 						imtbase::IObjectCollection::DataPtr dataPtr;
-						if (m_objectCollectionCompPtr->GetObjectData(collectionId, dataPtr)){
+						if (collectionPtr->GetObjectData(collectionId, dataPtr)){
 							const prolifedata::CCustomerInfo* foundCustomerInfoPtr = dynamic_cast<const prolifedata::CCustomerInfo*>(dataPtr.GetPtr());
 							if (foundCustomerInfoPtr != nullptr){
 								QByteArray foundCustomerId = foundCustomerInfoPtr->GetCustomerId();

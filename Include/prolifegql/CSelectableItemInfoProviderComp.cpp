@@ -9,6 +9,7 @@
 #include <iprm/CTextParam.h>
 
 // ImtCore includes
+#include <imtbase/ITenantCollectionProvider.h>
 #include <imtlic/IProductInstanceInfo.h>
 
 // ProLife includes
@@ -24,7 +25,7 @@ namespace prolifegql
 bool CSelectableItemInfoProviderComp::FillParams(
 	const QByteArray& objectId,
 	iprm::IParamsSet& paramsSet,
-	const QByteArray& /*contextTenantId*/) const
+	const QByteArray& contextTenantId) const
 {
 	iprm::CParamsSet* paramsSetPtr = dynamic_cast<iprm::CParamsSet*>(&paramsSet);
 	if (paramsSetPtr == nullptr){
@@ -42,7 +43,7 @@ bool CSelectableItemInfoProviderComp::FillParams(
 
 	// The identifiers live on the object meta info; GetElementMetaInfo() answers with
 	// the collection meta info, which does not carry them.
-	idoc::MetaInfoPtr metaInfoPtr = m_objectCollectionCompPtr->GetDataMetaInfo(objectId);
+	idoc::MetaInfoPtr metaInfoPtr = imtbase::GetTenantDataCollection(m_objectCollectionCompPtr.GetPtr(), contextTenantId)->GetDataMetaInfo(objectId);
 	if (!metaInfoPtr.IsValid()){
 		return false;
 	}

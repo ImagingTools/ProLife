@@ -61,6 +61,7 @@ protected:
 
 private:
 	bool FillObjectFromRepresentation(
+				const imtbase::IObjectCollection* collectionPtr,
 				const sdl::V1_0::prolife::CAccountData& representation,
 				istd::IChangeable& object,
 				QByteArray& objectId,

@@ -10,6 +10,7 @@
 #include <iprm/CIdParam.h>
 
 // ImtCore includes
+#include <imtbase/ITenantCollectionProvider.h>
 #include <imtbase/CComplexCollectionFilter.h>
 #include <imtlic/CProductInstanceInfo.h>
 #include <imtlic/IProductInfo.h>
@@ -35,6 +36,16 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 			const QByteArray& typeId,
 			idoc::MetaInfoPtr& metaInfoPtr) const
 {
+	return CreateMetaInfoInOperation(dataPtr, typeId, metaInfoPtr, nullptr);
+}
+
+
+bool CSoftwareMetaInfoCreatorComp::CreateMetaInfoInOperation(
+			const istd::IChangeable* dataPtr,
+			const QByteArray& typeId,
+			idoc::MetaInfoPtr& metaInfoPtr,
+			const imtbase::IOperationContext* operationContextPtr) const
+{
 	if (m_objectTypeIdsAttrPtr.FindValue(typeId) == -1){
 		return false;
 	}
@@ -59,7 +70,7 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 	
 	if (m_orderCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr orderDataPtr;
-		if (m_orderCollectionCompPtr->GetObjectData(orderId, orderDataPtr)){
+		if (imtbase::GetOperationCollection(m_orderCollectionCompPtr.GetPtr(), operationContextPtr)->GetObjectData(orderId, orderDataPtr)){
 			const IOrderInfo* orderInfoPtr = dynamic_cast<const IOrderInfo*>(orderDataPtr.GetPtr());
 			if (orderInfoPtr != nullptr){
 				QByteArray deliveryId = orderInfoPtr->GetOrderId();
@@ -77,7 +88,7 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 	
 	if (m_accountCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr customerDataPtr;
-		if (m_accountCollectionCompPtr->GetObjectData(customerId, customerDataPtr)){
+		if (imtbase::GetOperationCollection(m_accountCollectionCompPtr.GetPtr(), operationContextPtr)->GetObjectData(customerId, customerDataPtr)){
 			const ICustomerInfo* customerInfoPtr = dynamic_cast<const ICustomerInfo*>(customerDataPtr.GetPtr());
 			if (customerInfoPtr != nullptr){
 				QString customerName = customerInfoPtr->GetName();
@@ -92,7 +103,7 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 	
 	if (m_productCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr productDataPtr;
-		if (m_productCollectionCompPtr->GetObjectData(productId, productDataPtr)){
+		if (imtbase::GetOperationCollection(m_productCollectionCompPtr.GetPtr(), operationContextPtr)->GetObjectData(productId, productDataPtr)){
 			const imtlic::IProductInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInfo*>(productDataPtr.GetPtr());
 			if (productInfoPtr != nullptr){
 				QByteArray id = productInfoPtr->GetProductId();
@@ -111,7 +122,7 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 		
 		if (m_licenseCollectionCompPtr.IsValid()){
 			imtbase::IObjectCollection::DataPtr licenseDataPtr;
-			if (m_licenseCollectionCompPtr->GetObjectData(licenseId, licenseDataPtr)){
+			if (imtbase::GetOperationCollection(m_licenseCollectionCompPtr.GetPtr(), operationContextPtr)->GetObjectData(licenseId, licenseDataPtr)){
 				const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<const imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
 				if (licenseInfoPtr != nullptr){
 					
@@ -140,7 +151,7 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 		iprm::CParamsSet filterParam;
 		filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
 
-		QByteArrayList ids = m_hardwareBindingCollectionCompPtr->GetElementIds(0, -1, &filterParam);
+		QByteArrayList ids = imtbase::GetOperationCollection(m_hardwareBindingCollectionCompPtr.GetPtr(), operationContextPtr)->GetElementIds(0, -1, &filterParam);
 
 		metaInfoPtr->SetMetaInfo(imtlic::IProductInstanceInfo::MIT_IS_PAIRED, !ids.isEmpty());
 
@@ -154,7 +165,7 @@ bool CSoftwareMetaInfoCreatorComp::CreateMetaInfo(
 		if (ids.size() == 1){
 			QByteArray hardwareId = ids[0];
 			imtbase::IObjectCollection::DataPtr hardwareDataPtr;
-			if (m_deviceCollectionCompPtr->GetObjectData(hardwareId, hardwareDataPtr)){
+			if (imtbase::GetOperationCollection(m_deviceCollectionCompPtr.GetPtr(), operationContextPtr)->GetObjectData(hardwareId, hardwareDataPtr)){
 				const IDeviceInfo* deviceInfoPtr = dynamic_cast<const IDeviceInfo*>(hardwareDataPtr.GetPtr());
 				if (deviceInfoPtr != nullptr){
 					QByteArray macAddress = deviceInfoPtr->GetMacAddress();

@@ -4,6 +4,9 @@
 // ACF includes
 #include <imod/TModelWrap.h>
 
+// ImtCore includes
+#include <imtbase/ITenantCollectionProvider.h>
+
 // ProLife includes
 #include <prolifedata/IOrderInfo.h>
 #include <prolifedata/ICustomerInfo.h>
@@ -23,6 +26,16 @@ bool COrderMetaInfoCreatorComp::CreateMetaInfo(
 			const istd::IChangeable* dataPtr,
 			const QByteArray& typeId,
 			idoc::MetaInfoPtr& metaInfoPtr) const
+{
+	return CreateMetaInfoInOperation(dataPtr, typeId, metaInfoPtr, nullptr);
+}
+
+
+bool COrderMetaInfoCreatorComp::CreateMetaInfoInOperation(
+			const istd::IChangeable* dataPtr,
+			const QByteArray& typeId,
+			idoc::MetaInfoPtr& metaInfoPtr,
+			const imtbase::IOperationContext* operationContextPtr) const
 {
 	if (m_objectTypeIdsAttrPtr.FindValue(typeId) == -1){
 		return false;
@@ -44,7 +57,7 @@ bool COrderMetaInfoCreatorComp::CreateMetaInfo(
 	
 	if (m_accountCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr customerDataPtr;
-		if (m_accountCollectionCompPtr->GetObjectData(customerId, customerDataPtr)){
+		if (imtbase::GetOperationCollection(m_accountCollectionCompPtr.GetPtr(), operationContextPtr)->GetObjectData(customerId, customerDataPtr)){
 			const ICustomerInfo* customerInfoPtr = dynamic_cast<const ICustomerInfo*>(customerDataPtr.GetPtr());
 			if (customerInfoPtr != nullptr){
 				
@@ -100,7 +113,7 @@ bool COrderMetaInfoCreatorComp::CreateMetaInfo(
 					metaInfoPtr->SetMetaInfo(idKey, roleCustomerId);
 
 					imtbase::IObjectCollection::DataPtr roleAccountDataPtr;
-					if (m_accountCollectionCompPtr->GetObjectData(roleCustomerId, roleAccountDataPtr)){
+					if (imtbase::GetOperationCollection(m_accountCollectionCompPtr.GetPtr(), operationContextPtr)->GetObjectData(roleCustomerId, roleAccountDataPtr)){
 						const ICustomerInfo* roleCustomerInfoPtr = dynamic_cast<const ICustomerInfo*>(roleAccountDataPtr.GetPtr());
 						if (roleCustomerInfoPtr != nullptr){
 							metaInfoPtr->SetMetaInfo(nameKey, roleCustomerInfoPtr->GetName());

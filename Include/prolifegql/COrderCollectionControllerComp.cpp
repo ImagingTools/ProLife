@@ -193,9 +193,10 @@ bool COrderCollectionControllerComp::OnBeforeRemoveElements(
 void COrderCollectionControllerComp::OnAfterSetObjectDescription(
 			const QByteArray& objectId,
 			const QString& description,
-			const imtgql::CGqlRequest& /*gqlRequest*/) const
+			const imtgql::CGqlRequest& gqlRequest) const
 {
-	if (!m_objectCollectionCompPtr.IsValid()){
+	imtbase::IObjectCollection* collectionPtr = GetRequestCollection(gqlRequest);
+	if (collectionPtr == nullptr){
 		Q_ASSERT(false);
 		return;
 	}
@@ -203,7 +204,7 @@ void COrderCollectionControllerComp::OnAfterSetObjectDescription(
 	// The description is mirrored into the document body, so this update needs its own operation context,
 	// otherwise the resulting revision would show up in the history without initiator and description.
 	imtbase::IObjectCollection::DataPtr dataPtr;
-	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
+	if (collectionPtr->GetObjectData(objectId, dataPtr)){
 		prolifedata::IOrderInfo* orderInfoPtr = dynamic_cast<prolifedata::IOrderInfo*>(dataPtr.GetPtr());
 		if (orderInfoPtr != nullptr){
 			orderInfoPtr->SetDescription(description);
@@ -213,7 +214,7 @@ void COrderCollectionControllerComp::OnAfterSetObjectDescription(
 				operationContextPtr = m_operationContextControllerCompPtr->CreateOperationContext("Update", objectId, dataPtr.GetPtr());
 			}
 
-			if (!m_objectCollectionCompPtr->SetObjectData(objectId, *orderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
+			if (!collectionPtr->SetObjectData(objectId, *orderInfoPtr, istd::IChangeable::CM_WITHOUT_REFS, operationContextPtr.GetPtr())){
 				SendWarningMessage(0, QString("Unable to set description for object '%1'. Error: Set object data failed").arg(QString::fromUtf8(objectId)));
 			}
 		}
@@ -235,7 +236,8 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 	sdl::V1_0::prolife::COrderItem& representationObject,
 	QString& errorMessage) const
 {
-	if (!m_objectCollectionCompPtr.IsValid()){
+	imtbase::IObjectCollection* collectionPtr = GetContextCollection(ordersListRequest.GetRequestContext());
+	if (collectionPtr == nullptr){
 		Q_ASSERT_X(false, "Unable to create representation from object. Error: Attribute 'm_objectCollectionCompPtr' was not set", "COrderCollectionControllerComp");
 		return false;
 	}
@@ -264,7 +266,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isTypeIdRequested){
-		QByteArray collectionObjectId = m_objectCollectionCompPtr->GetObjectTypeId(objectId);
+		QByteArray collectionObjectId = collectionPtr->GetObjectTypeId(objectId);
 		representationObject.typeId = (collectionObjectId);
 	}
 
@@ -348,7 +350,8 @@ istd::IChangeableUniquePtr COrderCollectionControllerComp::CreateObjectFromRepre
 		return nullptr;
 	}
 
-	if (!FillObjectFromRepresentation(orderDataRepresentation, *orderInfoPtr, newObjectId, errorMessage)){
+	// the creation hook carries no request: uniqueness is checked against the collection without organization
+	if (!FillObjectFromRepresentation(m_objectCollectionCompPtr.GetPtr(), orderDataRepresentation, *orderInfoPtr, newObjectId, errorMessage)){
 		errorMessage = QString("Unable to create order. Error: '%1'").arg(errorMessage);
 		return nullptr;
 	}
@@ -628,11 +631,13 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 
 
 bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(
-	const imtgql::CGqlRequest& /*rawGqlRequest*/,
+	const imtgql::CGqlRequest& rawGqlRequest,
 	const sdl::V1_0::prolife::COrderUpdateGqlRequest& orderUpdateRequest,
 	istd::IChangeable& object,
 	QString& errorMessage) const
 {
+	imtbase::IObjectCollection* collectionPtr = GetRequestCollection(rawGqlRequest);
+
 	sdl::V1_0::prolife::OrderUpdateRequestArguments inputArguments = orderUpdateRequest.GetRequestedArguments();
 	if (!inputArguments.input){
 		I_CRITICAL();
@@ -664,7 +669,7 @@ bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 	
 	orderInfoPtr->SetObjectUuid(objectId);
 
-	if (!FillObjectFromRepresentation(orderData, object, objectId, errorMessage)){
+	if (!FillObjectFromRepresentation(collectionPtr, orderData, object, objectId, errorMessage)){
 		errorMessage = QString("Unable to update order. Error: '%1'").arg(errorMessage);
 		SendErrorMessage(0, errorMessage, "COrderCollectionControllerComp");
 		return false;
@@ -672,7 +677,7 @@ bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 
 	prolifedata::CIdentifiableOrderInfo* oldOrderInfoPtr = nullptr;
 	imtbase::IObjectCollection::DataPtr dataPtr;
-	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
+	if (collectionPtr->GetObjectData(objectId, dataPtr)){
 		oldOrderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
 	}
 
@@ -788,12 +793,13 @@ imtbase::ICollectionInfo::Ids COrderCollectionControllerComp::GetProductIdsForOr
 
 
 bool COrderCollectionControllerComp::FillObjectFromRepresentation(
+	const imtbase::IObjectCollection* collectionPtr,
 	const sdl::V1_0::prolife::COrderData& orderDataRepresentation,
 	istd::IChangeable& object,
 	QByteArray& objectId,
 	QString& errorMessage) const
 {
-	if (!m_objectCollectionCompPtr.IsValid()){
+	if (collectionPtr == nullptr){
 		Q_ASSERT_X(false, "Error: Attribute 'm_objectCollectionCompPtr' was not set", "COrderCollectionControllerComp");
 		return false;
 	}
@@ -853,12 +859,12 @@ bool COrderCollectionControllerComp::FillObjectFromRepresentation(
 	filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
 
 	// Check Order-ID exists
-	imtbase::ICollectionInfo::Ids collectionIds1 = m_objectCollectionCompPtr->GetElementIds(0, -1, &filterParam);
+	imtbase::ICollectionInfo::Ids collectionIds1 = collectionPtr->GetElementIds(0, -1, &filterParam);
 	if (!collectionIds1.isEmpty()){
 		QByteArray orderObjectId = collectionIds1[0];
 		if (orderUuid != orderObjectId){
 			imtbase::IObjectCollection::DataPtr dataPtr;
-			if (m_objectCollectionCompPtr->GetObjectData(orderObjectId, dataPtr)){
+			if (collectionPtr->GetObjectData(orderObjectId, dataPtr)){
 				prolifedata::CIdentifiableOrderInfo* objectPrderInfoPtr = dynamic_cast<prolifedata::CIdentifiableOrderInfo*>(dataPtr.GetPtr());
 				if (objectPrderInfoPtr != nullptr){
 					QByteArray currentOrderId = objectPrderInfoPtr->GetOrderId().toLower();

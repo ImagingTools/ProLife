@@ -30,7 +30,8 @@ sdl::V1_0::imtbase::CVisualStatus CDeviceCollectionControllerComp::OnGetObjectVi
 			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
-	if (!m_objectCollectionCompPtr.IsValid()){
+	imtbase::IObjectCollection* collectionPtr = GetRequestCollection(gqlRequest);
+	if (collectionPtr == nullptr){
 		Q_ASSERT_X(false, "Attribute 'ObjectCollection' was not set", "CDeviceCollectionControllerComp");
 		return sdl::V1_0::imtbase::CVisualStatus();
 	}
@@ -46,13 +47,13 @@ sdl::V1_0::imtbase::CVisualStatus CDeviceCollectionControllerComp::OnGetObjectVi
 	}
 
 	imtbase::IObjectCollection::DataPtr dataPtr;
-	if (m_objectCollectionCompPtr->GetObjectData(objectId, dataPtr)){
+	if (collectionPtr->GetObjectData(objectId, dataPtr)){
 		prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::IDeviceInfo*>(dataPtr.GetPtr());
 		if (deviceInfoPtr != nullptr){
 			QByteArray deviceType = deviceInfoPtr->GetDeviceType();
 			QByteArray macAddress = deviceInfoPtr->GetMacAddress();
 
-			idoc::MetaInfoPtr metaInfoPtr = m_objectCollectionCompPtr->GetDataMetaInfo(objectId);
+			idoc::MetaInfoPtr metaInfoPtr = collectionPtr->GetDataMetaInfo(objectId);
 			if (metaInfoPtr.IsValid()){
 				QString productName = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PRODUCT_NAME).toString();
 
@@ -405,7 +406,8 @@ istd::IChangeableUniquePtr CDeviceCollectionControllerComp::CreateObjectFromRepr
 
 	deviceInfoPtr->SetObjectUuid(newObjectId);
 
-	if (!FillObjectFromRepresentation(deviceDataRepresentation, *deviceInfoPtr, newObjectId, errorMessage)){
+	// the creation hook carries no request: uniqueness is checked against the collection without organization
+	if (!FillObjectFromRepresentation(m_objectCollectionCompPtr.GetPtr(), deviceDataRepresentation, *deviceInfoPtr, newObjectId, errorMessage)){
 		errorMessage = QString("Unable to create sensor. Error: '%1'").arg(errorMessage);
 
 		return nullptr;
@@ -489,12 +491,13 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 
 
 bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
-			const imtgql::CGqlRequest& /*rawGqlRequest*/,
+			const imtgql::CGqlRequest& rawGqlRequest,
 			const sdl::V1_0::prolife::CDeviceUpdateGqlRequest& deviceUpdateRequest,
 			istd::IChangeable& object,
 			QString& errorMessage) const
 {
-	if (!m_objectCollectionCompPtr.IsValid()){
+	imtbase::IObjectCollection* collectionPtr = GetRequestCollection(rawGqlRequest);
+	if (collectionPtr == nullptr){
 		Q_ASSERT_X(false, "Attribute 'ObjectCollection' was not set", "CDeviceCollectionControllerComp");
 		return false;
 	}
@@ -526,7 +529,7 @@ bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 
 	deviceInfoPtr->SetObjectUuid(objectId);
 
-	if (!FillObjectFromRepresentation(deviceData, *deviceInfoPtr, objectId, errorMessage)){
+	if (!FillObjectFromRepresentation(collectionPtr, deviceData, *deviceInfoPtr, objectId, errorMessage)){
 		errorMessage = QString("Unable to update sensor. Error: '%1'").arg(errorMessage);
 		return false;
 	}
@@ -562,6 +565,7 @@ void CDeviceCollectionControllerComp::OnComponentCreated()
 // private methods
 
 bool CDeviceCollectionControllerComp::FillObjectFromRepresentation(
+			const imtbase::IObjectCollection* collectionPtr,
 			const sdl::V1_0::prolife::CDeviceData& representation,
 			istd::IChangeable& object,
 			QByteArray& objectId,
@@ -581,7 +585,7 @@ bool CDeviceCollectionControllerComp::FillObjectFromRepresentation(
 	}
 
 	if (!macAddress.isEmpty()){
-		bool ok = prolifedata::CheckDeviceMacAddressExists(objectId, macAddress.toUtf8(), *m_objectCollectionCompPtr);
+		bool ok = prolifedata::CheckDeviceMacAddressExists(objectId, macAddress.toUtf8(), *collectionPtr);
 		if (!ok){
 			errorMessage = QString("MAC-Address '%1' already exists").arg(macAddress);
 			SendErrorMessage(0, errorMessage, "CDeviceControllerComp");
@@ -598,7 +602,7 @@ bool CDeviceCollectionControllerComp::FillObjectFromRepresentation(
 	}
 
 	if (!serialNumber.isEmpty()){
-		bool ok = prolifedata::CheckDeviceSerialNumberExists(objectId, serialNumber.toUtf8(), *m_objectCollectionCompPtr);
+		bool ok = prolifedata::CheckDeviceSerialNumberExists(objectId, serialNumber.toUtf8(), *collectionPtr);
 		if (!ok){
 			errorMessage = QT_TR_NOOP(QString("Serial Number '%1' already exists").arg(serialNumber));
 			SendErrorMessage(0, errorMessage, "CDeviceControllerComp");

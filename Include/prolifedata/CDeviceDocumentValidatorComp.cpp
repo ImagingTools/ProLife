@@ -4,6 +4,9 @@
 // Qt includes
 #include <QtCore/QString>
 
+// ImtCore includes
+#include <imtbase/ITenantCollectionProvider.h>
+
 // ProLife includes
 #include <prolifedata/prolifedata.h>
 #include <prolifedata/CDeviceInfo.h>
@@ -19,8 +22,10 @@ bool CDeviceDocumentValidatorComp::ValidateDocumentData(
 			const QByteArray& objectId,
 			const istd::IChangeable& document,
 			QString& errorMessage,
-			const imtbase::IOperationContext* /*operationContextPtr*/) const
+			const imtbase::IOperationContext* operationContextPtr) const
 {
+	const imtbase::IObjectCollection* collectionPtr = imtbase::GetOperationCollection(m_objectCollectionCompPtr.GetPtr(), operationContextPtr);
+
 	const prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr =
 		dynamic_cast<const prolifedata::COrderedIdentifiableDeviceInfo*>(&document);
 	if (deviceInfoPtr == nullptr){
@@ -30,7 +35,7 @@ bool CDeviceDocumentValidatorComp::ValidateDocumentData(
 
 	QByteArray macAddress = deviceInfoPtr->GetMacAddress();
 	if (!macAddress.isEmpty()){
-		bool ok = prolifedata::CheckDeviceMacAddressExists(objectId, macAddress, *m_objectCollectionCompPtr);
+		bool ok = prolifedata::CheckDeviceMacAddressExists(objectId, macAddress, *collectionPtr);
 		if (!ok){
 			errorMessage = QString("MAC-Address '%1' already exists").arg(QString::fromUtf8(macAddress));
 			return false;
@@ -39,7 +44,7 @@ bool CDeviceDocumentValidatorComp::ValidateDocumentData(
 
 	QByteArray serialNumber = deviceInfoPtr->GetSerialNumber();
 	if (!serialNumber.isEmpty()){
-		bool ok = prolifedata::CheckDeviceSerialNumberExists(objectId, serialNumber, *m_objectCollectionCompPtr);
+		bool ok = prolifedata::CheckDeviceSerialNumberExists(objectId, serialNumber, *collectionPtr);
 		if (!ok){
 			errorMessage = QString("Serial Number '%1' already exists").arg(QString::fromUtf8(serialNumber));
 			return false;

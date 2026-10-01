@@ -5,6 +5,7 @@
 #include <imod/TModelWrap.h>
 
 // ImtCore includes
+#include <imtbase/ITenantCollectionProvider.h>
 #include <imtlic/IProductInfo.h>
 #include <imtlic/ILicenseDefinition.h>
 
@@ -28,6 +29,16 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 			const istd::IChangeable* dataPtr,
 			const QByteArray& typeId,
 			idoc::MetaInfoPtr& metaInfoPtr) const
+{
+	return CreateMetaInfoInOperation(dataPtr, typeId, metaInfoPtr, nullptr);
+}
+
+
+bool CDeviceMetaInfoCreatorComp::CreateMetaInfoInOperation(
+			const istd::IChangeable* dataPtr,
+			const QByteArray& typeId,
+			idoc::MetaInfoPtr& metaInfoPtr,
+			const imtbase::IOperationContext* operationContextPtr) const
 {
 	metaInfoPtr.SetPtr(new imod::TModelWrap<MetaInfo>);
 
@@ -53,7 +64,7 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 		QByteArray customerId;
 		if (m_orderCollectionCompPtr.IsValid()){
 			imtbase::IObjectCollection::DataPtr orderDataPtr;
-			if (m_orderCollectionCompPtr->GetObjectData(orderId, orderDataPtr)){
+			if (imtbase::GetOperationCollection(m_orderCollectionCompPtr.GetPtr(), operationContextPtr)->GetObjectData(orderId, orderDataPtr)){
 				const IOrderInfo* orderInfoPtr = dynamic_cast<const IOrderInfo*>(orderDataPtr.GetPtr());
 				if (orderInfoPtr != nullptr){
 					QByteArray deliveryId = orderInfoPtr->GetOrderId();
@@ -71,7 +82,7 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 	
 		if (m_accountCollectionCompPtr.IsValid()){
 			imtbase::IObjectCollection::DataPtr customerDataPtr;
-			if (m_accountCollectionCompPtr->GetObjectData(customerId, customerDataPtr)){
+			if (imtbase::GetOperationCollection(m_accountCollectionCompPtr.GetPtr(), operationContextPtr)->GetObjectData(customerId, customerDataPtr)){
 				const ICustomerInfo* customerInfoPtr = dynamic_cast<const ICustomerInfo*>(customerDataPtr.GetPtr());
 				if (customerInfoPtr != nullptr){
 					
@@ -85,7 +96,7 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 	
 		if (m_productCollectionCompPtr.IsValid()){
 			imtbase::IObjectCollection::DataPtr productDataPtr;
-			if (m_productCollectionCompPtr->GetObjectData(productId, productDataPtr)){
+			if (imtbase::GetOperationCollection(m_productCollectionCompPtr.GetPtr(), operationContextPtr)->GetObjectData(productId, productDataPtr)){
 				const imtlic::IProductInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInfo*>(productDataPtr.GetPtr());
 				if (productInfoPtr != nullptr){
 					QByteArray id = productInfoPtr->GetProductId();
@@ -101,7 +112,7 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 	
 		if (m_licenseCollectionCompPtr.IsValid()){
 			imtbase::IObjectCollection::DataPtr licenseDataPtr;
-			if (m_licenseCollectionCompPtr->GetObjectData(licenseId, licenseDataPtr)){
+			if (imtbase::GetOperationCollection(m_licenseCollectionCompPtr.GetPtr(), operationContextPtr)->GetObjectData(licenseId, licenseDataPtr)){
 				const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<const imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
 				if (licenseInfoPtr != nullptr){
 					QByteArray id = licenseInfoPtr->GetLicenseId();
@@ -116,7 +127,7 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 		bool inUse = false;
 		if (m_deviceBindingCollectionCompPtr.IsValid()){
 			imtbase::IObjectCollection::DataPtr bindingDataPtr;
-			if (m_deviceBindingCollectionCompPtr->GetObjectData(objectId, bindingDataPtr)){
+			if (imtbase::GetOperationCollection(m_deviceBindingCollectionCompPtr.GetPtr(), operationContextPtr)->GetObjectData(objectId, bindingDataPtr)){
 				const IHardwareProductBinding* bindingInfoPtr = dynamic_cast<const IHardwareProductBinding*>(bindingDataPtr.GetPtr());
 				if (bindingInfoPtr != nullptr){
 					QByteArrayList softwareIds = bindingInfoPtr->GetSoftwareIds();
