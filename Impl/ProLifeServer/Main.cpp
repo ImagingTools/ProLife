@@ -21,6 +21,7 @@ static void InitializeProLifeServerResources()
 	Q_INIT_RESOURCE(prolifestyle);
 	Q_INIT_RESOURCE(prolifeqml);
 	Q_INIT_RESOURCE(ProLifeLoc);
+	Q_INIT_RESOURCE(prolifedb);
 
 	InitializeImtCoreAuthorizableServer();
 	ImtCoreInitDeskSqlResources();

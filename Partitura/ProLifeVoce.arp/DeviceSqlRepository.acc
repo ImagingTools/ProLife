@@ -83,6 +83,9 @@
                     <AttributeInfo Id="TableName" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Devices"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="TenantStorageResolver" Type="Reference" ExportId="TenantStorageResolver">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/SQL/Postgres">
+        <file alias="CreateProLifeTenantTables.sql">Resources/SQL/Postgres/CreateProLifeTenantTables.sql</file>
+    </qresource>
+</RCC>

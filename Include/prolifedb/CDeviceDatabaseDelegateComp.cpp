@@ -99,11 +99,12 @@ bool CDeviceDatabaseDelegateComp::CreateTextFilterQuery(
 
 QByteArray CDeviceDatabaseDelegateComp::CreateJoinTablesQuery() const
 {
-	return QByteArray(R"(
-			LEFT JOIN "Orders" AS orders
+	// the joined tenant-owned collections live in the same tenant schema, "Users" is global
+	return QString(R"(
+			LEFT JOIN %1"Orders" AS orders
 				ON orders."DocumentId"::text = root."DataMetaInfo"->>'OrderId'
 				AND orders."State" = 'Active'
-			LEFT JOIN "Accounts" AS acc
+			LEFT JOIN %1"Accounts" AS acc
 				ON acc."DocumentId"::text = orders."Document"->>'OrderCustomer'
 				AND acc."State" = 'Active'
 			LEFT JOIN "Users" AS users
@@ -115,13 +116,13 @@ QByteArray CDeviceDatabaseDelegateComp::CreateJoinTablesQuery() const
 			LEFT JOIN LATERAL (
 				SELECT
 					si."TimeStamp" AS "LicenseCreationDate"
-				FROM "Devices" AS si
+				FROM %1"Devices" AS si
 				WHERE si."DocumentId" = root."DocumentId"
 					AND (si."DataMetaInfo"->>'InUse')::boolean = TRUE
 				ORDER BY si."TimeStamp" ASC
 				LIMIT 1
 			) AS lic ON TRUE
-	)");
+	)").arg(GetTenantTableSchemePrefix()).toUtf8();
 }
 
 

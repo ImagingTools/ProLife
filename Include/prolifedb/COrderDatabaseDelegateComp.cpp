@@ -54,8 +54,9 @@ QString COrderDatabaseDelegateComp::CreateAdditionalFiltersQuery(const iprm::IPa
 
 QByteArray COrderDatabaseDelegateComp::CreateJoinTablesQuery() const
 {
-	return QByteArray(R"(
-			LEFT JOIN "Accounts" AS acc
+	// the joined tenant-owned collections live in the same tenant schema, "Users" is global
+	return QString(R"(
+			LEFT JOIN %1"Accounts" AS acc
 				ON acc."DocumentId"::text = root."Document"->>'OrderCustomer'
 				AND acc."State" = 'Active'
 			LEFT JOIN "Users" AS users
@@ -64,7 +65,7 @@ QByteArray COrderDatabaseDelegateComp::CreateJoinTablesQuery() const
 					OR users."DocumentId"::text = root1."RevisionInfo"->>'OwnerId')
 					AND users."State" = 'Active'
 				)
-	)");
+	)").arg(GetTenantTableSchemePrefix()).toUtf8();
 }
 
 

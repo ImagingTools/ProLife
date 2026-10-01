@@ -533,6 +533,9 @@
                     <AttributeInfo Id="ProductRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LisaGQLEngine/ProductRepository"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="TenantStorageResolver" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="TenantStorageAutoProvisioningResolver"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/TracingConfiguration"/>
                     </AttributeInfo>
@@ -628,6 +631,55 @@
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/TracingConfiguration"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="TenantStorageAutoProvisioningResolver" PackageId="ImtDatabasePck" ComponentId="TenantStorageAutoProvisioningResolver">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="StorageProvisioner" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="TenantStorageProvisioner"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="StorageResolver" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="TenantStorageResolver"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="TenantStorageProvisioner" PackageId="ImtDatabasePck" ComponentId="TenantStorageProvisioner">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DatabaseEngine"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DdlScriptPaths" Type="String[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>:/SQL/Postgres/CreateProLifeTenantTables.sql</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="StorageResolver" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="TenantStorageResolver"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="TenantStorageResolver" PackageId="ImtDatabasePck" ComponentId="TenantStorageResolver">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DatabaseEngine"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -1149,6 +1201,9 @@
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="TenantStorageResolver" Type="Reference" ExportId="TenantStorageResolver">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -1251,6 +1306,9 @@
                                 <AttributeInfo Id="ProductRepository" Type="Reference" ExportId="ProductRepository">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
+                                <AttributeInfo Id="TenantStorageResolver" Type="Reference" ExportId="TenantStorageResolver">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -1273,6 +1331,9 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TenantStorageResolver" Type="Reference" ExportId="TenantStorageResolver">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
@@ -1330,6 +1391,9 @@
                                     <Data IsEnabled="true" Value="OrderSqlRepository"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TenantStorageResolver" Type="Reference" ExportId="TenantStorageResolver">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
