@@ -120,9 +120,17 @@
                 <AttributeInfoMap/>
             </Data>
         </Element>
+        <Element Id="AccessContext" PackageId="ImtCorePck" ComponentId="AccessContext">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
         <Element Id="DatabaseEngine" PackageId="ImtCoreVoce" ComponentId="DatabaseEngine">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="AccessContext" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AccessContext"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="BackupSettings" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/BackupParams"/>
                     </AttributeInfo>
@@ -159,6 +167,9 @@
         <Element Id="DocumentService" PackageId="" ComponentId="DocumentService">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="AccessContextController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AccessContext"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="BindingProductRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/BindingProductsRepository"/>
                     </AttributeInfo>
@@ -275,7 +286,7 @@
                         <Data IsEnabled="true" Value="Repositories/AccountSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="DatabaseEngine"/>
+                        <Data IsEnabled="true" Value="SystemDatabaseEngine"/>
                     </AttributeInfo>
                     <AttributeInfo Id="DeviceBindingDatabaseDelegate" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/BindingProductsDatabaseDelegate"/>
@@ -320,6 +331,9 @@
         <Element Id="ProLifeHandlers" PackageId="ProLifeQmlVoce" ComponentId="ProLifeHandlers">
             <Data IsEnabled="true" Flags="2">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="AccessContextController" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AccessContext"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="AccountRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/AccountSqlRepository"/>
                     </AttributeInfo>
@@ -518,6 +532,9 @@
         <Element Id="Repositories" PackageId="" ComponentId="Repositories">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="AccessContext" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AccessContext"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/ProLifeDatabaseAccessSettings"/>
                     </AttributeInfo>
@@ -632,6 +649,50 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="SystemAccessContext" PackageId="ImtCorePck" ComponentId="SystemAccessContext">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="SystemDatabaseEngine" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseEngine">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="AccessContext" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="SystemAccessContext"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="AutoCreateDatabase" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="0"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="AutoCreateTables" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="0"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeServerSettings/ProLifeDatabaseAccessSettings"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DbName" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="prolife"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DbType" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="QPSQL"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="HostName" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="localhost"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Pasword" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="root"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Port" Type="Integer" ExportId="">
+                        <Data IsEnabled="true" Value="5432"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeServerSettings/TracingConfiguration"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="UsersModelUpdateBridge" PackageId="ImtCorePck" ComponentId="ModelUpdateBridge">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -731,6 +792,9 @@
                     <Element Id="CollectionDocumentService" PackageId="ImtDocPck" ComponentId="CollectionDocumentService">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="AccessContextController" Type="Reference" ExportId="AccessContextController">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="Collection" Type="Reference" ExportId="DeviceRepository">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -1179,6 +1243,9 @@
                     <Element Id="CachedAccountRepository" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="AccessContext" Type="Reference" ExportId="AccessContext">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="AccountSqlRepository"/>
                                 </AttributeInfo>
@@ -1188,6 +1255,9 @@
                     <Element Id="CachedDeviceRepository" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="AccessContext" Type="Reference" ExportId="AccessContext">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="DeviceSqlRepository"/>
                                 </AttributeInfo>
@@ -1197,6 +1267,9 @@
                     <Element Id="CachedOrderRepository" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="AccessContext" Type="Reference" ExportId="AccessContext">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="OrderSqlRepository"/>
                                 </AttributeInfo>
@@ -1206,6 +1279,9 @@
                     <Element Id="CachedSoftwareRepository" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="AccessContext" Type="Reference" ExportId="AccessContext">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
                                     <Data IsEnabled="true" Value="SoftwareSqlRepository"/>
                                 </AttributeInfo>
@@ -1355,6 +1431,38 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                                     <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="TenantRowLevelSecurity" PackageId="ImtDatabasePck" ComponentId="TenantRowLevelSecurityController">
+                        <Data IsEnabled="true" Flags="1">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="BindingScopedCollections" Type="Reference[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>AccountSqlRepository/AccountDatabaseDelegate</Value>
+                                            <Value>DeviceSqlRepository/DeviceDatabaseDelegate</Value>
+                                            <Value>OrderSqlRepository/OrderDatabaseDelegate</Value>
+                                            <Value>SoftwareSqlRepository/SoftwareProductDatabaseDelegate</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TableDelegates" Type="Reference[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>AccountSqlRepository/AccountDatabaseDelegate</Value>
+                                            <Value>DeviceSqlRepository/DeviceDatabaseDelegate</Value>
+                                            <Value>OrderSqlRepository/OrderDatabaseDelegate</Value>
+                                            <Value>SoftwareSqlRepository/SoftwareProductDatabaseDelegate</Value>
+                                        </Values>
+                                    </Data>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
