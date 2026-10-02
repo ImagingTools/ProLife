@@ -131,6 +131,9 @@
                     <AttributeInfo Id="AccessContext" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="AccessContext"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="AdminDatabaseAccessSettings" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="ProLifeServerSettings/AdminDatabaseAccessSettings"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="BackupSettings" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/BackupParams"/>
                     </AttributeInfo>
@@ -157,6 +160,13 @@
                     </AttributeInfo>
                     <AttributeInfo Id="PgPort" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="5432"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RequiredExtensions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>postgres_fdw</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/TracingConfiguration"/>
