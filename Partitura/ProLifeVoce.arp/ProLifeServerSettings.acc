@@ -321,6 +321,7 @@
                                             <Value>ProLifeDatabaseAccessSettings</Value>
                                             <Value>PumaDatabaseAccessSettings</Value>
                                             <Value>LisaDatabaseAccessSettings</Value>
+                                            <Value>AdminDatabaseAccessSettings</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -330,11 +331,33 @@
                                             <Value>ProLifeDatabaseSettings</Value>
                                             <Value>PumaDatabaseSettings</Value>
                                             <Value>LisaDatabaseSettings</Value>
+                                            <Value>AdminDatabaseSettings</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TypeId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="Default"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="AdminDatabaseAccessSettings" PackageId="ImtDatabasePck" ComponentId="DatabaseAccessSettings">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DbName" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="postgres"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="HostName" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="localhost"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Pasword" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value=""/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Port" Type="Integer" ExportId="">
+                                    <Data IsEnabled="true" Value="5432"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="UserName" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value=""/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -405,6 +428,7 @@
                 </ExportedInterfaces>
                 <ExportedComponents>
                     <Component ExportedId="LisaDatabaseAccessSettings" ComponentId="LisaDatabaseAccessSettings"/>
+                    <Component ExportedId="AdminDatabaseAccessSettings" ComponentId="AdminDatabaseAccessSettings"/>
                     <Component ExportedId="ProLifeDatabaseAccessSettings" ComponentId="ProLifeDatabaseAccessSettings"/>
                     <Component ExportedId="PumaDatabaseAccessSettings" ComponentId="PumaDatabaseAccessSettings"/>
                 </ExportedComponents>
@@ -542,6 +566,7 @@
         <Component ExportedId="LisaConnectionInterface" ComponentId="ServerParams/LisaConnectionInterface"/>
         <Component ExportedId="LisaDatabaseAccessSettings" ComponentId="DatabaseParams/LisaDatabaseAccessSettings"/>
         <Component ExportedId="ProLifeDatabaseAccessSettings" ComponentId="DatabaseParams/ProLifeDatabaseAccessSettings"/>
+        <Component ExportedId="AdminDatabaseAccessSettings" ComponentId="DatabaseParams/AdminDatabaseAccessSettings"/>
         <Component ExportedId="PumaConnectionInterface" ComponentId="ServerParams/PumaConnectionInterface"/>
         <Component ExportedId="PumaDatabaseAccessSettings" ComponentId="DatabaseParams/PumaDatabaseAccessSettings"/>
         <Component ExportedId="ServerConnectionInterface" ComponentId="ServerParams/ServerConnectionInterface"/>
