@@ -1,18 +1,15 @@
 module prolifeqml
 
-singleton CachedOrderCollection 1.0 CachedOrderCollection.qml
-singleton CachedDeviceCollection 1.0 CachedDeviceCollection.qml
-singleton CachedSoftwareCollection 1.0 CachedSoftwareCollection.qml
-
 DeviceValidator 1.0 DeviceValidator.qml
 LicenseValidator 1.0 LicenseValidator.qml
 OrderValidator 1.0 OrderValidator.qml
 
 AccountEditor 1.0 AccountEditor.qml
 AccountCollectionView 1.0 AccountCollectionView.qml
-AccountFilterComboBox 1.0 AccountFilterComboBox.qml
 LicenseFilterDelegate 1.0 LicenseFilterDelegate.qml
 CustomerFilterDelegate 1.0 CustomerFilterDelegate.qml
+ProductFilterDelegate 1.0 ProductFilterDelegate.qml
+ProductLicenseFilterDelegate 1.0 ProductLicenseFilterDelegate.qml
 WorkspacePage 1.0 WorkspacePage.qml
 GqlPiechartView 1.0 GqlPiechartView.qml
 GqlLinechartView 1.0 GqlLinechartView.qml

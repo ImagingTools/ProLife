@@ -26,6 +26,9 @@
                     <AttributeInfo Id="TableViewParamRepresentationController" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="UserSettingsController/TableViewParamRepresentationController"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="TenantsEnabled" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>

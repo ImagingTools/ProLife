@@ -436,6 +436,11 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 	QByteArray customerId = orderInfoPtr->GetCustomerId();
 	representationPayload.customerId = (customerId);
 
+	idoc::MetaInfoPtr metaInfoPtr = m_objectCollectionCompPtr->GetDataMetaInfo(id);
+	if (metaInfoPtr.IsValid()){
+		representationPayload.customerName = metaInfoPtr->GetMetaInfo(prolifedata::IOrderInfo::MIT_CUSTOMER_NAME).toString();
+	}
+
 	QString description = orderInfoPtr->GetDescription();
 	representationPayload.description = (description);
 

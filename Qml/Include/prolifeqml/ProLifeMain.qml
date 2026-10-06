@@ -14,20 +14,6 @@ ApplicationMain {
 	useWebSocketSubscription: true;
 	// canRecoveryPassword: false;
 	authConnectionState: pumaConnectionChecker.status
-	
-	Connections {
-		target: AuthorizationController;
-		
-		function onLoggedIn(){
-			CachedOrderCollection.updateModel();
-			CachedAccountCollection.updateModel();
-		}
-		
-		function onLoggedOut(){
-			CachedOrderCollection.clearModel();
-			CachedAccountCollection.clearModel();
-		}
-	}
 
 	WebSocketConnectionChecker {
 		id: pumaConnectionChecker;
@@ -41,14 +27,6 @@ ApplicationMain {
 		subscriptionManager: window.subscriptionManager;
 		onStatusChanged: {
 			if (status === 1){
-				if (!CachedProductCollection.completed){
-					CachedProductCollection.updateModel();
-				}
-				
-				if (!CachedLicenseCollection.completed){
-					CachedLicenseCollection.updateModel();
-				}
-				
 				if (PopupManager.messageIsOpened(gqlCommandId)){
 					PopupManager.closeMessage(gqlCommandId);
 				}

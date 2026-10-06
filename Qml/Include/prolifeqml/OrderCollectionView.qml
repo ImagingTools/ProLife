@@ -86,9 +86,9 @@ RemoteCollectionView {
 				timeFilterDelegate.setTimeUnit(params.timeFilter.mode, params.timeFilter.unit, true)
 			}
 
-			if (params.customerId !== ""){
+			if (params.customerId !== undefined && params.customerId !== ""){
 				let customersFilterDelegate = container.filterMenu.getFilterDelegate("Customers")
-				customersFilterDelegate.setSelectedId(params.customerId, true)
+				customersFilterDelegate.setSelectedId(params.customerId, params.customerName, true)
 			}
 
 			container.table.setSortingInfo(OrderItemTypeMetaInfo.s_timeStamp, "DESC")
@@ -98,21 +98,9 @@ RemoteCollectionView {
 
 	Component {
 		id: customersDelegateFilterComp
-		FieldFilterDelegate {
-			id: customersDelegateFilter
+
+		CustomerFilterDelegate {
 			objectName: "CustomersFilter"
-			name: qsTr("Customers")
-			visibleItemCount: 15
-			defaultFieldFilter.m_fieldId: "CustomerId"
-			
-			OptionsListAdapter {
-				id: optionsListAdapter
-				collectionModel: CachedAccountCollection.collectionModel
-				
-				onCollectionModelChanged: {
-					customersDelegateFilter.setOptionsList(m_options)
-				}
-			}
 		}
 	}
 

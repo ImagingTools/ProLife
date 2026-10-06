@@ -85,6 +85,11 @@ sdl::V1_0::prolife::CDeviceBindingData CDeviceControllerComp::OnGetDeviceBinding
 				if (productInstanceInfoPtr != nullptr){
 					QByteArray productId = productInstanceInfoPtr->GetProductId();
 					response.productUuid = productId;
+
+					idoc::MetaInfoPtr metaInfoPtr = m_softwareProductCollectionCompPtr->GetDataMetaInfo(softwareId);
+					if (metaInfoPtr.IsValid()){
+						response.productName = metaInfoPtr->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME).toString();
+					}
 				}
 			}
 		}

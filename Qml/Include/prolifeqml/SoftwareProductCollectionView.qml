@@ -34,7 +34,6 @@ RemoteCollectionView {
 	
 	onHeadersChanged: {
 		container.table.setColumnContentById(SoftwareProductItemTypeMetaInfo.s_status, pairComp);
-		container.table.setColumnContentById(SoftwareProductItemTypeMetaInfo.s_isMultiple, isMultipleColumnDelegateComp);
 	}
 	
 	Component.onCompleted: {
@@ -55,36 +54,6 @@ RemoteCollectionView {
 
 		registerFieldFilterDelegate("internalUse", internalUseDelegateFilterComp)
 		registerFieldFilterDelegate("LicenseCreationTimeFilter", licenseCreationTimeDelegateFilterComp)
-	}
-
-	Component {
-		id: isMultipleColumnDelegateComp;
-		TableCellDelegateBase {
-			id: cellDelegate
-
-			Image {
-				id: image;
-				anchors.verticalCenter: parent.verticalCenter;
-				anchors.left: parent.left;
-				anchors.leftMargin: Style.marginM;
-				width: Style.iconSizeM;
-				height: width;
-				source: "../../../" + Style.getIconPath("Icons/Ok", Icon.State.On, Icon.Mode.Normal);
-				sourceSize.width: width;
-				sourceSize.height: height;
-			}
-
-			onReused: {
-				if (!rowDelegate){
-					return
-				}
-
-				if (rowIndex >= 0){
-					let isMultiple = cellDelegate.getValue();
-					image.visible = isMultiple;
-				}
-			}
-		}
 	}
 
 	Component {
@@ -195,14 +164,14 @@ RemoteCollectionView {
 
 			container.filterMenu.clearAllFilters(true)
 
-			if (params.customerId !== ""){
+			if (params.customerId !== undefined && params.customerId !== ""){
 				let customersFilterDelegate = container.filterMenu.getFilterDelegate("Customers")
-				customersFilterDelegate.setSelectedId(params.customerId, true)
+				customersFilterDelegate.setSelectedId(params.customerId, params.customerName, true)
 			}
 
 			if (params.productId !== undefined && params.productId !== ""){
 				let productFilterDelegate = container.filterMenu.getFilterDelegate(SoftwareProductItemTypeMetaInfo.s_productUuid)
-				productFilterDelegate.setSelectedId(params.productId, true)
+				productFilterDelegate.setSelectedId(params.productId, params.productName, true)
 			}
 
 			if (params.inUse){
@@ -269,47 +238,20 @@ RemoteCollectionView {
 
 	Component {
 		id: productsDelegateFilterComp
-		
-		FieldFilterDelegate {
-			id: productsDelegateFilter
+
+		ProductFilterDelegate {
 			objectName: "ProductsFilter"
-			name: qsTr("Products")
-			visibleItemCount: 15
+			categoryId: "Software"
 			defaultFieldFilter.m_fieldId: SoftwareProductItemTypeMetaInfo.s_productUuid
-			
-			OptionsListAdapter {
-				id: optionsListAdapter
-				collectionModel: CachedProductCollection.softwareProductsModel
-				
-				onCollectionModelChanged: {
-					productsDelegateFilter.setOptionsList(m_options)
-				}
-			}
 		}
 	}
 
 	Component {
 		id: licensesDelegateFilterComp
-		
-		FieldFilterDelegate {
-			id: productsDelegateFilter
+
+		ProductLicenseFilterDelegate {
 			objectName: "LicensesFilter"
-			name: qsTr("Licenses")
-			visibleItemCount: 15
 			defaultFieldFilter.m_fieldId: SoftwareProductItemTypeMetaInfo.s_licenseUuid
-			
-			onFilterDependencyChanged: {
-				if (filterId === SoftwareProductItemTypeMetaInfo.s_productUuid){
-					optionsListAdapter.collectionModel = CachedProductCollection.getLicensesModel(filterValue)
-				}
-			}
-			
-			OptionsListAdapter {
-				id: optionsListAdapter
-				onCollectionModelChanged: {
-					productsDelegateFilter.setOptionsList(m_options)
-				}
-			}
 		}
 	}
 	
@@ -358,21 +300,9 @@ RemoteCollectionView {
 
 	Component {
 		id: customersDelegateFilterComp
-		FieldFilterDelegate {
-			id: customersDelegateFilter
+
+		CustomerFilterDelegate {
 			objectName: "CustomersFilter"
-			name: qsTr("Customers")
-			visibleItemCount: 15
-			defaultFieldFilter.m_fieldId: "CustomerId"
-			
-			OptionsListAdapter {
-				id: optionsListAdapter
-				collectionModel: CachedAccountCollection.collectionModel
-				
-				onCollectionModelChanged: {
-					customersDelegateFilter.setOptionsList(m_options)
-				}
-			}
 		}
 	}
 }
