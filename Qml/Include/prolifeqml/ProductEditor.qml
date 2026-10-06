@@ -25,12 +25,7 @@ import imtbaseComplexCollectionFilterSdl 1.0
 Item {
 	id: productEditor
 
-	property TreeItemModel licensesModel: TreeItemModel {}
-	property TreeItemModel productsModel: TreeItemModel {}
 	property BaseModel orderProductsModel: BaseModel {}
-
-	property TreeItemModel devicesModel: TreeItemModel {}
-	property TreeItemModel softwaresModel: TreeItemModel {}
 
 	property string orderId
 	property string orderUuid
@@ -52,62 +47,6 @@ Item {
 	// Quantity is relevant for create; still shown (disabled) when editing a created line.
 	readonly property bool showQuantity: productEditor.isCreateMode
 
-	CollectionDataProvider {
-		id: softwareCollection
-		commandId: ProlifeLicensesSdlCommandIds.s_softwareProductsList
-		fields: [
-			SoftwareProductItemTypeMetaInfo.s_id,
-			SoftwareProductItemTypeMetaInfo.s_name,
-			SoftwareProductItemTypeMetaInfo.s_productName,
-			SoftwareProductItemTypeMetaInfo.s_licenseUuid,
-			SoftwareProductItemTypeMetaInfo.s_licenseId,
-			SoftwareProductItemTypeMetaInfo.s_licenseName,
-			SoftwareProductItemTypeMetaInfo.s_serialNumber,
-			SoftwareProductItemTypeMetaInfo.s_productUuid,
-			SoftwareProductItemTypeMetaInfo.s_expiration,
-			SoftwareProductItemTypeMetaInfo.s_inUse
-		]
-		onCollectionModelChanged: {
-			if (contentLoader.item) {
-				contentLoader.item.softwaresModel = collectionModel
-				if (contentLoader.item.doUpdateGui)
-					contentLoader.item.doUpdateGui()
-			}
-			productEditor.syncLinkSelection()
-		}
-		onStateChanged: {
-			loading.visible = state === "Loading"
-		}
-	}
-
-	CollectionDataProvider {
-		id: deviceCollection
-		commandId: ProlifeSensorsSdlCommandIds.s_devicesList
-		fields: [
-			DeviceItemTypeMetaInfo.s_id,
-			DeviceItemTypeMetaInfo.s_name,
-			DeviceItemTypeMetaInfo.s_deviceType,
-			DeviceItemTypeMetaInfo.s_productUuid,
-			DeviceItemTypeMetaInfo.s_licenseUuid,
-			DeviceItemTypeMetaInfo.s_macAddress,
-			DeviceItemTypeMetaInfo.s_serialNumber,
-			DeviceItemTypeMetaInfo.s_productName,
-			DeviceItemTypeMetaInfo.s_licenseId,
-			DeviceItemTypeMetaInfo.s_licenseName
-		]
-		onCollectionModelChanged: {
-			if (contentLoader.item) {
-				contentLoader.item.devicesModel = collectionModel
-				if (contentLoader.item.doUpdateGui)
-					contentLoader.item.doUpdateGui()
-			}
-			productEditor.syncLinkSelection()
-		}
-		onStateChanged: {
-			loading.visible = state === "Loading"
-		}
-	}
-
 	FieldFilter {
 		id: excludeDocumentIdFilter
 		m_fieldId: "DocumentId"
@@ -117,7 +56,7 @@ Item {
 
 	GroupFilter {
 		id: excludesGroup
-		m_logicalOperation: deviceCollection.filter.logicalOperation.AND
+		m_logicalOperation: "And"
 		Component.onCompleted: {
 			if (!hasFieldFilters()) {
 				emplaceFieldFilters()
@@ -127,7 +66,7 @@ Item {
 
 	GroupFilter {
 		id: orderGroupFilter
-		m_logicalOperation: deviceCollection.filter.logicalOperation.OR
+		m_logicalOperation: "Or"
 
 		Component.onCompleted: {
 			if (!hasFieldFilters()) {
@@ -135,8 +74,6 @@ Item {
 			}
 			m_fieldFilters.addElement(orderUuidFilter)
 			m_fieldFilters.addElement(emptyOrderFilter)
-			deviceCollection.filter.addGroupFilter(orderGroupFilter)
-			softwareCollection.filter.addGroupFilter(orderGroupFilter)
 		}
 	}
 
@@ -188,9 +125,6 @@ Item {
 	}
 
 	function refreshLinkModels() {
-		deviceCollection.filter.removeGroupFilter(excludesGroup)
-		softwareCollection.filter.removeGroupFilter(excludesGroup)
-
 		if (!excludesGroup.hasFieldFilters()) {
 			excludesGroup.emplaceFieldFilters()
 		}
@@ -214,15 +148,6 @@ Item {
 				}
 			}
 		}
-
-		if (productEditor.isSoftware) {
-			softwareCollection.filter.addGroupFilter(excludesGroup)
-			softwareCollection.updateModel()
-		}
-		else {
-			deviceCollection.filter.addGroupFilter(excludesGroup)
-			deviceCollection.updateModel()
-		}
 	}
 
 	readonly property bool showLinkPicker: !productEditor.isCreateMode && !productEditor.chromeLocked
@@ -239,30 +164,16 @@ Item {
 		contentLoader.item.chromeLocked = productEditor.chromeLocked
 		contentLoader.item.hasLinkedSelection = productEditor.hasLinkedSelection
 			|| productEditor.chromeLocked
-		if (productEditor.isSoftware) {
-			contentLoader.item.softwaresModel = softwareCollection.collectionModel
-		}
-		else {
-			contentLoader.item.devicesModel = deviceCollection.collectionModel
-		}
 		if (contentLoader.item.doUpdateGui)
 			contentLoader.item.doUpdateGui()
 		productEditor.instanceCount = contentLoader.item.instanceCount
-		productEditor.syncLinkSelection()
 	}
 
-	// --- Link picker: server-side filterable single-select over the same collection ---
-
-	readonly property TreeItemModel linkSourceModel: productEditor.isSoftware
-		? softwareCollection.collectionModel
-		: deviceCollection.collectionModel
+	// --- Link picker: server-side filterable single-select over the instance list ---
 
 	readonly property string linkIdField: productEditor.isSoftware
 		? SoftwareProductItemTypeMetaInfo.s_id
 		: DeviceItemTypeMetaInfo.s_id
-
-	readonly property bool linkSourceEmpty: !productEditor.linkSourceModel
-		|| productEditor.linkSourceModel.getItemsCount() === 0
 
 	property string linkedItemId: ""
 	property string linkedItemName: ""
@@ -270,21 +181,28 @@ Item {
 
 	readonly property string emptyValueText: "—"
 
-	// Fields shown in a picker row, and the ones the typed text is matched against.
-	// They are collection field ids: the collection controller maps them onto the
-	// stored ones, the same way it does for the collection views.
+	// Fields requested for a picker row: what the row shows and what linking copies into the
+	// order product. The text is matched against the filter fields only.
 	readonly property var softwareLinkFields: [
 		SoftwareProductItemTypeMetaInfo.s_id,
 		SoftwareProductItemTypeMetaInfo.s_productName,
+		SoftwareProductItemTypeMetaInfo.s_productUuid,
 		SoftwareProductItemTypeMetaInfo.s_serialNumber,
+		SoftwareProductItemTypeMetaInfo.s_licenseUuid,
 		SoftwareProductItemTypeMetaInfo.s_licenseName,
-		SoftwareProductItemTypeMetaInfo.s_licenseId
+		SoftwareProductItemTypeMetaInfo.s_licenseId,
+		SoftwareProductItemTypeMetaInfo.s_expiration,
+		SoftwareProductItemTypeMetaInfo.s_inUse
 	]
 	readonly property var hardwareLinkFields: [
 		DeviceItemTypeMetaInfo.s_id,
 		DeviceItemTypeMetaInfo.s_productName,
+		DeviceItemTypeMetaInfo.s_productUuid,
+		DeviceItemTypeMetaInfo.s_licenseUuid,
+		DeviceItemTypeMetaInfo.s_licenseName,
 		DeviceItemTypeMetaInfo.s_licenseId,
-		DeviceItemTypeMetaInfo.s_macAddress
+		DeviceItemTypeMetaInfo.s_macAddress,
+		DeviceItemTypeMetaInfo.s_serialNumber
 	]
 	readonly property var softwareTextFilterFields: [
 		SoftwareProductItemTypeMetaInfo.s_productName,
@@ -298,8 +216,8 @@ Item {
 		DeviceItemTypeMetaInfo.s_macAddress
 	]
 
-	// Runs against the same list command as the collection behind the editor, with the
-	// same group filters, so a picked id is always a row of linkSourceModel.
+	// Order and exclusion groups keep products of other orders and lines already in this
+	// order out of the list.
 	FilterableSelectCollectionDataProvider {
 		id: linkSelectProvider
 
@@ -318,25 +236,6 @@ Item {
 			? productEditor.softwareTextFilterFields
 			: productEditor.hardwareTextFilterFields
 		groupFilters: [orderGroupFilter, excludesGroup]
-	}
-
-	// Popup rows are looked up by id on every repaint, so the row index is cached.
-	readonly property var linkIndexById: {
-		let map = ({})
-		if (productEditor.linkSourceModel) {
-			for (let i = 0; i < productEditor.linkSourceModel.getItemsCount(); i++) {
-				map[String(productEditor.linkSourceModel.getData(productEditor.linkIdField, i))] = i
-			}
-		}
-		return map
-	}
-
-	function indexOfLinkedId(id) {
-		if (id === "") {
-			return -1
-		}
-		let index = productEditor.linkIndexById[String(id)]
-		return index === undefined ? -1 : index
 	}
 
 	// A picker row carries every requested collection field, keyed by its field id.
@@ -408,26 +307,6 @@ Item {
 		}
 	}
 
-	function syncLinkSelection() {
-		if (!productEditor.showLinkPicker || !productItem) {
-			return
-		}
-		let index = productEditor.indexOfLinkedId(productItem.m_id)
-		if (index < 0) {
-			productEditor.linkedItemId = ""
-			productEditor.linkedItemName = ""
-			productEditor.linkedItemDetail = ""
-			return
-		}
-		productEditor.linkedItemId = productItem.m_id
-		productEditor.linkedItemName = productItem.m_productName !== ""
-			? productItem.m_productName
-			: productItem.m_id
-		productEditor.linkedItemDetail = productEditor.isSoftware
-			? productItem.m_serialNumber
-			: productItem.m_macAddress
-	}
-
 	// Opened below the control that triggered it, kept inside the view.
 	function openLinkPopup(anchorItem) {
 		linkSelectButton.isOpen = true
@@ -444,24 +323,20 @@ Item {
 		productEditor.linkedItemId = ""
 		productEditor.linkedItemName = ""
 		productEditor.linkedItemDetail = ""
-		productEditor.applyChromeLinkSelection()
+		productEditor.hasLinkedSelection = false
+		if (!contentLoader.item)
+			return
+		if (contentLoader.item.clearLinkedSelection)
+			contentLoader.item.clearLinkedSelection()
+		contentLoader.item.hasLinkedSelection = false
 	}
 
-	function applyChromeLinkSelection() {
-		if (!contentLoader.item || !productEditor.showLinkPicker)
+	function applyLinkedItem(item) {
+		if (!contentLoader.item || !productEditor.showLinkPicker || !item)
 			return
-		let idx = productEditor.indexOfLinkedId(productEditor.linkedItemId)
-		if (idx < 0) {
-			productEditor.hasLinkedSelection = false
-			if (contentLoader.item.clearLinkedSelection)
-				contentLoader.item.clearLinkedSelection()
-			contentLoader.item.hasLinkedSelection = false
-			return
-		}
 		productEditor.hasLinkedSelection = true
 		contentLoader.item.hasLinkedSelection = true
-		if (contentLoader.item.selectLinkedIndex)
-			contentLoader.item.selectLinkedIndex(idx)
+		contentLoader.item.selectLinkedItem(item.values)
 		productEditor.instanceCount = contentLoader.item.instanceCount
 	}
 
@@ -635,12 +510,14 @@ Item {
 			}
 
 			onItemSelected: {
-				let selectedItem = linkPopup.getItem(index)
+				// The row list is refetched on selection (selected group shown), the selection keeps the row.
+				let selectedItems = linkSelectProvider.getSelectedItems()
+				let selectedItem = selectedItems.length > 0 ? selectedItems[0] : linkPopup.getItem(index)
 				productEditor.linkedItemId = itemId
 				productEditor.linkedItemName = productEditor.itemTitle(selectedItem,
 					linkSelectProvider.getSelectedItemText(itemId))
 				productEditor.linkedItemDetail = productEditor.itemMainId(selectedItem)
-				productEditor.applyChromeLinkSelection()
+				productEditor.applyLinkedItem(selectedItem)
 			}
 
 			Component.onDestruction: {
@@ -873,7 +750,6 @@ Item {
 				color: selectMouseArea.containsMouse ? Style.buttonHoverColor : Style.baseColor
 				border.width: 1
 				border.color: selectMouseArea.containsMouse ? Style.borderColor2 : Style.borderColor
-				opacity: productEditor.linkSourceEmpty ? Style.opacityHigh : 1.0
 
 				property bool isOpen: false
 
@@ -881,7 +757,6 @@ Item {
 					id: selectMouseArea
 					anchors.fill: parent
 					hoverEnabled: true
-					enabled: !productEditor.linkSourceEmpty
 					cursorShape: Qt.PointingHandCursor
 
 					onClicked: {
@@ -899,7 +774,6 @@ Item {
 					source: "../../../../" + Style.getIconPath("Icons/Link", Icon.State.On, Icon.Mode.Normal)
 					sourceSize.width: width
 					sourceSize.height: height
-					opacity: productEditor.linkSourceEmpty ? Style.opacityLow : 1.0
 				}
 
 				Text {
@@ -909,10 +783,8 @@ Item {
 					anchors.right: parent.right
 					anchors.rightMargin: Style.marginM
 					anchors.verticalCenter: parent.verticalCenter
-					text: productEditor.linkSourceEmpty
-						? (productEditor.isSoftware ? qsTr("No licenses available") : qsTr("No devices available"))
-						: (productEditor.isSoftware ? qsTr("Select license") : qsTr("Select device"))
-					color: productEditor.linkSourceEmpty ? Style.inactiveTextColor : Style.textColor
+					text: productEditor.isSoftware ? qsTr("Select license") : qsTr("Select device")
+					color: Style.textColor
 					font.family: Style.fontFamily
 					font.pixelSize: Style.fontSizeM
 					elide: Text.ElideRight
@@ -1128,12 +1000,5 @@ Item {
 				productEditor.openLinkPopup(linkSelectButton)
 			}
 		}
-	}
-
-	Loading {
-		id: loading
-		anchors.fill: parent
-		visible: false
-		background.color: Style.baseColor
 	}
 }

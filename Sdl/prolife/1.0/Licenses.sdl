@@ -71,12 +71,16 @@ type LicenseTreeNode {
 type SoftwareProductData {
 	id: ID
 	productId: ID
+	productName: String
 	categoryId: ID
 	serialNumber: ID
 	project: String
 	inUse: Bool
 	orderUuid: ID
+	orderName: String
 	licenseUuid: ID
+	licenseName: String
+	licenseId: String
 	expiration: String
 	internalUse: Bool
 	isMultiple: Bool

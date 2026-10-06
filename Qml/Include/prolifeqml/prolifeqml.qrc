@@ -22,14 +22,9 @@
         <file alias="ProLife/SoftwareEditor.qml">SoftwareEditor.qml</file>
         <file alias="ProLife/SoftwareProductCollectionView.qml">SoftwareProductCollectionView.qml</file>
         <file alias="ProLife/SoftwareProductsCollectionViewCommandsDelegate.qml">SoftwareProductsCollectionViewCommandsDelegate.qml</file>
-        <file alias="ProLife/SplitLicenseDialog.qml">SplitLicenseDialog.qml</file>
-        <file alias="ProLife/RevokeLicenseDialog.qml">RevokeLicenseDialog.qml</file>
         <file alias="ProLife/LicenseTreeCanvas.qml">LicenseTreeCanvas.qml</file>
         <file alias="ProLife/LicenseTreeDialog.qml">LicenseTreeDialog.qml</file>
         <file alias="ProLife/HardwareProductBindingDialog.qml">HardwareProductBindingDialog.qml</file>
-        <file alias="prolifeqml/CachedOrderCollection.qml">CachedOrderCollection.qml</file>
-        <file alias="prolifeqml/CachedDeviceCollection.qml">CachedDeviceCollection.qml</file>
-        <file alias="prolifeqml/CachedSoftwareCollection.qml">CachedSoftwareCollection.qml</file>
         <file alias="ProLife/DeviceValidator.qml">DeviceValidator.qml</file>
         <file alias="ProLife/LicenseValidator.qml">LicenseValidator.qml</file>
         <file alias="ProLife/OrderValidator.qml">OrderValidator.qml</file>
@@ -38,9 +33,10 @@
         <file alias="ProLife/AccountEditor.qml">AccountEditor.qml</file>
         <file alias="ProLife/AccountCollectionViewCommandsDelegate.qml">AccountCollectionViewCommandsDelegate.qml</file>
         <file alias="ProLife/AccountCollectionView.qml">AccountCollectionView.qml</file>
-        <file alias="ProLife/AccountFilterComboBox.qml">AccountFilterComboBox.qml</file>
         <file alias="ProLife/LicenseFilterDelegate.qml">LicenseFilterDelegate.qml</file>
         <file alias="ProLife/CustomerFilterDelegate.qml">CustomerFilterDelegate.qml</file>
+        <file alias="ProLife/ProductFilterDelegate.qml">ProductFilterDelegate.qml</file>
+        <file alias="ProLife/ProductLicenseFilterDelegate.qml">ProductLicenseFilterDelegate.qml</file>
  	<file alias="ProLife/WorkspacePage.qml">WorkspacePage.qml</file>
 	<file alias="ProLife/GqlPiechartView.qml">GqlPiechartView.qml</file>
 	<file alias="ProLife/GqlLinechartView.qml">GqlLinechartView.qml</file>

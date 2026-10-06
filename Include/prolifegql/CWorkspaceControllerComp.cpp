@@ -147,6 +147,7 @@ sdl::V1_0::prolife::CBarChartData CWorkspaceControllerComp::OnGetSoftwareUsedBar
 {
 	return BuildProductUsageBarChart(
 				*m_softwareCollectionCompPtr.GetPtr(),
+				imtlic::IProductInstanceInfo::MIT_PRODUCT_UUID,
 				imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME,
 				*getSoftwareUsedBarChartRequest.GetRequestedArguments().input,
 				gqlRequest,
@@ -161,6 +162,7 @@ sdl::V1_0::prolife::CPieChartData CWorkspaceControllerComp::OnGetSoftwareUsedPie
 {
 	return BuildProductUsagePieChart(
 				*m_softwareCollectionCompPtr.GetPtr(),
+				imtlic::IProductInstanceInfo::MIT_PRODUCT_UUID,
 				imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME,
 				*getSoftwareUsedPieChartRequest.GetRequestedArguments().input,
 				gqlRequest,
@@ -175,6 +177,7 @@ sdl::V1_0::prolife::CBarChartData CWorkspaceControllerComp::OnGetHardwareUsedBar
 {
 	return BuildProductUsageBarChart(
 				*m_hardwareCollectionCompPtr.GetPtr(),
+				prolifedata::IDeviceInfo::MIT_DEVICE_TYPE,
 				prolifedata::IDeviceInfo::MIT_PRODUCT_NAME,
 				*getHardwareUsedBarChartRequest.GetRequestedArguments().input,
 				gqlRequest,
@@ -189,6 +192,7 @@ sdl::V1_0::prolife::CPieChartData CWorkspaceControllerComp::OnGetHardwareUsedPie
 {
 	return BuildProductUsagePieChart(
 				*m_hardwareCollectionCompPtr.GetPtr(),
+				prolifedata::IDeviceInfo::MIT_DEVICE_TYPE,
 				prolifedata::IDeviceInfo::MIT_PRODUCT_NAME,
 				*getHardwareUsedPieChartRequest.GetRequestedArguments().input,
 				gqlRequest,
@@ -460,6 +464,7 @@ sdl::V1_0::prolife::CBarChartData CWorkspaceControllerComp::OnGetSoftwareCreatio
 				gqlRequest,
 				*m_softwareCollectionCompPtr,
 				*getSoftwareCreationBarChartRequest.GetRequestedArguments().input,
+				imtlic::IProductInstanceInfo::MIT_PRODUCT_UUID,
 				imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME,
 				errorMessage);
 }
@@ -481,6 +486,7 @@ sdl::V1_0::prolife::CBarChartData CWorkspaceControllerComp::OnGetHardwareCreatio
 				gqlRequest,
 				*m_hardwareCollectionCompPtr,
 				*getHardwareCreationBarChartRequest.GetRequestedArguments().input,
+				prolifedata::IDeviceInfo::MIT_DEVICE_TYPE,
 				prolifedata::IDeviceInfo::MIT_PRODUCT_NAME,
 				errorMessage);
 }
@@ -533,6 +539,7 @@ sdl::V1_0::prolife::CBarChartData CWorkspaceControllerComp::GetItemsCreationBarC
 				const ::imtgql::CGqlRequest& gqlRequest,
 				const imtbase::IObjectCollection& collection,
 				const sdl::V1_0::prolife::CChartInput& chartInput,
+				int idMetaInfoType,
 				int nameMetaInfoType,
 				QString& errorMessage) const
 {
@@ -541,15 +548,16 @@ sdl::V1_0::prolife::CBarChartData CWorkspaceControllerComp::GetItemsCreationBarC
 	iprm::CParamsSet selectionParams;
 	PrepareFilters(selectionParams, chartInput, gqlRequest, true, false, std::nullopt, TFT_BY_CREATION);
 
-	QMap<QDate, QMap<QString, int>> resultMap;
+	QMap<QDate, QMap<QPair<QByteArray, QString>, int>> resultMap;
 	imtbase::ICollectionInfo::Ids elementIds = collection.GetElementIds(0, -1, &selectionParams);
 	for (const imtbase::ICollectionInfo::Id& elementId : elementIds){
 		idoc::MetaInfoPtr dataMetaInfoPtr = collection.GetDataMetaInfo(elementId);
 		idoc::MetaInfoPtr elementMetaInfoPtr = collection.GetElementMetaInfo(elementId);
 		if ( dataMetaInfoPtr.IsValid() && elementMetaInfoPtr.IsValid()){
+			QByteArray productId = dataMetaInfoPtr->GetMetaInfo(idMetaInfoType).toByteArray();
 			QString productName = dataMetaInfoPtr->GetMetaInfo(nameMetaInfoType).toString();
 			QDateTime insertionTime = elementMetaInfoPtr->GetMetaInfo(idoc::IDocumentMetaInfo::MIT_CREATION_TIME).toDateTime();
-			resultMap[insertionTime.date()][productName]++;
+			resultMap[insertionTime.date()][qMakePair(productId, productName)]++;
 		}
 	}
 
@@ -577,7 +585,7 @@ bool CWorkspaceControllerComp::BuildPieChart(
 
 
 bool CWorkspaceControllerComp::BuildBarChart(
-			const QMap<QDate, QMap<QString, int>>& map,
+			const QMap<QDate, QMap<QPair<QByteArray, QString>, int>>& map,
 			const sdl::V1_0::prolife::CChartInput& input,
 			const QString& yLabel,
 			sdl::V1_0::prolife::CBarChartData& barChartData) const
@@ -599,7 +607,7 @@ bool CWorkspaceControllerComp::BuildBarChart(
 		sdl::V1_0::prolife::CChartBar bar;
 		bar.segments.Emplace();
 
-		QMap<QString, int> aggregatedMap;
+		QMap<QPair<QByteArray, QString>, int> aggregatedMap;
 		for (QDate d = periodStart; d <= periodEnd; d = d.addDays(1)){
 			const auto& valueMap = map.value(d);
 			for (auto it = valueMap.constBegin(); it != valueMap.constEnd(); ++it){
@@ -610,9 +618,10 @@ bool CWorkspaceControllerComp::BuildBarChart(
 		int periodTotal = 0;
 		for (auto it = aggregatedMap.constBegin(); it != aggregatedMap.constEnd(); ++it){
 			sdl::V1_0::prolife::CChartSegment seg;
-			seg.label = it.key();
+			seg.id = it.key().first;
+			seg.label = it.key().second;
 			seg.value = it.value();
-			seg.color = GenerateColorFromString(it.key());
+			seg.color = GenerateColorFromString(it.key().second);
 			bar.segments->push_back(seg);
 			periodTotal += it.value();
 		}
@@ -845,6 +854,7 @@ sdl::V1_0::prolife::CChartSegment CWorkspaceControllerComp::CreateChartSegment(i
 
 sdl::V1_0::prolife::CBarChartData CWorkspaceControllerComp::BuildProductUsageBarChart(
 			const imtbase::IObjectCollection& collection,
+			int productIdMetaInfoType,
 			int productNameMetaInfoType,
 			const sdl::V1_0::prolife::CChartInput& input,
 			const ::imtgql::CGqlRequest& gqlRequest,
@@ -855,15 +865,16 @@ sdl::V1_0::prolife::CBarChartData CWorkspaceControllerComp::BuildProductUsageBar
 	iprm::CParamsSet selectionParams;
 	PrepareFilters(selectionParams, input, gqlRequest, true, false, true, TFT_BY_LICENSE_CREATION);
 
-	QMap<QDate, QMap<QString, int>> usageMap;
+	QMap<QDate, QMap<QPair<QByteArray, QString>, int>> usageMap;
 	imtbase::IObjectCollectionIterator* iteratorPtr = collection.CreateObjectCollectionIterator(QByteArray(), 0, -1, &selectionParams);
 	if (iteratorPtr != nullptr){
 		while (iteratorPtr->Next()){
 			QDateTime timestamp = iteratorPtr->GetElementInfo("LicenseCreationDate").toDateTime();
 			idoc::MetaInfoPtr dataMetaInfoPtr = iteratorPtr->GetDataMetaInfo();
 			if (dataMetaInfoPtr.IsValid()){
+				QByteArray productId = dataMetaInfoPtr->GetMetaInfo(productIdMetaInfoType).toByteArray();
 				QString name = dataMetaInfoPtr->GetMetaInfo(productNameMetaInfoType).toString();
-				usageMap[timestamp.date()][name]++;
+				usageMap[timestamp.date()][qMakePair(productId, name)]++;
 			}
 		}
 	}
@@ -878,6 +889,7 @@ sdl::V1_0::prolife::CBarChartData CWorkspaceControllerComp::BuildProductUsageBar
 
 sdl::V1_0::prolife::CPieChartData CWorkspaceControllerComp::BuildProductUsagePieChart(
 			const imtbase::IObjectCollection& collection,
+			int productIdMetaInfoType,
 			int productNameMetaInfoType,
 			const sdl::V1_0::prolife::CChartInput& input,
 			const ::imtgql::CGqlRequest& gqlRequest,
@@ -895,8 +907,9 @@ sdl::V1_0::prolife::CPieChartData CWorkspaceControllerComp::BuildProductUsagePie
 			QDateTime timestamp = iteratorPtr->GetElementInfo("LicenseCreationDate").toDateTime();
 			idoc::MetaInfoPtr dataMetaInfoPtr = iteratorPtr->GetDataMetaInfo();
 			if (dataMetaInfoPtr.IsValid()){
+				QByteArray productId = dataMetaInfoPtr->GetMetaInfo(productIdMetaInfoType).toByteArray();
 				QString name = dataMetaInfoPtr->GetMetaInfo(productNameMetaInfoType).toString();
-				map[qMakePair("", name)]++;
+				map[qMakePair(productId, name)]++;
 			}
 		}
 	}

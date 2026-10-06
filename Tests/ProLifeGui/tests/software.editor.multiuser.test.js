@@ -91,11 +91,9 @@ test.describe('Software / editor', () => {
       await gui.checkScreenshot(page, 'software-editor-new-project-and-serial');
     });
 
-    // Two Switch toggles, same mechanism - one final screenshot after both.
-    test('toggle internal use and is multiple', async () => {
+    test('toggle internal use', async () => {
       await editor.toggleInternalUse();
-      await editor.toggleIsMultiple();
-      await gui.checkScreenshot(page, 'software-editor-internal-use-and-multiple');
+      await gui.checkScreenshot(page, 'software-editor-internal-use');
     });
 
     test('expiration - unlimited and date', async () => {

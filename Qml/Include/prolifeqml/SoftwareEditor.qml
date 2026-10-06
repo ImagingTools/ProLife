@@ -10,16 +10,23 @@ import imtlicgui 1.0
 import imtguigql 1.0
 import prolifeqml 1.0
 import prolifeLicensesSdl 1.0
+import prolifeOrdersSdl 1.0
+import imtlicProductsSdl 1.0
+import imtlicLicensesSdl 1.0
+import imtbaseComplexCollectionFilterSdl 1.0
 
 /**
  * SoftwareEditor
  *
  * MultiPageView layout (domain-driven):
- *   General    — license identity: product/license/article/software-id + options
- *                (internal use / multiple / count). Required create/edit fields.
+ *   General    — license identity: product/license/article/software-id + internal use.
+ *                Required create/edit fields.
  *   Additional — project and order (secondary context, not the core license definition).
  *   Expiration — validity of the entitlement (unlimited / concrete date).
  *   Hierarchy  — parent/child license tree (only when the license has hierarchy).
+ *
+ * Product, license and order are picked from server-side searchable lists; the names
+ * shown for the current values come with the document itself.
  *
  * Embedded mode (Order product dialog):
  *   Set embedded=true to hide history/commands chrome and optionally pin order via
@@ -31,10 +38,6 @@ ViewBase {
 
 	contentColor: Style.baseColor
 	commandsPanelVisible: !root.embedded
-
-	property TreeItemModel licensesModel: TreeItemModel {}
-	property TreeItemModel productsModel: TreeItemModel {}
-	property var productLicensesModel: TreeItemModel {}
 
 	property SoftwareProductData softwareProductData: model
 	property bool isNew: false
@@ -57,12 +60,6 @@ ViewBase {
 	}
 
 	Component.onCompleted: {
-		if (!CachedProductCollection.completed) {
-			CachedProductCollection.updateModel()
-		}
-		if (!CachedOrderCollection.completed) {
-			CachedOrderCollection.updateModel()
-		}
 		multiPageView.updatePages()
 	}
 
@@ -139,14 +136,14 @@ ViewBase {
 				additionalPage.projectInput.readOnly = !canChangeProject
 
 				let canChangeOrder = PermissionsController.checkPermission("ChangeOrderForLicense")
-				additionalPage.ordersCB.changeable = canChangeOrder
+				additionalPage.orderSelect.changeable = canChangeOrder
 			}
 
 			let canChangeProduct = PermissionsController.checkPermission("ChangeProductForLicense")
-			generalPage.productCB.changeable = canChangeProduct
+			generalPage.productSelect.changeable = canChangeProduct
 
 			let canChangeLicense = PermissionsController.checkPermission("ChangeProductLicenses")
-			generalPage.licenseCB.changeable = canChangeLicense
+			generalPage.licenseSelect.changeable = canChangeLicense
 
 			let canChangeLicenseNumber = PermissionsController.checkPermission("ChangeLicenseNumber")
 			generalPage.serialNumberInput.readOnly = !canChangeLicenseNumber
@@ -154,10 +151,6 @@ ViewBase {
 			let canChangeExpiration = PermissionsController.checkPermission("ChangeExpiration")
 			expirationPage.expirationEditor.readOnly = !canChangeExpiration
 			expirationPage.unlimitedSwitch.readOnly = !canChangeExpiration
-
-			let hasHierarchy = softwareProductData.m_hasChildren || softwareProductData.m_hasParent
-			generalPage.multipleElementView.readOnly = hasHierarchy
-			generalPage.productCountElementView.readOnly = hasHierarchy
 
 			let ok =
 				canChangeProduct ||
@@ -206,24 +199,14 @@ ViewBase {
 
 		if (additionalPage) {
 			additionalPage.projectInput.readOnly = readOnly
-			additionalPage.ordersCB.changeable = !readOnly
+			additionalPage.orderSelect.changeable = !readOnly
 		}
-		generalPage.productCB.changeable = !readOnly
-		generalPage.licenseCB.changeable = !readOnly
+		generalPage.productSelect.changeable = !readOnly
+		generalPage.licenseSelect.changeable = !readOnly
 		generalPage.serialNumberInput.readOnly = readOnly
 		generalPage.internalUseSwitchElementView.readOnly = readOnly
 		expirationPage.expirationEditor.readOnly = readOnly
 		expirationPage.unlimitedSwitch.readOnly = readOnly
-
-		if (readOnly) {
-			generalPage.multipleElementView.readOnly = true
-			generalPage.productCountElementView.readOnly = true
-		}
-		else {
-			let hasHierarchy = softwareProductData && (softwareProductData.m_hasChildren || softwareProductData.m_hasParent)
-			generalPage.multipleElementView.readOnly = hasHierarchy
-			generalPage.productCountElementView.readOnly = hasHierarchy
-		}
 	}
 
 	function updateGui() {
@@ -289,11 +272,12 @@ ViewBase {
 
 		softwareProductData.m_id = orderedProduct.m_id || ""
 		softwareProductData.m_productId = orderedProduct.m_productUuid || ""
+		softwareProductData.m_productName = orderedProduct.m_productName || ""
 		softwareProductData.m_licenseUuid = orderedProduct.m_licenseUuid || ""
+		softwareProductData.m_licenseName = orderedProduct.m_licenseName || ""
+		softwareProductData.m_licenseId = orderedProduct.m_licenseId || ""
 		softwareProductData.m_serialNumber = orderedProduct.m_serialNumber || ""
 		softwareProductData.m_expiration = orderedProduct.m_expiration || ""
-		softwareProductData.m_isMultiple = orderedProduct.m_isMultiple || false
-		softwareProductData.m_productCount = orderedProduct.m_productCount || 0
 		softwareProductData.m_inUse = orderedProduct.m_inUse || false
 		softwareProductData.m_categoryId = "Software"
 		if (root.forcedOrderUuid !== "") {
@@ -313,24 +297,14 @@ ViewBase {
 		orderedProduct.m_categoryId = "Software"
 		orderedProduct.m_id = softwareProductData.m_id !== "" ? softwareProductData.m_id : orderedProduct.m_id
 		orderedProduct.m_productUuid = softwareProductData.m_productId
+		orderedProduct.m_productName = softwareProductData.m_productName
 		orderedProduct.m_licenseUuid = softwareProductData.m_licenseUuid
+		orderedProduct.m_licenseName = softwareProductData.m_licenseName
+		orderedProduct.m_licenseId = softwareProductData.m_licenseId
 		orderedProduct.m_serialNumber = softwareProductData.m_serialNumber
 		orderedProduct.m_expiration = softwareProductData.m_expiration
-		orderedProduct.m_isMultiple = softwareProductData.m_isMultiple
-		orderedProduct.m_productCount = softwareProductData.m_productCount
 		orderedProduct.m_inUse = softwareProductData.m_inUse
 		orderedProduct.m_macAddress = ""
-
-		let generalPage = root.getPageItem("General")
-		if (generalPage && generalPage.productCB.currentIndex >= 0 && generalPage.productCB.model) {
-			orderedProduct.m_productName = generalPage.productCB.model.getData("productName", generalPage.productCB.currentIndex)
-		}
-		if (generalPage && generalPage.licenseCB.currentIndex >= 0 && generalPage.licenseCB.model) {
-			let licenseModel = generalPage.licenseCB.model
-			let idx = generalPage.licenseCB.currentIndex
-			orderedProduct.m_licenseId = licenseModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseId, idx)
-			orderedProduct.m_licenseName = licenseModel.getData(SoftwareProductItemTypeMetaInfo.s_licenseName, idx)
-		}
 
 		return orderedProduct.m_productUuid !== "" && orderedProduct.m_licenseUuid !== ""
 	}
@@ -341,18 +315,6 @@ ViewBase {
 		}
 		root.doUpdateModel()
 		return softwareProductData.m_productId !== "" && softwareProductData.m_licenseUuid !== ""
-	}
-
-	function getProductLicensesModel() {
-		for (let i = 0; i < root.licensesModel.getItemsCount(); i++) {
-			let productId = root.licensesModel.getData("id", i)
-			if (productId === root.productId) {
-				if (root.licensesModel.containsKey("licenses", i)) {
-					return root.licensesModel.getData("licenses", i)
-				}
-			}
-		}
-		return null
 	}
 
 	MultiPageView {
@@ -419,57 +381,24 @@ ViewBase {
 			id: generalPage
 			anchors.fill: parent
 
-			property alias productCB: productCB
-			property alias licenseCB: licenseCB
+			property alias productSelect: productSelect
+			property alias licenseSelect: licenseSelect
 			property alias articleText: articleText
 			property alias serialNumberInput: serialNumberInput
 			property alias internalUseSwitchElementView: internalUseSwitchElementView
-			property alias multipleElementView: multipleElementView
-			property alias productCountElementView: productCountElementView
 
 			function updateGui() {
 				if (!root.softwareProductData) {
 					return
 				}
 
-				// Snapshot before touching combos: productCB.onCurrentIndexChanged
-				// resets license and may call doUpdateModel when not blocked.
-				let productId = root.softwareProductData.m_productId
-				let licenseUuid = root.softwareProductData.m_licenseUuid
-				let serialNumber = root.softwareProductData.m_serialNumber
-				let internalUse = root.softwareProductData.m_internalUse
-				let isMultiple = root.softwareProductData.m_isMultiple
-				let productCount = root.softwareProductData.m_productCount
-
-				productCB.currentIndex = -1
-
-				if (productCB.model) {
-					for (let i = 0; i < productCB.model.getItemsCount(); i++) {
-						let id = productCB.model.getData("id", i)
-						if (id === productId) {
-							productCB.currentIndex = i
-							break
-						}
-					}
-				}
-
-				internalUseSwitchElementView.checked = internalUse
-				multipleElementView.checked = isMultiple
-				productCountElementView.value = productCount
-
-				serialNumberInput.text = serialNumber
-
-				licenseCB.currentIndex = -1
-
-				if (licenseCB.model) {
-					for (let i = 0; i < licenseCB.model.getItemsCount(); i++) {
-						let licenseId = licenseCB.model.getData("id", i)
-						if (licenseId === licenseUuid) {
-							licenseCB.currentIndex = i
-							break
-						}
-					}
-				}
+				productSelect.selectedId = root.softwareProductData.m_productId
+				productSelect.selectedText = root.softwareProductData.m_productName
+				licenseSelect.selectedId = root.softwareProductData.m_licenseUuid
+				licenseSelect.selectedText = root.softwareProductData.m_licenseName
+				articleText.text = root.softwareProductData.m_licenseId
+				internalUseSwitchElementView.checked = root.softwareProductData.m_internalUse
+				serialNumberInput.text = root.softwareProductData.m_serialNumber
 			}
 
 			function updateModel() {
@@ -477,25 +406,48 @@ ViewBase {
 					return
 				}
 
-				if (productCB.currentIndex >= 0 && productCB.model) {
-					let selectedId = productCB.model.getData("id", productCB.currentIndex)
-					root.softwareProductData.m_productId = selectedId
-				}
-				else {
-					root.softwareProductData.m_productId = ""
-				}
-
+				root.softwareProductData.m_productId = productSelect.selectedId
+				root.softwareProductData.m_productName = productSelect.selectedText
+				root.softwareProductData.m_licenseUuid = licenseSelect.selectedId
+				root.softwareProductData.m_licenseName = licenseSelect.selectedText
+				root.softwareProductData.m_licenseId = articleText.text
 				root.softwareProductData.m_internalUse = internalUseSwitchElementView.checked
-				root.softwareProductData.m_isMultiple = multipleElementView.checked
-				root.softwareProductData.m_productCount = productCountElementView.value
 				root.softwareProductData.m_serialNumber = serialNumberInput.text
+			}
 
-				if (licenseCB.currentIndex >= 0 && licenseCB.model) {
-					let selectedId = licenseCB.model.getData("id", licenseCB.currentIndex)
-					root.softwareProductData.m_licenseUuid = selectedId
+			FieldFilter {
+				id: softwareCategoryFilter
+				m_fieldId: "CategoryId"
+				m_filterValue: "Software"
+				m_filterValueType: "String"
+				m_filterOperations: ["Equal"]
+			}
+
+			GroupFilter {
+				id: softwareCategoryGroup
+				m_logicalOperation: "And"
+
+				Component.onCompleted: {
+					softwareCategoryGroup.emplaceFieldFilters()
+					softwareCategoryGroup.m_fieldFilters.addElement(softwareCategoryFilter)
 				}
-				else {
-					root.softwareProductData.m_licenseUuid = ""
+			}
+
+			FieldFilter {
+				id: productLicensesFilter
+				m_fieldId: "ProductId"
+				m_filterValue: productSelect.selectedId
+				m_filterValueType: "String"
+				m_filterOperations: ["Equal"]
+			}
+
+			GroupFilter {
+				id: productLicensesGroup
+				m_logicalOperation: "And"
+
+				Component.onCompleted: {
+					productLicensesGroup.emplaceFieldFilters()
+					productLicensesGroup.m_fieldFilters.addElement(productLicensesFilter)
 				}
 			}
 
@@ -541,66 +493,53 @@ ViewBase {
 						objectName: "LicenseInformationGroup"
 						width: parent.width
 
-						ComboBoxElementView {
-							id: productCB
+						CollectionSelectElementView {
+							id: productSelect
 							objectName: "ProductCombo"
 							name: qsTr("Product")
-							nameId: "productName"
-							model: CachedProductCollection.softwareProductsModel
+							commandId: ImtlicProductsSdlCommandIds.s_productsList
+							fields: [ProductItemTypeMetaInfo.s_id, ProductItemTypeMetaInfo.s_productName]
+							titleField: ProductItemTypeMetaInfo.s_productName
+							textFilterFieldIds: [ProductItemTypeMetaInfo.s_productName]
+							sortByField: ProductItemTypeMetaInfo.s_productName
+							groupFilters: [softwareCategoryGroup]
+							placeHolderText: qsTr("Select a product")
+							filterPlaceholder: qsTr("Search by product name")
 							changeable: !root.readOnly
-							KeyNavigation.tab: licenseCB
-							KeyNavigation.backtab: productCountElementView
+							KeyNavigation.tab: licenseSelect
+							KeyNavigation.backtab: internalUseSwitchElementView
 							isSelectionRequired: true
 							errorText: qsTr("Please select a product")
 
-							onModelChanged: {
-								root.doUpdateGui()
-							}
-
-							onCurrentIndexChanged: {
-								if (productCB.currentIndex >= 0) {
-									let licensesModel = productCB.model.getData("licenses", productCB.currentIndex)
-									if (!licensesModel) {
-										licensesModel = productCB.model.addTreeModel("licenses", productCB.currentIndex)
-									}
-									root.productLicensesModel = licensesModel
-								}
-								else {
-									root.productLicensesModel = 0
-								}
-
-								licenseCB.currentIndex = -1
+							onItemSelected: {
+								licenseSelect.selectedId = ""
+								licenseSelect.selectedText = ""
+								articleText.text = ""
 								root.doUpdateModel()
 							}
 						}
 
-						ComboBoxElementView {
-							id: licenseCB
+						CollectionSelectElementView {
+							id: licenseSelect
 							objectName: "LicenseCombo"
-							nameId: SoftwareProductItemTypeMetaInfo.s_licenseName
 							name: qsTr("Licenses")
-							model: root.productLicensesModel
+							commandId: ImtlicLicensesSdlCommandIds.s_licensesList
+							fields: [LicenseItemTypeMetaInfo.s_id, LicenseItemTypeMetaInfo.s_licenseName, LicenseItemTypeMetaInfo.s_licenseId]
+							titleField: LicenseItemTypeMetaInfo.s_licenseName
+							descriptionField: LicenseItemTypeMetaInfo.s_licenseId
+							textFilterFieldIds: [LicenseItemTypeMetaInfo.s_licenseName, LicenseItemTypeMetaInfo.s_licenseId]
+							sortByField: LicenseItemTypeMetaInfo.s_licenseName
+							groupFilters: [productLicensesGroup]
+							placeHolderText: productSelect.selectedId !== "" ? qsTr("Select a license") : qsTr("Select a product first")
+							filterPlaceholder: qsTr("Search by license name or article")
 							KeyNavigation.tab: articleText
-							KeyNavigation.backtab: productCB
+							KeyNavigation.backtab: productSelect
 							isSelectionRequired: true
 							errorText: qsTr("Please select a license")
 
-							onCurrentIndexChanged: {
-								if (currentIndex >= 0) {
-									if (model) {
-										articleText.text = model.getData(SoftwareProductItemTypeMetaInfo.s_licenseId, currentIndex)
-									}
-									root.doUpdateModel()
-								}
-							}
-
-							delegate: Component {
-								FilterableComboBoxDelegate {
-									width: licenseCB.width
-									comboBoxRef: licenseCB.cbRef
-									text: model[SoftwareProductItemTypeMetaInfo.s_licenseName]
-									description: model[SoftwareProductItemTypeMetaInfo.s_licenseId]
-								}
+							onItemSelected: {
+								articleText.text = licenseSelect.itemValue(item, LicenseItemTypeMetaInfo.s_licenseId)
+								root.doUpdateModel()
 							}
 						}
 
@@ -610,7 +549,7 @@ ViewBase {
 							name: qsTr("Article")
 							readOnly: true
 							KeyNavigation.tab: serialNumberInput
-							KeyNavigation.backtab: licenseCB
+							KeyNavigation.backtab: licenseSelect
 						}
 
 						TextInputElementView {
@@ -640,34 +579,9 @@ ViewBase {
 							name: qsTr("Internal Use")
 							description: qsTr("Activate if the license is for internal use")
 							readOnly: root.readOnly
-							KeyNavigation.tab: multipleElementView
+							KeyNavigation.tab: productSelect
 							KeyNavigation.backtab: serialNumberInput
 							onCheckedChanged: {
-								root.doUpdateModel()
-							}
-						}
-
-						SwitchElementView {
-							id: multipleElementView
-							objectName: "IsMultipleSwitch"
-							name: qsTr("Is Multiple")
-							readOnly: root.readOnly
-							KeyNavigation.tab: productCountElementView
-							KeyNavigation.backtab: internalUseSwitchElementView
-							onCheckedChanged: {
-								root.doUpdateModel()
-							}
-						}
-
-						SpinBoxElementView {
-							id: productCountElementView
-							objectName: "ProductCountSpinBox"
-							name: qsTr("Product Count")
-							readOnly: root.readOnly
-							visible: multipleElementView.checked
-							KeyNavigation.tab: productCB
-							KeyNavigation.backtab: multipleElementView
-							onValueChanged: {
 								root.doUpdateModel()
 							}
 						}
@@ -686,28 +600,16 @@ ViewBase {
 			anchors.fill: parent
 
 			property alias projectInput: projectInput
-			property alias ordersCB: ordersCB
+			property alias orderSelect: orderSelect
 
 			function updateGui() {
 				if (!root.softwareProductData) {
 					return
 				}
 
-				let project = root.softwareProductData.m_project
-				let orderUuid = root.softwareProductData.m_orderUuid
-
-				projectInput.text = project
-				ordersCB.currentIndex = -1
-
-				if (ordersCB.sourceModel) {
-					for (let i = 0; i < ordersCB.sourceModel.getItemsCount(); i++) {
-						let id = ordersCB.sourceModel.getData("id", i)
-						if (id === orderUuid) {
-							ordersCB.currentIndex = i
-							break
-						}
-					}
-				}
+				projectInput.text = root.softwareProductData.m_project
+				orderSelect.selectedId = root.softwareProductData.m_orderUuid
+				orderSelect.selectedText = root.softwareProductData.m_orderName
 			}
 
 			function updateModel() {
@@ -717,17 +619,9 @@ ViewBase {
 
 				root.softwareProductData.m_project = projectInput.text
 
-				let canChangeOrder = PermissionsController.checkPermission("ChangeOrderForLicense")
-				if (canChangeOrder) {
-					if (ordersCB.sourceModel) {
-						if (ordersCB.currentIndex >= 0) {
-							let orderUuid = ordersCB.sourceModel.getData("id", ordersCB.currentIndex)
-							root.softwareProductData.m_orderUuid = orderUuid
-						}
-						else {
-							root.softwareProductData.m_orderUuid = ""
-						}
-					}
+				if (PermissionsController.checkPermission("ChangeOrderForLicense")) {
+					root.softwareProductData.m_orderUuid = orderSelect.selectedId
+					root.softwareProductData.m_orderName = orderSelect.selectedText
 				}
 			}
 
@@ -778,39 +672,32 @@ ViewBase {
 							name: qsTr("Project")
 							placeHolderText: qsTr("Enter the project")
 							readOnly: root.readOnly
-							KeyNavigation.tab: ordersCB
-							KeyNavigation.backtab: ordersCB
+							KeyNavigation.tab: orderSelect
+							KeyNavigation.backtab: orderSelect
 
 							onEditingFinished: {
 								root.doUpdateModel()
 							}
 						}
 
-						FilterableComboBoxElementView {
-							id: ordersCB
+						CollectionSelectElementView {
+							id: orderSelect
 							objectName: "OrderCombo"
-							nameId: "orderId"
 							name: qsTr("Order")
-							filteringFields: ["orderId", "customerName"]
-							sourceModel: CachedOrderCollection.collectionModel
+							commandId: ProlifeOrdersSdlCommandIds.s_ordersList
+							fields: [OrderItemTypeMetaInfo.s_id, OrderItemTypeMetaInfo.s_orderId, OrderItemTypeMetaInfo.s_customerName]
+							titleField: OrderItemTypeMetaInfo.s_orderId
+							descriptionField: OrderItemTypeMetaInfo.s_customerName
+							textFilterFieldIds: [OrderItemTypeMetaInfo.s_orderId, OrderItemTypeMetaInfo.s_customerLink]
+							placeHolderText: qsTr("Select an order")
+							filterPlaceholder: qsTr("Search by order or customer")
+							clearable: true
 							changeable: !root.readOnly
 							KeyNavigation.tab: projectInput
 							KeyNavigation.backtab: projectInput
 
-							delegate: Component {
-								FilterableComboBoxDelegate {
-									width: ordersCB.cbRef ? ordersCB.cbRef.width : 0
-									description: qsTr("Customer") + ": " + model.customerName
-									comboBoxRef: ordersCB.cbRef
-								}
-							}
-
-							onFinished: {
+							onItemSelected: {
 								root.doUpdateModel()
-							}
-
-							onModelChanged: {
-								root.doUpdateGui()
 							}
 						}
 					}

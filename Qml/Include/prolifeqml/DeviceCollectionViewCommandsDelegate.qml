@@ -376,8 +376,8 @@ DocCollectionViewDelegate {
 		}
 	}
 	
-	function onTransferLicenses(hardwareId, productId){
-		ModalDialogManager.openDialog(deviceCollectionViewComp, {"fromDeviceId": hardwareId,"productUuid": productId})
+	function onTransferLicenses(hardwareId, productId, productName){
+		ModalDialogManager.openDialog(deviceCollectionViewComp, {"fromDeviceId": hardwareId, "productUuid": productId, "productName": productName})
 	}
 
 	function onResetTransferCounter(hardwareId){
@@ -437,8 +437,9 @@ DocCollectionViewDelegate {
 			
 			let hardwareId = elementsModel.getData(DeviceItemTypeMetaInfo.s_id, indexes[0]);
 			let productId = elementsModel.getData(DeviceItemTypeMetaInfo.s_productUuid, indexes[0]);
+			let productName = elementsModel.getData(DeviceItemTypeMetaInfo.s_productName, indexes[0]);
 			
-			onTransferLicenses(hardwareId, productId)
+			onTransferLicenses(hardwareId, productId, productName)
 		}
 		else if (commandId === "DecryptFile"){
 			licenseFileDialog.open();
@@ -698,6 +699,7 @@ DocCollectionViewDelegate {
 			height: ModalDialogManager.activeView.height - 100;
 			
 			property string productUuid;
+			property string productName;
 			property string fromDeviceId;
 			property string toDeviceId;
 			
@@ -750,38 +752,15 @@ DocCollectionViewDelegate {
 					
 					Component {
 						id: productsDelegateFilterComp
-						FieldFilterDelegate {
+						ProductFilterDelegate {
 							id: productsDelegateFilter
-							name: qsTr("Products")
 							defaultFieldFilter.m_fieldId: "DeviceType"
+							categoryId: "Hardware"
 							readOnly: true
-							
-							property string productUuid: dialog.productUuid
-							onProductUuidChanged: {
-								if (productsDelegateFilter.productUuid !== ""){
-									optionsListAdapter.updateSelectedProduct()
-								}
-							}
-							
-							OptionsListAdapter {
-								id: optionsListAdapter
-								collectionModel: CachedProductCollection.hardwareProductsModel
-								onCollectionModelChanged: {
-									productsDelegateFilter.setOptionsList(m_options)
-									
-									if (productsDelegateFilter.productUuid !== ""){
-										updateSelectedProduct()
-									}
-								}
-								
-								function updateSelectedProduct(){
-									for (let i = 0; i < m_options.count; i++){
-										let optionId = productsDelegateFilter.getOptionId(i)
-										if (productsDelegateFilter.productUuid === optionId){
-											productsDelegateFilter.setSelectedIndex(i)
-											break
-										}
-									}
+
+							Component.onCompleted: {
+								if (dialog.productUuid !== ""){
+									productsDelegateFilter.setSelectedId(dialog.productUuid, dialog.productName, false)
 								}
 							}
 						}

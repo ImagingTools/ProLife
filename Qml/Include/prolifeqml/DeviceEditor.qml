@@ -14,12 +14,16 @@ import prolifeSensorsSdl 1.0
 import prolifeOrdersSdl 1.0
 import imtlicProductsSdl 1.0
 import imtlicLicensesSdl 1.0
+import imtbaseComplexCollectionFilterSdl 1.0
 
 /**
  * DeviceEditor
  *
  * MultiPageView: Device / Production / Licenses / Support / History.
  * Support and History are hidden in embedded mode.
+ *
+ * Device type, configuration and order are picked from server-side searchable lists; the
+ * names shown for the current values come with the document itself.
  *
  * Embedded mode (Order product dialog): set embedded=true, optionally forcedOrderId.
  * Use loadFromOrderedProduct() / applyToOrderedProduct() to map OrderedProduct.
@@ -31,15 +35,8 @@ DocumentViewBase {
 	contentColor: Style.baseColor
 	commandsPanelVisible: !deviceEditorContainer.embedded
 
-	property TreeItemModel accountsModel: TreeItemModel {}
-	property TreeItemModel productsModel: TreeItemModel {}
-
-	property bool orderComboBoxEnabled: true
-	property bool deviceTypeComboBoxEnabled: true
-
 	property int radius: 3
 	property int spacing: Style.marginM
-	property int comboBoxHeight: 27
 	property int contentMaxWidth: 900
 
 	property DeviceData deviceData: model ? model : null
@@ -73,12 +70,6 @@ DocumentViewBase {
 	}
 
 	Component.onCompleted: {
-		if (!CachedProductCollection.completed) {
-			CachedProductCollection.updateModel()
-		}
-		if (!CachedOrderCollection.completed) {
-			CachedOrderCollection.updateModel()
-		}
 		multiPageView.updatePages()
 	}
 
@@ -167,10 +158,10 @@ DocumentViewBase {
 			if (productionPage) {
 				productionPage.projectInput.readOnly = false
 				productionPage.statusCB.changeable = true
-				productionPage.orderCB.changeable = true
+				productionPage.orderSelect.changeable = true
 			}
-			devicePage.productCB.changeable = true
-			devicePage.configurationCB.changeable = true
+			devicePage.productSelect.changeable = true
+			devicePage.configurationSelect.changeable = true
 		}
 		else {
 			let canChangeDescription = PermissionsController.checkPermission("ChangeDescriptionForSensor")
@@ -184,7 +175,7 @@ DocumentViewBase {
 
 			if (productionPage) {
 				let canChangeOrder = PermissionsController.checkPermission("ChangeOrderForSensor")
-				productionPage.orderCB.changeable = canChangeOrder
+				productionPage.orderSelect.changeable = canChangeOrder
 
 				let canChangeProductionStatus = PermissionsController.checkPermission("ChangeProductionStatus")
 				productionPage.statusCB.changeable = canChangeProductionStatus
@@ -195,8 +186,8 @@ DocumentViewBase {
 
 			let canChangeConfiguration = PermissionsController.checkPermission("ChangeHardwareConfiguration")
 			let canChangeDevice = PermissionsController.checkPermission("ChangeDeviceType")
-			devicePage.configurationCB.changeable = canChangeConfiguration && canChangeDevice
-			devicePage.productCB.changeable = canChangeConfiguration && canChangeDevice
+			devicePage.configurationSelect.changeable = canChangeConfiguration && canChangeDevice
+			devicePage.productSelect.changeable = canChangeConfiguration && canChangeDevice
 
 			let ok =
 				canChangeDescription ||
@@ -213,11 +204,6 @@ DocumentViewBase {
 				commandsController.setCommandVisible("Redo", ok)
 				commandsController.setCommandVisible("Save", ok)
 			}
-		}
-
-		devicePage.productCB.enabled = deviceEditorContainer.deviceTypeComboBoxEnabled
-		if (productionPage) {
-			productionPage.orderCB.enabled = deviceEditorContainer.orderComboBoxEnabled
 		}
 	}
 
@@ -275,11 +261,11 @@ DocumentViewBase {
 		devicePage.descriptionInput.readOnly = readOnly
 		devicePage.serialNumberInput.readOnly = readOnly
 		devicePage.macAddressInput.readOnly = readOnly
-		devicePage.productCB.changeable = !readOnly
-		devicePage.configurationCB.changeable = !readOnly
+		devicePage.productSelect.changeable = !readOnly
+		devicePage.configurationSelect.changeable = !readOnly
 		if (productionPage) {
 			productionPage.statusCB.changeable = !readOnly
-			productionPage.orderCB.changeable = !readOnly
+			productionPage.orderSelect.changeable = !readOnly
 		}
 	}
 
@@ -335,7 +321,10 @@ DocumentViewBase {
 
 		deviceData.m_id = orderedProduct.m_id || ""
 		deviceData.m_deviceType = orderedProduct.m_productUuid || ""
-		deviceData.m_licenseName = orderedProduct.m_licenseUuid || orderedProduct.m_licenseName || ""
+		deviceData.m_productName = orderedProduct.m_productName || ""
+		deviceData.m_licenseName = orderedProduct.m_licenseUuid || ""
+		deviceData.m_configurationName = orderedProduct.m_licenseName || ""
+		deviceData.m_configurationArticle = orderedProduct.m_licenseId || ""
 		deviceData.m_serialNumber = orderedProduct.m_serialNumber || ""
 		deviceData.m_macAddress = orderedProduct.m_macAddress || ""
 		deviceData.m_description = orderedProduct.m_productName || ""
@@ -356,26 +345,16 @@ DocumentViewBase {
 		orderedProduct.m_categoryId = "Hardware"
 		orderedProduct.m_id = deviceData.m_id !== "" ? deviceData.m_id : orderedProduct.m_id
 		orderedProduct.m_productUuid = deviceData.m_deviceType
+		orderedProduct.m_productName = deviceData.m_productName
 		orderedProduct.m_licenseUuid = deviceData.m_licenseName
-		orderedProduct.m_licenseName = deviceData.m_licenseName
+		orderedProduct.m_licenseName = deviceData.m_configurationName
+		orderedProduct.m_licenseId = deviceData.m_configurationArticle
 		orderedProduct.m_serialNumber = deviceData.m_serialNumber
 		orderedProduct.m_macAddress = deviceData.m_macAddress
 		orderedProduct.m_expiration = ""
 		orderedProduct.m_isMultiple = false
 		orderedProduct.m_productCount = 0
 		orderedProduct.m_inUse = false
-
-		let devicePage = deviceEditorContainer.getPageItem("Device")
-		if (devicePage && devicePage.productCB.currentIndex >= 0 && devicePage.productCB.model) {
-			orderedProduct.m_productName = devicePage.productCB.model.getData(ProductItemTypeMetaInfo.s_productName, devicePage.productCB.currentIndex)
-		}
-		if (devicePage && devicePage.configurationCB.currentIndex >= 0 && devicePage.configurationCB.model) {
-			let cfgModel = devicePage.configurationCB.model
-			let idx = devicePage.configurationCB.currentIndex
-			orderedProduct.m_licenseId = cfgModel.getData(DeviceItemTypeMetaInfo.s_licenseId, idx)
-			orderedProduct.m_licenseName = cfgModel.getData(DeviceItemTypeMetaInfo.s_licenseName, idx)
-			orderedProduct.m_licenseUuid = cfgModel.getData(LicenseItemTypeMetaInfo.s_id, idx)
-		}
 
 		return orderedProduct.m_productUuid !== "" && orderedProduct.m_licenseUuid !== ""
 	}
@@ -547,8 +526,8 @@ DocumentViewBase {
 			id: devicePage
 			anchors.fill: parent
 
-			property alias productCB: productCB
-			property alias configurationCB: configurationCB
+			property alias productSelect: productSelect
+			property alias configurationSelect: configurationSelect
 			property alias articleText: articleText
 			property alias descriptionInput: descriptionInput
 			property alias serialNumberInput: serialNumberInput
@@ -563,33 +542,11 @@ DocumentViewBase {
 				serialNumberInput.text = deviceEditorContainer.deviceData.m_serialNumber
 				macAddressInput.text = deviceEditorContainer.deviceData.m_macAddress
 
-				productCB.currentIndex = -1
-
-				let productId = deviceEditorContainer.deviceData.m_deviceType
-				let productModel = productCB.model
-				if (productModel) {
-					for (let i = 0; i < productModel.getItemsCount(); i++) {
-						let id = productModel.getData(ProductItemTypeMetaInfo.s_id, i)
-						if (id === productId) {
-							productCB.currentIndex = i
-							break
-						}
-					}
-				}
-
-				configurationCB.currentIndex = -1
-
-				let licenseName = deviceEditorContainer.deviceData.m_licenseName
-				let model = configurationCB.model
-				if (model) {
-					for (let i = 0; i < model.getItemsCount(); i++) {
-						let id = model.getData(LicenseItemTypeMetaInfo.s_id, i)
-						if (id === licenseName) {
-							configurationCB.currentIndex = i
-							break
-						}
-					}
-				}
+				productSelect.selectedId = deviceEditorContainer.deviceData.m_deviceType
+				productSelect.selectedText = deviceEditorContainer.deviceData.m_productName
+				configurationSelect.selectedId = deviceEditorContainer.deviceData.m_licenseName
+				configurationSelect.selectedText = deviceEditorContainer.deviceData.m_configurationName
+				articleText.text = deviceEditorContainer.deviceData.m_configurationArticle
 			}
 
 			function updateModel() {
@@ -597,30 +554,50 @@ DocumentViewBase {
 					return
 				}
 
-				if (productCB.currentIndex >= 0 && productCB.model) {
-					let selectedProductId = productCB.model.getData(ProductItemTypeMetaInfo.s_id, productCB.currentIndex)
-					deviceEditorContainer.deviceData.m_deviceType = selectedProductId
-				}
-				else {
-					deviceEditorContainer.deviceData.m_deviceType = ""
-				}
-
-				let configurationExists = false
-				if (configurationCB.model) {
-					if (configurationCB.currentIndex >= 0) {
-						let configurationType = configurationCB.model.getData(LicenseItemTypeMetaInfo.s_id, configurationCB.currentIndex)
-						deviceEditorContainer.deviceData.m_licenseName = configurationType
-						configurationExists = true
-					}
-				}
-
-				if (!configurationExists) {
-					deviceEditorContainer.deviceData.m_licenseName = ""
-				}
-
+				deviceEditorContainer.deviceData.m_deviceType = productSelect.selectedId
+				deviceEditorContainer.deviceData.m_productName = productSelect.selectedText
+				deviceEditorContainer.deviceData.m_licenseName = configurationSelect.selectedId
+				deviceEditorContainer.deviceData.m_configurationName = configurationSelect.selectedText
+				deviceEditorContainer.deviceData.m_configurationArticle = articleText.text
 				deviceEditorContainer.deviceData.m_description = descriptionInput.text
 				deviceEditorContainer.deviceData.m_serialNumber = serialNumberInput.text
 				deviceEditorContainer.deviceData.m_macAddress = macAddressInput.text
+			}
+
+			FieldFilter {
+				id: hardwareCategoryFilter
+				m_fieldId: "CategoryId"
+				m_filterValue: "Hardware"
+				m_filterValueType: "String"
+				m_filterOperations: ["Equal"]
+			}
+
+			GroupFilter {
+				id: hardwareCategoryGroup
+				m_logicalOperation: "And"
+
+				Component.onCompleted: {
+					hardwareCategoryGroup.emplaceFieldFilters()
+					hardwareCategoryGroup.m_fieldFilters.addElement(hardwareCategoryFilter)
+				}
+			}
+
+			FieldFilter {
+				id: productConfigurationsFilter
+				m_fieldId: "ProductId"
+				m_filterValue: productSelect.selectedId
+				m_filterValueType: "String"
+				m_filterOperations: ["Equal"]
+			}
+
+			GroupFilter {
+				id: productConfigurationsGroup
+				m_logicalOperation: "And"
+
+				Component.onCompleted: {
+					productConfigurationsGroup.emplaceFieldFilters()
+					productConfigurationsGroup.m_fieldFilters.addElement(productConfigurationsFilter)
+				}
 			}
 
 			CustomScrollbar {
@@ -664,66 +641,51 @@ DocumentViewBase {
 						objectName: "DeviceInformationGroup"
 						width: parent.width
 
-						ComboBoxElementView {
-							id: productCB
+						CollectionSelectElementView {
+							id: productSelect
 							objectName: "DeviceTypeCombo"
 							name: qsTr("Device Type")
-							model: CachedProductCollection.hardwareProductsModel
-							nameId: ProductItemTypeMetaInfo.s_productName
-							KeyNavigation.tab: configurationCB
+							commandId: ImtlicProductsSdlCommandIds.s_productsList
+							fields: [ProductItemTypeMetaInfo.s_id, ProductItemTypeMetaInfo.s_productName]
+							titleField: ProductItemTypeMetaInfo.s_productName
+							textFilterFieldIds: [ProductItemTypeMetaInfo.s_productName]
+							sortByField: ProductItemTypeMetaInfo.s_productName
+							groupFilters: [hardwareCategoryGroup]
+							placeHolderText: qsTr("Select a device type")
+							filterPlaceholder: qsTr("Search by product name")
+							KeyNavigation.tab: configurationSelect
 							KeyNavigation.backtab: macAddressInput
 							isSelectionRequired: true
 							errorText: qsTr("Please select a device type")
 
-							onCurrentIndexChanged: {
-								let ok = false
-								if (productCB.currentIndex >= 0) {
-									let model = productCB.model.getData(ProductItemTypeMetaInfo.s_licenses, productCB.currentIndex)
-									if (model) {
-										configurationCB.model = model
-										ok = true
-									}
-								}
-
-								if (!ok) {
-									configurationCB.model = 0
-								}
-
-								configurationCB.currentIndex = -1
+							onItemSelected: {
+								configurationSelect.selectedId = ""
+								configurationSelect.selectedText = ""
+								articleText.text = ""
 								deviceEditorContainer.doUpdateModel()
-							}
-
-							onModelChanged: {
-								deviceEditorContainer.doUpdateGui()
 							}
 						}
 
-						ComboBoxElementView {
-							id: configurationCB
+						CollectionSelectElementView {
+							id: configurationSelect
 							objectName: "HardwareConfigurationCombo"
 							name: qsTr("Hardware Configuration")
-							nameId: LicenseItemTypeMetaInfo.s_licenseName
+							commandId: ImtlicLicensesSdlCommandIds.s_licensesList
+							fields: [LicenseItemTypeMetaInfo.s_id, LicenseItemTypeMetaInfo.s_licenseName, LicenseItemTypeMetaInfo.s_licenseId]
+							titleField: LicenseItemTypeMetaInfo.s_licenseName
+							descriptionField: LicenseItemTypeMetaInfo.s_licenseId
+							textFilterFieldIds: [LicenseItemTypeMetaInfo.s_licenseName, LicenseItemTypeMetaInfo.s_licenseId]
+							sortByField: LicenseItemTypeMetaInfo.s_licenseName
+							groupFilters: [productConfigurationsGroup]
+							placeHolderText: productSelect.selectedId !== "" ? qsTr("Select a configuration") : qsTr("Select a device type first")
+							filterPlaceholder: qsTr("Search by configuration name or article")
 							KeyNavigation.tab: articleText
-							KeyNavigation.backtab: productCB
+							KeyNavigation.backtab: productSelect
 							isSelectionRequired: true
 							errorText: qsTr("Please select a configuration")
-							delegate: Component {
-								FilterableComboBoxDelegate {
-									width: configurationCB.width
-									text: model[DeviceItemTypeMetaInfo.s_licenseName]
-									comboBoxRef: configurationCB.cbRef
-									description: model[DeviceItemTypeMetaInfo.s_licenseId]
-								}
-							}
 
-							onCurrentIndexChanged: {
-								if (configurationCB.currentIndex >= 0 && configurationCB.model) {
-									articleText.text = configurationCB.model.getData(DeviceItemTypeMetaInfo.s_licenseId, configurationCB.currentIndex)
-								}
-								else {
-									articleText.text = ""
-								}
-
+							onItemSelected: {
+								articleText.text = configurationSelect.itemValue(item, LicenseItemTypeMetaInfo.s_licenseId)
 								deviceEditorContainer.doUpdateModel()
 							}
 						}
@@ -734,7 +696,7 @@ DocumentViewBase {
 							name: qsTr("Article")
 							readOnly: true
 							KeyNavigation.tab: descriptionInput
-							KeyNavigation.backtab: configurationCB
+							KeyNavigation.backtab: configurationSelect
 						}
 
 						TextInputElementView {
@@ -791,7 +753,7 @@ DocumentViewBase {
 								}
 							}
 
-							KeyNavigation.tab: productCB
+							KeyNavigation.tab: productSelect
 							KeyNavigation.backtab: serialNumberInput
 						}
 					}
@@ -808,7 +770,7 @@ DocumentViewBase {
 			id: productionPage
 			anchors.fill: parent
 
-			property alias orderCB: orderCB
+			property alias orderSelect: orderSelect
 			property alias statusCB: statusCB
 			property alias projectInput: projectInput
 			property alias internalUseSwitchElementView: internalUseSwitchElementView
@@ -831,19 +793,8 @@ DocumentViewBase {
 					}
 				}
 
-				orderCB.currentIndex = -1
-
-				let orderId = deviceEditorContainer.deviceData.m_orderId
-				let ordersModel = orderCB.sourceModel
-				if (ordersModel) {
-					for (let i = 0; i < ordersModel.getItemsCount(); i++) {
-						let id = ordersModel.getData(OrderItemTypeMetaInfo.s_id, i)
-						if (id === orderId) {
-							orderCB.currentIndex = i
-							break
-						}
-					}
-				}
+				orderSelect.selectedId = deviceEditorContainer.deviceData.m_orderId
+				orderSelect.selectedText = deviceEditorContainer.deviceData.m_orderName
 
 				internalUseSwitchElementView.checked = deviceEditorContainer.deviceData.m_internalUse
 			}
@@ -853,15 +804,9 @@ DocumentViewBase {
 					return
 				}
 
-				let canChangeOrder = PermissionsController.checkPermission("ChangeOrderForSensor")
-				if (canChangeOrder && orderCB.sourceModel) {
-					if (orderCB.currentIndex >= 0) {
-						let selectedOrderId = orderCB.sourceModel.getData(OrderItemTypeMetaInfo.s_id, orderCB.currentIndex)
-						deviceEditorContainer.deviceData.m_orderId = selectedOrderId
-					}
-					else {
-						deviceEditorContainer.deviceData.m_orderId = ""
-					}
+				if (PermissionsController.checkPermission("ChangeOrderForSensor")) {
+					deviceEditorContainer.deviceData.m_orderId = orderSelect.selectedId
+					deviceEditorContainer.deviceData.m_orderName = orderSelect.selectedText
 				}
 
 				deviceEditorContainer.deviceData.m_project = projectInput.text
@@ -918,30 +863,23 @@ DocumentViewBase {
 						objectName: "productionInformationGroup"
 						width: parent.width
 
-						FilterableComboBoxElementView {
-							id: orderCB
+						CollectionSelectElementView {
+							id: orderSelect
 							objectName: "OrderCombo"
 							name: qsTr("Order-ID")
-							nameId: OrderItemTypeMetaInfo.s_orderId
-							filteringFields: [OrderItemTypeMetaInfo.s_orderId, OrderItemTypeMetaInfo.s_customerName]
-							sourceModel: CachedOrderCollection.collectionModel
+							commandId: ProlifeOrdersSdlCommandIds.s_ordersList
+							fields: [OrderItemTypeMetaInfo.s_id, OrderItemTypeMetaInfo.s_orderId, OrderItemTypeMetaInfo.s_customerName]
+							titleField: OrderItemTypeMetaInfo.s_orderId
+							descriptionField: OrderItemTypeMetaInfo.s_customerName
+							textFilterFieldIds: [OrderItemTypeMetaInfo.s_orderId, OrderItemTypeMetaInfo.s_customerLink]
+							placeHolderText: qsTr("Select an order")
+							filterPlaceholder: qsTr("Search by order or customer")
+							clearable: true
 							KeyNavigation.tab: statusCB
 							KeyNavigation.backtab: internalUseSwitchElementView
 
-							delegate: Component {
-								FilterableComboBoxDelegate {
-									width: comboBoxRef ? comboBoxRef.width : 0
-									comboBoxRef: orderCB.cbRef
-									description: qsTr("Customer") + ": " + model[OrderItemTypeMetaInfo.s_customerName]
-								}
-							}
-
-							onFinished: {
+							onItemSelected: {
 								deviceEditorContainer.doUpdateModel()
-							}
-
-							onModelChanged: {
-								deviceEditorContainer.doUpdateGui()
 							}
 						}
 
@@ -952,7 +890,7 @@ DocumentViewBase {
 							model: productionStatus.m_statusModel
 							nameId: "m_name"
 							KeyNavigation.tab: projectInput
-							KeyNavigation.backtab: orderCB
+							KeyNavigation.backtab: orderSelect
 
 							onCurrentIndexChanged: {
 								deviceEditorContainer.doUpdateModel()
@@ -983,7 +921,7 @@ DocumentViewBase {
 							name: qsTr("Internal Use")
 							description: qsTr("Activate if the sensor is for internal use")
 							readOnly: deviceEditorContainer.readOnly
-							KeyNavigation.tab: orderCB
+							KeyNavigation.tab: orderSelect
 							KeyNavigation.backtab: projectInput
 							onCheckedChanged: {
 								deviceEditorContainer.doUpdateModel()

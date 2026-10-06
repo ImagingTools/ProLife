@@ -88,6 +88,15 @@ sdl::V1_0::prolife::CDeviceData CDeviceCollectionDocumentServiceComp::OnGetDevic
 	QByteArray productUuid = deviceInfoPtr->GetDeviceType();
 	response.deviceType = (productUuid);
 
+	// Built from the edited document, not the stored one, so names follow unsaved changes and undo/redo.
+	idoc::MetaInfoPtr metaInfoPtr;
+	if (m_deviceMetaInfoCreatorCompPtr.IsValid() && m_deviceMetaInfoCreatorCompPtr->CreateMetaInfo(deviceInfoPtr, QByteArrayLiteral("Device"), metaInfoPtr) && metaInfoPtr.IsValid()){
+		response.productName = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PRODUCT_NAME).toString();
+		response.configurationName = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_NAME).toString();
+		response.configurationArticle = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_ID).toString();
+		response.orderName = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DELIVERY_ID).toString();
+	}
+
 	imtsdl::TElementList<sdl::V1_0::prolife::CSoftwareBindingInfo> softwareBindingInfoList;
 
 	QByteArrayList softwareIds = GetBindedSoftware(objectId);

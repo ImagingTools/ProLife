@@ -28,8 +28,6 @@
             <PositionMap>
                 <Element ComponentName="CommandsController" X="600" Y="75" Note=""/>
                 <Element ComponentName="Revision" X="950" Y="425" Note=""/>
-                <Element ComponentName="Revoke" X="0" Y="0" Note=""/>
-                <Element ComponentName="Split" X="0" Y="0" Note=""/>
                 <Element ComponentName="StandardCollectionCommands" X="250" Y="275" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>

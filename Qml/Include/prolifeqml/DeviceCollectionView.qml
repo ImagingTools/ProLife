@@ -91,17 +91,17 @@ RemoteCollectionView {
 
 			if (params.customerId !== undefined && params.customerId !== ""){
 				let customersFilterDelegate = container.filterMenu.getFilterDelegate("Customers")
-				customersFilterDelegate.setSelectedId(params.customerId, true)
+				customersFilterDelegate.setSelectedId(params.customerId, params.customerName, true)
 			}
 
 			if (params.productId !== undefined && params.productId !== ""){
 				let productFilterDelegate = container.filterMenu.getFilterDelegate(DeviceItemTypeMetaInfo.s_productUuid)
-				productFilterDelegate.setSelectedId(params.productId, true)
+				productFilterDelegate.setSelectedId(params.productId, params.productName, true)
 			}
 
 			if (params.licenseId !== undefined && params.licenseId !== ""){
 				let licenseFilterDelegate = container.filterMenu.getFilterDelegate(DeviceItemTypeMetaInfo.s_licenseUuid)
-				licenseFilterDelegate.setSelectedId(params.licenseId, true)
+				licenseFilterDelegate.setSelectedId(params.licenseId, params.licenseName, true)
 			}
 
 			if (params.statusId !== undefined && params.statusId !== ""){
@@ -188,55 +188,20 @@ RemoteCollectionView {
 
 	Component {
 		id: productsDelegateFilterComp
-		
-		FieldFilterDelegate {
-			id: productsDelegateFilter
+
+		ProductFilterDelegate {
 			objectName: "ProductsFilter"
-			name: qsTr("Products")
-			visibleItemCount: 15
+			categoryId: "Hardware"
 			defaultFieldFilter.m_fieldId: DeviceItemTypeMetaInfo.s_productUuid
-			
-			OptionsListAdapter {
-				id: optionsListAdapter
-				collectionModel: CachedProductCollection.hardwareProductsModel
-				
-				onCollectionModelChanged: {
-					productsDelegateFilter.setOptionsList(m_options)
-				}
-			}
-			
-			Connections {
-				target: CachedProductCollection
-				function onHardwareProductsModelReady(){
-					optionsListAdapter.collectionModel = null
-					optionsListAdapter.collectionModel = CachedProductCollection.hardwareProductsModel
-				}
-			}
 		}
 	}
 
 	Component {
 		id: licensesDelegateFilterComp
-		
-		FieldFilterDelegate {
-			id: productsDelegateFilter
+
+		ProductLicenseFilterDelegate {
 			objectName: "LicensesFilter"
-			name: qsTr("Licenses")
-			visibleItemCount: 15
 			defaultFieldFilter.m_fieldId: DeviceItemTypeMetaInfo.s_licenseUuid
-			
-			onFilterDependencyChanged: {
-				if (filterId === DeviceItemTypeMetaInfo.s_productUuid){
-					optionsListAdapter.collectionModel = CachedProductCollection.getLicensesModel(filterValue)
-				}
-			}
-			
-			OptionsListAdapter {
-				id: optionsListAdapter
-				onCollectionModelChanged: {
-					productsDelegateFilter.setOptionsList(m_options)
-				}
-			}
 		}
 	}
 
