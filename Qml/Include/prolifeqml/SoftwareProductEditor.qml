@@ -18,7 +18,6 @@ import prolifeLicensesSdl 1.0
 Item {
 	id: root
 
-	property TreeItemModel softwaresModel: TreeItemModel {}
 	property BaseModel orderProductsModel: BaseModel {}
 	property var model: null
 	property OrderedProduct productItem: model
@@ -32,13 +31,7 @@ Item {
 	property bool chromeLocked: false
 	property bool hasLinkedSelection: false
 
-	property int instanceCount: {
-		if (!root.createMode)
-			return 1
-		if (softwareEditor.softwareProductData && softwareEditor.softwareProductData.m_isMultiple)
-			return 1
-		return root.batchQuantity
-	}
+	property int instanceCount: root.createMode ? root.batchQuantity : 1
 
 	readonly property bool showEditor: root.createMode || root.hasLinkedSelection || root.chromeLocked
 	readonly property bool showEmptyLinkState: !root.createMode && !root.hasLinkedSelection && !root.chromeLocked
@@ -80,7 +73,7 @@ Item {
 
 		if (root.createMode) {
 			softwareEditor.applyToOrderedProduct(productItem)
-			if (!productItem.m_isMultiple && root.batchQuantity > 1) {
+			if (root.batchQuantity > 1) {
 				productItem.m_serialNumber = ""
 				productItem.m_expiration = ""
 			}
@@ -94,55 +87,30 @@ Item {
 		root.hasLinkedSelection = false
 	}
 
-	function selectLinkedIndex(index) {
-		if (index < 0 || !root.softwaresModel)
+	// \c values is a row of the instance picker, keyed by SoftwareProductItem field ids.
+	function selectLinkedItem(values) {
+		if (!values || !productItem)
 			return
-
-		let src = root.softwaresModel
-		let idx = index
 
 		productItem.m_isNew = false
 		productItem.m_categoryId = "Software"
-		productItem.m_id = src.getData(SoftwareProductItemTypeMetaInfo.s_id, idx)
-		productItem.m_licenseUuid = src.containsKey(SoftwareProductItemTypeMetaInfo.s_licenseUuid, idx)
-			? src.getData(SoftwareProductItemTypeMetaInfo.s_licenseUuid, idx) : ""
-		productItem.m_licenseId = src.containsKey(SoftwareProductItemTypeMetaInfo.s_licenseId, idx)
-			? src.getData(SoftwareProductItemTypeMetaInfo.s_licenseId, idx) : ""
-		productItem.m_licenseName = src.containsKey(SoftwareProductItemTypeMetaInfo.s_licenseName, idx)
-			? src.getData(SoftwareProductItemTypeMetaInfo.s_licenseName, idx) : ""
-		productItem.m_serialNumber = src.containsKey(SoftwareProductItemTypeMetaInfo.s_serialNumber, idx)
-			? src.getData(SoftwareProductItemTypeMetaInfo.s_serialNumber, idx) : ""
-		productItem.m_expiration = src.containsKey(SoftwareProductItemTypeMetaInfo.s_expiration, idx)
-			? src.getData(SoftwareProductItemTypeMetaInfo.s_expiration, idx) : ""
-		productItem.m_inUse = src.containsKey(SoftwareProductItemTypeMetaInfo.s_inUse, idx)
-			? src.getData(SoftwareProductItemTypeMetaInfo.s_inUse, idx) : false
-		productItem.m_productUuid = src.containsKey(SoftwareProductItemTypeMetaInfo.s_productUuid, idx)
-			? src.getData(SoftwareProductItemTypeMetaInfo.s_productUuid, idx) : ""
-		productItem.m_productName = src.containsKey(SoftwareProductItemTypeMetaInfo.s_productName, idx)
-			? src.getData(SoftwareProductItemTypeMetaInfo.s_productName, idx) : ""
-		productItem.m_isMultiple = false
-		productItem.m_productCount = 1
+		productItem.m_id = values[SoftwareProductItemTypeMetaInfo.s_id]
+		productItem.m_licenseUuid = values[SoftwareProductItemTypeMetaInfo.s_licenseUuid]
+		productItem.m_licenseId = values[SoftwareProductItemTypeMetaInfo.s_licenseId]
+		productItem.m_licenseName = values[SoftwareProductItemTypeMetaInfo.s_licenseName]
+		productItem.m_serialNumber = values[SoftwareProductItemTypeMetaInfo.s_serialNumber]
+		productItem.m_expiration = values[SoftwareProductItemTypeMetaInfo.s_expiration]
+		productItem.m_inUse = values[SoftwareProductItemTypeMetaInfo.s_inUse] === "true"
+		productItem.m_productUuid = values[SoftwareProductItemTypeMetaInfo.s_productUuid]
+		productItem.m_productName = values[SoftwareProductItemTypeMetaInfo.s_productName]
 		productItem.m_macAddress = ""
-
-		softwareData.m_id = productItem.m_id
-		softwareData.m_productId = productItem.m_productUuid
-		softwareData.m_licenseUuid = productItem.m_licenseUuid
-		softwareData.m_serialNumber = productItem.m_serialNumber
-		softwareData.m_expiration = productItem.m_expiration
-		softwareData.m_isMultiple = false
-		softwareData.m_productCount = 0
-		softwareData.m_inUse = productItem.m_inUse
-		softwareData.m_categoryId = "Software"
-		if (root.orderUuid !== "")
-			softwareData.m_orderUuid = root.orderUuid
 
 		root.hasLinkedSelection = true
 		softwareEditor.readOnly = true
-		softwareEditor.doUpdateGui()
+		softwareEditor.loadFromOrderedProduct(productItem)
 		softwareEditor.setReadOnly(true)
 
-		if (root.productItem)
-			root.productItem.modelChanged([])
+		root.productItem.modelChanged([])
 	}
 
 	onCreateModeChanged: {

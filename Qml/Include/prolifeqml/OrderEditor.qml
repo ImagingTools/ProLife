@@ -9,6 +9,7 @@ import imtauthgui 1.0
 import imtcolgui 1.0
 import prolifeqml 1.0
 import prolifeOrdersSdl 1.0
+import prolifeAccountsSdl 1.0
 import imtbaseImtCollectionSdl 1.0
 
 /**
@@ -24,12 +25,6 @@ ViewBase {
 	anchors.fill: parent
 	contentColor: Style.baseColor
 
-	property TreeItemModel accountsModel: CachedAccountCollection.collectionModel
-	property TreeItemModel productsModel: CachedProductCollection.collectionModel
-	property TreeItemModel devicesModel: CachedDeviceCollection.collectionModel
-	property TreeItemModel softwaresModel: CachedSoftwareCollection.collectionModel
-	property TreeItemModel licensesModel: CachedLicenseCollection.collectionModel
-
 	property OrderData orderData: model
 	property bool isNew: false
 	property int contentMaxWidth: 900
@@ -42,9 +37,6 @@ ViewBase {
 	}
 
 	Component.onCompleted: {
-		if (!CachedAccountCollection.completed) {
-			CachedAccountCollection.updateModel()
-		}
 		multiPageView.updatePages()
 	}
 
@@ -118,7 +110,7 @@ ViewBase {
 			generalPage.instanceIdInput.readOnly = readOnly
 			generalPage.purchaseIdInput.readOnly = readOnly
 			generalPage.descriptionInput.readOnly = readOnly
-			generalPage.customerCB.changeable = !readOnly
+			generalPage.customerSelect.changeable = !readOnly
 			generalPage.orderStatusCB.changeable = !readOnly
 		}
 		if (productsPage) {
@@ -144,7 +136,7 @@ ViewBase {
 			generalPage.instanceIdInput.readOnly = false
 			generalPage.purchaseIdInput.readOnly = false
 			generalPage.descriptionInput.readOnly = false
-			generalPage.customerCB.changeable = true
+			generalPage.customerSelect.changeable = true
 			generalPage.orderStatusCB.changeable = true
 			if (productsPage) {
 				productsPage.addProduct.visible = true
@@ -162,7 +154,7 @@ ViewBase {
 			generalPage.descriptionInput.readOnly = !canChangeDescriptionForOrder
 
 			let canChangeCustomer = PermissionsController.checkPermission("ChangeCustomer")
-			generalPage.customerCB.changeable = canChangeCustomer
+			generalPage.customerSelect.changeable = canChangeCustomer
 
 			let canChangeOrderStatus = PermissionsController.checkPermission("ChangeOrderStatus")
 			generalPage.orderStatusCB.changeable = canChangeOrderStatus
@@ -282,7 +274,7 @@ ViewBase {
 			property alias instanceIdInput: instanceIdInput
 			property alias purchaseIdInput: purchaseIdInput
 			property alias descriptionInput: descriptionInput
-			property alias customerCB: customerCB
+			property alias customerSelect: customerSelect
 			property alias orderStatusCB: orderStatusCB
 
 			function updateGui() {
@@ -294,18 +286,8 @@ ViewBase {
 				purchaseIdInput.text = orderEditorContainer.orderData.m_purchaseId
 				descriptionInput.text = orderEditorContainer.orderData.m_description
 
-				customerCB.currentIndex = -1
-				let customerId = orderEditorContainer.orderData.m_customerId
-				let customerModel = customerCB.model
-				if (customerModel) {
-					for (let i = 0; i < customerModel.getItemsCount(); i++) {
-						let id = customerModel.getData("id", i)
-						if (id === customerId) {
-							customerCB.currentIndex = i
-							break
-						}
-					}
-				}
+				customerSelect.selectedId = orderEditorContainer.orderData.m_customerId
+				customerSelect.selectedText = orderEditorContainer.orderData.m_customerName
 
 				orderStatusCB.currentIndex = -1
 				let status = orderEditorContainer.orderData.m_orderStatus
@@ -331,11 +313,8 @@ ViewBase {
 				orderEditorContainer.orderData.m_purchaseId = purchaseIdInput.text
 				orderEditorContainer.orderData.m_description = descriptionInput.text
 
-				let selectedAccountId = ""
-				if (customerCB.currentIndex >= 0 && customerCB.model) {
-					selectedAccountId = customerCB.model.getData("id", customerCB.currentIndex)
-				}
-				orderEditorContainer.orderData.m_customerId = selectedAccountId
+				orderEditorContainer.orderData.m_customerId = customerSelect.selectedId
+				orderEditorContainer.orderData.m_customerName = customerSelect.selectedText
 
 				if (orderStatusCB.currentIndex >= 0 && orderStatusCB.model) {
 					orderEditorContainer.orderData.m_orderStatus = orderStatusCB.model.getData("id", orderStatusCB.currentIndex)
@@ -454,7 +433,7 @@ ViewBase {
 							name: qsTr("Description")
 							placeHolderText: qsTr("Enter the comment")
 							readOnly: orderEditorContainer.readOnly
-							KeyNavigation.tab: customerCB
+							KeyNavigation.tab: customerSelect
 							KeyNavigation.backtab: purchaseIdInput
 
 							onEditingFinished: {
@@ -462,23 +441,26 @@ ViewBase {
 							}
 						}
 
-						ComboBoxElementView {
-							id: customerCB
+						CollectionSelectElementView {
+							id: customerSelect
 							objectName: "CustomerCombo"
 							name: qsTr("Customer")
-							model: orderEditorContainer.accountsModel
+							commandId: ProlifeAccountsSdlCommandIds.s_accountsList
+							fields: [AccountItemTypeMetaInfo.s_id, AccountItemTypeMetaInfo.s_name, AccountItemTypeMetaInfo.s_email]
+							titleField: AccountItemTypeMetaInfo.s_name
+							descriptionField: AccountItemTypeMetaInfo.s_email
+							textFilterFieldIds: [AccountItemTypeMetaInfo.s_name, AccountItemTypeMetaInfo.s_email]
+							sortByField: AccountItemTypeMetaInfo.s_name
+							placeHolderText: qsTr("Select a customer")
+							filterPlaceholder: qsTr("Search by name or e-mail")
 							changeable: !orderEditorContainer.readOnly
 							isSelectionRequired: true
 							errorText: qsTr("Please select a customer")
 							KeyNavigation.tab: orderStatusCB
 							KeyNavigation.backtab: descriptionInput
 
-							onCurrentIndexChanged: {
+							onItemSelected: {
 								orderEditorContainer.doUpdateModel()
-							}
-
-							onModelChanged: {
-								orderEditorContainer.doUpdateGui()
 							}
 						}
 
@@ -489,7 +471,7 @@ ViewBase {
 							changeable: !orderEditorContainer.readOnly
 							model: orderStatus.statusModel
 							KeyNavigation.tab: instanceIdInput
-							KeyNavigation.backtab: customerCB
+							KeyNavigation.backtab: customerSelect
 
 							onCurrentIndexChanged: {
 								orderEditorContainer.doUpdateModel()
@@ -539,10 +521,6 @@ ViewBase {
 					id: productsDialog
 
 					onStarted: {
-						productsDialog.bodyItem.productsModel = orderEditorContainer.productsModel
-						productsDialog.bodyItem.devicesModel = orderEditorContainer.devicesModel
-						productsDialog.bodyItem.softwaresModel = orderEditorContainer.softwaresModel
-						productsDialog.bodyItem.licensesModel = orderEditorContainer.licensesModel
 						productsDialog.bodyItem.orderUuid = orderEditorContainer.orderData.m_id
 						productsDialog.activeProductIndex = productsView.activeProductIndex
 						productsDialog.bodyItem.orderId = orderEditorContainer.orderData.m_orderId

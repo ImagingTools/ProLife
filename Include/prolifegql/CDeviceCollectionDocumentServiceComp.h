@@ -5,6 +5,7 @@
 #include <imtdoc/IDocumentService.h>
 #include <imtdoc/IDocumentServiceEventHandler.h>
 #include <imtbase/IOperationContextController.h>
+#include <imtbase/IMetaInfoCreator.h>
 #include <imtbasesdl/SDL/1.0/CPP/CollectionDocumentService_fwd.h>
 
 // ControlsGallery includes
@@ -29,6 +30,7 @@ public:
 		I_ASSIGN(m_softwareProductCollectionCompPtr, "SoftwareProductCollection", "Software product collection", true, "SoftwareProductCollection");
 		I_ASSIGN(m_licenseCollectionCompPtr, "LicenseCollection", "Remote License collection", true, "LicenseCollection");
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
+		I_ASSIGN(m_deviceMetaInfoCreatorCompPtr, "DeviceMetaInfoCreator", "Creates the meta info of the edited device, naming the objects it refers to", false, "DeviceMetaInfoCreator");
 		I_ASSIGN(m_orderOperationContextControllerCompPtr, "OrderOperationContextController", "Operation context controller for order info", true, "OrderOperationContextController");
 	I_END_COMPONENT
 
@@ -66,6 +68,7 @@ private:
 	I_REF(imtbase::IObjectCollection, m_softwareProductCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);
+	I_REF(imtbase::IMetaInfoCreator, m_deviceMetaInfoCreatorCompPtr);
 	I_REF(imtbase::IOperationContextController, m_orderOperationContextControllerCompPtr);
 };
 

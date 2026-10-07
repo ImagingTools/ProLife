@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "8f2b1e10-3a4c-4b8e-9c1a-prolife-api-full",
     "name": "ProLife Api",
-    "description": "GraphQL API test suite for ProLife's own domain surface (Accounts, Orders, Sensors/Devices, Licenses/SoftwareProducts, Workspace dashboards, DeviceCollectionDocumentService). One request/test per GraphQL field (43 fields total), built by analogy with Puma's TenantApiPostman and ProLife's own DeskTicketApiPostman. Shared imtauth fields (Authorization, CreateSuperuser) are used only as bootstrap infrastructure, not separately tested here. IotDevice fields (IotDeviceAdd/Update/List/Item and the IotDevice document-service operations) were removed - they aren't part of ProLife's own Sensors devices and had no real coverage story here (new/exploratory, all failing on real server validation errors unrelated to the collection itself).",
+    "description": "GraphQL API test suite for ProLife's own domain surface (Accounts, Orders, Sensors/Devices, Licenses/SoftwareProducts, Workspace dashboards, DeviceCollectionDocumentService). One request/test per GraphQL field (43 fields total), built by analogy with Puma's TenantApiPostman and ProLife's own DeskTicketApiPostman. Shared imtauth fields (Authorization, CreateSuperuser) are used only as bootstrap infrastructure, not separately tested here. Shared imtapp GetApplicationInfo is checked only for ProLife's tenantsEnabled configuration. IotDevice fields (IotDeviceAdd/Update/List/Item and the IotDevice document-service operations) were removed - they aren't part of ProLife's own Sensors devices and had no real coverage story here (new/exploratory, all failing on real server validation errors unrelated to the collection itself).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "auth": {
@@ -234,7 +234,8 @@
                   "const id = json.data && json.data.AccountUpdate && json.data.AccountUpdate.id;",
                   "pm.test('AccountUpdate returns the same id', function () {",
                   "  pm.expect(id).to.eql(pm.environment.get('accountId'));",
-                  "});"
+                  "});",
+                  "pm.environment.set('accountName', 'ProLifeApi Account ' + pm.environment.get('randomInt') + ' Updated');"
                 ]
               }
             }
@@ -421,7 +422,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "query OrderItem { OrderItem(input: { typeId: \"Order\", id: \"{{orderId}}\" }) { id name description orderId purchaseId customerId orderStatus orderProducts { id } customerRoles { customerId customerName roleType } } }",
+                "query": "query OrderItem { OrderItem(input: { typeId: \"Order\", id: \"{{orderId}}\" }) { id name description orderId purchaseId customerId customerName orderStatus orderProducts { id } customerRoles { customerId customerName roleType } } }",
                 "variables": ""
               }
             },
@@ -440,6 +441,9 @@
                   "});",
                   "pm.test('OrderItem returns the requested order', function () {",
                   "  pm.expect(json.data.OrderItem.id).to.eql(pm.environment.get('orderId'));",
+                  "});",
+                  "pm.test('OrderItem.customerName carries the linked account name', function () {",
+                  "  pm.expect(json.data.OrderItem.customerName).to.eql(pm.environment.get('accountName'));",
                   "});"
                 ]
               }
@@ -918,7 +922,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "query DeviceItem { DeviceItem(input: { typeId: \"Device\", id: \"{{deviceId}}\" }) { id name description macAddress serialNumber deviceType orderId licenseName project productionStatus internalUse } }",
+                "query": "query DeviceItem { DeviceItem(input: { typeId: \"Device\", id: \"{{deviceId}}\" }) { id name description macAddress serialNumber deviceType productName orderId orderName licenseName configurationName configurationArticle project productionStatus internalUse } }",
                 "variables": ""
               }
             },
@@ -937,6 +941,15 @@
                   "});",
                   "pm.test('DeviceItem returns the requested device', function () {",
                   "  pm.expect(json.data.DeviceItem.id).to.eql(pm.environment.get('deviceId'));",
+                  "});",
+                  "const device = json.data.DeviceItem;",
+                  "pm.test('DeviceItem carries the hardware product and configuration names', function () {",
+                  "  pm.expect(device.productName).to.be.a('string').and.not.empty;",
+                  "  pm.expect(device.configurationName).to.be.a('string').and.not.empty;",
+                  "  pm.expect(device.configurationArticle).to.be.a('string');",
+                  "});",
+                  "pm.test('DeviceItem.orderName is empty for a device without order', function () {",
+                  "  pm.expect(device.orderName).to.eql('');",
                   "});"
                 ]
               }
@@ -951,7 +964,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "query GetDeviceBinding { GetDeviceBinding(input: { id: \"{{deviceId}}\" }) { id productUuid project softwareIds } }",
+                "query": "query GetDeviceBinding { GetDeviceBinding(input: { id: \"{{deviceId}}\" }) { id productUuid productName project softwareIds } }",
                 "variables": ""
               }
             },
@@ -970,6 +983,13 @@
                   "});",
                   "pm.test('GetDeviceBinding returns an object', function () {",
                   "  pm.expect(json.data.GetDeviceBinding).to.be.an('object');",
+                  "});",
+                  "const binding = json.data.GetDeviceBinding;",
+                  "pm.test('GetDeviceBinding.productName matches productUuid', function () {",
+                  "  pm.expect(binding.productName).to.be.a('string');",
+                  "  if (binding.productUuid) {",
+                  "    pm.expect(binding.productName).to.not.be.empty;",
+                  "  }",
                   "});"
                 ]
               }
@@ -1358,7 +1378,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "query SoftwareProductItem { SoftwareProductItem(input: { typeId: \"SoftwareProduct\", id: \"{{softwareProductId}}\" }) { id productId categoryId serialNumber project inUse orderUuid licenseUuid expiration hasChildren hasParent } }",
+                "query": "query SoftwareProductItem { SoftwareProductItem(input: { typeId: \"SoftwareProduct\", id: \"{{softwareProductId}}\" }) { id productId productName categoryId serialNumber project inUse orderUuid orderName licenseUuid licenseName licenseId expiration hasChildren hasParent } }",
                 "variables": ""
               }
             },
@@ -1377,6 +1397,15 @@
                   "});",
                   "pm.test('SoftwareProductItem returns the requested product', function () {",
                   "  pm.expect(json.data.SoftwareProductItem.id).to.eql(pm.environment.get('softwareProductId'));",
+                  "});",
+                  "const software = json.data.SoftwareProductItem;",
+                  "pm.test('SoftwareProductItem carries the product and license names', function () {",
+                  "  pm.expect(software.productName).to.be.a('string').and.not.empty;",
+                  "  pm.expect(software.licenseName).to.be.a('string').and.not.empty;",
+                  "  pm.expect(software.licenseId).to.be.a('string');",
+                  "});",
+                  "pm.test('SoftwareProductItem.orderName is empty for a product without order', function () {",
+                  "  pm.expect(software.orderName).to.eql('');",
                   "});"
                 ]
               }
@@ -1526,7 +1555,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "query GetDeviceRepresentation { GetDeviceRepresentation(input: { id: \"{{deviceDocumentId}}\" }) { id name description macAddress serialNumber deviceType orderId licenseName project productionStatus internalUse } }",
+                "query": "query GetDeviceRepresentation { GetDeviceRepresentation(input: { id: \"{{deviceDocumentId}}\" }) { id name description macAddress serialNumber deviceType productName orderId orderName licenseName configurationName configurationArticle project productionStatus internalUse } }",
                 "variables": ""
               }
             },
@@ -1545,6 +1574,22 @@
                   "});",
                   "pm.test('GetDeviceRepresentation returns an object', function () {",
                   "  pm.expect(json.data.GetDeviceRepresentation).to.be.an('object');",
+                  "});",
+                  "const representation = json.data.GetDeviceRepresentation;",
+                  "pm.test('GetDeviceRepresentation names match the referenced ids', function () {",
+                  "  pm.expect(representation.productName).to.be.a('string');",
+                  "  pm.expect(representation.configurationName).to.be.a('string');",
+                  "  pm.expect(representation.configurationArticle).to.be.a('string');",
+                  "  pm.expect(representation.orderName).to.be.a('string');",
+                  "  if (representation.deviceType) {",
+                  "    pm.expect(representation.productName).to.not.be.empty;",
+                  "  }",
+                  "  if (representation.licenseName) {",
+                  "    pm.expect(representation.configurationName).to.not.be.empty;",
+                  "  }",
+                  "  if (representation.orderId) {",
+                  "    pm.expect(representation.orderName).to.not.be.empty;",
+                  "  }",
                   "});"
                 ]
               }
@@ -1649,6 +1694,13 @@
                   "});",
                   "pm.test('GetSoftwareUsedBarChart returns bars', function () {",
                   "  pm.expect(json.data.GetSoftwareUsedBarChart.bars).to.be.an('array');",
+                  "});",
+                  "pm.test('GetSoftwareUsedBarChart named segments carry the product id', function () {",
+                  "  json.data.GetSoftwareUsedBarChart.bars.forEach(function (bar) {",
+                  "    (bar.segments || []).filter(function (segment) { return !!segment.label; }).forEach(function (segment) {",
+                  "      pm.expect(segment.id, segment.label).to.be.a('string').and.not.empty;",
+                  "    });",
+                  "  });",
                   "});"
                 ]
               }
@@ -1682,6 +1734,11 @@
                   "});",
                   "pm.test('GetSoftwareUsedPieChart returns segments', function () {",
                   "  pm.expect(json.data.GetSoftwareUsedPieChart.segments).to.be.an('array');",
+                  "});",
+                  "pm.test('GetSoftwareUsedPieChart named segments carry the product id', function () {",
+                  "  json.data.GetSoftwareUsedPieChart.segments.filter(function (segment) { return !!segment.label; }).forEach(function (segment) {",
+                  "    pm.expect(segment.id, segment.label).to.be.a('string').and.not.empty;",
+                  "  });",
                   "});"
                 ]
               }
@@ -1715,6 +1772,13 @@
                   "});",
                   "pm.test('GetHardwareUsedBarChart returns bars', function () {",
                   "  pm.expect(json.data.GetHardwareUsedBarChart.bars).to.be.an('array');",
+                  "});",
+                  "pm.test('GetHardwareUsedBarChart named segments carry the product id', function () {",
+                  "  json.data.GetHardwareUsedBarChart.bars.forEach(function (bar) {",
+                  "    (bar.segments || []).filter(function (segment) { return !!segment.label; }).forEach(function (segment) {",
+                  "      pm.expect(segment.id, segment.label).to.be.a('string').and.not.empty;",
+                  "    });",
+                  "  });",
                   "});"
                 ]
               }
@@ -1748,6 +1812,11 @@
                   "});",
                   "pm.test('GetHardwareUsedPieChart returns segments', function () {",
                   "  pm.expect(json.data.GetHardwareUsedPieChart.segments).to.be.an('array');",
+                  "});",
+                  "pm.test('GetHardwareUsedPieChart named segments carry the product id', function () {",
+                  "  json.data.GetHardwareUsedPieChart.segments.filter(function (segment) { return !!segment.label; }).forEach(function (segment) {",
+                  "    pm.expect(segment.id, segment.label).to.be.a('string').and.not.empty;",
+                  "  });",
                   "});"
                 ]
               }
@@ -1946,6 +2015,13 @@
                   "});",
                   "pm.test('GetSoftwareCreationBarChart returns bars', function () {",
                   "  pm.expect(json.data.GetSoftwareCreationBarChart.bars).to.be.an('array');",
+                  "});",
+                  "pm.test('GetSoftwareCreationBarChart named segments carry the product id', function () {",
+                  "  json.data.GetSoftwareCreationBarChart.bars.forEach(function (bar) {",
+                  "    (bar.segments || []).filter(function (segment) { return !!segment.label; }).forEach(function (segment) {",
+                  "      pm.expect(segment.id, segment.label).to.be.a('string').and.not.empty;",
+                  "    });",
+                  "  });",
                   "});"
                 ]
               }
@@ -1979,6 +2055,13 @@
                   "});",
                   "pm.test('GetHardwareCreationBarChart returns bars', function () {",
                   "  pm.expect(json.data.GetHardwareCreationBarChart.bars).to.be.an('array');",
+                  "});",
+                  "pm.test('GetHardwareCreationBarChart named segments carry the product id', function () {",
+                  "  json.data.GetHardwareCreationBarChart.bars.forEach(function (bar) {",
+                  "    (bar.segments || []).filter(function (segment) { return !!segment.label; }).forEach(function (segment) {",
+                  "      pm.expect(segment.id, segment.label).to.be.a('string').and.not.empty;",
+                  "    });",
+                  "  });",
                   "});"
                 ]
               }
@@ -2858,6 +2941,39 @@
           ]
         },
         {
+          "name": "GetApplicationInfo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetApplicationInfo { GetApplicationInfo(input: { productId: \"{{productId}}\" }) { applicationId applicationName version tenantsEnabled } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Covers GetApplicationInfo (imtapp/1.0 Application.sdl). The ProLife server enables tenants (TenantsEnabled=true in ProLifeHandlers.acc); clients start tenant/organization requests only when this flag is set."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('GetApplicationInfo has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('GetApplicationInfo reports tenants enabled for ProLife', function () {",
+                  "  pm.expect(json.data.GetApplicationInfo.tenantsEnabled).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
           "name": "Search",
           "request": {
             "method": "POST",
@@ -3336,6 +3452,40 @@
           ]
         },
         {
+          "name": "OrderItem (Check Account name propagated)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query OrderItem { OrderItem(input: { typeId: \"Order\", id: \"{{metaOrderId}}\" }) { id customerId customerName } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Confirms the renamed account is reflected in the order item (OrderData.customerName), which the OrderEditor customer picker shows without loading the full account list."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('OrderItem has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "pm.test('OrderItem.customerName reflects the renamed account', function () {",
+                  "  pm.expect(json.data.OrderItem.customerId).to.eql(pm.environment.get('metaAccountId'));",
+                  "  pm.expect(json.data.OrderItem.customerName).to.eql(pm.environment.get('metaAccountName2'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
           "name": "OrderUpdate (Meta Info scenario - change delivery/purchase id)",
           "request": {
             "method": "POST",
@@ -3443,6 +3593,84 @@
                   "});",
                   "pm.test('purchaseIdLink.name reflects the updated purchase id', function () {",
                   "  pm.expect(item.purchaseIdLink.name).to.eql(pm.environment.get('metaOrderPurchaseId2'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DeviceItem (Check names propagated)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query DeviceItem { DeviceItem(input: { typeId: \"Device\", id: \"{{metaDeviceId}}\" }) { id deviceType productName orderId orderName licenseName configurationName configurationArticle } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Confirms the device item carries the names of its linked objects (DeviceData.productName/orderName/configurationName), which the DeviceEditor pickers show without loading full product/order lists. orderName must follow the order's updated delivery id."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('DeviceItem has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const device = json.data.DeviceItem;",
+                  "pm.test('DeviceItem.orderName reflects the updated delivery id', function () {",
+                  "  pm.expect(device.orderId).to.eql(pm.environment.get('metaOrderId'));",
+                  "  pm.expect(device.orderName).to.eql(pm.environment.get('metaOrderDeliveryId2'));",
+                  "});",
+                  "pm.test('DeviceItem carries the hardware product and configuration names', function () {",
+                  "  pm.expect(device.productName).to.be.a('string').and.not.empty;",
+                  "  pm.expect(device.configurationName).to.be.a('string').and.not.empty;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SoftwareProductItem (Check names propagated)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query SoftwareProductItem { SoftwareProductItem(input: { typeId: \"SoftwareProduct\", id: \"{{metaSoftwareId}}\" }) { id productId productName orderUuid orderName licenseUuid licenseName licenseId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Confirms the software item carries the names of its linked objects (SoftwareProductData.productName/orderName/licenseName/licenseId), which the SoftwareEditor pickers show without loading full product/license/order lists. orderName must follow the order's updated delivery id."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('SoftwareProductItem has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || []).to.have.length(0);",
+                  "});",
+                  "const software = json.data.SoftwareProductItem;",
+                  "pm.test('SoftwareProductItem.orderName reflects the updated delivery id', function () {",
+                  "  pm.expect(software.orderUuid).to.eql(pm.environment.get('metaOrderId'));",
+                  "  pm.expect(software.orderName).to.eql(pm.environment.get('metaOrderDeliveryId2'));",
+                  "});",
+                  "pm.test('SoftwareProductItem carries the product and license names', function () {",
+                  "  pm.expect(software.productName).to.be.a('string').and.not.empty;",
+                  "  pm.expect(software.licenseName).to.be.a('string').and.not.empty;",
                   "});"
                 ]
               }

@@ -155,9 +155,9 @@ ViewBase {
 							visible: false
 							timeFilter: root.timeFilter
 							onLegendClicked: {
-								let productId = CachedProductCollection.getProductIdByName(label)
 								let params = {}
-								params.productId = productId
+								params.productId = id
+								params.productName = label
 								params.internalUse = false
 								if (root.timeFilter){
 									let timeFilterObj = {}
@@ -182,9 +182,9 @@ ViewBase {
 							legendClickable: true
 							visible: false
 							onLegendClicked: {
-								let productId = CachedProductCollection.getProductIdByName(label)
 								let params = {}
-								params.productId = productId
+								params.productId = id
+								params.productName = label
 								params.internalUse = false
 								if (root.timeFilter){
 									let timeFilterObj = {}
@@ -234,6 +234,7 @@ ViewBase {
 							onLegendClicked: {
 								let navigationParams = {}
 								navigationParams.customerId = id
+								navigationParams.customerName = label
 								navigationParams.inUse = undefined
 								navigationParams.internalUse = false
 
@@ -265,6 +266,7 @@ ViewBase {
 							onLegendClicked: {
 								let navigationParams = {}
 								navigationParams.customerId = id
+								navigationParams.customerName = label
 								navigationParams.inUse = undefined
 								navigationParams.internalUse = false
 								
@@ -298,7 +300,7 @@ ViewBase {
 					onLegendClicked: {
 						let navigationParams = {}
 						navigationParams.licenseId = id
-						navigationParams.productId = CachedProductCollection.getProductIdByLicenseId(id)
+						navigationParams.licenseName = label
 						navigationParams.internalUse = false
 
 						if (root.timeFilter){

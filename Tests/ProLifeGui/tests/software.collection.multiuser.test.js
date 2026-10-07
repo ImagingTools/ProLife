@@ -29,7 +29,5 @@ defineCollectionSpec({ ...fixtures, defineTest: (...args) => fixtures.test(...ar
     { name: 'pagination', title: 'pagination - page size and navigation', pagination: { size: 50, page: 2, restore: true } },
     { name: 'revision-dialog', title: 'revision dialog', command: 'Revision', requires: 'ViewRevisions' },
     { name: 'remove-dialog', title: 'remove confirmation dialog', command: 'Remove', requires: 'RemoveLicense' },
-    { name: 'split-dialog', title: 'split dialog', command: 'Split', requires: 'SplitLicense' },
-    { name: 'revoke-dialog', title: 'revoke dialog', command: 'Revoke', requires: 'RevokeLicense' },
   ],
 });

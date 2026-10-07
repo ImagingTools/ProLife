@@ -411,6 +411,9 @@
                     <Element Id="DevicesPage" PackageId="ProLifeQmlVoce" ComponentId="DevicesPage">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="AccountRepository" Type="Reference" ExportId="AccountRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="BindingCollection" Type="Reference" ExportId="BindingCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>

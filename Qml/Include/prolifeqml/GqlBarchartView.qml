@@ -107,6 +107,7 @@ ElementView {
 					for (let j = 0; j < barItem.m_segments.count; ++j){
 						let segmentItem = barItem.m_segments.get(j).item
 						let segmentObj = {}
+						segmentObj.id = segmentItem.m_id
 						segmentObj.label = segmentItem.m_label
 						segmentObj.value = segmentItem.m_value
 						segmentObj.color = segmentItem.m_color

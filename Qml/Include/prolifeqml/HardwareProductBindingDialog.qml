@@ -8,6 +8,7 @@ import prolifeSensorsSdl 1.0
 import prolifeLicensesSdl 1.0
 import imtbaseImtCollectionSdl 1.0
 import imtbaseComplexCollectionFilterSdl 1.0
+import imtlicProductsSdl 1.0
 import imtlicgui 1.0
 import imtcolgui 1.0
 import imtauthgui 1.0
@@ -82,6 +83,7 @@ Dialog {
 			property string bindIssue: ""
 
 			property string productUuid: content.workingModel ? content.workingModel.m_productUuid : ""
+			property string productName: content.workingModel ? content.workingModel.m_productName : ""
 
 			property int pageIndex: 0
 
@@ -135,18 +137,9 @@ Dialog {
 					return
 				}
 
-				productComboBox.changeable = content.boundCount === 0
-
-				productComboBox.currentIndex = -1
-				if (productComboBox.model){
-					for (let i = 0; i < productComboBox.model.getItemsCount(); i++){
-						let id = productComboBox.model.getData("id", i)
-						if (id === content.workingModel.m_productUuid){
-							productComboBox.currentIndex = i
-							break
-						}
-					}
-				}
+				productSelect.changeable = content.boundCount === 0
+				productSelect.selectedId = content.workingModel.m_productUuid
+				productSelect.selectedText = content.workingModel.m_productName
 			}
 
 			function updateSaveState(){
@@ -326,33 +319,50 @@ Dialog {
 						anchors.right: parent.right
 						anchors.rightMargin: Style.marginL
 
-						ComboBoxElementView {
-							id: productComboBox
+						CollectionSelectElementView {
+							id: productSelect
 
 							width: parent.width
 							name: qsTr("Product")
-							nameId: "productName"
-							model: CachedProductCollection.softwareProductsModel
-							bottomComp: productComboBox.currentIndex >= 0 ? undefined : productErrorComp
+							commandId: ImtlicProductsSdlCommandIds.s_productsList
+							fields: [ProductItemTypeMetaInfo.s_id, ProductItemTypeMetaInfo.s_productName]
+							titleField: ProductItemTypeMetaInfo.s_productName
+							textFilterFieldIds: [ProductItemTypeMetaInfo.s_productName]
+							sortByField: ProductItemTypeMetaInfo.s_productName
+							groupFilters: [softwareCategoryGroup]
+							placeHolderText: qsTr("Select a product")
+							filterPlaceholder: qsTr("Search by product name")
 							controlWidth: Style.sizeHintXS
 							changeable: false
+							isSelectionRequired: true
+							errorText: qsTr("Please select a product")
 
-							onCurrentIndexChanged: {
-								if (productComboBox.currentIndex < 0 || !content.workingModel){
+							onItemSelected: {
+								if (!content.workingModel){
 									return
 								}
 
-								content.workingModel.m_productUuid = productComboBox.model.getData("id", productComboBox.currentIndex)
+								content.workingModel.m_productUuid = itemId
+								content.workingModel.m_productName = productSelect.selectedText
 								content.updateSaveState()
 								availableUpdateTimer.restart()
 							}
 
-							Component {
-								id: productErrorComp
+							FieldFilter {
+								id: softwareCategoryFilter
+								m_fieldId: "CategoryId"
+								m_filterValue: "Software"
+								m_filterValueType: "String"
+								m_filterOperations: ["Equal"]
+							}
 
-								BaseText {
-									color: Style.errorTextColor
-									text: qsTr("Please select a product")
+							GroupFilter {
+								id: softwareCategoryGroup
+								m_logicalOperation: "And"
+
+								Component.onCompleted: {
+									softwareCategoryGroup.emplaceFieldFilters()
+									softwareCategoryGroup.m_fieldFilters.addElement(softwareCategoryFilter)
 								}
 							}
 						}
@@ -562,8 +572,6 @@ Dialog {
 								availableHeaders.addHeader("licenseName", qsTr("Name"))
 								availableHeaders.addHeader("licenseId", qsTr("Article"))
 								availableHeaders.addHeader("serialNumber", qsTr("Software-ID"))
-								availableHeaders.addHeader("isMultiple", qsTr("Is Multiple"))
-								availableHeaders.addHeader("productCount", qsTr("Available"))
 
 								let filteringInfoIds = ["licenseName", "licenseId", "serialNumber"]
 
@@ -617,7 +625,7 @@ Dialog {
 					Component {
 						id: productsDelegateFilterComp
 
-						FieldFilterDelegate {
+						CollectionFieldFilterDelegate {
 							id: productsDelegateFilter
 
 							name: qsTr("Products")
@@ -625,16 +633,12 @@ Dialog {
 							readOnly: true
 
 							function syncSelection(){
-								for (let i = 0; i < optionsListAdapter.m_options.count; i++){
-									if (productsDelegateFilter.getOptionId(i) === content.productUuid){
-										productsDelegateFilter.setSelectedIndex(i)
-										return
-									}
+								if (content.productUuid !== ""){
+									productsDelegateFilter.setSelectedId(content.productUuid, content.productName, true)
 								}
 							}
 
 							Component.onCompleted: {
-								productsDelegateFilter.setOptionsList(optionsListAdapter.m_options)
 								productsDelegateFilter.syncSelection()
 							}
 
@@ -642,17 +646,6 @@ Dialog {
 								target: content
 
 								function onProductUuidChanged(){
-									productsDelegateFilter.syncSelection()
-								}
-							}
-
-							OptionsListAdapter {
-								id: optionsListAdapter
-
-								collectionModel: CachedProductCollection.softwareProductsModel
-
-								onCollectionModelChanged: {
-									productsDelegateFilter.setOptionsList(optionsListAdapter.m_options)
 									productsDelegateFilter.syncSelection()
 								}
 							}

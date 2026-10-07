@@ -31,8 +31,6 @@ class SoftwareEditorPage extends BasePage {
     this.article = new TextInput(page, ['ArticleInput']); // read-only
     this.serialNumber = new TextInput(page, ['SerialNumberInput']);
     this.internalUse = new Switch(page, ['InternalUseSwitch']);
-    this.isMultiple = new Switch(page, ['IsMultipleSwitch']);
-    this.productCount = new TextInput(page, ['ProductCountSpinBox']);
 
     // General page — assignment
     this.project = new TextInput(page, ['ProjectInput']);
@@ -89,11 +87,6 @@ class SoftwareEditorPage extends BasePage {
   async toggleInternalUse() {
     await this.openEditorPage('General');
     await this.internalUse.toggle();
-    return this;
-  }
-  async toggleIsMultiple() {
-    await this.openEditorPage('General');
-    await this.isMultiple.toggle();
     return this;
   }
   /** True while the license is unlimited - see setUnlimited for why this is read off the date picker. */

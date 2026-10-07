@@ -19,6 +19,7 @@
         <Element ComponentName="DeviceCommands" X="1000" Y="75" Note=""/>
         <Element ComponentName="DeviceController" X="950" Y="400" Note=""/>
         <Element ComponentName="DeviceInfo" X="200" Y="600" Note=""/>
+        <Element ComponentName="DeviceMetaInfoCreator" X="200" Y="700" Note=""/>
         <Element ComponentName="Encryption" X="1075" Y="275" Note=""/>
         <Element ComponentName="EncryptionBasePersistence" X="875" Y="275" Note=""/>
         <Element ComponentName="GroupFilterParamJoiner" X="175" Y="350" Note=""/>

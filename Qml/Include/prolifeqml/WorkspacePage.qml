@@ -45,6 +45,7 @@ ViewBase {
 	}
 
 	property string customerId
+	property string customerName
 	property TimeFilter timeFilter: defaultTimeFilter
 	property TimeFilter defaultTimeFilter: TimeFilter {
 		m_timeUnit: "Year"
@@ -102,15 +103,16 @@ ViewBase {
 					? (height - topRow.height - 4*spacing) / 2
 				: height - topRow.height - 3*spacing
 
-			function navigateToHardware(productName, inUse, statusId, isLicenseCreation){
+			function navigateToHardware(productId, productName, inUse, statusId, isLicenseCreation){
 				let params = {}
 
-				if (productName !== undefined){
-					let productId = CachedProductCollection.getProductIdByName(productName)
+				if (productId !== ""){
 					params.productId = productId
+					params.productName = productName
 				}
 
 				params.customerId = root.customerId
+				params.customerName = root.customerName
 				
 				if (inUse !== undefined){
 					params.inUse = inUse
@@ -142,14 +144,15 @@ ViewBase {
 				}
 			}
 		
-			function navigateToSoftware(productName){
+			function navigateToSoftware(productId, productName){
 				let params = {}
-				if (productName !== undefined){
-					let productId = CachedProductCollection.getProductIdByName(productName)
+				if (productId !== ""){
 					params.productId = productId
+					params.productName = productName
 				}
 
 				params.customerId = root.customerId
+				params.customerName = root.customerName
 				params.inUse = true
 				params.internalUse = false
 
@@ -197,13 +200,9 @@ ViewBase {
 						objectName: "CustomerFilterDelegate"
 						collectionFilter: CollectionFilter {}
 
-						onOptionSelectionChanged: {
-							if (optionIds.length > 0){
-								root.customerId = optionIds[0]
-							}
-							else{
-								root.customerId = ""
-							}
+						onSelectionChanged: {
+							root.customerName = itemText
+							root.customerId = itemId
 						}
 					}
 				}
@@ -430,6 +429,7 @@ ViewBase {
 										onClicked: {
 											let params = {}
 											params.customerId = root.customerId
+											params.customerName = root.customerName
 											let collectionId = model.item.m_collectionId
 											if (collectionId === "Devices"){
 												chartsBlock.applyTimeFilter(params, true)
@@ -513,7 +513,7 @@ ViewBase {
 					customerId: root.customerId
 					timeFilter: root.timeFilter
 					onLegendClicked: {
-						chartsBlock.navigateToSoftware(label)
+						chartsBlock.navigateToSoftware(id, label)
 					}
 				}
 
@@ -529,7 +529,7 @@ ViewBase {
 					customerId: root.customerId
 					timeFilter: root.timeFilter
 					onLegendClicked: {
-						chartsBlock.navigateToHardware(label, true, undefined, true)
+						chartsBlock.navigateToHardware(id, label, true, undefined, true)
 					}
 				}
 
@@ -546,7 +546,7 @@ ViewBase {
 					legendClickable: true
 					onLegendClicked: {
 						let statusId = deviceProductionStatus.getStatusIdByName(label)
-						chartsBlock.navigateToHardware(label, false, String(deviceProductionStatus.getStatusIndex(statusId)), false)
+						chartsBlock.navigateToHardware("", "", false, String(deviceProductionStatus.getStatusIndex(statusId)), false)
 					}
 					
 					DeviceProductionStatus {
@@ -590,7 +590,7 @@ ViewBase {
 					timeFilter: root.timeFilter
 					legendClickable: true
 					onLegendClicked: {
-						chartsBlock.navigateToSoftware(label)
+						chartsBlock.navigateToSoftware(id, label)
 					}
 				}
 		
@@ -606,7 +606,7 @@ ViewBase {
 					timeFilter: root.timeFilter
 					legendClickable: true
 					onLegendClicked: {
-						chartsBlock.navigateToHardware(label, true, undefined, true)
+						chartsBlock.navigateToHardware(id, label, true, undefined, true)
 					}
 				}
 

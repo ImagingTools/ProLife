@@ -94,12 +94,13 @@ private:
 				const ::imtgql::CGqlRequest& gqlRequest,
 				const imtbase::IObjectCollection& collection,
 				const sdl::V1_0::prolife::CChartInput& chartInput,
+				int idMetaInfoType,
 				int nameMetaInfoType,
 				QString& errorMessage) const;
 	bool BuildPieChart(
 				const QMap<QPair<QByteArray, QString>, int>& map,
 				sdl::V1_0::prolife::CPieChartData& pieChartData) const;
-	bool BuildBarChart(const QMap<QDate, QMap<QString, int>>& map,
+	bool BuildBarChart(const QMap<QDate, QMap<QPair<QByteArray, QString>, int>>& map,
 				const sdl::V1_0::prolife::CChartInput& input,
 				const QString& yLabel,
 				sdl::V1_0::prolife::CBarChartData& barChartData) const;
@@ -115,12 +116,14 @@ private:
 	sdl::V1_0::prolife::CChartSegment CreateChartSegment(int value, const QString& label, const QString& color, const QByteArray& segmentId = QByteArray()) const;
 	sdl::V1_0::prolife::CBarChartData BuildProductUsageBarChart(
 				const imtbase::IObjectCollection& collection,
+				int productIdMetaInfoType,
 				int productNameMetaInfoType,
 				const sdl::V1_0::prolife::CChartInput& input,
 				const ::imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const;
 	sdl::V1_0::prolife::CPieChartData BuildProductUsagePieChart(
 				const imtbase::IObjectCollection& collection,
+				int productIdMetaInfoType,
 				int productNameMetaInfoType,
 				const sdl::V1_0::prolife::CChartInput& input,
 				const ::imtgql::CGqlRequest& gqlRequest,

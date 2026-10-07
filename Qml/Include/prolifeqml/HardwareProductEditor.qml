@@ -17,7 +17,6 @@ import prolifeSensorsSdl 1.0
 Item {
 	id: root
 
-	property TreeItemModel devicesModel: TreeItemModel {}
 	property BaseModel orderProductsModel: BaseModel {}
 	property var model: null
 	property OrderedProduct productItem: model
@@ -87,76 +86,31 @@ Item {
 		root.hasLinkedSelection = false
 	}
 
-	function selectLinkedIndex(index) {
-		if (index < 0 || !root.devicesModel)
+	// \c values is a row of the instance picker, keyed by DeviceItem field ids.
+	function selectLinkedItem(values) {
+		if (!values || !productItem)
 			return
-
-		let src = root.devicesModel
-		let idx = index
 
 		productItem.m_isNew = false
 		productItem.m_categoryId = "Hardware"
-		productItem.m_id = src.getData(DeviceItemTypeMetaInfo.s_id, idx)
-
-		if (src.containsKey(DeviceItemTypeMetaInfo.s_licenseUuid, idx))
-			productItem.m_licenseUuid = src.getData(DeviceItemTypeMetaInfo.s_licenseUuid, idx)
-		else if (src.containsKey(DeviceItemTypeMetaInfo.s_licenseName, idx))
-			productItem.m_licenseUuid = src.getData(DeviceItemTypeMetaInfo.s_licenseName, idx)
-		else
-			productItem.m_licenseUuid = ""
-
-		if (src.containsKey(DeviceItemTypeMetaInfo.s_licenseId, idx))
-			productItem.m_licenseId = src.getData(DeviceItemTypeMetaInfo.s_licenseId, idx)
-		else
-			productItem.m_licenseId = ""
-
-		if (src.containsKey(DeviceItemTypeMetaInfo.s_licenseName, idx))
-			productItem.m_licenseName = src.getData(DeviceItemTypeMetaInfo.s_licenseName, idx)
-		else
-			productItem.m_licenseName = ""
-
-		if (src.containsKey(DeviceItemTypeMetaInfo.s_macAddress, idx))
-			productItem.m_macAddress = src.getData(DeviceItemTypeMetaInfo.s_macAddress, idx)
-		else
-			productItem.m_macAddress = ""
-
-		if (src.containsKey(DeviceItemTypeMetaInfo.s_serialNumber, idx))
-			productItem.m_serialNumber = src.getData(DeviceItemTypeMetaInfo.s_serialNumber, idx)
-		else
-			productItem.m_serialNumber = ""
-
-		if (src.containsKey(DeviceItemTypeMetaInfo.s_deviceType, idx))
-			productItem.m_productUuid = src.getData(DeviceItemTypeMetaInfo.s_deviceType, idx)
-		else if (src.containsKey(DeviceItemTypeMetaInfo.s_productUuid, idx))
-			productItem.m_productUuid = src.getData(DeviceItemTypeMetaInfo.s_productUuid, idx)
-		else
-			productItem.m_productUuid = ""
-
-		if (src.containsKey(DeviceItemTypeMetaInfo.s_productName, idx))
-			productItem.m_productName = src.getData(DeviceItemTypeMetaInfo.s_productName, idx)
-		else
-			productItem.m_productName = ""
-
+		productItem.m_id = values[DeviceItemTypeMetaInfo.s_id]
+		productItem.m_licenseUuid = values[DeviceItemTypeMetaInfo.s_licenseUuid]
+		productItem.m_licenseId = values[DeviceItemTypeMetaInfo.s_licenseId]
+		productItem.m_licenseName = values[DeviceItemTypeMetaInfo.s_licenseName]
+		productItem.m_macAddress = values[DeviceItemTypeMetaInfo.s_macAddress]
+		productItem.m_serialNumber = values[DeviceItemTypeMetaInfo.s_serialNumber]
+		productItem.m_productUuid = values[DeviceItemTypeMetaInfo.s_productUuid]
+		productItem.m_productName = values[DeviceItemTypeMetaInfo.s_productName]
 		productItem.m_expiration = ""
 		productItem.m_isMultiple = false
 		productItem.m_productCount = 0
 
-		deviceData.m_id = productItem.m_id
-		deviceData.m_deviceType = productItem.m_productUuid
-		deviceData.m_licenseName = productItem.m_licenseUuid !== "" ? productItem.m_licenseUuid : productItem.m_licenseName
-		deviceData.m_serialNumber = productItem.m_serialNumber
-		deviceData.m_macAddress = productItem.m_macAddress
-		deviceData.m_description = productItem.m_productName
-		if (root.orderUuid !== "")
-			deviceData.m_orderId = root.orderUuid
-
 		root.hasLinkedSelection = true
 		deviceEditor.readOnly = true
-		deviceEditor.doUpdateGui()
+		deviceEditor.loadFromOrderedProduct(productItem)
 		deviceEditor.setReadOnly(true)
 
-		if (root.productItem)
-			root.productItem.modelChanged([])
+		root.productItem.modelChanged([])
 	}
 
 	onCreateModeChanged: {
