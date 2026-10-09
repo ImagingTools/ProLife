@@ -17,6 +17,7 @@
 #include <prolifedata/TOrderedWrap.h>
 #include <prolifedata/IHardwareProductBinding.h>
 #include <prolifedata/CGroupFilter.h>
+#include <prolifegql/prolifegql.h>
 
 
 namespace prolifegql
@@ -497,7 +498,7 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 
 
 bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
-			const imtgql::CGqlRequest& /*rawGqlRequest*/,
+			const imtgql::CGqlRequest& rawGqlRequest,
 			const sdl::V1_0::prolife::CDeviceUpdateGqlRequest& deviceUpdateRequest,
 			istd::IChangeable& object,
 			QString& errorMessage) const
@@ -529,6 +530,10 @@ bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 
 	prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(&object);
 	Q_ASSERT(deviceInfoPtr != nullptr);
+
+	if (!CheckDeviceChangePermissions(*deviceInfoPtr, deviceInfoPtr->GetOrderId(), deviceData, rawGqlRequest, false, errorMessage)){
+		return false;
+	}
 
 	deviceInfoPtr->ResetData();
 

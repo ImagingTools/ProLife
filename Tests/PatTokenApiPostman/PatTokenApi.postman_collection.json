@@ -189,7 +189,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"PatTokenApi Token Owner {{randomInt}}\", description: \"Created by PatTokenApiPostman - PAT scope-intersection owner role\", roleId: \"PatTokenApiTokenOwner{{randomInt}}\", productId: \"{{productId}}\", parentRoles: \"\", permissions: \"ViewSensors;ViewOrders\", isDefault: false, isGuest: false } }) { id } }",
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"PatTokenApi Token Owner {{randomInt}}\", description: \"Created by PatTokenApiPostman - PAT scope-intersection owner role\", roleId: \"PatTokenApiTokenOwner{{randomInt}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"ViewSensors\", direct: true}, {id: \"ViewOrders\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
                 "variables": ""
               }
             }
@@ -231,7 +231,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", productId: \"{{productId}}\", name: \"PatTokenApi Token Owner Actor\", username: \"pattokenapi_owner_{{randomInt}}\", password: \"PatTokenApi_2026!\", email: \"owner{{randomInt}}@pattokenapi.test\", groups: [], roles: [\"{{roleTokenOwnerId}}\"], permissions: \"\", systemInfos: [] } }) { id } }",
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", productId: \"{{productId}}\", name: \"PatTokenApi Token Owner Actor\", username: \"pattokenapi_owner_{{randomInt}}\", password: \"PatTokenApi_2026!\", email: \"owner{{randomInt}}@pattokenapi.test\", groups: [], roles: [{id: \"{{roleTokenOwnerId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
                 "variables": ""
               }
             }
@@ -275,7 +275,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"PatTokenApi Other User {{randomInt}}\", description: \"Created by PatTokenApiPostman - cross-user attacker role, deliberately disjoint from Token Owner\", roleId: \"PatTokenApiOtherUser{{randomInt}}\", productId: \"{{productId}}\", parentRoles: \"\", permissions: \"ViewAccounts\", isDefault: false, isGuest: false } }) { id } }",
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"PatTokenApi Other User {{randomInt}}\", description: \"Created by PatTokenApiPostman - cross-user attacker role, deliberately disjoint from Token Owner\", roleId: \"PatTokenApiOtherUser{{randomInt}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"ViewAccounts\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
                 "variables": ""
               }
             }
@@ -317,7 +317,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", productId: \"{{productId}}\", name: \"PatTokenApi Other User Actor\", username: \"pattokenapi_other_{{randomInt}}\", password: \"PatTokenApi_2026!\", email: \"other{{randomInt}}@pattokenapi.test\", groups: [], roles: [\"{{roleOtherUserId}}\"], permissions: \"\", systemInfos: [] } }) { id } }",
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", productId: \"{{productId}}\", name: \"PatTokenApi Other User Actor\", username: \"pattokenapi_other_{{randomInt}}\", password: \"PatTokenApi_2026!\", email: \"other{{randomInt}}@pattokenapi.test\", groups: [], roles: [{id: \"{{roleOtherUserId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
                 "variables": ""
               }
             }

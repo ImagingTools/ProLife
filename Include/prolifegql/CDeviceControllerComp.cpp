@@ -75,6 +75,9 @@ sdl::V1_0::prolife::CDeviceBindingData CDeviceControllerComp::OnGetDeviceBinding
 		}
 	}
 
+	response.productUuid = QByteArray();
+	response.productName = QString();
+
 	QByteArrayList softwareIds = hardwareProductBindingPtr->GetSoftwareIds();
 	if (!softwareIds.isEmpty()){
 		if (m_softwareProductCollectionCompPtr.IsValid()){

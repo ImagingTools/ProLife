@@ -90,6 +90,13 @@ DocCollectionViewDelegate {
 							if (m_status === "Success"){
 								root.documentUpdated(root.documentId)
 							}
+							else{
+								if (m_message){
+									PopupManager.addErrorMessage(m_message)
+								}
+								root.updateDocumentFailed(root.documentId, "")
+								root.updateRepresentationFromDocument()
+							}
 						}
 					}
 				}
@@ -150,6 +157,13 @@ DocCollectionViewDelegate {
 						onFinished: {
 							if (m_status === "Success"){
 								iotRoot.documentUpdated(iotRoot.documentId)
+							}
+							else{
+								if (m_message){
+									PopupManager.addErrorMessage(m_message)
+								}
+								iotRoot.updateDocumentFailed(iotRoot.documentId, "")
+								iotRoot.updateRepresentationFromDocument()
 							}
 						}
 					}
@@ -221,17 +235,16 @@ DocCollectionViewDelegate {
 		
 		DeviceEditor {
 			id: deviceEditor;
-			
+
+			isNew: deviceEditor.isNewDocument
+
 			commandsControllerComp:
 				Component { GqlBasedCommandsController {
 					typeId: "Device";
 				}}
 
-			onDeviceDataChanged: {
-				if (deviceData !== null && container.documentManager){
-					isNew = container.documentManager.documentIsNew(deviceData.m_id)
-					checkPermissions()
-				}
+			onIsNewChanged: {
+				checkPermissions()
 			}
 			
 			commandsDelegateComp: Component {ViewCommandsDelegateBase {
@@ -766,32 +779,32 @@ DocCollectionViewDelegate {
 						}
 					}
 					
-					Loader {
-						id: deviceCollectionViewLoader
+					RemoteCollectionView {
+						id: devicePickerView
 						anchors.fill: parent
+						collectionId: "Devices"
+						commandsControllerComp: null
+						commandsDelegateComp: null
+						commandsPanelVisible: false
+						visibleMetaInfo: false
+						documentCollectionFilter: null
+						canResetFilters: false
+						showRemoteChangesAlert: false
+
 						Component.onCompleted: {
-							deviceCollectionViewLoader.setSource("qrc:/qml/ProLife/DeviceCollectionView.qml", {
-								"commandsControllerComp": null,
-								"visibleMetaInfo": false,
-								"commandsDelegateComp": null,
-								"canResetFilters": false
-							})
-						}
-						onLoaded: {
-							item.table.isMultiSelect = false
-							item.collectionFilter.addFieldFilter(excludeFilter)
-							item.collectionFilter.addFieldFilter(productionStatusFilter)
-							item.selectionChanged.connect(function(){
-								if (item.selectedIds.length > 0){
-									dialog.toDeviceId = item.selectedIds[0]
-								}
-								dialog.setButtonEnabled(Enums.ok, item.selectedIds.length > 0)
-							})
-							item.registerFieldFilterDelegate("SoftwareCount", licensesDelegateFilterComp)
-							item.registerFieldFilterDelegate("DeviceType", productsDelegateFilterComp)
+							devicePickerView.table.isMultiSelect = false
+							devicePickerView.collectionFilter.addFieldFilter(excludeFilter)
+							devicePickerView.collectionFilter.addFieldFilter(productionStatusFilter)
+							devicePickerView.registerFieldFilterDelegate("SoftwareCount", licensesDelegateFilterComp)
+							devicePickerView.registerFieldFilterDelegate("DeviceType", productsDelegateFilterComp)
 							if (PermissionsController.checkPermission("ViewAccounts")){
-								item.registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
+								devicePickerView.registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
 							}
+						}
+
+						onSelectionChanged: {
+							dialog.toDeviceId = selectedIds.length === 1 ? selectedIds[0] : ""
+							dialog.setButtonEnabled(Enums.ok, dialog.toDeviceId !== "")
 						}
 					}
 				}
