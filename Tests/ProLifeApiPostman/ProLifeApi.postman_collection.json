@@ -4686,11 +4686,18 @@
                   "  pm.expect(types, JSON.stringify(items.slice(0, 5))).to.include('Create');",
                   "  pm.expect(types).to.include('Update');",
                   "});",
-                  "pm.test('The audit entries carry the device type and the acting user', function () {",
+                  "pm.test('The audit entries carry the device type and the superuser who saved the device', function () {",
                   "  mine.forEach(function (i) {",
                   "    pm.expect(i.targetLink.typeId).to.eql('Device');",
-                  "    pm.expect(i.userLink && i.userLink.id).to.be.a('string').and.not.empty;",
+                  "    pm.expect(i.userLink && i.userLink.id).to.eql(pm.environment.get('suUserId'));",
                   "  });",
+                  "});",
+                  "pm.test('The description-only editor save is attributed to the editor, not to the superuser', function () {",
+                  "  const editorUpdates = items.filter(function (i) {",
+                  "    return i.actionType === 'Update' && i.targetLink && i.targetLink.id === pm.environment.get('qaDeviceId')",
+                  "      && i.userLink && i.userLink.id === pm.environment.get('qaDescUserId');",
+                  "  });",
+                  "  pm.expect(editorUpdates.length, JSON.stringify(items.slice(0, 10))).to.be.above(0);",
                   "});"
                 ]
               }
@@ -5065,6 +5072,571 @@
                   "const json = pm.response.json();",
                   "pm.test('Ticket document closed', function () {",
                   "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "10 Remote Permissions - Role Changes and PAT",
+      "description": "ProLife resolves user permissions from users and roles that live in Puma. Covers a personal access token used before any other permission read of its owner, and that role and user changes made in Puma reach ProLife.",
+      "item": [
+        {
+          "name": "RPC: Auth SU and seed ids",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{suLogin}}\", password: \"{{suPassword}}\", productId: \"{{productId}}\" }) { token } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('SU authorized for the remote permission scenario', function () {",
+                  "  pm.expect(auth && auth.token, JSON.stringify(json)).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('token', auth.token);",
+                  "pm.environment.set('rpcRoleId', pm.variables.replaceIn('{{$guid}}'));",
+                  "pm.environment.set('rpcUserId', pm.variables.replaceIn('{{$guid}}'));",
+                  "const suffix = String(Date.now());",
+                  "pm.environment.set('rpcRoleCode', 'ProLifeApiRemotePerm' + suffix);",
+                  "pm.environment.set('rpcLogin', 'prolifeapi_rpc_' + suffix);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RPC: RoleAdd granting ViewSensors and ViewOrders",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{rpcRoleId}}\", item: { id: \"{{rpcRoleId}}\", name: \"{{rpcRoleCode}}\", description: \"Created by ProLifeApiPostman - remote permission scenario\", roleId: \"{{rpcRoleCode}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"ViewSensors\", direct: true}, {id: \"ViewOrders\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Role created', function () {",
+                  "  pm.expect(json.data && json.data.RoleAdd && json.data.RoleAdd.id, JSON.stringify(json)).to.eql(pm.environment.get('rpcRoleId'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RPC: UserAdd holding only that role",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{rpcUserId}}\", item: { id: \"{{rpcUserId}}\", productId: \"{{productId}}\", name: \"ProLifeApi Remote Permission User\", username: \"{{rpcLogin}}\", password: \"RemotePerm_2026!\", email: \"{{rpcLogin}}@prolifeapi.test\", groups: [], roles: [{id: \"{{rpcRoleId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('User created', function () {",
+                  "  pm.expect(json.data && json.data.UserAdd && json.data.UserAdd.id, JSON.stringify(json)).to.eql(pm.environment.get('rpcUserId'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RPC: Auth the user",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{rpcLogin}}\", password: \"RemotePerm_2026!\", productId: \"{{productId}}\" }) { token userId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('User authorized', function () {",
+                  "  pm.expect(auth && auth.token, JSON.stringify(json)).to.be.a('string').and.not.empty;",
+                  "  pm.expect(auth.userId).to.eql(pm.environment.get('rpcUserId'));",
+                  "});",
+                  "pm.environment.set('rpcUserToken', auth.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RPC: CreateToken scoped to ViewSensors without a product",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{rpcUserId}}\", name: \"ProLifeApi remote permission token\", scopes: [\"ViewSensors\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { token success message } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{rpcUserToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.CreateToken;",
+                  "pm.test('Token created', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(payload && payload.token).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('rpcPat', payload && payload.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RPC: PAT as the first permission read of the user resolves its role",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetUserPermissions { GetUserPermissions(input: { productId: \"{{productId}}\" }) { groups { entries { permissionId } } errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{rpcPat}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.GetUserPermissions;",
+                  "const ids = [];",
+                  "((payload && payload.groups) || []).forEach(function (g) { (g.entries || []).forEach(function (e) { ids.push(e.permissionId); }); });",
+                  "pm.test('A token used before any other permission read gets the role permission within its scope', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(ids.sort(), JSON.stringify(json)).to.eql([\"ViewSensors\"]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RPC: JWT permissions of the user",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetUserPermissions { GetUserPermissions(input: { productId: \"{{productId}}\" }) { groups { entries { permissionId } } errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{rpcUserToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.GetUserPermissions;",
+                  "const ids = [];",
+                  "((payload && payload.groups) || []).forEach(function (g) { (g.entries || []).forEach(function (e) { ids.push(e.permissionId); }); });",
+                  "pm.test('The user holds both role permissions', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(ids.sort(), JSON.stringify(json)).to.eql([\"ViewOrders\",\"ViewSensors\"]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RPC: RoleUpdate replaces ViewSensors with ViewAccounts",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RoleUpdate { RoleUpdate(input: { id: \"{{rpcRoleId}}\", typeId: \"Role\", productId: \"{{productId}}\", item: { id: \"{{rpcRoleId}}\", name: \"{{rpcRoleCode}}\", roleId: \"{{rpcRoleCode}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"ViewOrders\", direct: true}, {id: \"ViewAccounts\", direct: true}] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Role permissions updated', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RPC: JWT permissions follow the role change",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetUserPermissions { GetUserPermissions(input: { productId: \"{{productId}}\" }) { groups { entries { permissionId } } errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{rpcUserToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.GetUserPermissions;",
+                  "const ids = [];",
+                  "((payload && payload.groups) || []).forEach(function (g) { (g.entries || []).forEach(function (e) { ids.push(e.permissionId); }); });",
+                  "pm.test('Permissions added to and removed from the role reach ProLife', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(ids.sort(), JSON.stringify(json)).to.eql([\"ViewAccounts\",\"ViewOrders\"]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RPC: PAT loses its only scope with the role change",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetUserPermissions { GetUserPermissions(input: { productId: \"{{productId}}\" }) { groups { entries { permissionId } } errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{rpcPat}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.GetUserPermissions;",
+                  "const ids = [];",
+                  "((payload && payload.groups) || []).forEach(function (g) { (g.entries || []).forEach(function (e) { ids.push(e.permissionId); }); });",
+                  "pm.test('The token neither keeps the revoked permission nor gains the new ones outside its scope', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(ids.sort(), JSON.stringify(json)).to.eql([]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RPC: UserUpdate removes the role from the user",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserUpdate { UserUpdate(input: { id: \"{{rpcUserId}}\", typeId: \"User\", productId: \"{{productId}}\", item: { id: \"{{rpcUserId}}\", productId: \"{{productId}}\", name: \"ProLifeApi Remote Permission User\", username: \"{{rpcLogin}}\", roles: [], groups: [], permissions: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Role removed from the user', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RPC: JWT permissions after the role is removed",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetUserPermissions { GetUserPermissions(input: { productId: \"{{productId}}\" }) { groups { entries { permissionId } } errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{rpcUserToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.GetUserPermissions;",
+                  "const ids = [];",
+                  "((payload && payload.groups) || []).forEach(function (g) { (g.entries || []).forEach(function (e) { ids.push(e.permissionId); }); });",
+                  "pm.test('Removing the role in Puma revokes the permission in ProLife', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(ids.sort(), JSON.stringify(json)).to.eql([]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RPC: RemoveElements users",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"Users\", elementIds: [\"{{rpcUserId}}\"] }) { success } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Scenario user removed', function () {",
+                  "  pm.expect(json.data && json.data.RemoveElements && json.data.RemoveElements.success, JSON.stringify(json)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RPC: RemoveElements roles",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"Roles\", elementIds: [\"{{rpcRoleId}}\"] }) { success } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Scenario role removed', function () {",
+                  "  pm.expect(json.data && json.data.RemoveElements && json.data.RemoveElements.success, JSON.stringify(json)).to.eql(true);",
                   "});"
                 ]
               }

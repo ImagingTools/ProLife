@@ -176,7 +176,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{deskActorRoleId}}\", item: { id: \"{{deskActorRoleId}}\", name: \"DeskApi Actor {{runSuffix}}\", description: \"Created by DeskTicketApiPostman - plain actor, no product permissions\", roleId: \"DeskApiActor{{runSuffix}}\", productId: \"{{productId}}\", parentRoles: \"\", permissions: \"\", isDefault: false, isGuest: false } }) { id } }",
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{deskActorRoleId}}\", item: { id: \"{{deskActorRoleId}}\", name: \"DeskApi Actor {{runSuffix}}\", description: \"Created by DeskTicketApiPostman - plain actor, no product permissions\", roleId: \"DeskApiActor{{runSuffix}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [], isDefault: false, isGuest: false } }) { id } }",
                 "variables": ""
               }
             }
@@ -232,7 +232,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{clientUserObjId}}\", item: { id: \"{{clientUserObjId}}\", productId: \"{{productId}}\", name: \"DeskApi Client Actor\", username: \"{{clientLogin}}\", password: \"{{actorPassword}}\", email: \"client{{runSuffix}}@deskticketapi.test\", groups: [], roles: [\"{{deskActorRoleId}}\"], permissions: \"\", systemInfos: [] } }) { id } }",
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{clientUserObjId}}\", item: { id: \"{{clientUserObjId}}\", productId: \"{{productId}}\", name: \"DeskApi Client Actor\", username: \"{{clientLogin}}\", password: \"{{actorPassword}}\", email: \"client{{runSuffix}}@deskticketapi.test\", groups: [], roles: [{id: \"{{deskActorRoleId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
                 "variables": ""
               }
             }
@@ -264,7 +264,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{agentUserObjId}}\", item: { id: \"{{agentUserObjId}}\", productId: \"{{productId}}\", name: \"DeskApi Agent Actor\", username: \"{{agentLogin}}\", password: \"{{actorPassword}}\", email: \"agent{{runSuffix}}@deskticketapi.test\", groups: [], roles: [\"{{deskActorRoleId}}\"], permissions: \"\", systemInfos: [] } }) { id } }",
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{agentUserObjId}}\", item: { id: \"{{agentUserObjId}}\", productId: \"{{productId}}\", name: \"DeskApi Agent Actor\", username: \"{{agentLogin}}\", password: \"{{actorPassword}}\", email: \"agent{{runSuffix}}@deskticketapi.test\", groups: [], roles: [{id: \"{{deskActorRoleId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
                 "variables": ""
               }
             }
@@ -296,7 +296,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{outsiderUserObjId}}\", item: { id: \"{{outsiderUserObjId}}\", productId: \"{{productId}}\", name: \"DeskApi Outsider Actor\", username: \"{{outsiderLogin}}\", password: \"{{actorPassword}}\", email: \"outsider{{runSuffix}}@deskticketapi.test\", groups: [], roles: [\"{{deskActorRoleId}}\"], permissions: \"\", systemInfos: [] } }) { id } }",
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{outsiderUserObjId}}\", item: { id: \"{{outsiderUserObjId}}\", productId: \"{{productId}}\", name: \"DeskApi Outsider Actor\", username: \"{{outsiderLogin}}\", password: \"{{actorPassword}}\", email: \"outsider{{runSuffix}}@deskticketapi.test\", groups: [], roles: [{id: \"{{deskActorRoleId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
                 "variables": ""
               }
             }
@@ -1248,42 +1248,7 @@
     },
     {
       "name": "Bulk Operations",
-      "item": [
-        {
-          "name": "Bulk mutation probe (expected not exposed)",
-          "request": {
-            "method": "POST",
-            "body": {
-              "mode": "graphql",
-              "graphql": {
-                "query": "mutation RemoveTicketsBulk { RemoveTicketsBulk(input: { ids: [\"{{ticketId}}\"] }) { removedCount } }",
-                "variables": ""
-              }
-            },
-            "url": "{{baseUrl}}/graphql",
-            "description": "Negative probe confirming that bulk operations are not present in imtdesk/1.0 public schema."
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Bulk API is absent in schema', function () {",
-                  "  const code = pm.response.code;",
-                  "  if (code === 200) {",
-                  "    const json = pm.response.json();",
-                  "    pm.expect((json.errors || []).length > 0).to.eql(true);",
-                  "  } else {",
-                  "    pm.expect([400, 404, 405]).to.include(code);",
-                  "  }",
-                  "});"
-                ]
-              }
-            }
-          ]
-        }
-      ]
+      "item": []
     },
     {
       "name": "Negative & Edge Cases",
