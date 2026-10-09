@@ -11,6 +11,8 @@
 #include <imtbase/CObjectLink.h>
 #include <imtlic/IProductInfo.h>
 #include <imtaccount/CCompanyInfo.h>
+#include <imtauth/IUserInfo.h>
+#include <imtgql/IGqlContext.h>
 
 // ProLife includes
 #include <prolifedata/prolifedata.h>
@@ -399,6 +401,25 @@ istd::IChangeableUniquePtr COrderCollectionControllerComp::CreateObjectFromRepre
 }
 
 
+// reimplemented (imtservergql::CObjectCollectionControllerCompBase)
+
+istd::IChangeableUniquePtr COrderCollectionControllerComp::CreateObjectFromRequest(
+	const imtgql::CGqlRequest& gqlRequest,
+	QByteArray& newObjectId,
+	QString& errorMessage) const
+{
+	sdl::V1_0::prolife::COrderAddGqlRequest orderAddRequest(gqlRequest, false);
+	if (orderAddRequest.IsValid()){
+		sdl::V1_0::prolife::OrderAddRequestArguments arguments = orderAddRequest.GetRequestedArguments();
+		if (arguments.input && arguments.input->item && !CheckNewProductPermissions(*arguments.input->item, gqlRequest, errorMessage)){
+			return nullptr;
+		}
+	}
+
+	return BaseClass::CreateObjectFromRequest(gqlRequest, newObjectId, errorMessage);
+}
+
+
 bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 	const istd::IChangeable& data,
 	const sdl::V1_0::prolife::COrderItemGqlRequest& orderItemRequest,
@@ -633,7 +654,7 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 
 
 bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(
-	const imtgql::CGqlRequest& /*rawGqlRequest*/,
+	const imtgql::CGqlRequest& rawGqlRequest,
 	const sdl::V1_0::prolife::COrderUpdateGqlRequest& orderUpdateRequest,
 	istd::IChangeable& object,
 	QString& errorMessage) const
@@ -650,6 +671,9 @@ bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 	}
 
 	sdl::V1_0::prolife::COrderData orderData = *inputArguments.input->item;
+	if (!CheckNewProductPermissions(orderData, rawGqlRequest, errorMessage)){
+		return false;
+	}
 	QByteArray objectId;
 	if (inputArguments.input->id){
 		objectId = *inputArguments.input->id;
@@ -789,6 +813,48 @@ imtbase::ICollectionInfo::Ids COrderCollectionControllerComp::GetProductIdsForOr
 	filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
 
 	return productCollectionPtr->GetElementIds(0, -1, &filterParam);
+}
+
+
+bool COrderCollectionControllerComp::CheckNewProductPermissions(
+	const sdl::V1_0::prolife::COrderData& orderData,
+	const imtgql::CGqlRequest& gqlRequest,
+	QString& errorMessage) const
+{
+	if (!orderData.orderProducts){
+		return true;
+	}
+
+	const imtgql::IGqlContext* gqlContextPtr = gqlRequest.GetRequestContext();
+	const imtauth::IUserInfo* userInfoPtr = gqlContextPtr != nullptr ? gqlContextPtr->GetUserInfo() : nullptr;
+	if (userInfoPtr == nullptr){
+		errorMessage = QStringLiteral("Unable to save the order. Error: User is unknown");
+		return false;
+	}
+
+	if (userInfoPtr->IsAdmin()){
+		return true;
+	}
+
+	const QByteArrayList permissions = userInfoPtr->GetPermissions();
+	for (const istd::TNullableValue<sdl::V1_0::prolife::COrderedProduct>& product : *orderData.orderProducts){
+		if (!product->isNew || !*product->isNew){
+			continue;
+		}
+
+		const QByteArray categoryId = product->categoryId ? *product->categoryId : QByteArray();
+		if (categoryId == QByteArrayLiteral("Hardware") && !permissions.contains(QByteArrayLiteral("AddSensor"))){
+			errorMessage = QStringLiteral("No permission to create new hardware");
+			return false;
+		}
+
+		if (categoryId == QByteArrayLiteral("Software") && !permissions.contains(QByteArrayLiteral("AddLicense"))){
+			errorMessage = QStringLiteral("No permission to create new software");
+			return false;
+		}
+	}
+
+	return true;
 }
 
 

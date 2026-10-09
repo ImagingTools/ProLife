@@ -648,6 +648,10 @@ Dialog {
 								function onProductUuidChanged(){
 									productsDelegateFilter.syncSelection()
 								}
+
+								function onProductNameChanged(){
+									productsDelegateFilter.syncSelection()
+								}
 							}
 						}
 					}

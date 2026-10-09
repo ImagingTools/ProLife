@@ -179,7 +179,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation AccountAdd { AccountAdd(input: { typeId: \"Account\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi Account {{randomInt}}\", customerId: \"CUST-{{randomInt}}\", description: \"Created by ProLifeApiPostman\", email: \"account{{randomInt}}@prolifeapi.test\", companyName: \"ProLifeApi Co\", country: \"Testland\", city: \"Testville\", postalCode: \"00000\", street: \"Test street 1\", groups: \"\" } }) { id } }",
+                "query": "mutation AccountAdd { AccountAdd(input: { typeId: \"Account\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi Account {{randomInt}}\", customerId: \"CUST-{{randomInt}}\", description: \"Created by ProLifeApiPostman\", email: \"account{{randomInt}}@prolifeapi.test\", companyName: \"ProLifeApi Co\", country: \"Testland\", city: \"Testville\", postalCode: \"00000\", street: \"Test street 1\", groups: [] } }) { id } }",
                 "variables": ""
               }
             },
@@ -214,7 +214,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation AccountUpdate { AccountUpdate(input: { typeId: \"Account\", id: \"{{accountId}}\", item: { id: \"{{accountId}}\", name: \"ProLifeApi Account {{randomInt}} Updated\", customerId: \"CUST-{{randomInt}}\", description: \"Updated by ProLifeApiPostman\", email: \"account{{randomInt}}@prolifeapi.test\", companyName: \"ProLifeApi Co\", country: \"Testland\", city: \"Testville\", postalCode: \"11111\", street: \"Updated street 2\", groups: \"\" } }) { id } }",
+                "query": "mutation AccountUpdate { AccountUpdate(input: { typeId: \"Account\", id: \"{{accountId}}\", item: { id: \"{{accountId}}\", name: \"ProLifeApi Account {{randomInt}} Updated\", customerId: \"CUST-{{randomInt}}\", description: \"Updated by ProLifeApiPostman\", email: \"account{{randomInt}}@prolifeapi.test\", companyName: \"ProLifeApi Co\", country: \"Testland\", city: \"Testville\", postalCode: \"11111\", street: \"Updated street 2\", groups: [] } }) { id } }",
                 "variables": ""
               }
             },
@@ -2114,7 +2114,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi Full Access {{randomInt}}\", description: \"Created by ProLifeApiPostman - full access scenario role\", roleId: \"ProLifeApiFullAccess{{randomInt}}\", productId: \"{{productId}}\", parentRoles: \"\", permissions: \"ViewWorkspace;ViewAccounts;ViewSensors;ViewOrders;ViewLicenses;ViewUsers;ViewRoles;ViewGroups\", isDefault: false, isGuest: false } }) { id } }",
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi Full Access {{randomInt}}\", description: \"Created by ProLifeApiPostman - full access scenario role\", roleId: \"ProLifeApiFullAccess{{randomInt}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"ViewWorkspace\", direct: true}, {id: \"ViewAccounts\", direct: true}, {id: \"ViewSensors\", direct: true}, {id: \"ViewOrders\", direct: true}, {id: \"ViewLicenses\", direct: true}, {id: \"ViewUsers\", direct: true}, {id: \"ViewRoles\", direct: true}, {id: \"ViewGroups\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
                 "variables": ""
               }
             },
@@ -2146,7 +2146,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi Accounts Viewer {{randomInt}}\", description: \"Created by ProLifeApiPostman - narrow permission scenario role\", roleId: \"ProLifeApiAccountsViewer{{randomInt}}\", productId: \"{{productId}}\", parentRoles: \"\", permissions: \"ViewAccounts\", isDefault: false, isGuest: false } }) { id } }",
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi Accounts Viewer {{randomInt}}\", description: \"Created by ProLifeApiPostman - narrow permission scenario role\", roleId: \"ProLifeApiAccountsViewer{{randomInt}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"ViewAccounts\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
                 "variables": ""
               }
             },
@@ -2178,7 +2178,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi No Access {{randomInt}}\", description: \"Created by ProLifeApiPostman - zero permission scenario role\", roleId: \"ProLifeApiNoAccess{{randomInt}}\", productId: \"{{productId}}\", parentRoles: \"\", permissions: \"\", isDefault: false, isGuest: false } }) { id } }",
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi No Access {{randomInt}}\", description: \"Created by ProLifeApiPostman - zero permission scenario role\", roleId: \"ProLifeApiNoAccess{{randomInt}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [], isDefault: false, isGuest: false } }) { id } }",
                 "variables": ""
               }
             },
@@ -2210,7 +2210,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", productId: \"{{productId}}\", name: \"ProLifeApi Full Access Actor\", username: \"prolifeapi_full_{{randomInt}}\", password: \"ProLifeApi_2026!\", email: \"full{{randomInt}}@prolifeapi.test\", groups: [], roles: [\"{{roleFullAccessId}}\"], permissions: \"\", systemInfos: [] } }) { id } }",
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", productId: \"{{productId}}\", name: \"ProLifeApi Full Access Actor\", username: \"prolifeapi_full_{{randomInt}}\", password: \"ProLifeApi_2026!\", email: \"full{{randomInt}}@prolifeapi.test\", groups: [], roles: [{id: \"{{roleFullAccessId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
                 "variables": ""
               }
             },
@@ -2244,7 +2244,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", productId: \"{{productId}}\", name: \"ProLifeApi Accounts Viewer Actor\", username: \"prolifeapi_accviewer_{{randomInt}}\", password: \"ProLifeApi_2026!\", email: \"accviewer{{randomInt}}@prolifeapi.test\", groups: [], roles: [\"{{roleAccountsViewerId}}\"], permissions: \"\", systemInfos: [] } }) { id } }",
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", productId: \"{{productId}}\", name: \"ProLifeApi Accounts Viewer Actor\", username: \"prolifeapi_accviewer_{{randomInt}}\", password: \"ProLifeApi_2026!\", email: \"accviewer{{randomInt}}@prolifeapi.test\", groups: [], roles: [{id: \"{{roleAccountsViewerId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
                 "variables": ""
               }
             },
@@ -2278,7 +2278,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", productId: \"{{productId}}\", name: \"ProLifeApi No Access Actor\", username: \"prolifeapi_noaccess_{{randomInt}}\", password: \"ProLifeApi_2026!\", email: \"noaccess{{randomInt}}@prolifeapi.test\", groups: [], roles: [\"{{roleNoAccessId}}\"], permissions: \"\", systemInfos: [] } }) { id } }",
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", productId: \"{{productId}}\", name: \"ProLifeApi No Access Actor\", username: \"prolifeapi_noaccess_{{randomInt}}\", password: \"ProLifeApi_2026!\", email: \"noaccess{{randomInt}}@prolifeapi.test\", groups: [], roles: [{id: \"{{roleNoAccessId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
                 "variables": ""
               }
             },
@@ -3061,7 +3061,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation AccountAdd { AccountAdd(input: { typeId: \"Account\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"MetaScenario Account {{randomInt}}\", customerId: \"META-CUST-{{randomInt}}\", description: \"Meta info propagation scenario\", email: \"metascenario{{randomInt}}@prolifeapi.test\", companyName: \"ProLifeApi Co\", country: \"Testland\", city: \"Testville\", postalCode: \"00000\", street: \"Test street 1\", groups: \"\" } }) { id } }",
+                "query": "mutation AccountAdd { AccountAdd(input: { typeId: \"Account\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"MetaScenario Account {{randomInt}}\", customerId: \"META-CUST-{{randomInt}}\", description: \"Meta info propagation scenario\", email: \"metascenario{{randomInt}}@prolifeapi.test\", companyName: \"ProLifeApi Co\", country: \"Testland\", city: \"Testville\", postalCode: \"00000\", street: \"Test street 1\", groups: [] } }) { id } }",
                 "variables": ""
               }
             },
@@ -3314,7 +3314,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation AccountUpdate { AccountUpdate(input: { typeId: \"Account\", id: \"{{metaAccountId}}\", item: { id: \"{{metaAccountId}}\", name: \"MetaScenario Account {{randomInt}} Renamed\", customerId: \"META-CUST-{{randomInt}}\", description: \"Meta info propagation scenario\", email: \"metascenario{{randomInt}}@prolifeapi.test\", companyName: \"ProLifeApi Co\", country: \"Testland\", city: \"Testville\", postalCode: \"00000\", street: \"Test street 1\", groups: \"\" } }) { id } }",
+                "query": "mutation AccountUpdate { AccountUpdate(input: { typeId: \"Account\", id: \"{{metaAccountId}}\", item: { id: \"{{metaAccountId}}\", name: \"MetaScenario Account {{randomInt}} Renamed\", customerId: \"META-CUST-{{randomInt}}\", description: \"Meta info propagation scenario\", email: \"metascenario{{randomInt}}@prolifeapi.test\", companyName: \"ProLifeApi Co\", country: \"Testland\", city: \"Testville\", postalCode: \"00000\", street: \"Test street 1\", groups: [] } }) { id } }",
                 "variables": ""
               }
             },
@@ -3671,6 +3671,1400 @@
                   "pm.test('SoftwareProductItem carries the product and license names', function () {",
                   "  pm.expect(software.productName).to.be.a('string').and.not.empty;",
                   "  pm.expect(software.licenseName).to.be.a('string').and.not.empty;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "09 QA Regression - Field Permissions, Order Products, Revisions, Audit",
+      "description": "Server regressions found by the exploratory GUI QA of 2026-10-08 (Docs/QA/ProLifeGuiExploratory-2026-10-08.md): field-level hardware permissions (D-02), creating products through orders (D-04), the hardware dashboard counter (D-09), User Actions for document saves (D-10), revision history after the first save (D-16/D-30) and the default ticket type (D-08).",
+      "item": [
+        {
+          "name": "QA: Seed regression variables",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{suLogin}}\", password: \"{{suPassword}}\", productId: \"{{productId}}\" }) { token userId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Logs in as su and seeds the ids/logins of the QA regression scenario (exploratory GUI QA, 2026-10-08)."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "function uuid() { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) { const r = Math.random() * 16 | 0; return (c === 'x' ? r : ((r & 0x3) | 0x8)).toString(16); }); }",
+                  "const n = String(Date.now() % 1000000000);",
+                  "pm.environment.set('qaN', n);",
+                  "['qaDescRoleId', 'qaDescUserId', 'qaOrderRoleId', 'qaOrderUserId', 'qaDeviceId', 'qaRejectedSoftwareLineId', 'qaRejectedHardwareLineId', 'qaOrderId', 'qaAccountId'].forEach(function (k) { pm.environment.set(k, uuid()); });",
+                  "pm.environment.set('qaDescRoleCode', 'QaRegDescOnly' + n);",
+                  "pm.environment.set('qaDescLogin', 'qa_reg_desc_' + n);",
+                  "pm.environment.set('qaOrderRoleCode', 'QaRegOrderOnly' + n);",
+                  "pm.environment.set('qaOrderLogin', 'qa_reg_order_' + n);",
+                  "pm.environment.set('qaMacAddress', 'AA:BB:CC:' + ('0' + (Number(n) % 100)).slice(-2) + ':' + ('0' + (Number(n.slice(-4, -2)) % 100)).slice(-2) + ':' + ('0' + (Number(n.slice(-2)) % 100)).slice(-2));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('Auth SU (QA regression) returns a token', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(auth && auth.token).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('token', auth.token);",
+                  "pm.environment.set('suToken', auth.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "QA: RoleAdd description-only hardware editor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{qaDescRoleId}}\", item: { id: \"{{qaDescRoleId}}\", name: \"{{qaDescRoleCode}}\", description: \"QA regression role\", roleId: \"{{qaDescRoleCode}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"ViewSensors\", direct: true}, {id: \"ChangeDescriptionForSensor\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Description-only role created', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "QA: UserAdd description-only hardware editor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{qaDescUserId}}\", item: { id: \"{{qaDescUserId}}\", productId: \"{{productId}}\", name: \"QA Regression Description Editor\", username: \"{{qaDescLogin}}\", password: \"QaRegression_2026!\", email: \"{{qaDescLogin}}@prolifeapi.test\", groups: [], roles: [{id: \"{{qaDescRoleId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Description-only user created', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "QA: RoleAdd order-only operator",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{qaOrderRoleId}}\", item: { id: \"{{qaOrderRoleId}}\", name: \"{{qaOrderRoleCode}}\", description: \"QA regression role\", roleId: \"{{qaOrderRoleCode}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"ViewOrders\", direct: true}, {id: \"AddOrder\", direct: true}, {id: \"ChangeOrderProducts\", direct: true}, {id: \"ViewLicenses\", direct: true}, {id: \"ViewSensors\", direct: true}, {id: \"ViewAccounts\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Order-only role created', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "QA: UserAdd order-only operator",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{qaOrderUserId}}\", item: { id: \"{{qaOrderUserId}}\", productId: \"{{productId}}\", name: \"QA Regression Order Operator\", username: \"{{qaOrderLogin}}\", password: \"QaRegression_2026!\", email: \"{{qaOrderLogin}}@prolifeapi.test\", groups: [], roles: [{id: \"{{qaOrderRoleId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Order-only user created', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "QA: AccountAdd customer for the order scenario",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation AccountAdd { AccountAdd(input: { typeId: \"Account\", id: \"{{qaAccountId}}\", item: { id: \"{{qaAccountId}}\", name: \"QA Regression Customer {{qaN}}\", customerId: \"QA-REG-CUST-{{qaN}}\", description: \"\", email: \"qa-reg-{{qaN}}@prolifeapi.test\", companyName: \"QA Regression Co\", country: \"Testland\", city: \"Testville\", postalCode: \"00000\", street: \"Test street 1\", groups: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Customer created', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-09: GetTotalSummaryInfo this year (before)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetTotalSummaryInfo { GetTotalSummaryInfo(input: { customerId: \"\", timeFilter: { timeUnit: \"Year\", interpretationMode: \"Current\", unitMultiplier: 1 } }) { summaryInfos { collectionId total notInUseCount } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const infos = (json.data && json.data.GetTotalSummaryInfo && json.data.GetTotalSummaryInfo.summaryInfos) || [];",
+                  "const hardware = infos.find(function (i) { return i.collectionId === 'Devices'; });",
+                  "pm.test('Hardware summary is returned', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(hardware, JSON.stringify(infos)).to.be.an('object');",
+                  "});",
+                  "pm.environment.set('qaHardwareTotalBefore', hardware ? hardware.total : -1);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-09: DeviceAdd without any license",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation DeviceAdd { DeviceAdd(input: { typeId: \"Device\", id: \"{{qaDeviceId}}\", item: { id: \"{{qaDeviceId}}\", name: \"QA Regression Device\", description: \"qa original description\", macAddress: \"{{qaMacAddress}}\", serialNumber: \"QA-REG-SN-{{qaN}}\", deviceType: \"{{deviceTypeId}}\", orderId: \"\", licenseName: \"{{deviceConfigurationId}}\", project: \"\", productionStatus: \"Finished\" } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Unlicensed device created', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-09: GetTotalSummaryInfo this year counts the unlicensed device",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetTotalSummaryInfo { GetTotalSummaryInfo(input: { customerId: \"\", timeFilter: { timeUnit: \"Year\", interpretationMode: \"Current\", unitMultiplier: 1 } }) { summaryInfos { collectionId total notInUseCount } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Regression for D-09: the Hardware card filtered by the first license date, so hardware without a license was never counted for the selected period."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const infos = (json.data && json.data.GetTotalSummaryInfo && json.data.GetTotalSummaryInfo.summaryInfos) || [];",
+                  "const hardware = infos.find(function (i) { return i.collectionId === 'Devices'; });",
+                  "pm.test('Hardware created this year is counted even without a license', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(hardware.total).to.eql(Number(pm.environment.get('qaHardwareTotalBefore')) + 1);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "QA: Auth description-only hardware editor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{qaDescLogin}}\", password: \"QaRegression_2026!\", productId: \"{{productId}}\" }) { token } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('Auth description-only editor returns a token', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(auth && auth.token).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('token', auth.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-02: DeviceUpdate changing the serial number is rejected",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation DeviceUpdate { DeviceUpdate(input: { typeId: \"Device\", id: \"{{qaDeviceId}}\", item: { id: \"{{qaDeviceId}}\", name: \"QA Regression Device\", description: \"qa original description\", macAddress: \"{{qaMacAddress}}\", serialNumber: \"QA-REG-HACKED-{{qaN}}\", deviceType: \"{{deviceTypeId}}\", orderId: \"\", licenseName: \"{{deviceConfigurationId}}\", project: \"\", productionStatus: \"Finished\" } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Regression for D-02: a user holding only ChangeDescriptionForSensor passed the command-level OR check and could rewrite any field."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Serial number change without ChangeSerialNumberForSensor is refused', function () {",
+                  "  pm.expect(json.errors, 'expected a GraphQL error, got ' + JSON.stringify(json)).to.be.an('array').that.is.not.empty;",
+                  "  pm.expect(json.errors.map(function (e) { return e.message; }).join(' | ')).to.include('Serial Number');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-02: DeviceUpdate changing the device type is rejected",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation DeviceUpdate { DeviceUpdate(input: { typeId: \"Device\", id: \"{{qaDeviceId}}\", item: { id: \"{{qaDeviceId}}\", name: \"QA Regression Device\", description: \"qa original description\", macAddress: \"{{qaMacAddress}}\", serialNumber: \"QA-REG-SN-{{qaN}}\", deviceType: \"\", orderId: \"\", licenseName: \"{{deviceConfigurationId}}\", project: \"\", productionStatus: \"Finished\" } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Device type change without ChangeDeviceType is refused', function () {",
+                  "  pm.expect(json.errors, 'expected a GraphQL error, got ' + JSON.stringify(json)).to.be.an('array').that.is.not.empty;",
+                  "  pm.expect(json.errors.map(function (e) { return e.message; }).join(' | ')).to.include('Device Type');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-02: DeviceUpdate changing only the description is accepted",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation DeviceUpdate { DeviceUpdate(input: { typeId: \"Device\", id: \"{{qaDeviceId}}\", item: { id: \"{{qaDeviceId}}\", name: \"QA Regression Device\", description: \"qa description v2\", macAddress: \"{{qaMacAddress}}\", serialNumber: \"QA-REG-SN-{{qaN}}\", deviceType: \"{{deviceTypeId}}\", orderId: \"\", licenseName: \"{{deviceConfigurationId}}\", project: \"\", productionStatus: \"Finished\" } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Permitted description change is saved', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "QA: OpenDocument device as description-only editor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation OpenDocument { OpenDocument(input: { collectionId: \"Devices\", id: \"{{qaDeviceId}}\" }) { documentId objectId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Device document opened', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});",
+                  "pm.environment.set('qaDeviceDocId', json.data.OpenDocument.documentId);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "QA: GetDeviceRepresentation (waits for the document to load)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetDeviceRepresentation { GetDeviceRepresentation(input: { id: \"{{qaDeviceDocId}}\" }) { serialNumber description macAddress licenseName deviceType productionStatus project orderId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "setTimeout(function () {}, Number(pm.environment.get('qaLoadAttempt') || 0) > 0 ? 250 : 0);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const rep = json.data && json.data.GetDeviceRepresentation;",
+                  "const attempt = Number(pm.environment.get('qaLoadAttempt') || 0);",
+                  "if ((!rep || !rep.serialNumber) && attempt < 40) {",
+                  "  pm.environment.set('qaLoadAttempt', attempt + 1);",
+                  "  postman.setNextRequest(pm.info.requestName);",
+                  "} else {",
+                  "  pm.environment.unset('qaLoadAttempt');",
+                  "  pm.test('Device representation is loaded', function () {",
+                  "    pm.expect(rep && rep.serialNumber).to.eql('QA-REG-SN-' + pm.environment.get('qaN'));",
+                  "  });",
+                  "  ['description', 'macAddress', 'licenseName', 'deviceType', 'productionStatus', 'project', 'orderId'].forEach(function (k) {",
+                  "    pm.environment.set('qaRep' + k.charAt(0).toUpperCase() + k.slice(1), rep[k] || '');",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-02: UpdateDeviceFromRepresentation changing the serial number is refused",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateDeviceFromRepresentation { UpdateDeviceFromRepresentation(input: { documentId: \"{{qaDeviceDocId}}\", deviceData: { description: \"{{qaRepDescription}}\", macAddress: \"{{qaRepMacAddress}}\", licenseName: \"{{qaRepLicenseName}}\", deviceType: \"{{qaRepDeviceType}}\", productionStatus: \"{{qaRepProductionStatus}}\", project: \"{{qaRepProject}}\", orderId: \"{{qaRepOrderId}}\", serialNumber: \"QA-REG-HACKED2-{{qaN}}\" } }) { status message } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Regression for D-02: UpdateDeviceFromRepresentation (the path the GUI editor uses) had no permission check at all."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const status = json.data && json.data.UpdateDeviceFromRepresentation;",
+                  "pm.test('Document update without ChangeSerialNumberForSensor fails with a reason', function () {",
+                  "  pm.expect(status && status.status, JSON.stringify(json)).to.eql('Failed');",
+                  "  pm.expect(status.message).to.include('Serial Number');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-02: UpdateDeviceFromRepresentation changing the description is accepted",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateDeviceFromRepresentation { UpdateDeviceFromRepresentation(input: { documentId: \"{{qaDeviceDocId}}\", deviceData: { description: \"qa description v3\", macAddress: \"{{qaRepMacAddress}}\", licenseName: \"{{qaRepLicenseName}}\", deviceType: \"{{qaRepDeviceType}}\", productionStatus: \"{{qaRepProductionStatus}}\", project: \"{{qaRepProject}}\", orderId: \"{{qaRepOrderId}}\", serialNumber: \"QA-REG-SN-{{qaN}}\" } }) { status message } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Permitted document update succeeds', function () {",
+                  "  pm.expect(json.data.UpdateDeviceFromRepresentation.status, JSON.stringify(json)).to.eql('Success');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "QA: SaveDocument device as description-only editor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SaveDocument { SaveDocument(input: { collectionId: \"Devices\", documentId: \"{{qaDeviceDocId}}\", documentName: \"\" }) { status message } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Document saved', function () {",
+                  "  pm.expect(json.data.SaveDocument.status, JSON.stringify(json)).to.eql('Success');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-02: CreateNewDocument device as description-only editor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateNewDocument { CreateNewDocument(input: { collectionId: \"Devices\", typeId: \"Device\" }) { documentId objectId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('New device document opened for the description-only editor', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});",
+                  "pm.environment.set('qaDescNewDeviceDocId', json.data.CreateNewDocument.documentId);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-02: UpdateDeviceFromRepresentation of a new device without AddSensor is refused",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateDeviceFromRepresentation { UpdateDeviceFromRepresentation(input: { documentId: \"{{qaDescNewDeviceDocId}}\", deviceData: { description: \"qa desc-only new device {{qaN}}\" } }) { status message } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Regression: a new device document could be filled by a user without AddSensor as long as only permitted fields were set."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const status = json.data && json.data.UpdateDeviceFromRepresentation;",
+                  "pm.test('Filling a new device without AddSensor fails with a reason', function () {",
+                  "  pm.expect(status && status.status, JSON.stringify(json)).to.eql('Failed');",
+                  "  pm.expect(status.message).to.include('create new hardware');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "QA: CloseDocument new device as description-only editor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CloseDocument { CloseDocument(input: { id: \"{{qaDescNewDeviceDocId}}\", collectionId: \"Devices\" }) { status } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('New device document closed', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "QA: Auth SU again (device checks)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{suLogin}}\", password: \"{{suPassword}}\", productId: \"{{productId}}\" }) { token } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('Auth SU returns a token', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(auth && auth.token).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('token', auth.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-02: DeviceItem keeps the serial number and stores the permitted description",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query DeviceItem { DeviceItem(input: { id: \"{{qaDeviceId}}\" }) { serialNumber description deviceType } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const device = json.data && json.data.DeviceItem;",
+                  "pm.test('Refused changes did not reach the stored device', function () {",
+                  "  pm.expect(device.serialNumber).to.eql('QA-REG-SN-' + pm.environment.get('qaN'));",
+                  "  pm.expect(device.deviceType).to.eql(pm.environment.get('deviceTypeId'));",
+                  "});",
+                  "pm.test('Permitted description change is stored', function () {",
+                  "  pm.expect(device.description).to.eql('qa description v3');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-30: CreateNewDocument device",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateNewDocument { CreateNewDocument(input: { collectionId: \"Devices\", typeId: \"Device\" }) { documentId objectId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('New device document created', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});",
+                  "pm.environment.set('qaNewDeviceDocId', json.data.CreateNewDocument.documentId);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-30: UpdateDeviceFromRepresentation fills the new device",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateDeviceFromRepresentation { UpdateDeviceFromRepresentation(input: { documentId: \"{{qaNewDeviceDocId}}\", deviceData: { serialNumber: \"QA-REG-NEW-{{qaN}}\", description: \"qa revision v1\", macAddress: \"\", licenseName: \"{{deviceConfigurationId}}\", deviceType: \"{{deviceTypeId}}\" } }) { status message } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('New device filled', function () { pm.expect(json.data.UpdateDeviceFromRepresentation.status, JSON.stringify(json)).to.eql('Success'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-30: SaveDocument first save of the new device",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SaveDocument { SaveDocument(input: { collectionId: \"Devices\", documentId: \"{{qaNewDeviceDocId}}\", documentName: \"\" }) { status message } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('First save succeeds', function () { pm.expect(json.data.SaveDocument.status, JSON.stringify(json)).to.eql('Success'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-30: GetOpenedDocumentList binds the saved document to its record",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetOpenedDocumentList { GetOpenedDocumentList(input: { collectionId: \"Devices\" }) { documentList { documentId objectId isDirty } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const docs = (json.data && json.data.GetOpenedDocumentList && json.data.GetOpenedDocumentList.documentList) || [];",
+                  "const doc = docs.find(function (d) { return d.documentId === pm.environment.get('qaNewDeviceDocId'); });",
+                  "pm.test('Saved new document carries its stored object id', function () {",
+                  "  pm.expect(doc, JSON.stringify(docs)).to.be.an('object');",
+                  "  pm.expect(doc.objectId).to.be.a('string').and.not.empty;",
+                  "  pm.expect(doc.isDirty).to.eql(false);",
+                  "});",
+                  "if (doc) pm.environment.set('qaNewDeviceId', doc.objectId);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-30: UpdateDeviceFromRepresentation edits the saved device in the same session",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateDeviceFromRepresentation { UpdateDeviceFromRepresentation(input: { documentId: \"{{qaNewDeviceDocId}}\", deviceData: { serialNumber: \"QA-REG-NEW-{{qaN}}\", description: \"qa revision v2\", macAddress: \"\", licenseName: \"{{deviceConfigurationId}}\", deviceType: \"{{deviceTypeId}}\" } }) { status message } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Edit accepted', function () { pm.expect(json.data.UpdateDeviceFromRepresentation.status, JSON.stringify(json)).to.eql('Success'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-30: SaveDocument second save of the same document",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SaveDocument { SaveDocument(input: { collectionId: \"Devices\", documentId: \"{{qaNewDeviceDocId}}\", documentName: \"\" }) { status message } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Second save succeeds', function () { pm.expect(json.data.SaveDocument.status, JSON.stringify(json)).to.eql('Success'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-30: GetRevisionInfoList records the second save as a change, not a creation",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetRevisionInfoList { GetRevisionInfoList(input: { documentId: \"{{qaNewDeviceId}}\", collectionId: \"Devices\" }) { activeRevision revisions { revision user description isActive } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Regression for D-16/D-30: the opened document kept an empty source URL after the first save, so every following save was described as \"Created the document\" and the diff was lost."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const list = json.data && json.data.GetRevisionInfoList;",
+                  "const revisions = (list && list.revisions) || [];",
+                  "const created = revisions.filter(function (r) { return (r.description || '').indexOf('Created the document') >= 0; });",
+                  "const active = revisions.find(function (r) { return r.isActive; });",
+                  "pm.test('Exactly two revisions, only one of them a creation', function () {",
+                  "  pm.expect(revisions, JSON.stringify(revisions)).to.have.length(2);",
+                  "  pm.expect(created).to.have.length(1);",
+                  "});",
+                  "pm.test('Latest revision describes the description change and its author', function () {",
+                  "  pm.expect(active.description).to.include('qa revision v1').and.include('qa revision v2');",
+                  "  pm.expect(active.user).to.be.a('string').and.not.empty;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-10: GetUserActions records the document-service create and update",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetUserActions { GetUserActions(input: { productId: \"{{productId}}\", viewParams: { offset: 0, count: 50, filterModel: { sortingInfo: [{ fieldId: \"timeStamp\", sortingOrder: \"DESC\" }] } } }) { items { actionType targetLink { id typeId } userLink { id } } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Regression for D-10: saves through SaveDocument (the GUI path) never reached the User Actions log."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const items = (json.data && json.data.GetUserActions && json.data.GetUserActions.items) || [];",
+                  "const mine = items.filter(function (i) { return i.targetLink && i.targetLink.id === pm.environment.get('qaNewDeviceId'); });",
+                  "const types = mine.map(function (i) { return i.actionType; });",
+                  "pm.test('Saving a new device through the document service is audited as Create then Update', function () {",
+                  "  pm.expect(types, JSON.stringify(items.slice(0, 5))).to.include('Create');",
+                  "  pm.expect(types).to.include('Update');",
+                  "});",
+                  "pm.test('The audit entries carry the device type and the acting user', function () {",
+                  "  mine.forEach(function (i) {",
+                  "    pm.expect(i.targetLink.typeId).to.eql('Device');",
+                  "    pm.expect(i.userLink && i.userLink.id).to.be.a('string').and.not.empty;",
+                  "  });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "QA: Auth order-only operator",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{qaOrderLogin}}\", password: \"QaRegression_2026!\", productId: \"{{productId}}\" }) { token } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('Auth order-only operator returns a token', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(auth && auth.token).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('token', auth.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-04: OrderAdd with a new software line is rejected without AddLicense",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation OrderAdd { OrderAdd(input: { typeId: \"Order\", id: \"{{qaOrderId}}\", item: { id: \"{{qaOrderId}}\", name: \"QA-REG-PO-{{qaN}}\", description: \"\", orderId: \"QA-REG-PO-{{qaN}}\", purchaseId: \"QA-REG-PO-{{qaN}}\", customerId: \"{{qaAccountId}}\", orderStatus: \"Created\", orderProducts: [ { id: \"{{qaRejectedSoftwareLineId}}\", productUuid: \"{{softwareCatalogProductId}}\", licenseUuid: \"{{licenseDefinitionId}}\", categoryId: \"Software\", licenseId: \"QA-REG-SW-{{qaN}}\", productName: \"QA Regression Software\", licenseName: \"QA Regression Software\", serialNumber: \"QA-REG-SW-{{qaN}}\", inUse: false, isNew: true, expiration: \"\" } ] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Regression for D-04: Orders -> Add Product -> Create new created Software for users without AddLicense."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Creating software through an order requires AddLicense', function () {",
+                  "  pm.expect(json.errors, 'expected a GraphQL error, got ' + JSON.stringify(json)).to.be.an('array').that.is.not.empty;",
+                  "  pm.expect(json.errors.map(function (e) { return e.message; }).join(' | ')).to.include('No permission to create new software');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "QA: OrderAdd without products as order-only operator",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation OrderAdd { OrderAdd(input: { typeId: \"Order\", id: \"{{qaOrderId}}\", item: { id: \"{{qaOrderId}}\", name: \"QA-REG-PO-{{qaN}}\", description: \"\", orderId: \"QA-REG-PO-{{qaN}}\", purchaseId: \"QA-REG-PO-{{qaN}}\", customerId: \"{{qaAccountId}}\", orderStatus: \"Created\", orderProducts: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Order-only operator can still create an order', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-04: OrderUpdate adding a new software line is rejected",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation OrderUpdate { OrderUpdate(input: { typeId: \"Order\", id: \"{{qaOrderId}}\", item: { id: \"{{qaOrderId}}\", name: \"QA-REG-PO-{{qaN}}\", description: \"\", orderId: \"QA-REG-PO-{{qaN}}\", purchaseId: \"QA-REG-PO-{{qaN}}\", customerId: \"{{qaAccountId}}\", orderStatus: \"Created\", orderProducts: [ { id: \"{{qaRejectedSoftwareLineId}}\", productUuid: \"{{softwareCatalogProductId}}\", licenseUuid: \"{{licenseDefinitionId}}\", categoryId: \"Software\", licenseId: \"QA-REG-SW-{{qaN}}\", productName: \"QA Regression Software\", licenseName: \"QA Regression Software\", serialNumber: \"QA-REG-SW-{{qaN}}\", inUse: false, isNew: true, expiration: \"\" } ] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Adding new software to an existing order requires AddLicense', function () {",
+                  "  pm.expect(json.errors, 'expected a GraphQL error, got ' + JSON.stringify(json)).to.be.an('array').that.is.not.empty;",
+                  "  pm.expect(json.errors.map(function (e) { return e.message; }).join(' | ')).to.include('No permission to create new software');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-04: OrderUpdate adding a new hardware line is rejected without AddSensor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation OrderUpdate { OrderUpdate(input: { typeId: \"Order\", id: \"{{qaOrderId}}\", item: { id: \"{{qaOrderId}}\", name: \"QA-REG-PO-{{qaN}}\", description: \"\", orderId: \"QA-REG-PO-{{qaN}}\", purchaseId: \"QA-REG-PO-{{qaN}}\", customerId: \"{{qaAccountId}}\", orderStatus: \"Created\", orderProducts: [ { id: \"{{qaRejectedHardwareLineId}}\", productUuid: \"{{deviceTypeId}}\", licenseUuid: \"{{deviceConfigurationId}}\", categoryId: \"Hardware\", licenseId: \"\", productName: \"QA Regression Hardware\", licenseName: \"QA Regression Hardware\", serialNumber: \"QA-REG-HW-{{qaN}}\", macAddress: \"\", inUse: false, isNew: true, expiration: \"\" } ] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Adding new hardware to an existing order requires AddSensor', function () {",
+                  "  pm.expect(json.errors, 'expected a GraphQL error, got ' + JSON.stringify(json)).to.be.an('array').that.is.not.empty;",
+                  "  pm.expect(json.errors.map(function (e) { return e.message; }).join(' | ')).to.include('No permission to create new hardware');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "QA: Auth SU again (order checks)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{suLogin}}\", password: \"{{suPassword}}\", productId: \"{{productId}}\" }) { token } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('Auth SU returns a token', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(auth && auth.token).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('token', auth.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-04: rejected software line was not created",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query SoftwareProductItem { SoftwareProductItem(input: { id: \"{{qaRejectedSoftwareLineId}}\" }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('No software product exists for the refused order line', function () {",
+                  "  pm.expect(json.errors, JSON.stringify(json)).to.be.an('array').that.is.not.empty;",
+                  "  pm.expect(json.errors[0].message).to.include('does not exist');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-04: rejected hardware line was not created",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query DeviceItem { DeviceItem(input: { id: \"{{qaRejectedHardwareLineId}}\" }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('No device exists for the refused order line', function () {",
+                  "  pm.expect(json.errors, JSON.stringify(json)).to.be.an('array').that.is.not.empty;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-04: OrderItem still has no products",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query OrderItem { OrderItem(input: { id: \"{{qaOrderId}}\" }) { id orderProducts { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Refused updates left the order unchanged', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(json.data.OrderItem.orderProducts || []).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-08: CreateNewDocument ticket",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateNewDocument { CreateNewDocument(input: { collectionId: \"Tickets\", typeId: \"Ticket\" }) { documentId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('New ticket document created', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});",
+                  "pm.environment.set('qaTicketDocId', json.data.CreateNewDocument.documentId);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "D-08: GetTicketRepresentation of a new ticket defaults to Support Request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetTicketRepresentation { GetTicketRepresentation(input: { id: \"{{qaTicketDocId}}\" }) { ticketType status priority } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Regression for D-08: the server created tickets as AccessRequest while the editor showed SupportRequest, so an untouched type flipped after saving."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const ticket = json.data && json.data.GetTicketRepresentation;",
+                  "pm.test('Server default ticket type matches the editor default', function () {",
+                  "  pm.expect(ticket && ticket.ticketType, JSON.stringify(json)).to.eql('SupportRequest');",
+                  "  pm.expect(ticket.status).to.eql('Open');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "QA: CloseDocument ticket",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CloseDocument { CloseDocument(input: { id: \"{{qaTicketDocId}}\", collectionId: \"Tickets\" }) { status } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Ticket document closed', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
                   "});"
                 ]
               }

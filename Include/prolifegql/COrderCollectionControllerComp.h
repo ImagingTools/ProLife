@@ -43,6 +43,12 @@ protected:
 				const imtgql::CGqlRequest& gqlRequest) const override;
 	virtual bool IsDescriptionStoredInDocument() const override;
 
+	// reimplemented (imtservergql::CObjectCollectionControllerCompBase)
+	virtual istd::IChangeableUniquePtr CreateObjectFromRequest(
+				const imtgql::CGqlRequest& gqlRequest,
+				QByteArray& newObjectId,
+				QString& errorMessage) const override;
+
 	// reimplemented (sdl::V1_0::prolife::COrderCollectionControllerCompBase)
 	virtual bool CreateRepresentationFromObject(
 				const imtbase::IObjectCollectionIterator& objectCollectionIterator,
@@ -66,6 +72,10 @@ protected:
 	virtual void SetAdditionalFilters(const imtgql::CGqlRequest& gqlRequest,const imtgql::CGqlParamObject& viewParamsGql, iprm::CParamsSet* filterParams) const override;
 
 private:
+	bool CheckNewProductPermissions(
+				const sdl::V1_0::prolife::COrderData& orderData,
+				const imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const;
 	bool FillObjectFromRepresentation(
 				const sdl::V1_0::prolife::COrderData& representation,
 				istd::IChangeable& object,

@@ -57,6 +57,7 @@ protected:
 	virtual bool ProcessEvent(imtdoc::CEventBase* eventPtr) override;
 
 private:
+	bool IsNewDocument(const QByteArray& userId, const QByteArray& documentId) const;
 	QByteArrayList GetBindedSoftware(const QByteArray& deviceId) const;
 	bool GetSoftwareInfo(const QByteArray& softwareId, sdl::V1_0::prolife::CSoftwareBindingInfo& softwareInfo) const;
 	bool RemoveHardwareFromOrder(const QByteArray& deviceId, const QByteArray& orderId) const;
