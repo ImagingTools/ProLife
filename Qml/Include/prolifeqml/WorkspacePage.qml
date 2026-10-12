@@ -318,10 +318,13 @@ ViewBase {
 							onWidthChanged: {
 								checkWidth()
 							}
-							
+
+							onControlItemChanged: {
+								checkWidth()
+							}
+
 							function checkWidth(){
 								if (!controlItem){
-									controlItem.width = 0
 									return
 								}
 
