@@ -24,20 +24,6 @@ const { BasePage } = require('imtcore-gui-testkit/pages/BasePage');
 const { ComboBox, TextInput, Switch } = require('imtcore-gui-testkit/controls');
 const gui = require('imtcore-gui-testkit/lib/gui');
 
-const FIELD_PAGE = {
-  DeviceTypeCombo: 'Device',
-  HardwareConfigurationCombo: 'Device',
-  ArticleInput: 'Device',
-  DescriptionInput: 'Device',
-  SerialNumberInput: 'Device',
-  MacAddressInput: 'Device',
-  OrderCombo: 'Production',
-  ProductionStatusCombo: 'Production',
-  ProjectInput: 'Production',
-  InternalUseSwitch: 'Production',
-  LicenseInformationTable: 'Licenses',
-};
-
 class DeviceEditorPage extends BasePage {
   constructor(page) {
     // No MenuPanel pageId - the editor is a document tab, not a page. Reuse BasePage for the command
@@ -66,19 +52,8 @@ class DeviceEditorPage extends BasePage {
     return this;
   }
 
-  async ensureFieldPage(objectName) {
-    const pageId = FIELD_PAGE[objectName];
-    if (pageId) {
-      await this.openEditorPage(pageId);
-    }
-    return this;
-  }
-
   // --- editor commands --------------------------------------------------------------------------
 
-  save() {
-    return this.runCommand('Save');
-  }
   undo() {
     return this.runCommand('Undo');
   }
@@ -94,8 +69,13 @@ class DeviceEditorPage extends BasePage {
   transferLicenses() {
     return this.runCommand('TransferLicenses');
   }
-  support() {
-    return this.runCommand('Support');
+  /**
+   * Open the editor's Support sub-page. It used to be a command-bar command opening a dialog; it is a
+   * MultiPageView page now (DeviceEditor.qml's supportPageComp), and on an unsaved document it shows
+   * "Tickets are available after saving" instead of a ticket panel.
+   */
+  openSupport() {
+    return this.openEditorPage('Support');
   }
 
   // --- field helpers ----------------------------------------------------------------------------
@@ -160,13 +140,6 @@ class DeviceEditorPage extends BasePage {
     await this.openEditorPage(pageAndHeader.pageId);
     await gui.clickButton(this.page, [pageAndHeader.header]);
     return this;
-  }
-
-  // --- structural expectations (used by permission tests) ---------------------------------------
-
-  async expectFieldVisible(objectName) {
-    await this.ensureFieldPage(objectName);
-    return gui.expectVisible(this.page, [objectName]);
   }
 }
 

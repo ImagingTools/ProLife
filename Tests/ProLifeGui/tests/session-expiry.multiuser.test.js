@@ -9,15 +9,14 @@
 
 const { test } = require('../fixtures/test');
 const { WorkspacePage } = require('../pages');
-const { canSeePage } = require('../matrix/permissions');
 
 const TOKEN_STORAGE_KEY = 'AuthorizationController/accessToken';
 
 test.describe('Session expiry', () => {
-  test('missing/expired token redirects to the login screen on reload', async ({ page, gui, user }) => {
+  test('missing/expired token redirects to the login screen on reload', async ({ page, gui }) => {
     const workspace = new WorkspacePage(page);
     await workspace.reload();
-    if (canSeePage(user, 'Workspace')) await workspace.open();
+    if (await workspace.isAvailable()) await workspace.open();
 
     await page.evaluate((key) => localStorage.removeItem(key), TOKEN_STORAGE_KEY);
     await gui.reload(page);

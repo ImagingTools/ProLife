@@ -25,23 +25,8 @@ DocumentCollectionViewDelegate {
 			createLicenseFileIsEnabled = deviceId !== "" && licenseNumber !== "";
 		}
 
-		let splitEnabled = isEnabled;
-		if (splitEnabled){
-			let isMultiple = elementsModel.getData(SoftwareProductItemTypeMetaInfo.s_isMultiple, selection[0]);
-			let productCount = elementsModel.getData(SoftwareProductItemTypeMetaInfo.s_productCount, selection[0]);
-			
-			// Can only split if it's a multi-product license with at least 2 licenses
-			splitEnabled = isMultiple && productCount > 1;
-		}
-		
-		// Enable Revoke if this is a parent license (has child licenses)
-		// We'll enable it optimistically - the dialog will show if there are no children
-		let revokeEnabled = isEnabled;
-		
 		if(commandsController){
 			commandsController.setCommandIsEnabled("CreateLicenseFile", createLicenseFileIsEnabled);
-			commandsController.setCommandIsEnabled("Split", splitEnabled);
-			commandsController.setCommandIsEnabled("Revoke", revokeEnabled);
 		}
 	}
 	
@@ -70,49 +55,6 @@ DocumentCollectionViewDelegate {
 			}
 			
 			container.contextMenuModel.refresh();
-		}
-	}
-	
-	onCommandActivated: {
-		if (commandId === "Split"){
-			let indexes = container.collectionView.table.getSelectedIndexes();
-			if (indexes.length === 0){
-				return;
-			}
-			
-			let elementsModel = container.collectionView.table.elements;
-			let licenseId = elementsModel.getData(SoftwareProductItemTypeMetaInfo.s_id, indexes[0]);
-			let productCount = elementsModel.getData(SoftwareProductItemTypeMetaInfo.s_productCount, indexes[0]);
-			
-			ModalDialogManager.openDialog(splitLicenseDialogComp, {
-				"licenseId": licenseId,
-				"maxAvailableCount": productCount
-			});
-		}
-		else if (commandId === "Revoke"){
-			let indexes = container.collectionView.table.getSelectedIndexes();
-			if (indexes.length === 0){
-				return;
-			}
-			
-			let elementsModel = container.collectionView.table.elements;
-			let licenseId = elementsModel.getData(SoftwareProductItemTypeMetaInfo.s_id, indexes[0]);
-			
-			ModalDialogManager.openDialog(revokeLicenseDialogComp, {
-				"parentLicenseId": licenseId
-			});
-		}
-	}
-
-	Component {
-		id: splitLicenseDialogComp
-		SplitLicenseDialog {
-		}
-	}
-
-	Component {
-		id: revokeLicenseDialogComp
-		RevokeLicenseDialog {
 		}
 	}
 }

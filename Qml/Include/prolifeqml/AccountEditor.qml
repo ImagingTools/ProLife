@@ -345,6 +345,8 @@ ViewBase {
 							placeHolderText: qsTr("Enter the email");
 
 							textInputValidator: mailValid;
+							showErrorWhenInvalid: true;
+							errorText: qsTr("Please enter a valid email");
 
 							onEditingFinished: {
 								accountEditorContainer.doUpdateModel();
@@ -360,7 +362,7 @@ ViewBase {
 
 						RegularExpressionValidator {
 							id: mailValid;
-							regularExpression: /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
+							regularExpression: /^(\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*)?$/;
 						}
 					}
 				}

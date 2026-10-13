@@ -12,6 +12,7 @@
 #include <imtdoc/CDocumentSavedEvent.h>
 
 // ProLife includes
+#include <prolifegql/prolifegql.h>
 #include <prolifedata/prolifedata.h>
 #include <prolifedata/CDeviceInfo.h>
 #include <prolifedata/CIotDeviceInfo.h>
@@ -88,6 +89,15 @@ sdl::V1_0::prolife::CDeviceData CDeviceCollectionDocumentServiceComp::OnGetDevic
 	QByteArray productUuid = deviceInfoPtr->GetDeviceType();
 	response.deviceType = (productUuid);
 
+	// Built from the edited document, not the stored one, so names follow unsaved changes and undo/redo.
+	idoc::MetaInfoPtr metaInfoPtr;
+	if (m_deviceMetaInfoCreatorCompPtr.IsValid() && m_deviceMetaInfoCreatorCompPtr->CreateMetaInfo(deviceInfoPtr, QByteArrayLiteral("Device"), metaInfoPtr) && metaInfoPtr.IsValid()){
+		response.productName = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PRODUCT_NAME).toString();
+		response.configurationName = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_NAME).toString();
+		response.configurationArticle = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_ID).toString();
+		response.orderName = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DELIVERY_ID).toString();
+	}
+
 	imtsdl::TElementList<sdl::V1_0::prolife::CSoftwareBindingInfo> softwareBindingInfoList;
 
 	QByteArrayList softwareIds = GetBindedSoftware(objectId);
@@ -141,6 +151,12 @@ sdl::V1_0::imtbase::CDocumentOperationStatus CDeviceCollectionDocumentServiceCom
 	prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(documentPtr.GetPtr());
 	if (deviceInfoPtr == nullptr){
 		response.status = sdl::V1_0::imtbase::EDocumentOperationStatus::InvalidDocumentId;
+		return response;
+	}
+
+	QString permissionError;
+	if (!CheckDeviceChangePermissions(*deviceInfoPtr, deviceInfoPtr->GetOrderId(), deviceData, gqlRequest, IsNewDocument(userId, documentId), permissionError)){
+		response.message = permissionError;
 		return response;
 	}
 
@@ -223,6 +239,19 @@ bool CDeviceCollectionDocumentServiceComp::ProcessEvent(imtdoc::CEventBase* even
 
 
 // private methods
+
+bool CDeviceCollectionDocumentServiceComp::IsNewDocument(const QByteArray& userId, const QByteArray& documentId) const
+{
+	const imtdoc::IDocumentService::DocumentList documents = m_documentServiceCompPtr->GetOpenedDocumentList(userId);
+	for (const imtdoc::IDocumentService::DocumentListItem& document : documents){
+		if (document.documentId == documentId){
+			return document.url.isEmpty();
+		}
+	}
+
+	return false;
+}
+
 
 QByteArrayList CDeviceCollectionDocumentServiceComp::GetBindedSoftware(const QByteArray& deviceId) const
 {

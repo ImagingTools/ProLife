@@ -515,6 +515,14 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 
 	representationPayload.customerId = softwareInfoPtr->GetCustomerId();
 
+	idoc::MetaInfoPtr metaInfoPtr = m_objectCollectionCompPtr->GetDataMetaInfo(id);
+	if (metaInfoPtr.IsValid()){
+		representationPayload.productName = metaInfoPtr->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME).toString();
+		representationPayload.licenseName = metaInfoPtr->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_NAME).toString();
+		representationPayload.licenseId = metaInfoPtr->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_LICENSE_ID).toString();
+		representationPayload.orderName = metaInfoPtr->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_DELIVERY_ID).toString();
+	}
+
 	imtbase::ICollectionInfo::Ids licenseIds = softwareInfoPtr->GetLicenseInstances().GetElementIds();
 	if (!licenseIds.isEmpty()){
 		QByteArray licenseId = licenseIds[0];

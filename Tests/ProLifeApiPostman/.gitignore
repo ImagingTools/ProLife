@@ -2,3 +2,4 @@ node_modules/
 npm-debug.log*
 run-report.json
 junit-report.xml
+junit-report-ws.xml

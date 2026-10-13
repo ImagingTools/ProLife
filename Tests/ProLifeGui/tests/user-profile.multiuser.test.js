@@ -11,13 +11,13 @@
 
 const { test, expect } = require('../fixtures/test');
 const { WorkspacePage } = require('../pages');
-const { canSeePage } = require('../matrix/permissions');
+const { Table } = require('imtcore-gui-testkit/controls');
 
 test.describe('User profile', () => {
-  test.beforeEach(async ({ page, user }) => {
+  test.beforeEach(async ({ page }) => {
     const workspace = new WorkspacePage(page);
     await workspace.reload();
-    if (canSeePage(user, 'Workspace')) await workspace.open();
+    if (await workspace.isAvailable()) await workspace.open();
   });
 
   // UserPanel.qml's account menu is a plain PopupMenuDialog bound to a ListModel, NOT a ComboBox - its
@@ -51,7 +51,7 @@ test.describe('User profile', () => {
 
     await gui.clickButton(page, ['ChangeButton']);
     await gui.expectVisible(page, ['NewPasswordInput'], 'password card should expand');
-    await gui.checkScreenshot(page, 'user-profile-general-password-card');
+    await gui.checkElementScreenshot(page, ['Dialog'], 'user-profile-general-password-card');
 
     await gui.clickButton(page, ['CancelButton']);
     await gui.expectHidden(page, ['NewPasswordInput'], 'password card should collapse after Cancel');
@@ -62,7 +62,10 @@ test.describe('User profile', () => {
   // a non-default expiration), read the generated secret, copy it, confirm it lands in the table, then
   // revoke and delete it (cleanup, so repeat runs don't accumulate orphaned tokens).
   test('access tokens: generate, copy, appears in the list, revoke, then delete', async ({ page, gui }) => {
-    const tokenName = `gui-test-token-${Date.now()}`;
+    // Keyed to the user, not the clock: the name is typed into a field several screenshots capture, so
+    // a per-run number means they never match. Per-user because this spec runs for EVERY user against
+    // one database, in parallel - the names still must not collide.
+    const tokenName = `gui-test-token-${test.info().project.name}`;
 
     await gui.openComboPopup(page, ['UserPanelButton']);
     await gui.clickPopupItemByIndex(page, 0); // Profile
@@ -72,19 +75,37 @@ test.describe('User profile', () => {
     await gui.clickButton(page, ['NewTokenButton']);
     await gui.expectVisible(page, ['TokenNameInput'], '"New Personal Access Token" dialog should open');
 
+    // A token has to be granted at least one permission, and the tree offers only the permissions its
+    // owner actually holds - so a user granted none gets "No permissions available to assign to this
+    // token" and ProfileTokensPage.qml hides the whole PermissionsTableView (scopesEmpty), toolbar
+    // included. There is no token for them to create; that is the product working, not a failure.
+    //
+    // The scope list loads asynchronously, so this waits for the toolbar rather than counting rows in
+    // the same tick - and it asks about the TOOLBAR, not about "TreeRow_0" anywhere on the page, which
+    // also matched a row of the profile's own permissions tree behind the dialog and so never skipped.
+    test.skip(
+      !(await gui.dom.isVisible(page, ['ExpandAllButton'], 10000)),
+      'this user holds no permissions, so a scoped token cannot be created'
+    );
+
     await gui.fill(page, ['TokenNameInput'], tokenName);
     await gui.fill(page, ['TokenDescriptionInput'], 'Created by the GUI test suite');
     // Blur the description field (its value only commits onEditingFinished) by interacting with the
     // expiration combo next - also proves that combo is a real, working control, not just a default.
     await gui.select(page, ['ComboBox'], '30Days');
 
-    // Click through the permissions tree for real (not just "Check All") - expand it, then check two
-    // individual rows. Row content is data-dependent per user, but su/fullAccess always has a large
-    // permission set, so rows 0 and 1 are reliably present.
+    // Click through the permissions tree for real (not just "Check All") - expand it and check the top
+    // row, which is a GROUP and therefore selects its children with it.
+    //
+    // It used to check rows 0 AND 1, assuming both are always present and independent. They are for su,
+    // whose tree is large. A user holding ONE permission has a tree of exactly two rows - the group and
+    // its single child - so the second click unchecked the child and with it the group, leaving nothing
+    // selected. "Select at least one permission" stayed up, Generate Token stayed disabled, and the
+    // failure surfaced much later as "the dialog should open". One group row is what this needs, and it
+    // holds for any user.
     await gui.clickButton(page, ['ExpandAllButton']);
     await gui.checkScreenshot(page, 'access-tokens-new-dialog-tree-expanded');
-    await gui.click(page, ['TreeRow_0', 'RowCheckBox'], { what: 'first permission row checkbox' });
-    await gui.click(page, ['TreeRow_1', 'RowCheckBox'], { what: 'second permission row checkbox' });
+    await gui.click(page, ['TreeRow_0', 'RowCheckBox'], { what: 'first permission group checkbox' });
     await gui.checkScreenshot(page, 'access-tokens-new-dialog-filled');
 
     // Generate Token is disabled until name + expiration + at least one scope are all set - clicking
@@ -99,13 +120,15 @@ test.describe('User profile', () => {
     const tokenValueInput = gui.dom.byPath(page, ['TokenValueField', 'TextInput']);
     const tokenValue = await tokenValueInput.evaluate((el) => el.textContent.trim());
     expect(tokenValue, 'the generated token secret should be non-empty').toBeTruthy();
-    await gui.checkScreenshot(page, 'access-tokens-token-created');
+    await gui.checkElementScreenshot(page, ['Dialog'], 'access-tokens-token-created', { path: ['TokenValueField'] });
 
     // Copy: no structural "was it copied" signal exposed (the icon just swaps to a checkmark and the
     // button disables itself), so the click succeeding without error plus a screenshot of the changed
     // icon state is the check here - same reasoning as this suite's own RememberMeCheckBox convention.
+    // The generated secret is random per run - masked out of both shots of it, or the comparison is
+    // against a value that can never match.
     await gui.clickButton(page, ['CopyTokenButton']);
-    await gui.checkScreenshot(page, 'access-tokens-token-copied');
+    await gui.checkElementScreenshot(page, ['Dialog'], 'access-tokens-token-copied', { path: ['TokenValueField'] });
 
     await gui.clickButton(page, ['OKButton']);
     await gui.expectHidden(page, ['TokenValueField'], '"Token Created" dialog should close after OK');
@@ -114,13 +137,14 @@ test.describe('User profile', () => {
     // position (a fresh token's row position depends on the list's own sort order).
     const tokenRow = page.locator('[objectName^="TableRow_"][visible]').filter({ hasText: tokenName }).first();
     await tokenRow.waitFor({ state: 'visible', timeout: 10000 });
-    await gui.checkScreenshot(page, 'access-tokens-list-with-new-token');
+    const expirationMasks = await new Table(page).columnMasks(['expiresAt']);
+    await gui.checkScreenshot(page, 'access-tokens-list-with-new-token', expirationMasks);
 
     // Revoke, then delete (cleanup) - both scoped to THIS token's own row so a same-named leftover
     // from a previous failed run can't be affected instead.
     await gui.clickWithin(page, tokenRow, 'RevokeTokenButton');
     await gui.waitForStable(page);
-    await gui.checkScreenshot(page, 'access-tokens-token-revoked');
+    await gui.checkScreenshot(page, 'access-tokens-token-revoked', expirationMasks);
 
     await gui.clickWithin(page, tokenRow, 'DeleteTokenButton');
     await gui.expectVisible(page, ['YesButton'], 'delete should ask for confirmation');

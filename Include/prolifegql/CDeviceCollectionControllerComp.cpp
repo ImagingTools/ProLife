@@ -17,6 +17,7 @@
 #include <prolifedata/TOrderedWrap.h>
 #include <prolifedata/IHardwareProductBinding.h>
 #include <prolifedata/CGroupFilter.h>
+#include <prolifegql/prolifegql.h>
 
 
 namespace prolifegql
@@ -471,6 +472,14 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	QByteArray productUuid = deviceInfoPtr->GetDeviceType();
 	representationPayload.deviceType = (productUuid);
 
+	idoc::MetaInfoPtr metaInfoPtr = m_objectCollectionCompPtr->GetDataMetaInfo(id);
+	if (metaInfoPtr.IsValid()){
+		representationPayload.productName = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PRODUCT_NAME).toString();
+		representationPayload.configurationName = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_NAME).toString();
+		representationPayload.configurationArticle = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_ID).toString();
+		representationPayload.orderName = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DELIVERY_ID).toString();
+	}
+
 	imtsdl::TElementList<sdl::V1_0::prolife::CSoftwareBindingInfo> softwareBindingInfoList;
 
 	QByteArrayList softwareIds = GetBindedSoftware(id);
@@ -489,7 +498,7 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 
 
 bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
-			const imtgql::CGqlRequest& /*rawGqlRequest*/,
+			const imtgql::CGqlRequest& rawGqlRequest,
 			const sdl::V1_0::prolife::CDeviceUpdateGqlRequest& deviceUpdateRequest,
 			istd::IChangeable& object,
 			QString& errorMessage) const
@@ -521,6 +530,10 @@ bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 
 	prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr = dynamic_cast<prolifedata::COrderedIdentifiableDeviceInfo*>(&object);
 	Q_ASSERT(deviceInfoPtr != nullptr);
+
+	if (!CheckDeviceChangePermissions(*deviceInfoPtr, deviceInfoPtr->GetOrderId(), deviceData, rawGqlRequest, false, errorMessage)){
+		return false;
+	}
 
 	deviceInfoPtr->ResetData();
 

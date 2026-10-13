@@ -3,7 +3,7 @@
 
 // ImtCore includes
 #include <imtauth/IUserGroupInfo.h>
-#include <imtauth/IAddress.h>
+#include <imtaccount/IAddress.h>
 
 // ProLife includes
 #include <prolifedata/CCustomerInfo.h>
@@ -54,8 +54,8 @@ bool CCustomerChangeGeneratorComp::CompareDocuments(
 
 
 void CCustomerChangeGeneratorComp::CompareAddresses(
-	const imtauth::IAddressProvider* oldAddressProviderPtr,
-	const imtauth::IAddressProvider* newAddressProviderPtr,
+	const imtaccount::IAddressProvider* oldAddressProviderPtr,
+	const imtaccount::IAddressProvider* newAddressProviderPtr,
 	imtbase::CObjectCollection& documentChangeCollection)
 {
 	const QByteArrayList oldAddressIds = (oldAddressProviderPtr != nullptr) ? oldAddressProviderPtr->GetAddressList().GetElementIds() : QByteArrayList();
@@ -117,14 +117,14 @@ void CCustomerChangeGeneratorComp::CompareAddresses(
 
 
 void CCustomerChangeGeneratorComp::CompareAddressFields(
-	const imtauth::IAddressProvider& oldAddressProvider,
+	const imtaccount::IAddressProvider& oldAddressProvider,
 	const QByteArray& oldAddressId,
-	const imtauth::IAddressProvider& newAddressProvider,
+	const imtaccount::IAddressProvider& newAddressProvider,
 	const QByteArray& newAddressId,
 	imtbase::CObjectCollection& documentChangeCollection)
 {
-	const imtauth::IAddress* oldAddressPtr = oldAddressProvider.GetAddress(oldAddressId);
-	const imtauth::IAddress* newAddressPtr = newAddressProvider.GetAddress(newAddressId);
+	const imtaccount::IAddress* oldAddressPtr = oldAddressProvider.GetAddress(oldAddressId);
+	const imtaccount::IAddress* newAddressPtr = newAddressProvider.GetAddress(newAddressId);
 	if (oldAddressPtr == nullptr || newAddressPtr == nullptr){
 		return;
 	}
@@ -139,11 +139,11 @@ void CCustomerChangeGeneratorComp::CompareAddressFields(
 				QT_TRANSLATE_NOOP("Attribute", "Address Category"),
 				oldAddressProvider.GetAddressCategory(oldAddressId),
 				newAddressProvider.GetAddressCategory(newAddressId),
-				imtauth::IAddressProvider::AddressCategoryGetStrings());
+				imtaccount::IAddressProvider::AddressCategoryGetStrings());
 }
 
 
-QString CCustomerChangeGeneratorComp::FormatAddress(const imtauth::IAddress* addressPtr)
+QString CCustomerChangeGeneratorComp::FormatAddress(const imtaccount::IAddress* addressPtr)
 {
 	if (addressPtr == nullptr){
 		return QString();

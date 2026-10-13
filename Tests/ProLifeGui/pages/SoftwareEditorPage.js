@@ -20,20 +20,6 @@ const { BasePage } = require('imtcore-gui-testkit/pages/BasePage');
 const { ComboBox, TextInput, Switch } = require('imtcore-gui-testkit/controls');
 const gui = require('imtcore-gui-testkit/lib/gui');
 
-const FIELD_PAGE = {
-  ProductCombo: 'General',
-  LicenseCombo: 'General',
-  ArticleInput: 'General',
-  SerialNumberInput: 'General',
-  InternalUseSwitch: 'General',
-  IsMultipleSwitch: 'General',
-  ProductCountSpinBox: 'General',
-  ProjectInput: 'Additional',
-  OrderCombo: 'Additional',
-  UnlimitedSwitch: 'Expiration',
-  ExpirationDatePicker: 'Expiration',
-};
-
 class SoftwareEditorPage extends BasePage {
   constructor(page) {
     // Editor tab, reuse BasePage for command bar.
@@ -45,8 +31,6 @@ class SoftwareEditorPage extends BasePage {
     this.article = new TextInput(page, ['ArticleInput']); // read-only
     this.serialNumber = new TextInput(page, ['SerialNumberInput']);
     this.internalUse = new Switch(page, ['InternalUseSwitch']);
-    this.isMultiple = new Switch(page, ['IsMultipleSwitch']);
-    this.productCount = new TextInput(page, ['ProductCountSpinBox']);
 
     // General page — assignment
     this.project = new TextInput(page, ['ProjectInput']);
@@ -64,19 +48,8 @@ class SoftwareEditorPage extends BasePage {
     return this;
   }
 
-  async ensureFieldPage(objectName) {
-    const pageId = FIELD_PAGE[objectName];
-    if (pageId) {
-      await this.openEditorPage(pageId);
-    }
-    return this;
-  }
-
   // --- editor commands --------------------------------------------------------------------------
 
-  save() {
-    return this.runCommand('Save');
-  }
   undo() {
     return this.runCommand('Undo');
   }
@@ -116,16 +89,28 @@ class SoftwareEditorPage extends BasePage {
     await this.internalUse.toggle();
     return this;
   }
-  async toggleIsMultiple() {
-    await this.openEditorPage('General');
-    await this.isMultiple.toggle();
-    return this;
+  /** True while the license is unlimited - see setUnlimited for why this is read off the date picker. */
+  async isUnlimited() {
+    return (await gui.countVisible(this.page, ['ExpirationDatePicker'])) === 0;
   }
+
+  /**
+   * Drive the Unlimited switch to `on`, judged by what the switch CONTROLS rather than by the switch
+   * itself: the bridge never mirrors `checked`, but the date picker is `visible: !unlimitedSwitch.checked`
+   * (SoftwareEditor.qml), so its visibility IS the switch's state. This used to toggle blindly, assuming
+   * a new license starts limited; it does not, so the step meant to turn Unlimited off turned it on and
+   * the following setExpiration() went looking for a picker the app had just hidden.
+   */
   async setUnlimited(on) {
-    // Toggle only if needed; we click to set desired state by checking screenshot or always toggle twice if wrong.
-    // For simplicity in tests we toggle and rely on state.
     await this.openEditorPage('Expiration');
+    if ((await this.isUnlimited()) === on) return this;
     await this.unlimited.toggle();
+    await gui.waitForStable(this.page);
+    if ((await this.isUnlimited()) !== on) {
+      throw new Error(
+        `Unlimited switch did not reach ${on}: the expiration date picker is still ${on ? 'visible' : 'hidden'}`
+      );
+    }
     return this;
   }
   async setExpiration(text) {
@@ -148,13 +133,6 @@ class SoftwareEditorPage extends BasePage {
     await this.openEditorPage(pageAndHeader.pageId);
     await gui.clickButton(this.page, [pageAndHeader.header]);
     return this;
-  }
-
-  // --- structural expectations (used by permission tests) ---------------------------------------
-
-  async expectFieldVisible(objectName) {
-    await this.ensureFieldPage(objectName);
-    return gui.expectVisible(this.page, [objectName]);
   }
 }
 

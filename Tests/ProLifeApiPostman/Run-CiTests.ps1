@@ -176,6 +176,8 @@ param(
     [string]$EnvironmentPath = (Join-Path $ScriptDir "ProLifeApi-Dev.postman_environment.json"),
     [string]$JUnitReportPath = (Join-Path $ScriptDir "junit-report.xml"),
     [string]$JsonReportPath = (Join-Path $ScriptDir "run-report.json"),
+    [string]$WsJUnitReportPath = (Join-Path $ScriptDir "junit-report-ws.xml"),
+    [int]$WebSocketPort = 18778,
     [int]$StartupTimeoutSeconds = 60
 )
 
@@ -460,6 +462,25 @@ function Invoke-NewmanSuite {
     return $LASTEXITCODE
 }
 
+function Invoke-WsSuite {
+    # Newman does not execute Postman WebSocket requests, so the subscription
+    # coverage lives in a node runner speaking the same protocol. It is the only
+    # place the ProLife -> Puma forwarding of subscriptions is actually exercised.
+    $wsScript = Join-Path $ScriptDir "ws\ws-subscriptions.js"
+    if (-not (Test-Path $wsScript)) {
+        Write-Host "WebSocket suite not found at $wsScript - skipping." -ForegroundColor Yellow
+        return 0
+    }
+
+    Write-Step "Running WebSocket subscription suite"
+
+    $wsBaseUrl = "http://localhost:$HttpPort/ProLife"
+    $wsUrl = "ws://localhost:$WebSocketPort"
+
+    & node $wsScript --http $wsBaseUrl --ws $wsUrl --env $EnvironmentPath --junit $WsJUnitReportPath | Out-Host
+    return $LASTEXITCODE
+}
+
 $repoRootSource = if ($PSBoundParameters.ContainsKey('RepoRoot')) { 'explicit -RepoRoot' }
     elseif ($env:PROLIFEDIR -eq $RepoRoot) { 'PROLIFEDIR env var' }
     elseif ((Get-Location).Path -eq $RepoRoot) { 'working directory' }
@@ -499,6 +520,11 @@ try {
     Start-TestServer
 
     $exitCode = Invoke-NewmanSuite
+
+    # Runs against the same three live servers, so it exercises the real
+    # ProLife -> Puma subscription chain rather than either server alone.
+    $wsExitCode = Invoke-WsSuite
+    if ($exitCode -eq 0) { $exitCode = $wsExitCode }
 }
 finally {
     # Tear down in reverse start order: ProLife depends on Lisa/Puma being

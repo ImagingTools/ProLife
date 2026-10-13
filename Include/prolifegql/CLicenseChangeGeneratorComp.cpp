@@ -9,7 +9,7 @@
 #include <iqt/iqt.h>
 #include <imtlic/IProductInfo.h>
 #include <imtlic/ILicenseDefinition.h>
-#include <imtauth/CCompanyInfo.h>
+#include <imtaccount/CCompanyInfo.h>
 
 // ProLife includes
 #include <prolifedata/COrderInfo.h>
@@ -275,7 +275,7 @@ QString CLicenseChangeGeneratorComp::GetAccountName(const QByteArray& accountId)
 
 	imtbase::IObjectCollection::DataPtr dataPtr;
 	if (m_accountCollectionCompPtr->GetObjectData(accountId, dataPtr)){
-		const imtauth::CIdentifiableCompanyInfo* companyInfoPtr = dynamic_cast<const imtauth::CIdentifiableCompanyInfo*>(dataPtr.GetPtr());
+		const imtaccount::CIdentifiableCompanyInfo* companyInfoPtr = dynamic_cast<const imtaccount::CIdentifiableCompanyInfo*>(dataPtr.GetPtr());
 		if (companyInfoPtr != nullptr){
 			return companyInfoPtr->GetName();
 		}

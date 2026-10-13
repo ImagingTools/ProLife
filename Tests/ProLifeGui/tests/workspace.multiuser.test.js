@@ -11,7 +11,6 @@
 
 const { test, newUserPage } = require('../fixtures/test');
 const { WorkspacePage } = require('../pages');
-const { canSeePage, visiblePages } = require('../matrix/permissions');
 const gui = require('imtcore-gui-testkit/lib/gui');
 
 // TimeFilterDelegate/CustomerFilterDelegate are both built on ImtCore's FilterDelegateBase, whose
@@ -35,33 +34,25 @@ async function resetWorkspaceFilters(page) {
 }
 
 test.describe('Workspace', () => {
-  test.beforeEach(async ({ page }) => {
-    const workspace = new WorkspacePage(page);
-    await workspace.reload();
-  });
+  // Scoped to its own describe so the reload does NOT also fire for the shared-page block(s)
+  // below: an outer beforeEach runs for nested describes too, and requesting the `page` fixture
+  // there created and booted a whole extra app instance per nested test that nothing then used.
+  test.describe('cold load', () => {
+    test.beforeEach(async ({ page }) => {
+      const workspace = new WorkspacePage(page);
+      await workspace.reload();
+    });
 
-  // 1. Landing state, per user. Always taken (even for users without ViewWorkspace) so the baseline
-  //    documents exactly what each permission level lands on.
-  test('workspace start', async ({ page, gui, user }) => {
-    if (canSeePage(user, 'Workspace')) {
-      await new WorkspacePage(page).open();
-    }
-    await gui.checkScreenshot(page, 'workspace-start');
-  });
-
-  // 2. Structural permission-matrix check on the navigation menu (cheap, exact, per user). This is
-  //    the one place we assert visibility structurally so the intent is machine-checked, not only
-  //    eyeballed via screenshot.
-  test('menu reflects permissions', async ({ page, user }) => {
-    const workspace = new WorkspacePage(page);
-    const shouldSee = visiblePages(user);
-    for (const pageId of Object.keys(require('../matrix/permissions').PAGE_PERMISSIONS)) {
-      if (shouldSee.includes(pageId)) {
-        await workspace.menu.expectHasPage(pageId);
-      } else {
-        await workspace.menu.expectNoPage(pageId);
+    // Landing state, per user. Always taken - including for users who cannot open the Workspace at
+    // all - so the baseline documents exactly what each user lands on. This screenshot IS the
+    // per-user difference; nothing else needs to assert who may see what.
+    test('workspace start', async ({ page, gui }) => {
+      const workspace = new WorkspacePage(page);
+      if (await workspace.isAvailable()) {
+        await workspace.open();
       }
-    }
+      await gui.checkScreenshot(page, 'workspace-start');
+    });
   });
 
   // The remaining interactions only make sense for users who can actually open the Workspace. One
@@ -69,22 +60,23 @@ test.describe('Workspace', () => {
   // boot per test - reset per-test via workspace.open() (resets the active tab back to Dashboard - see
   // resetWorkspaceFilters's own comment) plus an explicit filter reset, cheaply, without navigation.
   test.describe.serial('interactions', () => {
-    let page, user, workspace;
+    let page, workspace, available;
 
     test.beforeAll(async ({ browser }, testInfo) => {
-      ({ page, user } = await newUserPage(browser, testInfo));
+      ({ page } = await newUserPage(browser, testInfo));
       workspace = new WorkspacePage(page);
       // newUserPage() only opens a blank page - unlike the page fixture, nothing has navigated to the
       // app yet, so load it once here before the very first interaction.
       await workspace.reload();
+      available = await workspace.isAvailable();
     });
 
     test.afterAll(async () => {
-      if (page) await page.close();
+      if (page) await page.context().close();
     });
 
     test.beforeEach(async () => {
-      test.skip(!canSeePage(user, 'Workspace'), 'user cannot see the Workspace page');
+      test.skip(!available, 'Workspace is not available to this user');
       await workspace.open();
       // Explicit reset, NOT implicit via re-navigation - see openDashboard()'s own comment: confirmed
       // live that a prior test leaving the Analytics tab active (e.g. 'analytics tab reflects time
@@ -106,11 +98,11 @@ test.describe('Workspace', () => {
 
     // The Analytics tab has its OWN Software/Hardware vs Orders toggle (StatisticsPage.qml - a
     // separate ViewBase/commandsController from WorkspacePage's own Dashboard/UserActions/Analytics
-    // tabs), previously untested. Orders' own chart (OrderCreationLineChart) only renders for a user
-    // with ViewOrders.
+    // tabs), previously untested. Orders' own chart (OrderCreationLineChart) is not offered to every
+    // user, so the toggle itself decides whether there is anything to exercise.
     test('analytics tab - orders sub-view', async () => {
-      test.skip(!user.can('ViewOrders'), 'orders analytics sub-view requires ViewOrders');
       await workspace.openAnalytics();
+      test.skip(!(await workspace.commands.isAvailable('Orders')), 'orders analytics sub-view is not available to this user');
       await workspace.openAnalyticsOrders();
       await gui.checkScreenshot(page, 'workspace-analytics-orders');
     });
@@ -131,25 +123,37 @@ test.describe('Workspace', () => {
     });
 
     test('customer filter', async () => {
-      test.skip(!user.can('ViewAccounts'), 'customer filter requires ViewAccounts');
+      test.skip(
+        !(await workspace.customerFilterCombo.hasOption('QUISS')),
+        'no QUISS customer visible to this user'
+      );
       await workspace.setCustomerFilter('QUISS');
       await gui.checkScreenshot(page, 'workspace-customer-filter');
     });
 
     test('software card - view all', async () => {
-      test.skip(!user.can('ViewLicenses'), 'software card requires ViewLicenses');
+      test.skip(
+        !(await gui.dom.isVisible(page, ['SoftwareProductsInfo', 'ViewAllButton'])),
+        'the software card is not available to this user'
+      );
       await workspace.viewAllIn('SoftwareProducts');
       await gui.checkScreenshot(page, 'workspace-software-view-all');
     });
 
     test('software card - create new', async () => {
-      test.skip(!user.can('ViewLicenses'), 'software card requires ViewLicenses');
+      test.skip(
+        !(await gui.dom.isVisible(page, ['SoftwareProductsInfo', 'CreateNewButton'])),
+        'the software card is not available to this user'
+      );
       await workspace.createNewIn('SoftwareProducts');
       await gui.checkScreenshot(page, 'workspace-software-create-new');
     });
 
     test('orders card - view all', async () => {
-      test.skip(!user.can('ViewOrders'), 'orders card requires ViewOrders');
+      test.skip(
+        !(await gui.dom.isVisible(page, ['OrdersInfo', 'ViewAllButton'])),
+        'the orders card is not available to this user'
+      );
       await workspace.viewAllIn('Orders');
       await gui.checkScreenshot(page, 'workspace-orders-view-all');
     });

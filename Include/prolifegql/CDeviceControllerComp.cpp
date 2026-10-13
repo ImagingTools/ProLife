@@ -75,6 +75,9 @@ sdl::V1_0::prolife::CDeviceBindingData CDeviceControllerComp::OnGetDeviceBinding
 		}
 	}
 
+	response.productUuid = QByteArray();
+	response.productName = QString();
+
 	QByteArrayList softwareIds = hardwareProductBindingPtr->GetSoftwareIds();
 	if (!softwareIds.isEmpty()){
 		if (m_softwareProductCollectionCompPtr.IsValid()){
@@ -85,6 +88,11 @@ sdl::V1_0::prolife::CDeviceBindingData CDeviceControllerComp::OnGetDeviceBinding
 				if (productInstanceInfoPtr != nullptr){
 					QByteArray productId = productInstanceInfoPtr->GetProductId();
 					response.productUuid = productId;
+
+					idoc::MetaInfoPtr metaInfoPtr = m_softwareProductCollectionCompPtr->GetDataMetaInfo(softwareId);
+					if (metaInfoPtr.IsValid()){
+						response.productName = metaInfoPtr->GetMetaInfo(imtlic::IProductInstanceInfo::MIT_PRODUCT_NAME).toString();
+					}
 				}
 			}
 		}

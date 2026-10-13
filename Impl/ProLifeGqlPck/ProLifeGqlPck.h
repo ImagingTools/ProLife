@@ -49,7 +49,7 @@ typedef icomp::TModelCompWrap<
 			icomp::TMakeComponentWrap<
 						prolifedata::CCustomerInfo,
 						prolifedata::ICustomerInfo,
-						imtauth::ICompanyInfo,
+						imtaccount::ICompanyInfo,
 						iser::IObject,
 						iser::ISerializable,
 						istd::IChangeable>> CustomerInfo;

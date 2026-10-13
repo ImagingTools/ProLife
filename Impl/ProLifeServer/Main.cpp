@@ -3,6 +3,8 @@
 #include <imtcore/CImtCoreAuthorizableServerInitializer.h>
 #include <imtcore/CImtCoreBaseInitializer.h>
 #include <imtcore/CImtCoreDeskInitializer.h>
+#include <imtcore/CImtCoreAuthInitializer.h>
+#include <imtcore/CImtCoreLicInitializer.h>
 #include <imtlic/IProductInfo.h>
 
 // ProLife includes
@@ -23,8 +25,9 @@ static void InitializeProLifeServerResources()
 	InitializeImtCoreAuthorizableServer();
 	ImtCoreInitDeskSqlResources();
 
-	// GetStyleData serves the themes from ':/Style'.
 	ImtCoreInitStyleResources();
+	ImtCoreInitAuthStyleResources();
+	ImtCoreInitLicStyleResources();
 }
 
 

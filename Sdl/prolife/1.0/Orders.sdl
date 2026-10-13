@@ -65,6 +65,7 @@ type OrderData {
 	orderId: ID
 	purchaseId: ID
 	customerId: ID
+	customerName: String
 	orderStatus: ID
 	orderProducts: [OrderedProduct]
 	customerRoles: [OrderCustomerRole]

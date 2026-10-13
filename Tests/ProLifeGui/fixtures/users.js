@@ -2,20 +2,23 @@
 //
 // Consumed by:
 //   - playwright.config.js  -> one Playwright *project* per user (each with its own storageState)
-//   - global-setup.js       -> creates the roles/users via GraphQL, then UI-logs-in each one
-//   - fixtures/test.js       -> exposes the current user (resolved from the project name) to tests
+//   - global-setup.js       -> UI-logs-in each active user and mints its storageState
+//   - fixtures/test.js      -> exposes the current user (resolved from the project name) to tests
 //
-// Permission codes are the exact FeatureId strings from
-//   Impl/ProLifeServer/ProLifeFeatures.xml
-// and match the page/command/field gating declared in
-//   Partitura/ProLifeQmlVoce.arp/Pages.acc + *Page.acc      (per-page PagePermissions / CommandPermissions)
-//   Partitura/ImtGraphQlVoce.arp/PagesController.acc         (Workspace / Search / Administration)
-// A few command-permission ids used below (SplitLicense, RevokeLicense) are NOT in ProLifeFeatures.xml
-// but ARE real CommandPermissions declared in SoftwareProductsPage.acc, so a role can still be granted
-// the raw string; they gate the Split/Revoke command visibility. This mirrors the role/permission model
-// already validated in Tests/ProLifeApiPostman ("08 Multi-role Scenario").
+// `permissions` is what gets GRANTED to this fixture user's role when seeding (fixtures/seed.js joins
+// it into the ';'-delimited string the server stores). A test does not read it - `requires()` compares
+// against the list the SERVER returned at login, which storageState already carries.
 //
-// permissions is stored server-side as a ';'-delimited string; here we keep an array and join on seed.
+// The one exception is '*'. The superuser bypasses permission checks server-side and is therefore sent
+// an EMPTY list, indistinguishable from a user granted nothing; '*' here is what tells the two apart,
+// and defineUsers refuses a superuser without it - otherwise su would silently skip every
+// permission-gated test in the suite. Codes are the exact
+// FeatureId strings from Impl/ProLifeServer/ProLifeFeatures.xml, except SplitLicense/RevokeLicense,
+// which are CommandPermissions declared in SoftwareProductsPage.acc - a role can be granted the raw
+// string either way. Mirrors the role model validated in Tests/ProLifeApiPostman ("08 Multi-role
+// Scenario").
+
+const { defineUsers } = require('imtcore-gui-testkit/fixtures/defineUsers');
 
 const PASSWORD = 'ProLifeGui_2026!';
 
@@ -200,11 +203,11 @@ const USERS = [
     isolatedSpec: 'software.editor.multiuser.test.js',
   },
   {
-    // Drives concurrent-session-banner.multiuser.test.js - opens TWO simultaneous sessions of this
-    // SAME user on purpose (that's the whole point of the test: observe RemoteCollectionView.qml's
-    // "modified from another computer" banner, which only fires when a SECOND session of the SAME user
-    // changes a row the FIRST session is looking at). Still needs its own isolated user so it doesn't
-    // collide with some OTHER spec file's own document-tab activity under a shared matrix user.
+    // Drives concurrent-session-banner.multiuser.test.js: this is the WATCHING session, looking at the
+    // Hardware table while `su` changes a row from its own session. The banner fires on a change made by
+    // a different USER (RemoteCollectionChangeListener.qml compares ownerId to the current user), so the
+    // watcher must not be su - hence a user of its own, which also keeps it clear of any other spec's
+    // document-tab activity under a shared matrix user.
     key: 'bannerEditor',
     title: 'Concurrent Session Banner (isolated)',
     login: 'prolifegui_bannereditor',
@@ -294,50 +297,15 @@ const USERS = [
   },
 ];
 
-// The guest (unauthenticated) pseudo-user. Not seeded, no storageState.
-const GUEST = { key: 'guest', title: 'Guest', login: null, password: null, seed: false, permissions: [] };
-
-const byKey = (key) => USERS.find((u) => u.key === key) || (key === GUEST.key ? GUEST : undefined);
-
-/**
- * Does this user hold a given permission code? '*' users hold everything.
- * @param {TestUser} user
- * @param {string} permission
- */
-const can = (user, permission) => !!user && (user.permissions.includes('*') || user.permissions.includes(permission));
-
-// Fast default subset for iterative/local runs: `su` (superuser baseline) + `fullAccess` (broadest
-// non-superuser coverage - every page/command via real granted permissions, not '*', so editor
-// save-paths etc. still get exercised without needing the full matrix). This does NOT validate
-// per-user restrictions (accountsViewer/noAccess/etc. seeing less) - set PROLIFE_GUI_ALL_USERS=1 (or
-// Run-CiTests.ps1 -AllUsers) to run the complete permission matrix when that's what you're testing.
-const DEFAULT_USER_KEYS = ['su', 'fullAccess'];
-const useAllUsers = () => process.env.PROLIFE_GUI_ALL_USERS === '1' || process.env.PROLIFE_GUI_ALL_USERS === 'true';
-
-/**
- * The users that should actually get a Playwright project / storageState this run.
- *
- * `isolatedSpec` users (the editor-isolation users) are ALWAYS active, in both the fast default subset
- * and the full matrix: their whole point is that their dedicated editor spec runs under them and NO
- * other user - so if they weren't active, that editor spec would run under nobody at all (every other
- * project testIgnores it - see buildProjects.js). They add no matrix breadth (one user, one spec), so
- * including them by default costs one extra project per editor file, not a full re-run of everything.
- */
-const activeUsers = () => {
-  const matrix = useAllUsers() ? USERS : USERS.filter((u) => DEFAULT_USER_KEYS.includes(u.key));
-  const isolated = USERS.filter((u) => u.isolatedSpec && !matrix.includes(u));
-  return [...matrix, ...isolated];
-};
-
-module.exports = {
-  USERS,
-  GUEST,
-  PASSWORD,
-  DEFAULT_USER_KEYS,
-  byKey,
-  can,
-  useAllUsers,
-  activeUsers,
-  authFile: (key) => `.auth/${key}.json`,
-  seededUsers: () => USERS.filter((u) => u.seed),
-};
+// Fast default subset for iterative/local runs: `fullAccess` (broadest non-superuser coverage - every
+// page/command via real granted permissions, not '*', so editor save-paths etc. still get exercised
+// without needing the full matrix) + `accEditor` for the Accounts editor. Naming an isolated user here
+// makes the list authoritative (see defineUsers): the OTHER isolated specs - devices/software/
+// administration editors, document tabs, the concurrent-session banner - and every restricted user run
+// only under the full matrix, PROLIFE_GUI_ALL_USERS=1 (or Run-CiTests.ps1 -AllUsers).
+module.exports = defineUsers({
+  users: USERS,
+  defaultUserKeys: ['fullAccess', 'accEditor'],
+  allUsersEnv: 'PROLIFE_GUI_ALL_USERS',
+});
+module.exports.PASSWORD = PASSWORD;

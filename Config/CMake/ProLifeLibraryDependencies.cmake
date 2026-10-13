@@ -39,7 +39,7 @@ declare_target_dependencies(ImtCore::imtbasesdl	LINK_SCOPE INTERFACE	ImtCore::im
 declare_target_dependencies(prolifesdl		LINK_SCOPE PUBLIC	ImtCore::imtbasesdl)
 
 # --- Libraries --------------------------------------------------------------
-declare_target_dependencies(prolifedata	LINK_SCOPE PUBLIC	ImtCore::imtauth)
+declare_target_dependencies(prolifedata	LINK_SCOPE PUBLIC	ImtCore::imtaccount ImtCore::imtauth)
 declare_target_dependencies(prolifedb		LINK_SCOPE PUBLIC	ImtCore::imtdb)
 declare_target_dependencies(prolifegql		LINK_SCOPE PUBLIC	prolifesdl prolifedata ImtCore::imtguigql ImtCore::imtgui)
 

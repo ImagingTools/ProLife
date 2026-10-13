@@ -45,6 +45,7 @@ ViewBase {
 	}
 
 	property string customerId
+	property string customerName
 	property TimeFilter timeFilter: defaultTimeFilter
 	property TimeFilter defaultTimeFilter: TimeFilter {
 		m_timeUnit: "Year"
@@ -93,24 +94,30 @@ ViewBase {
 			anchors.fill: parent
 
 			property int spacing: Style.marginL
-			property real chartWidth: (width- 4*spacing) / 3 
+			property real chartWidth: (width- 4*spacing) / 3
+
+			property real filtersX: row1.visible ? row1.x : row2.visible ? row2.x : Style.spacingM
+			// Filters sit in the commands header only while they fit left of the centered commands.
+			property bool compactFilters: root.commandsView ? filtersX + filterRow.width + Style.marginM > (width - root.commandsView.centerCommandsWidth) / 2 : false
+			property real filtersHeight: compactFilters ? filterRow.height + spacing : 0
 
 			property real rowHeight:
 				(!row1.visible && !row2.visible)
-					? height - topRow.height - 2*spacing
+					? height - topRow.height - filtersHeight - 2*spacing
 				: (row1.visible && row2.visible)
-					? (height - topRow.height - 4*spacing) / 2
-				: height - topRow.height - 3*spacing
+					? (height - topRow.height - filtersHeight - 4*spacing) / 2
+				: height - topRow.height - filtersHeight - 3*spacing
 
-			function navigateToHardware(productName, inUse, statusId, isLicenseCreation){
+			function navigateToHardware(productId, productName, inUse, statusId, isLicenseCreation){
 				let params = {}
 
-				if (productName !== undefined){
-					let productId = CachedProductCollection.getProductIdByName(productName)
+				if (productId !== ""){
 					params.productId = productId
+					params.productName = productName
 				}
 
 				params.customerId = root.customerId
+				params.customerName = root.customerName
 				
 				if (inUse !== undefined){
 					params.inUse = inUse
@@ -142,14 +149,15 @@ ViewBase {
 				}
 			}
 		
-			function navigateToSoftware(productName){
+			function navigateToSoftware(productId, productName){
 				let params = {}
-				if (productName !== undefined){
-					let productId = CachedProductCollection.getProductIdByName(productName)
+				if (productId !== ""){
 					params.productId = productId
+					params.productName = productName
 				}
 
 				params.customerId = root.customerId
+				params.customerName = root.customerName
 				params.inUse = true
 				params.internalUse = false
 
@@ -159,8 +167,8 @@ ViewBase {
 			}
 
 			Item {
-				x: row1.visible ? row1.x : row2.visible ? row2.x : Style.spacingM
-				y: -height - ((root.commandsPanelHeight - height) / 2)
+				x: chartsBlock.filtersX
+				y: chartsBlock.compactFilters ? chartsBlock.spacing : -height - ((root.commandsPanelHeight - height) / 2)
 				z: parent.z + 1
 				width: filterRow.width
 				height: filterRow.height
@@ -197,13 +205,9 @@ ViewBase {
 						objectName: "CustomerFilterDelegate"
 						collectionFilter: CollectionFilter {}
 
-						onOptionSelectionChanged: {
-							if (optionIds.length > 0){
-								root.customerId = optionIds[0]
-							}
-							else{
-								root.customerId = ""
-							}
+						onSelectionChanged: {
+							root.customerName = itemText
+							root.customerId = itemId
 						}
 					}
 				}
@@ -212,12 +216,13 @@ ViewBase {
 			Row {
 				id: topRow
 				anchors.top: parent.top
-				anchors.topMargin: chartsBlock.spacing
+				anchors.topMargin: chartsBlock.spacing + chartsBlock.filtersHeight
 				anchors.horizontalCenter: parent.horizontalCenter
 				spacing: chartsBlock.spacing
 				visible: collectionInfoRepeater.count > 0
-				height: 110
+				height: Math.max(110, cardHeight + 2 * Style.marginS)
 
+				property real cardHeight: 0
 				property string customerId: root.customerId
 				property TimeFilter timeFilter: root.timeFilter
 				property bool updateRequested: false
@@ -313,10 +318,13 @@ ViewBase {
 							onWidthChanged: {
 								checkWidth()
 							}
-							
+
+							onControlItemChanged: {
+								checkWidth()
+							}
+
 							function checkWidth(){
 								if (!controlItem){
-									controlItem.width = 0
 									return
 								}
 
@@ -328,16 +336,23 @@ ViewBase {
 								}
 							}
 
+							height: topRow.height - 2 * Style.marginS
+
+							onContentHeightChanged: {
+								if (model.item.m_collectionId === "SoftwareProducts" || model.item.m_collectionId === "Devices"){
+									topRow.cardHeight = contentHeight + 2 * Style.marginXL
+								}
+							}
+
 							bottomComp: Component {
-								Row {
-									height: Style.marginL
+								Flow {
+									width: parent.width
 									spacing: Style.marginXL
 									visible: model.item.m_collectionId === "SoftwareProducts" || model.item.m_collectionId === "Devices"
 									Row {
 										id: inUseRow
-										anchors.verticalCenter: parent.verticalCenter
 										spacing: Style.marginS
-										height: parent.height
+										height: Style.marginL
 
 										Rectangle {
 											id: inUseRect
@@ -355,9 +370,8 @@ ViewBase {
 									}
 									Row {
 										id: notInUseRow
-										anchors.verticalCenter: parent.verticalCenter
 										spacing: Style.marginS
-										height: parent.height
+										height: Style.marginL
 
 										Rectangle {
 											id: notInUseRect
@@ -375,9 +389,8 @@ ViewBase {
 									}
 									Row {
 										id: internaUseRow
-										anchors.verticalCenter: parent.verticalCenter
 										spacing: Style.marginS
-										height: parent.height
+										height: Style.marginL
 
 										Rectangle {
 											anchors.verticalCenter: parent.verticalCenter
@@ -430,9 +443,10 @@ ViewBase {
 										onClicked: {
 											let params = {}
 											params.customerId = root.customerId
+											params.customerName = root.customerName
 											let collectionId = model.item.m_collectionId
 											if (collectionId === "Devices"){
-												chartsBlock.applyTimeFilter(params, true)
+												chartsBlock.applyTimeFilter(params, false)
 												NavigationController.navigate("Devices/<hardware-filter>", params)
 											}
 											else if (collectionId === "SoftwareProducts"){
@@ -513,7 +527,7 @@ ViewBase {
 					customerId: root.customerId
 					timeFilter: root.timeFilter
 					onLegendClicked: {
-						chartsBlock.navigateToSoftware(label)
+						chartsBlock.navigateToSoftware(id, label)
 					}
 				}
 
@@ -529,7 +543,7 @@ ViewBase {
 					customerId: root.customerId
 					timeFilter: root.timeFilter
 					onLegendClicked: {
-						chartsBlock.navigateToHardware(label, true, undefined, true)
+						chartsBlock.navigateToHardware(id, label, true, undefined, true)
 					}
 				}
 
@@ -546,7 +560,7 @@ ViewBase {
 					legendClickable: true
 					onLegendClicked: {
 						let statusId = deviceProductionStatus.getStatusIdByName(label)
-						chartsBlock.navigateToHardware(label, false, String(deviceProductionStatus.getStatusIndex(statusId)), false)
+						chartsBlock.navigateToHardware("", "", false, String(deviceProductionStatus.getStatusIndex(statusId)), false)
 					}
 					
 					DeviceProductionStatus {
@@ -590,7 +604,7 @@ ViewBase {
 					timeFilter: root.timeFilter
 					legendClickable: true
 					onLegendClicked: {
-						chartsBlock.navigateToSoftware(label)
+						chartsBlock.navigateToSoftware(id, label)
 					}
 				}
 		
@@ -606,7 +620,7 @@ ViewBase {
 					timeFilter: root.timeFilter
 					legendClickable: true
 					onLegendClicked: {
-						chartsBlock.navigateToHardware(label, true, undefined, true)
+						chartsBlock.navigateToHardware(id, label, true, undefined, true)
 					}
 				}
 

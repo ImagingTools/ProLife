@@ -2,7 +2,7 @@
 
 
 // ImtCore includes
-#include <imtauth/CCompanyInfo.h>
+#include <imtaccount/CCompanyInfo.h>
 
 // ProLife includes
 #include <prolifedata/ICustomerInfo.h>
@@ -12,10 +12,10 @@ namespace prolifedata
 {
 
 
-class CCustomerInfo: virtual public ICustomerInfo, virtual public imtauth::CIdentifiableCompanyInfo
+class CCustomerInfo: virtual public ICustomerInfo, virtual public imtaccount::CIdentifiableCompanyInfo
 {
 public:
-	typedef imtauth::CCompanyInfo BaseClass;
+	typedef imtaccount::CCompanyInfo BaseClass;
 
 	void SetCustomerId(const QByteArray& customerId);
 

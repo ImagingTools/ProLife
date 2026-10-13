@@ -1,21 +1,28 @@
-// Finds (and, with --delete, removes) orphaned screenshot baselines under tests/__screenshots__.
+// Reports (and, with --delete, removes) baselines nothing can compare against any more, and flags
+// baselines that are suspiciously identical to one another.
 //
-// Two kinds of orphan, both harmless-but-clutter rather than test-breaking:
-//   1. SPEC-level: tests/__screenshots__/<project>/<specRelPath>/ where <specRelPath> no longer
-//      exists under tests/ at all - the spec file was renamed, split, or deleted (e.g. this session's
-//      administration.multiuser.test.js -> administration.editor.multiuser.test.js split, or the
-//      earlier duplicate-test-deletion pass), but its baselines were never cleaned up.
-//   2. SCREENSHOT-level: an individual <name>-<platform>.png inside an EXISTING spec's baseline
-//      directory whose <name> no longer appears in any `checkScreenshot(page, '<name>'` call in that
-//      spec's current source - the spec still exists, but that particular check was renamed or
-//      removed from it.
+// Baselines live flat per user: tests/__screenshots__/<project>/<name>-<platform>.png. Screenshot
+// names are therefore global across the suite, which is what lets this work from names alone.
 //
-// Usage:
-//   node scripts/prune-orphan-baselines.js            # report only, deletes nothing
-//   node scripts/prune-orphan-baselines.js --delete    # actually remove the orphans found
+// Three kinds of dead baseline:
+//   1. the name no longer appears in any spec - the check was renamed or removed;
+//   2. the name belongs to a spec this project does not run (a user whose permissions exclude it, or
+//      an isolatedSpec pinned to somebody else);
+//   3. the name belongs to a @mutating test and this project is excluded from the mutating phase.
+//
+// And one thing it only REPORTS: two baselines of the same user that are byte-identical. That is how
+// two real defects looked - a landing shot identical to another page's (navigation never happened) and
+// a "saved" shot identical to its "filled" predecessor (the save did nothing) - both committed as
+// expected state, where no screenshot comparison could ever notice.
+//
+//   node scripts/prune-orphan-baselines.js            # report only
+//   node scripts/prune-orphan-baselines.js --delete   # remove the dead ones (never the identical ones)
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
+const { execFileSync } = require('child_process');
+const { collectionScreenshotNamesFromSource } = require('imtcore-gui-testkit/specs/collectionSpec');
 
 const TESTS_DIR = path.resolve(__dirname, '..', 'tests');
 const SCREENSHOTS_DIR = path.join(TESTS_DIR, '__screenshots__');
@@ -26,35 +33,58 @@ function listDirs(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name);
 }
 
-// Recursively find every baseline leaf directory under a project folder, returning its path relative
-// to the project folder (e.g. "devices.editor.multiuser.test.js" - specs live flat in tests/, but
-// this stays recursive in case that ever changes) and the list of .png files directly inside it.
-function findSpecDirs(projectDir, relPath = '') {
-  const abs = path.join(projectDir, relPath);
-  const entries = fs.readdirSync(abs, { withFileTypes: true });
-  const pngFiles = entries.filter((e) => e.isFile() && e.name.endsWith('.png')).map((e) => e.name);
-  const results = [];
-  if (pngFiles.length > 0) {
-    results.push({ relPath, pngFiles });
-  }
-  for (const e of entries) {
-    if (e.isDirectory()) {
-      results.push(...findSpecDirs(projectDir, path.join(relPath, e.name)));
-    }
-  }
-  return results;
-}
-
-// Extract every `checkScreenshot(<page-expr>, 'name'` / `"name"` literal from a spec file's source -
-// good enough for this codebase's convention of always passing a string literal, not a template/var.
-function extractScreenshotNames(specSource) {
+/** Every `checkScreenshot(page, 'name'` literal, plus whatever a declared collection spec generates. */
+function screenshotNamesIn(specSource) {
   const names = new Set();
   const re = /checkScreenshot\s*\(\s*[^,]+,\s*['"]([^'"]+)['"]/g;
   let m;
-  while ((m = re.exec(specSource))) {
-    names.add(m[1]);
+  while ((m = re.exec(specSource))) names.add(m[1]);
+  // Throws rather than returning null if it finds a declaration it cannot read - see its own comment.
+  for (const name of collectionScreenshotNamesFromSource(specSource) || []) names.add(name);
+  return names;
+}
+
+/** The names produced inside a test tagged @mutating. */
+function mutatingScreenshotNamesIn(specSource) {
+  const names = new Set();
+  for (const block of specSource.split(/\n(?=\s*test\s*\()/)) {
+    const arrow = block.indexOf('=>');
+    const header = arrow === -1 ? block : block.slice(0, arrow);
+    if (!header.includes('@mutating')) continue;
+    const re = /checkScreenshot\s*\(\s*[^,]+,\s*['"]([^'"]+)['"]/g;
+    let m;
+    while ((m = re.exec(block))) names.add(m[1]);
   }
   return names;
+}
+
+/**
+ * Which (project, spec) pairs Playwright schedules - asked of Playwright rather than reimplemented from
+ * testIgnore/testMatch/grepInvert. Listed with the full matrix on, so baselines belonging to users
+ * outside the default subset are not mistaken for dead. Null when no listing can be produced, and the
+ * caller then skips the checks that depend on it rather than calling everything an orphan.
+ */
+function scheduledSpecsByProject(extraArgs = []) {
+  let output = '';
+  try {
+    output = execFileSync('npx', ['playwright', 'test', '--list', ...extraArgs], {
+      cwd: path.resolve(__dirname, '..'),
+      env: { ...process.env, PROLIFE_GUI_ALL_USERS: '1' },
+      encoding: 'utf8',
+      shell: process.platform === 'win32',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    });
+  } catch (err) {
+    output = (err && err.stdout) || '';
+  }
+  const byProject = new Map();
+  const re = /^\s*\[([^\]]+)\]\s+›\s+(\S+?):/gm;
+  let m;
+  while ((m = re.exec(output))) {
+    if (!byProject.has(m[1])) byProject.set(m[1], new Set());
+    byProject.get(m[1]).add(path.basename(m[2].trim()));
+  }
+  return byProject.size ? byProject : null;
 }
 
 function main() {
@@ -63,51 +93,92 @@ function main() {
     return;
   }
 
-  const orphanSpecDirs = [];
-  const orphanScreenshotFiles = [];
+  // name -> { spec, mutating }. A name used by two specs would collide in the flat layout, so say so.
+  const owners = new Map();
+  const duplicateNames = [];
+  for (const spec of fs.readdirSync(TESTS_DIR).filter((f) => f.endsWith('.js'))) {
+    const source = fs.readFileSync(path.join(TESTS_DIR, spec), 'utf8');
+    const mutating = mutatingScreenshotNamesIn(source);
+    for (const name of screenshotNamesIn(source)) {
+      if (owners.has(name)) duplicateNames.push(`${name} (${owners.get(name).spec} and ${spec})`);
+      owners.set(name, { spec, mutating: mutating.has(name) });
+    }
+  }
 
+  const scheduled = scheduledSpecsByProject();
+  const mutatingProjects = scheduled ? scheduledSpecsByProject(['--grep', '@mutating']) : null;
+  if (!scheduled) {
+    console.log('Could not list the test graph - skipping the "this project does not run it" checks.\n');
+  }
+
+  const dead = [];
   for (const project of listDirs(SCREENSHOTS_DIR)) {
     const projectDir = path.join(SCREENSHOTS_DIR, project);
-    for (const { relPath, pngFiles } of findSpecDirs(projectDir)) {
-      // relPath is the spec's path under tests/ (e.g. "devices.editor.multiuser.test.js").
-      const specPath = path.join(TESTS_DIR, relPath);
-      const dirPath = path.join(projectDir, relPath);
-
-      if (!fs.existsSync(specPath)) {
-        orphanSpecDirs.push(dirPath);
+    for (const file of fs.readdirSync(projectDir).filter((f) => f.endsWith('.png'))) {
+      const name = file.replace(/-[^-]+\.png$/, '');
+      const owner = owners.get(name);
+      const full = path.join(projectDir, file);
+      if (!owner) {
+        dead.push({ full, why: 'no spec takes a screenshot by this name' });
         continue;
       }
-
-      const specSource = fs.readFileSync(specPath, 'utf8');
-      const validNames = extractScreenshotNames(specSource);
-
-      for (const pngFile of pngFiles) {
-        // Strip the trailing "-<platform>.png" (e.g. "-linux.png"/"-win32.png") to get the name passed
-        // to checkScreenshot.
-        const baseName = pngFile.replace(/-[^-]+\.png$/, '');
-        if (!validNames.has(baseName)) {
-          orphanScreenshotFiles.push(path.join(dirPath, pngFile));
-        }
+      if (!scheduled) continue;
+      if (!(scheduled.get(project) || new Set()).has(owner.spec)) {
+        dead.push({ full, why: `${project} does not run ${owner.spec}` });
+        continue;
+      }
+      if (owner.mutating && !(mutatingProjects.get(project) || new Set()).has(owner.spec)) {
+        dead.push({ full, why: `${project} is excluded from the @mutating phase` });
       }
     }
   }
 
-  console.log(`Orphaned spec baseline directories (spec file no longer exists): ${orphanSpecDirs.length}`);
-  for (const d of orphanSpecDirs) console.log(`  ${path.relative(TESTS_DIR, d)}`);
-
-  console.log(`\nOrphaned individual screenshots (spec exists, this check name doesn't): ${orphanScreenshotFiles.length}`);
-  for (const f of orphanScreenshotFiles) console.log(`  ${path.relative(TESTS_DIR, f)}`);
-
-  if (!DELETE) {
-    if (orphanSpecDirs.length + orphanScreenshotFiles.length > 0) {
-      console.log('\nRun with --delete to remove the above.');
-    }
-    return;
+  if (duplicateNames.length) {
+    console.log(`Screenshot names used by more than one spec: ${duplicateNames.length}`);
+    for (const d of duplicateNames) console.log(`  ${d}`);
+    console.log('  Baselines are keyed by name alone, so these two specs share one file.\n');
   }
 
-  for (const d of orphanSpecDirs) fs.rmSync(d, { recursive: true, force: true });
-  for (const f of orphanScreenshotFiles) fs.rmSync(f, { force: true });
+  console.log(`Baselines nothing can compare against: ${dead.length}`);
+  for (const { full, why } of dead) console.log(`  ${path.relative(TESTS_DIR, full)}  - ${why}`);
+
+  reportIdenticalBaselines();
+
+  if (!DELETE) {
+    if (dead.length) console.log('\nRun with --delete to remove them.');
+    return;
+  }
+  for (const { full } of dead) fs.rmSync(full, { force: true });
   console.log('\nDeleted.');
+}
+
+/**
+ * Baselines byte-identical to another baseline of the SAME user. Reported, never deleted - the
+ * duplicate is the evidence, and which one of the pair is wrong is a judgement call.
+ */
+function reportIdenticalBaselines() {
+  const collisions = [];
+  for (const project of listDirs(SCREENSHOTS_DIR)) {
+    const projectDir = path.join(SCREENSHOTS_DIR, project);
+    const byHash = new Map();
+    for (const file of fs.readdirSync(projectDir).filter((f) => f.endsWith('.png'))) {
+      const hash = crypto.createHash('md5').update(fs.readFileSync(path.join(projectDir, file))).digest('hex');
+      if (!byHash.has(hash)) byHash.set(hash, []);
+      byHash.get(hash).push(file);
+    }
+    for (const files of byHash.values()) {
+      if (files.length > 1) collisions.push({ project, files });
+    }
+  }
+
+  console.log(`\nBaselines identical to another baseline of the same user: ${collisions.length}`);
+  for (const { project, files } of collisions) {
+    console.log(`  [${project}] ${files.join('  ==  ')}`);
+  }
+  if (collisions.length) {
+    console.log('  Each group is one image committed under several names - usually a navigation that did');
+    console.log('  not happen, or an action that changed nothing. Not pruned: decide which one is wrong.');
+  }
 }
 
 main();

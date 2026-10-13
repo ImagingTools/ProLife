@@ -175,7 +175,7 @@ istd::IChangeableUniquePtr CCustomerCollectionControllerComp::CreateObjectFromRe
 		return nullptr;
 	}
 
-	istd::TUniqueInterfacePtr<imtauth::ICompanyInfo> companyInstancePtr = m_accountInfoFactCompPtr.CreateInstance();
+	istd::TUniqueInterfacePtr<imtaccount::ICompanyInfo> companyInstancePtr = m_accountInfoFactCompPtr.CreateInstance();
 	if (!companyInstancePtr.IsValid()){
 		errorMessage = QString("Unable to create company instance. Error: Invalid object");
 		SendErrorMessage(0, errorMessage, "CCustomerCollectionControllerComp");
@@ -197,7 +197,7 @@ istd::IChangeableUniquePtr CCustomerCollectionControllerComp::CreateObjectFromRe
 	}
 
 	istd::IChangeableUniquePtr retVal;
-	retVal.MoveCastedPtr<imtauth::ICompanyInfo>(std::move(companyInstancePtr));
+	retVal.MoveCastedPtr<imtaccount::ICompanyInfo>(std::move(companyInstancePtr));
 
 	return retVal;
 }
@@ -247,11 +247,11 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 	std::sort(groups.begin(), groups.end());
 	representationPayload.groups = (groups.join(';'));
 
-	const imtauth::IAddressProvider* addressProviderPtr = customerInfoPtr->GetAddresses();
+	const imtaccount::IAddressProvider* addressProviderPtr = customerInfoPtr->GetAddresses();
 	if (addressProviderPtr != nullptr){
 		imtbase::ICollectionInfo::Ids addressesIds = addressProviderPtr->GetAddressList().GetElementIds();
 		if (!addressesIds.isEmpty()){
-			const imtauth::IAddress* addressPtr = addressProviderPtr->GetAddress(addressesIds[0]);
+			const imtaccount::IAddress* addressPtr = addressProviderPtr->GetAddress(addressesIds[0]);
 			if (addressPtr != nullptr){
 				QString city = addressPtr->GetCity();
 				representationPayload.city = (city);
@@ -439,7 +439,7 @@ bool CCustomerCollectionControllerComp::FillObjectFromRepresentation(
 		customerInfoPtr->SetCustomerId(accountCustomerId);
 	}
 
-	imtauth::CAddress address;
+	imtaccount::CAddress address;
 
 	if (accountDataRepresentation.city){
 		QString accountCity = *accountDataRepresentation.city;

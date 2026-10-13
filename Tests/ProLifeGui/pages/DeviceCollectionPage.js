@@ -11,13 +11,13 @@
 //   ResetTransferCounter, DecryptFile, Support            Bind also needs a non-empty MAC)
 //
 // Filters (FilterPanel -> "<filterId>", options are text-keyed, each has a ClearButton; the panel has
-// ClearAllFilters and a built-in CreationDateFilter + DocumentState + SearchTextInput):
+// ClearAllFilters and a built-in CreationDateFilter + SearchTextInput):
 //   SensorStatusFilter, UsageFilter, LicenseFilter, LicenseCreationDateFilter,
-//   CustomersFilter, ProductsFilter, LicensesFilter, DateFilter, DocumentState
+//   CustomersFilter, ProductsFilter, LicensesFilter
 //
 // Commands are permission-gated server-side (New<-AddSensor, Remove<-RemoveSensor,
-// Bind<-BindSensor, CreateLicenseFile<-CreateLicenseFile, TransferLicenses<-TransferLicenses, ...);
-// see matrix/permissions.js.
+// Bind<-BindSensor, CreateLicenseFile<-CreateLicenseFile, TransferLicenses<-TransferLicenses, ...),
+// so a test asks commands.isAvailable(id) rather than predicting who holds what.
 
 const { CollectionPage } = require('imtcore-gui-testkit/pages/CollectionPage');
 const { TableConfigDialog } = require('imtcore-gui-testkit/controls');
@@ -38,12 +38,15 @@ const FILTERS = {
   products: 'ProductsFilter',
   licenses: 'LicensesFilter',
   creationDate: 'CreationDateFilter',
-  documentState: 'DocumentState',
 };
 
 class DeviceCollectionPage extends CollectionPage {
   constructor(page) {
-    super(page, 'Devices');
+    // Declared to the base class rather than reimplemented here: CollectionPage.filterId() turns a
+    // short key ('status') into the real objectName ('SensorStatusFilter'), and masks() covers the
+    // timestamp columns. Without these every filter key falls through as its own objectName and
+    // nothing resolves - which is exactly what a live hardwareManager run caught.
+    super(page, 'Devices', { filters: FILTERS, maskColumns: TIMESTAMP_HEADER_IDS });
   }
 
   // --- custom commands (each throws if the command button is missing/hidden) --------------------
@@ -82,44 +85,71 @@ class DeviceCollectionPage extends CollectionPage {
     return gui.clickPopupItemByIndex(this.page, 1);
   }
 
-  // --- Bind dialog (HardwareProductBindingDialog.qml) --------------------------------------------
-  // Opened by bind(). Its own footer is Save/Close ("SaveButton"/"CloseButton", Enums.ok/cancel).
-  // "Bind New Licenses" opens a SECOND Dialog (HardwareProductBindingEditor.qml, "Available
-  // Licenses") on top of it - NOT nested inside it in the DOM (confirmed live: both dialogs' roots
-  // carry objectName "Dialog" as PARALLEL/sibling overlays, each with exactly one "Dialog" ancestor in
-  // its own controls' chain, not two), so a single ['Dialog', ...] scope already reaches whichever
-  // dialog's own control it names - it just needs to not collide with an IDENTICALLY-named control
-  // elsewhere. The nested editor's footer is Bind/Cancel ("BindButton"/"CancelButton"); the command
-  // bar's own "Bind" command is ALSO "BindButton" but has NO Dialog ancestor at all, so scoping to
-  // ['Dialog', 'BindButton'] unambiguously reaches the nested editor's confirm button, never the
-  // command bar's. The outer dialog's own footer (Save/Close) never collides with the nested editor's
-  // (Bind/Cancel), since the two dialogs are only ever open one-at-a-time from each other's own
-  // controls' perspective in the flows below.
+  async selectSensorByMac(macAddress) {
+    const rows = this.page.locator('[objectName^="TableRow_"][visible]');
+    const count = await rows.count();
+    for (let index = 0; index < count; index++) {
+      const value = await rows.nth(index).locator('[objectName="macAddress"][visible]').first().textContent().catch(() => '');
+      if (value.trim() === macAddress) {
+        await this.selectRow(index);
+        return true;
+      }
+    }
+    return false;
+  }
 
-  /** Row index in the (outer dialog's) "Used Licenses" table. */
+  // --- Bind dialog (HardwareProductBindingDialog.qml) --------------------------------------------
+  // Opened by bind(). ONE dialog with two pages that slide: the bound-licence list, and a "Select
+  // Licenses" picker. It used to be two separate dialogs (the picker lived in its own
+  // HardwareProductBindingEditor.qml, since removed), which is why the flows below read as if they
+  // opened and closed a nested window - they now just move between pages.
+  //
+  // Both pages are in the scene at once, so a bare ['Dialog', 'TableRow_0'] is ambiguous between the
+  // two lists: each is addressed through its own name instead. The controls carry explicit objectNames
+  // added for these tests - the captions they would otherwise be named after either change with the
+  // selection ("Bind" -> "Bind (2)") or do not exist at all on the icon-only buttons.
+  // Its own footer is still Save/Close ("SaveButton"/"CloseButton", Enums.ok/cancel).
+
+  /** Row index in the bound-licences table (the dialog's first page). */
   selectUsedLicenseRow(index) {
-    return gui.click(this.page, ['Dialog', `TableRow_${index}`], { what: `used license row ${index}` });
+    return gui.click(this.page, ['BoundLicensesTable', `TableRow_${index}`], { what: `bound licence row ${index}` });
   }
-  unbindLicense() {
-    return gui.clickButton(this.page, ['Dialog', 'UnbindButton']);
+  /** Unbind is a per-ROW button in that table, not a dialog-level command. */
+  unbindLicense(index = 0) {
+    return gui.clickButton(this.page, ['BoundLicensesTable', `TableRow_${index}`, 'UnbindLicenseButton']);
   }
-  /** Opens the nested "Available Licenses" (Bind New Licenses) dialog. */
+  /** Slides to the licence picker ("Select Licenses"). */
   openBindNewLicenses() {
-    return gui.clickButton(this.page, ['Dialog', 'BindNewLicensesButton']);
+    return gui.clickButton(this.page, ['Dialog', 'OpenAvailableLicensesButton']);
   }
-  /** Toggle a license's checkbox by row index in the nested "Available Licenses" dialog's table. */
+  /** Toggle a licence's checkbox by row index in the picker's own list. */
   checkAvailableLicense(index) {
-    return gui.click(this.page, ['Dialog', `TableRow_${index}`, 'RowCheckBox'], {
-      what: `available license row ${index} checkbox`,
+    return gui.click(this.page, ['AvailableLicensesCollection', `TableRow_${index}`, 'RowCheckBox'], {
+      what: `available licence row ${index} checkbox`,
     });
   }
-  /** Confirms the nested dialog (Enums.ok, "Bind") - binds the checked license(s) and closes it. */
+  /** Binds the checked licences and slides back to the bound list. */
   confirmBindNewLicenses() {
-    return gui.clickButton(this.page, ['Dialog', 'BindButton']);
+    return gui.clickButton(this.page, ['Dialog', 'ConfirmBindLicensesButton']);
   }
-  /** Cancels the nested dialog (Enums.cancel, "Cancel") without binding anything. */
+  /** Returns to the bound list without binding anything. */
   cancelBindNewLicenses() {
-    return gui.clickButton(this.page, ['Dialog', 'CancelButton']);
+    return gui.clickButton(this.page, ['Dialog', 'BackToBoundLicensesButton']);
+  }
+  /**
+   * Whether the dialog is showing the licence PICKER rather than the bound list.
+   *
+   * Both pages live in one sliding row (HardwareProductBindingDialog.qml), so the picker is never
+   * hidden - it is slid out of the dialog's clipped area. Its `visible` flag stays true on both pages
+   * and says nothing about which one you are looking at; where it sits does. Overlap, not a side, so
+   * this does not care which way the row slides.
+   */
+  async isAvailableLicensesShowing() {
+    const dialog = await this.page.locator('[objectName="Dialog"][visible]').first().boundingBox();
+    const picker = await this.page.locator('[objectName="AvailableLicensesCollection"]').first().boundingBox();
+    if (!dialog || !picker || !picker.width) return false;
+    const overlap = Math.min(dialog.x + dialog.width, picker.x + picker.width) - Math.max(dialog.x, picker.x);
+    return overlap > picker.width / 2;
   }
   /** Save (Enums.ok) - opens the "Apply changes" project-name prompt (notClosingButtons keeps the
    * Bind dialog itself open underneath). Only enabled once a product is selected and the binding
@@ -170,43 +200,6 @@ class DeviceCollectionPage extends CollectionPage {
 
   // --- filters ----------------------------------------------------------------------------------
 
-  /** Pick an option in a registered field filter by its option text (e.g. status "None"). */
-  async selectFilterOption(filterKey, optionText) {
-    const filterId = FILTERS[filterKey] || filterKey;
-    await this.filters.combo(filterId).select(optionText);
-    return this;
-  }
-
-  /**
-   * Pick an option in a registered field filter BY POSITION (see DeviceCollectionView.qml for the
-   * source-defined option order backing each filterKey - e.g. 'status' is
-   * None/Accepted/InProgress/Canceled/OnHold/Finished/Defect/InRepair/Decommissioned, indices 0-8;
-   * 'license' is WithoutLicense/WithLicense, indices 0-1, per LicenseFilterDelegate.qml).
-   */
-  async selectFilterOptionByIndex(filterKey, index) {
-    const filterId = FILTERS[filterKey] || filterKey;
-    await this.filters.combo(filterId).selectIndex(index);
-    return this;
-  }
-
-  /** Open the built-in creation-date filter and pick a preset ('Month_Current', 'Year_Last', ...). */
-  async setCreationDate(preset) {
-    await this.filters.dateFilter(FILTERS.creationDate, preset);
-    return this;
-  }
-
-  /** Clear one registered filter. */
-  async clearFilter(filterKey) {
-    await this.filters.clearFilter(FILTERS[filterKey] || filterKey);
-    return this;
-  }
-
-  /** Clear every active filter. */
-  async clearAllFilters() {
-    await this.filters.clearAllFilters();
-    return this;
-  }
-
   // --- precondition filters for context-sensitive commands --------------------------------------
   // Bind/CreateLicenseFile/TransferLicenses/ResetTransferCounter only actually DO something on a row
   // that satisfies a server-side data precondition (DeviceCollectionViewCommandsDelegate.qml); a bare
@@ -243,6 +236,23 @@ class DeviceCollectionPage extends CollectionPage {
     await this.selectFilterOptionByIndex('status', 5);
     await this.selectFilterOptionByIndex('license', 1);
     return this;
+  }
+
+  /** Select the first row satisfying every CreateLicenseFile server precondition. */
+  async selectCompleteLicensedSensor() {
+    await this.filterFinishedSensorsWithLicense();
+    const rows = this.page.locator('[objectName^="TableRow_"][visible]');
+    const count = await rows.count();
+    for (let index = 0; index < count; index++) {
+      const row = rows.nth(index);
+      const serialNumber = await row.locator('[objectName="serialNumber"][visible]').first().textContent().catch(() => '');
+      const macAddress = await row.locator('[objectName="macAddress"][visible]').first().textContent().catch(() => '');
+      if (serialNumber.trim() && macAddress.trim()) {
+        await this.selectRow(index);
+        return true;
+      }
+    }
+    return false;
   }
 
   static get FILTERS() {

@@ -2,21 +2,21 @@
 
 
 // ImtCore includes
-#include <imtauth/ICompanyInfo.h>
+#include <imtaccount/ICompanyInfo.h>
 
 
 namespace prolifedata
 {
 
 
-class ICustomerInfo: virtual public imtauth::ICompanyInfo
+class ICustomerInfo: virtual public imtaccount::ICompanyInfo
 {
 public:
 	enum MetaInfoTypes
 	{
 		MIT_CUSTOMER_ID = IContactBaseInfo::MIT_GROUPS + 1
 	};
-	
+
 	/**
 		Get customer-ID.
 	*/
