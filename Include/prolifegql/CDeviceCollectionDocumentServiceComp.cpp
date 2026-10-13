@@ -12,6 +12,7 @@
 #include <imtdoc/CDocumentSavedEvent.h>
 
 // ProLife includes
+#include <prolifegql/prolifegql.h>
 #include <prolifedata/prolifedata.h>
 #include <prolifedata/CDeviceInfo.h>
 #include <prolifedata/CIotDeviceInfo.h>
@@ -153,6 +154,12 @@ sdl::V1_0::imtbase::CDocumentOperationStatus CDeviceCollectionDocumentServiceCom
 		return response;
 	}
 
+	QString permissionError;
+	if (!CheckDeviceChangePermissions(*deviceInfoPtr, deviceInfoPtr->GetOrderId(), deviceData, gqlRequest, IsNewDocument(userId, documentId), permissionError)){
+		response.message = permissionError;
+		return response;
+	}
+
 	QString macAddress;
 	if (deviceData.macAddress){
 		macAddress = *deviceData.macAddress;
@@ -232,6 +239,19 @@ bool CDeviceCollectionDocumentServiceComp::ProcessEvent(imtdoc::CEventBase* even
 
 
 // private methods
+
+bool CDeviceCollectionDocumentServiceComp::IsNewDocument(const QByteArray& userId, const QByteArray& documentId) const
+{
+	const imtdoc::IDocumentService::DocumentList documents = m_documentServiceCompPtr->GetOpenedDocumentList(userId);
+	for (const imtdoc::IDocumentService::DocumentListItem& document : documents){
+		if (document.documentId == documentId){
+			return document.url.isEmpty();
+		}
+	}
+
+	return false;
+}
+
 
 QByteArrayList CDeviceCollectionDocumentServiceComp::GetBindedSoftware(const QByteArray& deviceId) const
 {

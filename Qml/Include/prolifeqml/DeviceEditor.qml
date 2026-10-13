@@ -58,11 +58,8 @@ DocumentViewBase {
 		: (deviceData ? deviceData.m_id : "")
 
 	// A ticket is stored with a reference to the device record, so that record has to
-	// exist and have an id to point at. isNewDocument comes from DocumentViewBase and
-	// asks the document manager; the local `isNew` below cannot be used - it is fed
-	// documentIsNew(m_id), an object id where a document id is expected, and
-	// documentIsNew() reports "new" for anything it fails to find, so it reads true
-	// for saved devices too.
+	// exist and have an id to point at. `isNew` is not used here: embedded hosts set it
+	// to their own create mode, which says nothing about a stored record.
 	readonly property bool ticketsEnabled: !deviceEditorContainer.isNewDocument && deviceEditorContainer.deviceObjectId !== ""
 
 	DeviceProductionStatus {

@@ -40,7 +40,9 @@ RemoteCollectionView {
 	
 		registerFieldFilterDelegate("LicenseStatus", licenseDelegateFilterComp)
 
-		registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
+		if (PermissionsController.checkPermission("ViewAccounts")){
+			registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
+		}
 
 		registerFieldFilterDelegate("SensorStatus", statusDelegateFilterComp)
 		registerFieldFilterDelegate(DeviceItemTypeMetaInfo.s_productUuid, productsDelegateFilterComp)
@@ -91,7 +93,9 @@ RemoteCollectionView {
 
 			if (params.customerId !== undefined && params.customerId !== ""){
 				let customersFilterDelegate = container.filterMenu.getFilterDelegate("Customers")
-				customersFilterDelegate.setSelectedId(params.customerId, params.customerName, true)
+				if (customersFilterDelegate){
+					customersFilterDelegate.setSelectedId(params.customerId, params.customerName, true)
+				}
 			}
 
 			if (params.productId !== undefined && params.productId !== ""){

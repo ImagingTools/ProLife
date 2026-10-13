@@ -40,7 +40,7 @@ Item {
 	property bool isSoftware: true
 	property bool isCreateMode: false
 	property int batchQuantity: 1
-	property bool canCreateNew: true
+	readonly property bool canCreateNew: productEditor.isSoftware ? PermissionsController.checkPermission("AddLicense") : PermissionsController.checkPermission("AddSensor")
 
 	readonly property bool isEditing: productEditor.index >= 0
 	readonly property bool chromeLocked: productEditor.isEditing
@@ -93,14 +93,13 @@ Item {
 		m_filterOperations: ["Equal"]
 	}
 
-	Component.onCompleted: {
-		productEditor.canCreateNew = PermissionsController.checkPermission("AddLicense")
-			|| PermissionsController.checkPermission("AddSensor")
-	}
-
 	function applyCategoryToProduct() {
 		if (!productItem)
 			return
+		if (!productEditor.isEditing && !productEditor.canCreateNew) {
+			productEditor.isCreateMode = false
+			productItem.m_isNew = false
+		}
 		productItem.m_categoryId = productEditor.isSoftware
 			? productEditor.softwareCategoryId
 			: productEditor.hardwareCategoryId

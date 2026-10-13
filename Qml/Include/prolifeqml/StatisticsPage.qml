@@ -17,6 +17,9 @@ ViewBase {
 	property int spacing: Style.marginL
 	property int commandsPanelHeight: Style.marginL
 
+	// The filter sits in the commands header only while it fits left of the centered commands.
+	property bool compactFilters: commandsView ? spacing + timeFilterDelegate.width + Style.marginM > (width - commandsView.centerCommandsWidth) / 2 : false
+
 	property TimeFilter timeFilter: defaultTimeFilter
 	property TimeFilter defaultTimeFilter: TimeFilter {
 		m_timeUnit: "Year"
@@ -69,11 +72,12 @@ ViewBase {
 	StackView {
 		id: stackView
 		anchors.fill: parent
+		anchors.topMargin: root.compactFilters ? timeFilterDelegate.height + root.spacing : 0
 	}
 
 	Item {
 		x: root.spacing
-		y: -height - ((root.commandsPanelHeight - height) / 2)
+		y: root.compactFilters ? 0 : -height - ((root.commandsPanelHeight - height) / 2)
 		z: parent.z + 1
 		width: timeFilterDelegate.width
 		height: timeFilterDelegate.height

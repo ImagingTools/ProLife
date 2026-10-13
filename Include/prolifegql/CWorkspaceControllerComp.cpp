@@ -323,23 +323,23 @@ sdl::V1_0::prolife::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalSummar
 		sdl::V1_0::prolife::CCollectionSummaryInfo hardwareCollectionInfo;
 
 		iprm::CParamsSet paramsSet;
-		PrepareFilters(paramsSet, *arguments.input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_LICENSE_CREATION);
+		PrepareFilters(paramsSet, *arguments.input, gqlRequest, true, std::nullopt, std::nullopt, TFT_BY_CREATION);
 
 		int totalCount = m_hardwareCollectionCompPtr->GetElementsCount(&paramsSet);
 		hardwareCollectionInfo.total = totalCount;
 
 		iprm::CParamsSet internalUseParamsSet;
-		PrepareFilters(internalUseParamsSet, *arguments.input, gqlRequest, true, true, std::nullopt, TFT_BY_LICENSE_CREATION);
+		PrepareFilters(internalUseParamsSet, *arguments.input, gqlRequest, true, true, std::nullopt, TFT_BY_CREATION);
 
 		hardwareCollectionInfo.internalUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&internalUseParamsSet);
 
 		iprm::CParamsSet inUseParamsSet;
-		PrepareFilters(inUseParamsSet, *arguments.input, gqlRequest, true, false, true, TFT_BY_LICENSE_CREATION);
+		PrepareFilters(inUseParamsSet, *arguments.input, gqlRequest, true, false, true, TFT_BY_CREATION);
 
 		hardwareCollectionInfo.inUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&inUseParamsSet);
 
 		iprm::CParamsSet notInUseParamsSet;
-		PrepareFilters(notInUseParamsSet, *arguments.input, gqlRequest, true, false, false, TFT_BY_LICENSE_CREATION);
+		PrepareFilters(notInUseParamsSet, *arguments.input, gqlRequest, true, false, false, TFT_BY_CREATION);
 
 		hardwareCollectionInfo.notInUseCount = m_hardwareCollectionCompPtr->GetElementsCount(&notInUseParamsSet);
 
@@ -554,7 +554,8 @@ sdl::V1_0::prolife::CBarChartData CWorkspaceControllerComp::GetItemsCreationBarC
 		idoc::MetaInfoPtr dataMetaInfoPtr = collection.GetDataMetaInfo(elementId);
 		idoc::MetaInfoPtr elementMetaInfoPtr = collection.GetElementMetaInfo(elementId);
 		if ( dataMetaInfoPtr.IsValid() && elementMetaInfoPtr.IsValid()){
-			QByteArray productId = dataMetaInfoPtr->GetMetaInfo(idMetaInfoType).toByteArray();
+			// Meta info read from the database holds QJsonValue, which converts to QString but not to QByteArray.
+			QByteArray productId = dataMetaInfoPtr->GetMetaInfo(idMetaInfoType).toString().toUtf8();
 			QString productName = dataMetaInfoPtr->GetMetaInfo(nameMetaInfoType).toString();
 			QDateTime insertionTime = elementMetaInfoPtr->GetMetaInfo(idoc::IDocumentMetaInfo::MIT_CREATION_TIME).toDateTime();
 			resultMap[insertionTime.date()][qMakePair(productId, productName)]++;
@@ -872,7 +873,7 @@ sdl::V1_0::prolife::CBarChartData CWorkspaceControllerComp::BuildProductUsageBar
 			QDateTime timestamp = iteratorPtr->GetElementInfo("LicenseCreationDate").toDateTime();
 			idoc::MetaInfoPtr dataMetaInfoPtr = iteratorPtr->GetDataMetaInfo();
 			if (dataMetaInfoPtr.IsValid()){
-				QByteArray productId = dataMetaInfoPtr->GetMetaInfo(productIdMetaInfoType).toByteArray();
+				QByteArray productId = dataMetaInfoPtr->GetMetaInfo(productIdMetaInfoType).toString().toUtf8();
 				QString name = dataMetaInfoPtr->GetMetaInfo(productNameMetaInfoType).toString();
 				usageMap[timestamp.date()][qMakePair(productId, name)]++;
 			}
@@ -907,7 +908,7 @@ sdl::V1_0::prolife::CPieChartData CWorkspaceControllerComp::BuildProductUsagePie
 			QDateTime timestamp = iteratorPtr->GetElementInfo("LicenseCreationDate").toDateTime();
 			idoc::MetaInfoPtr dataMetaInfoPtr = iteratorPtr->GetDataMetaInfo();
 			if (dataMetaInfoPtr.IsValid()){
-				QByteArray productId = dataMetaInfoPtr->GetMetaInfo(productIdMetaInfoType).toByteArray();
+				QByteArray productId = dataMetaInfoPtr->GetMetaInfo(productIdMetaInfoType).toString().toUtf8();
 				QString name = dataMetaInfoPtr->GetMetaInfo(productNameMetaInfoType).toString();
 				map[qMakePair(productId, name)]++;
 			}
