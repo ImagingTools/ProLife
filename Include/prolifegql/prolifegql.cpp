@@ -3,6 +3,7 @@
 
 
 // ImtCore includes
+#include <imtauth/imtauth.h>
 #include <imtauth/IUserInfo.h>
 #include <imtgql/IGqlContext.h>
 
@@ -35,7 +36,7 @@ bool CheckDeviceChangePermissions(
 
 	const QByteArrayList permissions = userInfoPtr->GetPermissions();
 	if (isNewDevice){
-		if (permissions.contains(QByteArrayLiteral("AddSensor"))){
+		if (imtauth::HasPermission(permissions, QByteArrayLiteral("/SensorManagement/EditSensor/AddSensor"))){
 			return true;
 		}
 
@@ -45,38 +46,38 @@ bool CheckDeviceChangePermissions(
 
 	QStringList deniedFields;
 	auto checkField = [&permissions, &deniedFields](bool isChanged, const QByteArray& permissionId, const QString& fieldName){
-		if (isChanged && !permissions.contains(permissionId)){
+		if (isChanged && !imtauth::HasPermission(permissions, permissionId)){
 			deniedFields << fieldName;
 		}
 	};
 
 	const QByteArray macAddress = deviceData.macAddress ? deviceData.macAddress->toUtf8() : QByteArray();
-	checkField(macAddress != device.GetMacAddress(), "ChangeMacAddress", QStringLiteral("MAC-Address"));
+	checkField(macAddress != device.GetMacAddress(), "/SensorManagement/EditSensor/ChangeSensor/ChangeMacAddress", QStringLiteral("MAC-Address"));
 
 	const QByteArray serialNumber = deviceData.serialNumber ? deviceData.serialNumber->toUtf8() : QByteArray();
-	checkField(serialNumber != device.GetSerialNumber(), "ChangeSerialNumberForSensor", QStringLiteral("Serial Number"));
+	checkField(serialNumber != device.GetSerialNumber(), "/SensorManagement/EditSensor/ChangeSensor/ChangeSerialNumberForSensor", QStringLiteral("Serial Number"));
 
 	const QByteArray configurationType = deviceData.licenseName ? deviceData.licenseName->toUtf8() : QByteArray();
-	checkField(configurationType != device.GetConfigurationType(), "ChangeHardwareConfiguration", QStringLiteral("Hardware Configuration"));
+	checkField(configurationType != device.GetConfigurationType(), "/SensorManagement/EditSensor/ChangeSensor/ChangeHardwareConfiguration", QStringLiteral("Hardware Configuration"));
 
 	const QByteArray deviceType = deviceData.deviceType ? deviceData.deviceType->toUtf8() : QByteArray();
-	checkField(deviceType != device.GetDeviceType(), "ChangeDeviceType", QStringLiteral("Device Type"));
+	checkField(deviceType != device.GetDeviceType(), "/SensorManagement/EditSensor/ChangeSensor/ChangeDeviceType", QStringLiteral("Device Type"));
 
 	if (deviceData.project){
-		checkField(deviceData.project->toUtf8() != device.GetProject(), "ChangeProjectForSensor", QStringLiteral("Project"));
+		checkField(deviceData.project->toUtf8() != device.GetProject(), "/SensorManagement/EditSensor/ChangeSensor/ChangeProjectForSensor", QStringLiteral("Project"));
 	}
 
 	if (deviceData.orderId){
-		checkField(deviceData.orderId->toUtf8() != orderId, "ChangeOrderForSensor", QStringLiteral("Order"));
+		checkField(deviceData.orderId->toUtf8() != orderId, "/SensorManagement/EditSensor/ChangeSensor/ChangeOrderForSensor", QStringLiteral("Order"));
 	}
 
 	if (deviceData.description){
-		checkField(*deviceData.description != device.GetDescription(), "ChangeDescriptionForSensor", QStringLiteral("Description"));
+		checkField(*deviceData.description != device.GetDescription(), "/SensorManagement/EditSensor/ChangeSensor/ChangeDescriptionForSensor", QStringLiteral("Description"));
 	}
 
 	if (deviceData.productionStatus){
 		const prolifedata::IDeviceInfo::DeviceProductionStatus status = prolifedata::GetProductionStatusFromId(deviceData.productionStatus->toUtf8());
-		checkField(status != device.GetDeviceProductionStatus(), "ChangeProductionStatus", QStringLiteral("Production Status"));
+		checkField(status != device.GetDeviceProductionStatus(), "/SensorManagement/EditSensor/ChangeSensor/ChangeProductionStatus", QStringLiteral("Production Status"));
 	}
 
 	if (!deniedFields.isEmpty()){

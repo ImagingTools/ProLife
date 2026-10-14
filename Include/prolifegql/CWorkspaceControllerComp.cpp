@@ -286,7 +286,7 @@ sdl::V1_0::prolife::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalSummar
 
 	response.summaryInfos.Emplace();
 
-	bool viewLicenses = m_checkPermissionCompPtr->CheckPermission(userPermissions,{"ViewLicenses"});
+	bool viewLicenses = m_checkPermissionCompPtr->CheckPermission(userPermissions,{"/LicenseManagement/ViewLicenses"});
 	if (viewLicenses || isAdmin){
 		sdl::V1_0::prolife::CCollectionSummaryInfo softwareCollectionInfo;
 
@@ -318,7 +318,7 @@ sdl::V1_0::prolife::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalSummar
 		response.summaryInfos->push_back(softwareCollectionInfo);
 	}
 
-	bool viewSensors = m_checkPermissionCompPtr->CheckPermission(userPermissions,{"ViewSensors"});
+	bool viewSensors = m_checkPermissionCompPtr->CheckPermission(userPermissions,{"/SensorManagement/ViewSensors"});
 	if (viewSensors || isAdmin){
 		sdl::V1_0::prolife::CCollectionSummaryInfo hardwareCollectionInfo;
 
@@ -350,7 +350,7 @@ sdl::V1_0::prolife::CTotalSummaryInfo CWorkspaceControllerComp::OnGetTotalSummar
 		response.summaryInfos->push_back(hardwareCollectionInfo);
 	}
 
-	bool viewOrders = m_checkPermissionCompPtr->CheckPermission(userPermissions,{"ViewOrders"});
+	bool viewOrders = m_checkPermissionCompPtr->CheckPermission(userPermissions,{"/OrderManagement/ViewOrders"});
 	if (viewOrders || isAdmin){
 		sdl::V1_0::prolife::CCollectionSummaryInfo orderCollectionInfo;
 

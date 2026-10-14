@@ -11,6 +11,7 @@
 #include <imtbase/CObjectLink.h>
 #include <imtlic/IProductInfo.h>
 #include <imtaccount/CCompanyInfo.h>
+#include <imtauth/imtauth.h>
 #include <imtauth/IUserInfo.h>
 #include <imtgql/IGqlContext.h>
 
@@ -843,12 +844,12 @@ bool COrderCollectionControllerComp::CheckNewProductPermissions(
 		}
 
 		const QByteArray categoryId = product->categoryId ? *product->categoryId : QByteArray();
-		if (categoryId == QByteArrayLiteral("Hardware") && !permissions.contains(QByteArrayLiteral("AddSensor"))){
+		if (categoryId == QByteArrayLiteral("Hardware") && !imtauth::HasPermission(permissions, QByteArrayLiteral("/SensorManagement/EditSensor/AddSensor"))){
 			errorMessage = QStringLiteral("No permission to create new hardware");
 			return false;
 		}
 
-		if (categoryId == QByteArrayLiteral("Software") && !permissions.contains(QByteArrayLiteral("AddLicense"))){
+		if (categoryId == QByteArrayLiteral("Software") && !imtauth::HasPermission(permissions, QByteArrayLiteral("/LicenseManagement/EditLicense/AddLicense"))){
 			errorMessage = QStringLiteral("No permission to create new software");
 			return false;
 		}
