@@ -19,6 +19,9 @@
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="ProductInfo" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="ProLifeServerSettings/TracingConfiguration"/>
                     </AttributeInfo>
@@ -503,6 +506,7 @@
                                 <Value>Roles</Value>
                                 <Value>UserGroups</Value>
                                 <Value>UserSessions</Value>
+                                <Value>UserConnections</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
