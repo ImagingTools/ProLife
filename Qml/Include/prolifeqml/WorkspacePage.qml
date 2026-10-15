@@ -281,21 +281,33 @@ ViewBase {
 
 				SubscriptionClient {
 					gqlCommandId: "OnDevicesCollectionChanged"
+					deliveryEnabled: topRow.visible
 					onMessageReceived: {
+						topRow.updateModel()
+					}
+					onRefreshRequired: {
 						topRow.updateModel()
 					}
 				}
 
 				SubscriptionClient {
 					gqlCommandId: "OnSoftwareProductsCollectionChanged"
+					deliveryEnabled: topRow.visible
 					onMessageReceived: {
+						topRow.updateModel()
+					}
+					onRefreshRequired: {
 						topRow.updateModel()
 					}
 				}
 
 				SubscriptionClient {
 					gqlCommandId: "OnOrdersCollectionChanged"
+					deliveryEnabled: topRow.visible
 					onMessageReceived: {
+						topRow.updateModel()
+					}
+					onRefreshRequired: {
 						topRow.updateModel()
 					}
 				}

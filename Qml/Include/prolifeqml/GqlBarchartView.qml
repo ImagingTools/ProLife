@@ -77,7 +77,11 @@ ElementView {
 
 	SubscriptionClient {
 		id: subscriptionClient
+		deliveryEnabled: barChartElementView.visible
 		onMessageReceived: {
+			barChartElementView.updateModel()
+		}
+		onRefreshRequired: {
 			barChartElementView.updateModel()
 		}
 	}
