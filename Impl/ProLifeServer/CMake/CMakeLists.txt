@@ -32,8 +32,8 @@ set(DEPLOY_QT_QML_DIRS
 deploy_qt(TARGET ${PROJECT_NAME})
 
 if(WIN32)
-	file(COPY ${OPENSSLDIR}/lib/x64/libcrypto-1_1-x64.dll DESTINATION ${PROJECT_SOURCE_DIR}/../../../Bin/${CMAKE_BUILD_TYPE}_${TARGETNAME})
-	file(COPY ${OPENSSLDIR}/lib/x64/libssl-1_1-x64.dll DESTINATION ${PROJECT_SOURCE_DIR}/../../../Bin/${CMAKE_BUILD_TYPE}_${TARGETNAME})
+	file(COPY ${OPENSSLDIR}/lib/x64/libcrypto-3-x64.dll DESTINATION ${PROJECT_SOURCE_DIR}/../../../Bin/${CMAKE_BUILD_TYPE}_${TARGETNAME})
+	file(COPY ${OPENSSLDIR}/lib/x64/libssl-3-x64.dll DESTINATION ${PROJECT_SOURCE_DIR}/../../../Bin/${CMAKE_BUILD_TYPE}_${TARGETNAME})
 endif()
 
 include(${IMTCOREDIR}/Config/CMake/OpenSSL.cmake)

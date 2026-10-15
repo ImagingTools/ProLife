@@ -2114,7 +2114,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi Full Access {{randomInt}}\", description: \"Created by ProLifeApiPostman - full access scenario role\", roleId: \"ProLifeApiFullAccess{{randomInt}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"ViewWorkspace\", direct: true}, {id: \"ViewAccounts\", direct: true}, {id: \"ViewSensors\", direct: true}, {id: \"ViewOrders\", direct: true}, {id: \"ViewLicenses\", direct: true}, {id: \"ViewUsers\", direct: true}, {id: \"ViewRoles\", direct: true}, {id: \"ViewGroups\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi Full Access {{randomInt}}\", description: \"Created by ProLifeApiPostman - full access scenario role\", roleId: \"ProLifeApiFullAccess{{randomInt}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/WorkspaceManagement/ViewWorkspace\", direct: true}, {id: \"/AccountManagement/ViewAccounts\", direct: true}, {id: \"/SensorManagement/ViewSensors\", direct: true}, {id: \"/OrderManagement/ViewOrders\", direct: true}, {id: \"/LicenseManagement/ViewLicenses\", direct: true}, {id: \"/Administration/ViewAdministration/ViewUsers\", direct: true}, {id: \"/Administration/ViewAdministration/ViewRoles\", direct: true}, {id: \"/Administration/ViewAdministration/ViewGroups\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
                 "variables": ""
               }
             },
@@ -2146,7 +2146,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi Accounts Viewer {{randomInt}}\", description: \"Created by ProLifeApiPostman - narrow permission scenario role\", roleId: \"ProLifeApiAccountsViewer{{randomInt}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"ViewAccounts\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi Accounts Viewer {{randomInt}}\", description: \"Created by ProLifeApiPostman - narrow permission scenario role\", roleId: \"ProLifeApiAccountsViewer{{randomInt}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/AccountManagement/ViewAccounts\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
                 "variables": ""
               }
             },
@@ -2451,8 +2451,8 @@
                   "});",
                   "const permIds = json.data.GetProfile.permissions.map(function (p) { return p.id; });",
                   "pm.test('Full Access actor profile includes ViewAccounts and ViewSensors permissions', function () {",
-                  "  pm.expect(permIds).to.include('ViewAccounts');",
-                  "  pm.expect(permIds).to.include('ViewSensors');",
+                  "  pm.expect(permIds).to.include('/AccountManagement/ViewAccounts');",
+                  "  pm.expect(permIds).to.include('/SensorManagement/ViewSensors');",
                   "});"
                 ]
               }
@@ -2609,8 +2609,8 @@
                   "});",
                   "const permIds = json.data.GetProfile.permissions.map(function (p) { return p.id; });",
                   "pm.test('Accounts Viewer profile includes ViewAccounts but not ViewSensors', function () {",
-                  "  pm.expect(permIds).to.include('ViewAccounts');",
-                  "  pm.expect(permIds).to.not.include('ViewSensors');",
+                  "  pm.expect(permIds).to.include('/AccountManagement/ViewAccounts');",
+                  "  pm.expect(permIds).to.not.include('/SensorManagement/ViewSensors');",
                   "});"
                 ]
               }
@@ -2767,8 +2767,8 @@
                   "});",
                   "const permIds = json.data.GetProfile.permissions.map(function (p) { return p.id; });",
                   "pm.test('No Access actor profile does not include ViewAccounts or ViewSensors', function () {",
-                  "  pm.expect(permIds).to.not.include('ViewAccounts');",
-                  "  pm.expect(permIds).to.not.include('ViewSensors');",
+                  "  pm.expect(permIds).to.not.include('/AccountManagement/ViewAccounts');",
+                  "  pm.expect(permIds).to.not.include('/SensorManagement/ViewSensors');",
                   "});"
                 ]
               }
@@ -3041,7 +3041,7 @@
                   "});",
                   "const allEntryIds = groups.reduce(function (acc, g) { return acc.concat(g.entries.map(function (e) { return e.permissionId; })); }, []);",
                   "pm.test('GetProductPermissions includes the ViewAccounts permission used by the scenario roles above', function () {",
-                  "  pm.expect(allEntryIds).to.include('ViewAccounts');",
+                  "  pm.expect(allEntryIds).to.include('/AccountManagement/ViewAccounts');",
                   "});"
                 ]
               }
@@ -3742,7 +3742,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{qaDescRoleId}}\", item: { id: \"{{qaDescRoleId}}\", name: \"{{qaDescRoleCode}}\", description: \"QA regression role\", roleId: \"{{qaDescRoleCode}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"ViewSensors\", direct: true}, {id: \"ChangeDescriptionForSensor\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{qaDescRoleId}}\", item: { id: \"{{qaDescRoleId}}\", name: \"{{qaDescRoleCode}}\", description: \"QA regression role\", roleId: \"{{qaDescRoleCode}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/SensorManagement/ViewSensors\", direct: true}, {id: \"/SensorManagement/EditSensor/ChangeSensor/ChangeDescriptionForSensor\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
                 "variables": ""
               }
             },
@@ -3802,7 +3802,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{qaOrderRoleId}}\", item: { id: \"{{qaOrderRoleId}}\", name: \"{{qaOrderRoleCode}}\", description: \"QA regression role\", roleId: \"{{qaOrderRoleCode}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"ViewOrders\", direct: true}, {id: \"AddOrder\", direct: true}, {id: \"ChangeOrderProducts\", direct: true}, {id: \"ViewLicenses\", direct: true}, {id: \"ViewSensors\", direct: true}, {id: \"ViewAccounts\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{qaOrderRoleId}}\", item: { id: \"{{qaOrderRoleId}}\", name: \"{{qaOrderRoleCode}}\", description: \"QA regression role\", roleId: \"{{qaOrderRoleCode}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/OrderManagement/ViewOrders\", direct: true}, {id: \"/OrderManagement/EditOrder/AddOrder\", direct: true}, {id: \"/OrderManagement/EditOrder/ChangeOrder/ChangeOrderProducts\", direct: true}, {id: \"/LicenseManagement/ViewLicenses\", direct: true}, {id: \"/SensorManagement/ViewSensors\", direct: true}, {id: \"/AccountManagement/ViewAccounts\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
                 "variables": ""
               }
             },
@@ -5128,7 +5128,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{rpcRoleId}}\", item: { id: \"{{rpcRoleId}}\", name: \"{{rpcRoleCode}}\", description: \"Created by ProLifeApiPostman - remote permission scenario\", roleId: \"{{rpcRoleCode}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"ViewSensors\", direct: true}, {id: \"ViewOrders\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{rpcRoleId}}\", item: { id: \"{{rpcRoleId}}\", name: \"{{rpcRoleCode}}\", description: \"Created by ProLifeApiPostman - remote permission scenario\", roleId: \"{{rpcRoleCode}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/SensorManagement/ViewSensors\", direct: true}, {id: \"/OrderManagement/ViewOrders\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
                 "variables": ""
               }
             },
@@ -5218,7 +5218,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{rpcUserId}}\", name: \"ProLifeApi remote permission token\", scopes: [\"ViewSensors\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { token success message } }",
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{rpcUserId}}\", name: \"ProLifeApi remote permission token\", scopes: [\"/SensorManagement/ViewSensors\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { token success message } }",
                 "variables": ""
               }
             },
@@ -5308,7 +5308,7 @@
                   "((payload && payload.groups) || []).forEach(function (g) { (g.entries || []).forEach(function (e) { ids.push(e.permissionId); }); });",
                   "pm.test('A token used before any other permission read gets the role permission within its scope', function () {",
                   "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
-                  "  pm.expect(ids.sort(), JSON.stringify(json)).to.eql([\"ViewSensors\"]);",
+                  "  pm.expect(ids.sort(), JSON.stringify(json)).to.eql([\"/SensorManagement/ViewSensors\"]);",
                   "});"
                 ]
               }
@@ -5361,7 +5361,7 @@
                   "((payload && payload.groups) || []).forEach(function (g) { (g.entries || []).forEach(function (e) { ids.push(e.permissionId); }); });",
                   "pm.test('The user holds both role permissions', function () {",
                   "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
-                  "  pm.expect(ids.sort(), JSON.stringify(json)).to.eql([\"ViewOrders\",\"ViewSensors\"]);",
+                  "  pm.expect(ids.sort(), JSON.stringify(json)).to.eql([\"/OrderManagement/ViewOrders\",\"/SensorManagement/ViewSensors\"]);",
                   "});"
                 ]
               }
@@ -5376,7 +5376,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RoleUpdate { RoleUpdate(input: { id: \"{{rpcRoleId}}\", typeId: \"Role\", productId: \"{{productId}}\", item: { id: \"{{rpcRoleId}}\", name: \"{{rpcRoleCode}}\", roleId: \"{{rpcRoleCode}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"ViewOrders\", direct: true}, {id: \"ViewAccounts\", direct: true}] } }) { id } }",
+                "query": "mutation RoleUpdate { RoleUpdate(input: { id: \"{{rpcRoleId}}\", typeId: \"Role\", productId: \"{{productId}}\", item: { id: \"{{rpcRoleId}}\", name: \"{{rpcRoleCode}}\", roleId: \"{{rpcRoleCode}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/OrderManagement/ViewOrders\", direct: true}, {id: \"/AccountManagement/ViewAccounts\", direct: true}] } }) { id } }",
                 "variables": ""
               }
             },
@@ -5443,7 +5443,7 @@
                   "((payload && payload.groups) || []).forEach(function (g) { (g.entries || []).forEach(function (e) { ids.push(e.permissionId); }); });",
                   "pm.test('Permissions added to and removed from the role reach ProLife', function () {",
                   "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
-                  "  pm.expect(ids.sort(), JSON.stringify(json)).to.eql([\"ViewAccounts\",\"ViewOrders\"]);",
+                  "  pm.expect(ids.sort(), JSON.stringify(json)).to.eql([\"/AccountManagement/ViewAccounts\",\"/OrderManagement/ViewOrders\"]);",
                   "});"
                 ]
               }

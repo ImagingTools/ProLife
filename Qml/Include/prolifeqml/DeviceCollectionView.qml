@@ -17,6 +17,10 @@ RemoteCollectionView {
 	anchors.fill: parent;
 	collectionId: "Devices"
 
+	permissionPaths: ({
+		"DevicesList": "/SensorManagement/ViewSensors"
+	})
+
 	additionalFieldIds: [DeviceItemTypeMetaInfo.s_statusId, DeviceItemTypeMetaInfo.s_deviceType, DeviceItemTypeMetaInfo.s_inUse, DeviceItemTypeMetaInfo.s_productUuid]
 	documentCollectionFilter: null
 	commandsDelegateComp: Component {DeviceCollectionViewCommandsDelegate {

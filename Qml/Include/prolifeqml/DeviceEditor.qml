@@ -35,6 +35,16 @@ DocumentViewBase {
 	contentColor: Style.baseColor
 	commandsPanelVisible: !deviceEditorContainer.embedded
 
+	skeletonComp: Component {
+		SkeletonFormView {
+			sidePanelVisible: true
+			sidePanelWidth: Style.sizeHintXXS
+			sideItemCount: 4
+			rowCount: 6
+			contentMaxWidth: deviceEditorContainer.contentMaxWidth
+		}
+	}
+
 	property int radius: 3
 	property int spacing: Style.marginM
 	property int contentMaxWidth: 900

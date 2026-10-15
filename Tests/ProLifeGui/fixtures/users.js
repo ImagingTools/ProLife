@@ -305,7 +305,7 @@ const USERS = [
 // only under the full matrix, PROLIFE_GUI_ALL_USERS=1 (or Run-CiTests.ps1 -AllUsers).
 module.exports = defineUsers({
   users: USERS,
-  defaultUserKeys: ['fullAccess', 'accEditor'],
+  defaultUserKeys: ['fullAccess', 'accEditor', 'admEditor'],
   allUsersEnv: 'PROLIFE_GUI_ALL_USERS',
 });
 module.exports.PASSWORD = PASSWORD;

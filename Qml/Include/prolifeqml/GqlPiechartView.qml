@@ -70,7 +70,11 @@ ElementView {
 
 	SubscriptionClient {
 		id: subscriptionClient
+		deliveryEnabled: piechartElementView.visible
 		onMessageReceived: {
+			piechartElementView.updateModel()
+		}
+		onRefreshRequired: {
 			piechartElementView.updateModel()
 		}
 	}

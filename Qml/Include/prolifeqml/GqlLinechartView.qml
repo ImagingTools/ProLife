@@ -74,7 +74,11 @@ ElementView {
 
 	SubscriptionClient {
 		id: subscriptionClient
+		deliveryEnabled: graph2dElementView.visible
 		onMessageReceived: {
+			graph2dElementView.updateModel()
+		}
+		onRefreshRequired: {
 			graph2dElementView.updateModel()
 		}
 	}

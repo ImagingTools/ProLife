@@ -189,7 +189,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"PatTokenApi Token Owner {{randomInt}}\", description: \"Created by PatTokenApiPostman - PAT scope-intersection owner role\", roleId: \"PatTokenApiTokenOwner{{randomInt}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"ViewSensors\", direct: true}, {id: \"ViewOrders\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"PatTokenApi Token Owner {{randomInt}}\", description: \"Created by PatTokenApiPostman - PAT scope-intersection owner role\", roleId: \"PatTokenApiTokenOwner{{randomInt}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/SensorManagement/ViewSensors\", direct: true}, {id: \"/OrderManagement/ViewOrders\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
                 "variables": ""
               }
             }
@@ -275,7 +275,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"PatTokenApi Other User {{randomInt}}\", description: \"Created by PatTokenApiPostman - cross-user attacker role, deliberately disjoint from Token Owner\", roleId: \"PatTokenApiOtherUser{{randomInt}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"ViewAccounts\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"PatTokenApi Other User {{randomInt}}\", description: \"Created by PatTokenApiPostman - cross-user attacker role, deliberately disjoint from Token Owner\", roleId: \"PatTokenApiOtherUser{{randomInt}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/AccountManagement/ViewAccounts\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
                 "variables": ""
               }
             }
@@ -868,7 +868,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", productId: \"{{productId}}\", name: \"PAT Suite - Primary Lifecycle Token\", description: \"Primary lifecycle token created by PatTokenApiPostman\", scopes: [\"ViewSensors\",\"ViewOrders\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", productId: \"{{productId}}\", name: \"PAT Suite - Primary Lifecycle Token\", description: \"Primary lifecycle token created by PatTokenApiPostman\", scopes: [\"/SensorManagement/ViewSensors\",\"/OrderManagement/ViewOrders\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
                 "variables": ""
               }
             }
@@ -958,8 +958,8 @@
                   "pm.test('GetToken productId matches the productId it was created with', function () { pm.expect(t.productId).to.eql(pm.environment.get('productId')); });",
                   "pm.test('GetToken name matches', function () { pm.expect(t.name).to.eql('PAT Suite - Primary Lifecycle Token'); });",
                   "pm.test('GetToken scopes include both granted scopes', function () {",
-                  "  pm.expect(t.scopes).to.include('ViewSensors');",
-                  "  pm.expect(t.scopes).to.include('ViewOrders');",
+                  "  pm.expect(t.scopes).to.include('/SensorManagement/ViewSensors');",
+                  "  pm.expect(t.scopes).to.include('/OrderManagement/ViewOrders');",
                   "});",
                   "pm.test('GetToken createdAt is present', function () { pm.expect(t.createdAt).to.be.ok; });",
                   "pm.test('GetToken lastUsedAt is not yet set', function () { pm.expect(t.lastUsedAt).to.not.be.ok; });",
@@ -1287,8 +1287,8 @@
                   "pm.test('ValidateToken valid is true', function () { pm.expect(p.valid).to.eql(true); });",
                   "pm.test('ValidateToken userId matches Token Owner', function () { pm.expect(p.userId).to.eql(pm.environment.get('tokenOwnerUserId')); });",
                   "pm.test('ValidateToken scopes include both granted scopes', function () {",
-                  "  pm.expect(p.scopes).to.include('ViewSensors');",
-                  "  pm.expect(p.scopes).to.include('ViewOrders');",
+                  "  pm.expect(p.scopes).to.include('/SensorManagement/ViewSensors');",
+                  "  pm.expect(p.scopes).to.include('/OrderManagement/ViewOrders');",
                   "});",
                   "pm.test('ValidateToken message is exact', function () { pm.expect(p.message).to.eql('Token is valid'); });"
                 ]
@@ -2082,7 +2082,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", name: \"Intersection A - Full Match\", scopes: [\"ViewSensors\",\"ViewOrders\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", name: \"Intersection A - Full Match\", scopes: [\"/SensorManagement/ViewSensors\",\"/OrderManagement/ViewOrders\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
                 "variables": ""
               }
             }
@@ -2184,7 +2184,7 @@
                   "const ids = flattenPermissionIds(json.data.GetUserPermissions);",
                   "pm.test('Scenario A: no probe error', function () { pm.expect(json.data.GetUserPermissions.errorMessage).to.not.be.ok; });",
                   "pm.test('Scenario A: effective set is exactly ViewSensors+ViewOrders', function () {",
-                  "  pm.expect(ids.sort()).to.eql(['ViewOrders','ViewSensors']);",
+                  "  pm.expect(ids.sort()).to.eql(['/OrderManagement/ViewOrders','/SensorManagement/ViewSensors']);",
                   "});"
                 ]
               }
@@ -2201,7 +2201,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", name: \"Intersection B - Narrow Subset\", scopes: [\"ViewSensors\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", name: \"Intersection B - Narrow Subset\", scopes: [\"/SensorManagement/ViewSensors\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
                 "variables": ""
               }
             }
@@ -2302,10 +2302,10 @@
                   "});",
                   "const ids = flattenPermissionIds(json.data.GetUserPermissions);",
                   "pm.test('Scenario B: effective set is exactly ViewSensors', function () {",
-                  "  pm.expect(ids).to.eql(['ViewSensors']);",
+                  "  pm.expect(ids).to.eql(['/SensorManagement/ViewSensors']);",
                   "});",
                   "pm.test('Scenario B: ViewOrders is NOT present despite user having it', function () {",
-                  "  pm.expect(ids).to.not.include('ViewOrders');",
+                  "  pm.expect(ids).to.not.include('/OrderManagement/ViewOrders');",
                   "});"
                 ]
               }
@@ -2322,7 +2322,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", name: \"Intersection - Self Escalation Attempt\", scopes: [\"ViewSensors\",\"AddOrder\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", name: \"Intersection - Self Escalation Attempt\", scopes: [\"/SensorManagement/ViewSensors\",\"/OrderManagement/EditOrder/AddOrder\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
                 "variables": ""
               }
             }
@@ -2378,7 +2378,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", name: \"Intersection C - Over Broad\", scopes: [\"ViewSensors\",\"ViewOrders\",\"AddOrder\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", name: \"Intersection C - Over Broad\", scopes: [\"/SensorManagement/ViewSensors\",\"/OrderManagement/ViewOrders\",\"/OrderManagement/EditOrder/AddOrder\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
                 "variables": ""
               }
             }
@@ -2479,10 +2479,10 @@
                   "});",
                   "const ids = flattenPermissionIds(json.data.GetUserPermissions);",
                   "pm.test('Scenario C: effective set is exactly ViewSensors+ViewOrders', function () {",
-                  "  pm.expect(ids.sort()).to.eql(['ViewOrders','ViewSensors']);",
+                  "  pm.expect(ids.sort()).to.eql(['/OrderManagement/ViewOrders','/SensorManagement/ViewSensors']);",
                   "});",
                   "pm.test('Scenario C: AddOrder is NOT granted despite nominal scope', function () {",
-                  "  pm.expect(ids).to.not.include('AddOrder');",
+                  "  pm.expect(ids).to.not.include('/OrderManagement/EditOrder/AddOrder');",
                   "});"
                 ]
               }
@@ -2519,7 +2519,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", name: \"Intersection D - Fully Disjoint\", scopes: [\"AddOrder\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", name: \"Intersection D - Fully Disjoint\", scopes: [\"/OrderManagement/EditOrder/AddOrder\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
                 "variables": ""
               }
             }
@@ -2678,7 +2678,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{suUserId}}\", name: \"Intersection E - Admin Bypass\", scopes: [\"ViewSensors\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{suUserId}}\", name: \"Intersection E - Admin Bypass\", scopes: [\"/SensorManagement/ViewSensors\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
                 "variables": ""
               }
             }
@@ -2782,8 +2782,8 @@
                   "  pm.expect(ids.length).to.be.greaterThan(1);",
                   "});",
                   "pm.test('Scenario E: contains permissions clearly outside the nominal scope', function () {",
-                  "  pm.expect(ids).to.include('AddOrder');",
-                  "  pm.expect(ids).to.include('ViewAccounts');",
+                  "  pm.expect(ids).to.include('/OrderManagement/EditOrder/AddOrder');",
+                  "  pm.expect(ids).to.include('/AccountManagement/ViewAccounts');",
                   "});"
                 ]
               }
@@ -2954,7 +2954,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", name: \"Cross-user-created token\", scopes: [\"ViewSensors\"] }) { id token success message } }",
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", name: \"Cross-user-created token\", scopes: [\"/SensorManagement/ViewSensors\"] }) { id token success message } }",
                 "variables": ""
               }
             }
@@ -3121,7 +3121,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", name: \"Comma Scope Token\", scopes: [\"ViewSensors,Extra\",\"ViewOrders\"] }) { id token success message } }",
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", name: \"Comma Scope Token\", scopes: [\"/SensorManagement/ViewSensors,Extra\",\"/OrderManagement/ViewOrders\"] }) { id token success message } }",
                 "variables": ""
               }
             }
@@ -3197,7 +3197,7 @@
                   "const scopes = json.data.GetToken.scopes;",
                   "pm.test('Scopes round-trip as 3 entries, not 2 (comma-split corruption)', function () {",
                   "  pm.expect(scopes, 'Unexpected response: ' + JSON.stringify(json)).to.have.length(3);",
-                  "  pm.expect(scopes.sort()).to.eql(['Extra','ViewOrders','ViewSensors']);",
+                  "  pm.expect(scopes.sort()).to.eql(['/OrderManagement/ViewOrders','/SensorManagement/ViewSensors','Extra']);",
                   "});"
                 ]
               }
@@ -3219,7 +3219,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", productId: \"{{productId}}\", name: \"PAT Suite - Product Alpha\", scopes: [\"ViewSensors\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", productId: \"{{productId}}\", name: \"PAT Suite - Product Alpha\", scopes: [\"/SensorManagement/ViewSensors\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
                 "variables": ""
               }
             }
@@ -3292,7 +3292,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", productId: \"{{secondaryProductId}}\", name: \"PAT Suite - Product Beta\", scopes: [\"ViewOrders\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", productId: \"{{secondaryProductId}}\", name: \"PAT Suite - Product Beta\", scopes: [\"/OrderManagement/ViewOrders\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
                 "variables": ""
               }
             }
@@ -3345,7 +3345,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", name: \"PAT Suite - No Product\", scopes: [\"ViewSensors\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", name: \"PAT Suite - No Product\", scopes: [\"/SensorManagement/ViewSensors\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
                 "variables": ""
               }
             }
@@ -3930,7 +3930,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", productId: \"{{productId}}\", name: \"Cross-Product Auth Probe\", scopes: [\"ViewSensors\",\"ViewOrders\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", productId: \"{{productId}}\", name: \"Cross-Product Auth Probe\", scopes: [\"/SensorManagement/ViewSensors\",\"/OrderManagement/ViewOrders\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
                 "variables": ""
               }
             }
@@ -4012,7 +4012,7 @@
                   "const ids = flattenPermissionIds(json.data.GetUserPermissions);",
                   "pm.test('Same-product probe: no error', function () { pm.expect(json.data.GetUserPermissions.errorMessage).to.not.be.ok; });",
                   "pm.test('Same-product probe: effective set is exactly ViewSensors+ViewOrders', function () {",
-                  "  pm.expect(ids.sort()).to.eql(['ViewOrders','ViewSensors']);",
+                  "  pm.expect(ids.sort()).to.eql(['/OrderManagement/ViewOrders','/SensorManagement/ViewSensors']);",
                   "});"
                 ]
               }
@@ -4126,7 +4126,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", productId: \"{{productId}}\", name: \"Cross-Product Lifecycle A (ProLife)\", scopes: [\"ViewSensors\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", productId: \"{{productId}}\", name: \"Cross-Product Lifecycle A (ProLife)\", scopes: [\"/SensorManagement/ViewSensors\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
                 "variables": ""
               }
             }
@@ -4194,7 +4194,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", productId: \"{{secondaryProductId}}\", name: \"Cross-Product Lifecycle B (DeskTicket)\", scopes: [\"ViewOrders\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", productId: \"{{secondaryProductId}}\", name: \"Cross-Product Lifecycle B (DeskTicket)\", scopes: [\"/OrderManagement/ViewOrders\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { id token success message } }",
                 "variables": ""
               }
             }
@@ -4545,7 +4545,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", name: \"Cache Staleness Probe\", scopes: [\"ViewSensors\"] }) { id token success message } }",
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{tokenOwnerUserId}}\", name: \"Cache Staleness Probe\", scopes: [\"/SensorManagement/ViewSensors\"] }) { id token success message } }",
                 "variables": ""
               }
             }
