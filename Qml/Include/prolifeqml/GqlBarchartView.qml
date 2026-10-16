@@ -164,11 +164,11 @@ ElementView {
 		}
 	}
 
-	Loading {
+	SkeletonPanelView {
 		id: loading
 		z: parent.z + 1
 		anchors.fill: parent
-		background.color: Style.baseColor
-		visible: false
+		anchors.margins: 1
+		radius: Style.radiusM
 	}
 }

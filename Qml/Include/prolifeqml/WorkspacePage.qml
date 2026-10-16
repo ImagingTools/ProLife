@@ -82,7 +82,9 @@ ViewBase {
 		}
 		
 		onParentActivated: {
-			root.checkCurrentPage("Dashboard")
+			if (restPath.length === 0){
+				root.checkCurrentPage("Dashboard")
+			}
 		}
 	}
 
@@ -213,6 +215,30 @@ ViewBase {
 				}
 			}
 
+			// The summary cards only exist once their data has arrived, so placeholders stand in until then.
+			Row {
+				id: topRowSkeleton
+				anchors.top: parent.top
+				anchors.topMargin: chartsBlock.spacing + chartsBlock.filtersHeight + Style.marginS
+				anchors.horizontalCenter: parent.horizontalCenter
+				spacing: chartsBlock.spacing
+				visible: !topRow.summaryReceived
+
+				Repeater {
+					model: 3
+
+					delegate: SkeletonPanelView {
+						width: chartsBlock.chartWidth
+						height: 110 - 2 * Style.marginS
+						radius: Style.radiusM
+						border.width: 1
+						border.color: Style.borderColor
+						titleVisible: false
+						visible: true
+					}
+				}
+			}
+
 			Row {
 				id: topRow
 				anchors.top: parent.top
@@ -223,6 +249,7 @@ ViewBase {
 				height: Math.max(110, cardHeight + 2 * Style.marginS)
 
 				property real cardHeight: 0
+				property bool summaryReceived: false
 				property string customerId: root.customerId
 				property TimeFilter timeFilter: root.timeFilter
 				property bool updateRequested: false
@@ -276,6 +303,11 @@ ViewBase {
 
 					Component.onCompleted: {
 						send()
+					}
+
+					// Success or failure, the placeholders give way to whatever the reply left.
+					onFinished: {
+						topRow.summaryReceived = true
 					}
 				}
 
@@ -372,7 +404,7 @@ ViewBase {
 											width: Style.buttonWidthXXS
 											height: width
 											radius: width
-											color: "green"
+											color: Style.successColor
 										}
 
 										BaseText {
@@ -391,7 +423,7 @@ ViewBase {
 											width: Style.buttonWidthXXS
 											height: width
 											radius: width
-											color: "gray"
+											color: Style.neutralEmphasisColor
 										}
 
 										BaseText {
@@ -409,7 +441,7 @@ ViewBase {
 											width: Style.buttonWidthXXS
 											height: width
 											radius: width
-											color: "blue"
+											color: Style.imaginToolsAccentColor
 										}
 
 										BaseText {
@@ -474,11 +506,12 @@ ViewBase {
 								}
 							}
 
-							Loading {
+							SkeletonPanelView {
 								id: loading
 								anchors.fill: parent
-								background.color: Style.baseColor
-								visible: false
+								anchors.margins: 1
+								radius: Style.radiusM
+								titleVisible: false
 							}
 
 							StickerView {
