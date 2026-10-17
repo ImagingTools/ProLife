@@ -28,11 +28,11 @@
                     <AttributeInfo Id="ComponentsToInitialize" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
+                                <Value>ProLifeServerBase/LisaDatabaseConnector</Value>
+                                <Value>ProLifeServerBase/PumaDatabaseConnector</Value>
                                 <Value>ProLifeServerBase/ConnectionSubscriber</Value>
                                 <Value>ProLifeServerBase/LisaLoginStatusSubscriberController</Value>
                                 <Value>ProLifeServerBase/HttpServerFramework</Value>
-                                <Value>ProLifeServerBase/LisaDatabaseConnector</Value>
-                                <Value>ProLifeServerBase/PumaDatabaseConnector</Value>
                                 <Value>ProLifeServerBase/DatabaseEngine</Value>
                                 <Value>ProLifeServerBase/UsersModelUpdateBridge</Value>
                                 <Value>ProLifeServerBase/RolesModelUpdateBridge</Value>
