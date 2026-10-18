@@ -101,6 +101,14 @@
     Where newman writes the JUnit XML report. Point TeamCity's "XML Report
     Processing" (JUnit) build feature at this same path.
 
+.PARAMETER Rls
+    Run with tenant Row Level Security enforced. The Puma and ProLife servers
+    connect as the restricted role -RlsUser and get -DbUser/-DbPassword only as
+    their administrative login: on start they prepare the databases themselves
+    (role, ownership, extensions). After the suite the isolation is checked in
+    the ProLife database as -RlsUser (JUnit report: -RlsJUnitReportPath). The
+    server settings files are restored afterwards.
+
 .EXAMPLE
     powershell -ExecutionPolicy Bypass -File Run-CiTests.ps1
 
@@ -178,10 +186,17 @@ param(
     [string]$JsonReportPath = (Join-Path $ScriptDir "run-report.json"),
     [string]$WsJUnitReportPath = (Join-Path $ScriptDir "junit-report-ws.xml"),
     [int]$WebSocketPort = 18778,
-    [int]$StartupTimeoutSeconds = 60
+    [int]$StartupTimeoutSeconds = 60,
+    [switch]$Rls,
+    [string]$RlsUser = "imt_app",
+    [string]$RlsPassword = "Imt_App_Rls_2026!",
+    [string]$PumaSettingsPath = "C:\Users\Public\ImagingTools\Puma\Puma Server\PumaServerPgTestSettings.xml",
+    [string]$SettingsPath = "C:\Users\Public\ImagingTools\ProLife\ProLife Server\ProLifeServerTestSettings.xml",
+    [string]$RlsJUnitReportPath = (Join-Path $ScriptDir "junit-report-rls.xml")
 )
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $RepoRoot "Tests\Rls\RlsMode.ps1")
 $serverProcess = $null
 $pumaProcess = $null
 $lisaProcess = $null
@@ -509,6 +524,14 @@ try {
     Stop-ServerProcess "LisaServerTest"
     Stop-ServerProcess "PumaServerPgTest"
 
+    if ($Rls) {
+        Write-Step "Enabling tenant Row Level Security"
+        Enable-RlsDatabaseSettings -SettingsPath $PumaSettingsPath -DatabaseParameterId "DatabaseAccessSettings" -AdminParameterId "AdminDatabaseAccessSettings" `
+            -AppUser $RlsUser -AppPassword $RlsPassword -AdminUser $DbUser -AdminPassword $DbPassword
+        Enable-RlsDatabaseSettings -SettingsPath $SettingsPath -DatabaseParameterId "ProLifeDatabaseSettings" -AdminParameterId "AdminDatabaseSettings" `
+            -AppUser $RlsUser -AppPassword $RlsPassword -AdminUser $DbUser -AdminPassword $DbPassword
+    }
+
     Restore-DatabaseFromBackup $PumaDbName $PumaBackupPath
     Start-PumaTestServer
 
@@ -525,6 +548,14 @@ try {
     # ProLife -> Puma subscription chain rather than either server alone.
     $wsExitCode = Invoke-WsSuite
     if ($exitCode -eq 0) { $exitCode = $wsExitCode }
+
+    if ($Rls) {
+        Write-Step "Checking tenant isolation in the database"
+        $rlsExitCode = Invoke-RlsIsolationCheck -PsqlPath (Resolve-PsqlPath) -DbHost $DbHost -DbPort $DbPort -DbName $DbName `
+            -AppUser $RlsUser -AppPassword $RlsPassword -ScriptPath (Join-Path $RepoRoot "Tests\Rls\rls-isolation.sql") -JUnitPath $RlsJUnitReportPath `
+            -SetupScriptPath (Join-Path $RepoRoot "Tests\Rls\rls-fixtures.sql") -AdminUser $DbUser -AdminPassword $DbPassword
+        if ($exitCode -eq 0) { $exitCode = $rlsExitCode }
+    }
 }
 finally {
     # Tear down in reverse start order: ProLife depends on Lisa/Puma being
@@ -541,6 +572,10 @@ finally {
     if ($pumaProcess -and -not $pumaProcess.HasExited) {
         Write-Step "Stopping PumaServerPgTest.exe (PID $($pumaProcess.Id))"
         Stop-Process -Id $pumaProcess.Id -Force -ErrorAction SilentlyContinue
+    }
+    if ($Rls) {
+        Restore-RlsDatabaseSettings -SettingsPath $SettingsPath
+        Restore-RlsDatabaseSettings -SettingsPath $PumaSettingsPath
     }
 }
 
