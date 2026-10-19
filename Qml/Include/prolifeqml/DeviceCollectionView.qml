@@ -18,7 +18,7 @@ RemoteCollectionView {
 	collectionId: "Devices"
 
 	permissionPaths: ({
-		"DevicesList": "/SensorManagement/ViewSensors"
+		"DevicesList": "/SensorManagement/View"
 	})
 
 	additionalFieldIds: [DeviceItemTypeMetaInfo.s_statusId, DeviceItemTypeMetaInfo.s_deviceType, DeviceItemTypeMetaInfo.s_inUse, DeviceItemTypeMetaInfo.s_productUuid]
@@ -44,7 +44,7 @@ RemoteCollectionView {
 	
 		registerFieldFilterDelegate("LicenseStatus", licenseDelegateFilterComp)
 
-		if (PermissionsController.checkPermission("ViewAccounts")){
+		if (PermissionsController.checkPermission("/AccountManagement/View")){
 			registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
 		}
 

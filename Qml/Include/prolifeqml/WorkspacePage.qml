@@ -23,12 +23,12 @@ ViewBase {
 	Component.onCompleted: {
 		stackView.addPage(workspacePageComp)
 		
-		let viewUserActions = PermissionsController.checkPermission("ViewUserActions")
+		let viewUserActions = PermissionsController.checkPermission("/WorkspaceManagement/ViewUserActions")
 		if (viewUserActions){
 			stackView.addPage(userActionsPageComp)
 		}
 
-		if (PermissionsController.checkPermission("ViewAnalytics")){
+		if (PermissionsController.checkPermission("/WorkspaceManagement/ViewAnalytics")){
 			stackView.addPage(statisticsPageComp)
 		}
 
@@ -549,8 +549,8 @@ ViewBase {
 				property real chartHeight: row1.height - 85
 
 				Component.onCompleted: {
-					let viewLicenses = PermissionsController.checkPermission("ViewLicenses")
-					let viewHardware = PermissionsController.checkPermission("ViewSensors")
+					let viewLicenses = PermissionsController.checkPermission("/LicenseManagement/View")
+					let viewHardware = PermissionsController.checkPermission("/SensorManagement/View")
 					if (viewLicenses && viewHardware){
 						softwareUsedPieChart.updateModel()
 						softwareUsedBarChart.updateModel()
@@ -627,8 +627,8 @@ ViewBase {
 				property real chartHeight: row2.height - 85
 
 				Component.onCompleted: {
-					let viewLicenses = PermissionsController.checkPermission("ViewLicenses")
-					let viewHardware = PermissionsController.checkPermission("ViewSensors")
+					let viewLicenses = PermissionsController.checkPermission("/LicenseManagement/View")
+					let viewHardware = PermissionsController.checkPermission("/SensorManagement/View")
 					if (viewLicenses && viewHardware){
 						softwareUsedBarChart.updateModel()
 						hardwareUsedBarChart.updateModel()

@@ -19,7 +19,7 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewAccounts</Value>
+                                <Value>/AccountManagement/View</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -38,12 +38,12 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ChangeCustomerId</Value>
-                                <Value>ChangeAccountDescription</Value>
-                                <Value>ChangeAccountName</Value>
-                                <Value>ChangeAccountEmail</Value>
-                                <Value>ChangeCompanyAddress</Value>
-                                <Value>ChangeAccountGroups</Value>
+                                <Value>/AccountManagement/Edit/Change/CustomerId</Value>
+                                <Value>/AccountManagement/Edit/Change/Description</Value>
+                                <Value>/AccountManagement/Edit/Change/Name</Value>
+                                <Value>/AccountManagement/Edit/Change/Email</Value>
+                                <Value>/AccountManagement/Edit/Change/CompanyAddress</Value>
+                                <Value>/AccountManagement/Edit/Change/Groups</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -62,7 +62,7 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>AddAccount</Value>
+                                <Value>/AccountManagement/Edit/Add</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -81,8 +81,8 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewAccounts</Value>
-                                <Value>ChangeCustomer</Value>
+                                <Value>/AccountManagement/View</Value>
+                                <Value>/OrderManagement/Edit/Change/Customer</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -98,77 +98,77 @@
                     <AttributeInfo Id="CreateSubCollectionPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewAccounts</Value>
+                                <Value>/AccountManagement/View</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="ExportObjectPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ExportAccount</Value>
+                                <Value>/AccountManagement/View</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="GetCollectionHeadersPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewAccounts</Value>
+                                <Value>/AccountManagement/View</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="GetCommandsPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewAccounts</Value>
+                                <Value>/AccountManagement/View</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="GetDataMetaInfoPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewAccounts</Value>
+                                <Value>/AccountManagement/View</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="GetElementMetaInfoPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewAccounts</Value>
+                                <Value>/AccountManagement/View</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="GetObjectDataPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewAccounts</Value>
+                                <Value>/AccountManagement/View</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="GetObjectTypeIdPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewAccounts</Value>
+                                <Value>/AccountManagement/View</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="GetObjectVisualStatusPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewAccounts</Value>
+                                <Value>/AccountManagement/View</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="ImportObjectPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ImportAccount</Value>
+                                <Value>/AccountManagement/Edit/Add</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="InsertNewObjectPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>AddAccount</Value>
+                                <Value>/AccountManagement/Edit/Add</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -178,64 +178,64 @@
                     <AttributeInfo Id="RemoveElementSetPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>RemoveAccount</Value>
+                                <Value>/AccountManagement/Edit/Remove</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="RemoveElementsPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>RemoveAccount</Value>
+                                <Value>/AccountManagement/Edit/Remove</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="RestoreObjectSetPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>RestoreAccount</Value>
+                                <Value>/AccountManagement/Edit/Remove</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="RestoreObjectsPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>RestoreAccount</Value>
+                                <Value>/AccountManagement/Edit/Remove</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="SetObjectDataPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ChangeCustomerId</Value>
-                                <Value>ChangeAccountName</Value>
-                                <Value>ChangeAccountEmail</Value>
-                                <Value>ChangeAccountDescription</Value>
-                                <Value>ChangeCompanyAddress</Value>
-                                <Value>ChangeAccountGroups</Value>
+                                <Value>/AccountManagement/Edit/Change/CustomerId</Value>
+                                <Value>/AccountManagement/Edit/Change/Name</Value>
+                                <Value>/AccountManagement/Edit/Change/Email</Value>
+                                <Value>/AccountManagement/Edit/Change/Description</Value>
+                                <Value>/AccountManagement/Edit/Change/CompanyAddress</Value>
+                                <Value>/AccountManagement/Edit/Change/Groups</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="SetObjectDescriptionPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ChangeCustomerId</Value>
-                                <Value>ChangeAccountName</Value>
-                                <Value>ChangeAccountEmail</Value>
-                                <Value>ChangeAccountDescription</Value>
-                                <Value>ChangeCompanyAddress</Value>
-                                <Value>ChangeAccountGroups</Value>
+                                <Value>/AccountManagement/Edit/Change/CustomerId</Value>
+                                <Value>/AccountManagement/Edit/Change/Name</Value>
+                                <Value>/AccountManagement/Edit/Change/Email</Value>
+                                <Value>/AccountManagement/Edit/Change/Description</Value>
+                                <Value>/AccountManagement/Edit/Change/CompanyAddress</Value>
+                                <Value>/AccountManagement/Edit/Change/Groups</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="SetObjectNamePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ChangeCustomerId</Value>
-                                <Value>ChangeAccountName</Value>
-                                <Value>ChangeAccountEmail</Value>
-                                <Value>ChangeAccountDescription</Value>
-                                <Value>ChangeCompanyAddress</Value>
-                                <Value>ChangeAccountGroups</Value>
+                                <Value>/AccountManagement/Edit/Change/CustomerId</Value>
+                                <Value>/AccountManagement/Edit/Change/Name</Value>
+                                <Value>/AccountManagement/Edit/Change/Email</Value>
+                                <Value>/AccountManagement/Edit/Change/Description</Value>
+                                <Value>/AccountManagement/Edit/Change/CompanyAddress</Value>
+                                <Value>/AccountManagement/Edit/Change/Groups</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

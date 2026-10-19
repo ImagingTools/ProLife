@@ -157,7 +157,7 @@ DocumentViewBase {
 			return
 		}
 
-		let canAddSensor = PermissionsController.checkPermission("AddSensor")
+		let canAddSensor = PermissionsController.checkPermission("/SensorManagement/Edit/Add")
 		if (isNew && canAddSensor) {
 			devicePage.descriptionInput.readOnly = false
 			devicePage.serialNumberInput.readOnly = false
@@ -171,28 +171,28 @@ DocumentViewBase {
 			devicePage.configurationSelect.changeable = true
 		}
 		else {
-			let canChangeDescription = PermissionsController.checkPermission("ChangeDescriptionForSensor")
+			let canChangeDescription = PermissionsController.checkPermission("/SensorManagement/Edit/Change/Description")
 			devicePage.descriptionInput.readOnly = !canChangeDescription
 
-			let canChangeSerialNumber = PermissionsController.checkPermission("ChangeSerialNumberForSensor")
+			let canChangeSerialNumber = PermissionsController.checkPermission("/SensorManagement/Edit/Change/SerialNumber")
 			devicePage.serialNumberInput.readOnly = !canChangeSerialNumber
 
-			let canChangeMacAddress = PermissionsController.checkPermission("ChangeMacAddress")
+			let canChangeMacAddress = PermissionsController.checkPermission("/SensorManagement/Edit/Change/MacAddress")
 			devicePage.macAddressInput.readOnly = !canChangeMacAddress
 
 			if (productionPage) {
-				let canChangeOrder = PermissionsController.checkPermission("ChangeOrderForSensor")
+				let canChangeOrder = PermissionsController.checkPermission("/SensorManagement/Edit/Change/Order")
 				productionPage.orderSelect.changeable = canChangeOrder
 
-				let canChangeProductionStatus = PermissionsController.checkPermission("ChangeProductionStatus")
+				let canChangeProductionStatus = PermissionsController.checkPermission("/SensorManagement/Edit/Change/ProductionStatus")
 				productionPage.statusCB.changeable = canChangeProductionStatus
 
-				let canChangeProject = PermissionsController.checkPermission("ChangeProjectForSensor")
+				let canChangeProject = PermissionsController.checkPermission("/SensorManagement/Edit/Change/Project")
 				productionPage.projectInput.readOnly = !canChangeProject
 			}
 
-			let canChangeConfiguration = PermissionsController.checkPermission("ChangeHardwareConfiguration")
-			let canChangeDevice = PermissionsController.checkPermission("ChangeDeviceType")
+			let canChangeConfiguration = PermissionsController.checkPermission("/SensorManagement/Edit/Change/HardwareConfiguration")
+			let canChangeDevice = PermissionsController.checkPermission("/SensorManagement/Edit/Change/DeviceType")
 			devicePage.configurationSelect.changeable = canChangeConfiguration && canChangeDevice
 			devicePage.productSelect.changeable = canChangeConfiguration && canChangeDevice
 
@@ -202,9 +202,9 @@ DocumentViewBase {
 				canChangeMacAddress ||
 				canChangeConfiguration ||
 				canChangeDevice ||
-				PermissionsController.checkPermission("ChangeOrderForSensor") ||
-				PermissionsController.checkPermission("ChangeProductionStatus") ||
-				PermissionsController.checkPermission("ChangeProjectForSensor")
+				PermissionsController.checkPermission("/SensorManagement/Edit/Change/Order") ||
+				PermissionsController.checkPermission("/SensorManagement/Edit/Change/ProductionStatus") ||
+				PermissionsController.checkPermission("/SensorManagement/Edit/Change/Project")
 
 			if (commandsController && !deviceEditorContainer.embedded) {
 				commandsController.setCommandVisible("Undo", ok)
@@ -227,7 +227,7 @@ DocumentViewBase {
 		if (devicePage.macAddressInput.acceptableInput &&
 				devicePage.serialNumberInput.acceptableInput &&
 				!ModalDialogManager.dialogIsOpened(confirmSetFinishedStatusDialogComp) &&
-				PermissionsController.checkPermission("ChangeProductionStatus")) {
+				PermissionsController.checkPermission("/SensorManagement/Edit/Change/ProductionStatus")) {
 
 			if (deviceEditorContainer.visible && deviceData.m_macAddress !== "" && deviceData.m_serialNumber !== "" && deviceData.m_productionStatus !== "Finished") {
 				ModalDialogManager.openDialog(confirmSetFinishedStatusDialogComp)
@@ -399,7 +399,7 @@ DocumentViewBase {
 			}
 			if (!deviceEditorContainer.embedded) {
 				multiPageView.addPage("Support", qsTr("Support"), supportPageComp, "Icons/SupportDesk")
-				if (PermissionsController.checkPermission("ViewRevisions")) {
+				if (PermissionsController.checkPermission("/SensorManagement/Revisions/View")) {
 					multiPageView.addPage("History", qsTr("History"), historyPageComp, "Icons/History")
 				}
 			}
@@ -514,6 +514,7 @@ DocumentViewBase {
 
 			DocumentHistoryView {
 				id: historyWorkspace
+				revisionsPermissionPath: "/SensorManagement/Revisions"
 				anchors.top: historyPageHeader.bottom
 				anchors.topMargin: Style.marginM
 				anchors.bottom: parent.bottom
@@ -811,7 +812,7 @@ DocumentViewBase {
 					return
 				}
 
-				if (PermissionsController.checkPermission("ChangeOrderForSensor")) {
+				if (PermissionsController.checkPermission("/SensorManagement/Edit/Change/Order")) {
 					deviceEditorContainer.deviceData.m_orderId = orderSelect.selectedId
 					deviceEditorContainer.deviceData.m_orderName = orderSelect.selectedText
 				}

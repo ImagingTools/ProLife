@@ -130,7 +130,7 @@ ViewBase {
 			return
 		}
 
-		let canAddOrder = PermissionsController.checkPermission("AddOrder")
+		let canAddOrder = PermissionsController.checkPermission("/OrderManagement/Edit/Add")
 
 		if (isNew && canAddOrder) {
 			generalPage.instanceIdInput.readOnly = false
@@ -144,22 +144,22 @@ ViewBase {
 			}
 		}
 		else {
-			let canChangeDeliveryId = PermissionsController.checkPermission("ChangeDeliveryId")
+			let canChangeDeliveryId = PermissionsController.checkPermission("/OrderManagement/Edit/Change/DeliveryId")
 			generalPage.instanceIdInput.readOnly = !canChangeDeliveryId
 
-			let canChangePurchaseOrderId = PermissionsController.checkPermission("ChangePurchaseOrderId")
+			let canChangePurchaseOrderId = PermissionsController.checkPermission("/OrderManagement/Edit/Change/PurchaseOrderId")
 			generalPage.purchaseIdInput.readOnly = !canChangePurchaseOrderId
 
-			let canChangeDescriptionForOrder = PermissionsController.checkPermission("ChangeDescriptionForOrder")
+			let canChangeDescriptionForOrder = PermissionsController.checkPermission("/OrderManagement/Edit/Change/Description")
 			generalPage.descriptionInput.readOnly = !canChangeDescriptionForOrder
 
-			let canChangeCustomer = PermissionsController.checkPermission("ChangeCustomer")
+			let canChangeCustomer = PermissionsController.checkPermission("/OrderManagement/Edit/Change/Customer")
 			generalPage.customerSelect.changeable = canChangeCustomer
 
-			let canChangeOrderStatus = PermissionsController.checkPermission("ChangeOrderStatus")
+			let canChangeOrderStatus = PermissionsController.checkPermission("/OrderManagement/Edit/Change/Status")
 			generalPage.orderStatusCB.changeable = canChangeOrderStatus
 
-			let canChangeOrderProducts = PermissionsController.checkPermission("ChangeOrderProducts")
+			let canChangeOrderProducts = PermissionsController.checkPermission("/OrderManagement/Edit/Change/Products")
 			if (productsPage) {
 				productsPage.addProduct.visible = canChangeOrderProducts
 				productsPage.productsView.readOnly = !canChangeOrderProducts
@@ -234,7 +234,7 @@ ViewBase {
 				productsPageComp,
 				"Icons/Product"
 			)
-			if (PermissionsController.checkPermission("ViewRevisions")) {
+			if (PermissionsController.checkPermission("/OrderManagement/Revisions/View")) {
 				multiPageView.addPage("History", qsTr("History"), historyPageComp, "Icons/History")
 			}
 
@@ -258,6 +258,7 @@ ViewBase {
 		id: historyPageComp
 
 		DocumentHistoryPanel {
+			revisionsPermissionPath: "/OrderManagement/Revisions"
 			documentId: orderEditorContainer.orderData ? orderEditorContainer.orderData.m_id : ""
 			collectionId: "Orders"
 		}

@@ -35,13 +35,13 @@
                     <AttributeInfo Id="EditPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewAccounts</Value>
-                                <Value>ChangeCustomerId</Value>
-                                <Value>ChangeAccountDescription</Value>
-                                <Value>ChangeAccountName</Value>
-                                <Value>ChangeAccountEmail</Value>
-                                <Value>ChangeCompanyAddress</Value>
-                                <Value>ChangeAccountGroups</Value>
+                                <Value>/AccountManagement/View</Value>
+                                <Value>/AccountManagement/Edit/Change/CustomerId</Value>
+                                <Value>/AccountManagement/Edit/Change/Description</Value>
+                                <Value>/AccountManagement/Edit/Change/Name</Value>
+                                <Value>/AccountManagement/Edit/Change/Email</Value>
+                                <Value>/AccountManagement/Edit/Change/CompanyAddress</Value>
+                                <Value>/AccountManagement/Edit/Change/Groups</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -54,14 +54,14 @@
                     <AttributeInfo Id="NewPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>AddAccount</Value>
+                                <Value>/AccountManagement/Edit/Add</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="RemovePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>RemoveAccount</Value>
+                                <Value>/AccountManagement/Edit/Remove</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -310,7 +310,7 @@
                         <Data IsEnabled="true" Value="CheckPermissionOr"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PermissionId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="ViewAllAccounts"/>
+                        <Data IsEnabled="true" Value="/AccountManagement/ViewAll"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
@@ -342,7 +342,7 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewRevisions</Value>
+                                <Value>/AccountManagement/Revisions/View</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -376,14 +376,14 @@
                     <AttributeInfo Id="ClosePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>RemoveAccount</Value>
-                                <Value>ViewAccounts</Value>
-                                <Value>ChangeCustomerId</Value>
-                                <Value>ChangeAccountDescription</Value>
-                                <Value>ChangeAccountName</Value>
-                                <Value>ChangeAccountEmail</Value>
-                                <Value>ChangeCompanyAddress</Value>
-                                <Value>ChangeAccountGroups</Value>
+                                <Value>/AccountManagement/Edit/Remove</Value>
+                                <Value>/AccountManagement/View</Value>
+                                <Value>/AccountManagement/Edit/Change/CustomerId</Value>
+                                <Value>/AccountManagement/Edit/Change/Description</Value>
+                                <Value>/AccountManagement/Edit/Change/Name</Value>
+                                <Value>/AccountManagement/Edit/Change/Email</Value>
+                                <Value>/AccountManagement/Edit/Change/CompanyAddress</Value>
+                                <Value>/AccountManagement/Edit/Change/Groups</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -399,28 +399,28 @@
                     <AttributeInfo Id="RedoPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>AddAccount</Value>
-                                <Value>RemoveAccount</Value>
-                                <Value>ChangeCustomerId</Value>
-                                <Value>ChangeAccountDescription</Value>
-                                <Value>ChangeAccountName</Value>
-                                <Value>ChangeAccountEmail</Value>
-                                <Value>ChangeCompanyAddress</Value>
-                                <Value>ChangeAccountGroups</Value>
+                                <Value>/AccountManagement/Edit/Add</Value>
+                                <Value>/AccountManagement/Edit/Remove</Value>
+                                <Value>/AccountManagement/Edit/Change/CustomerId</Value>
+                                <Value>/AccountManagement/Edit/Change/Description</Value>
+                                <Value>/AccountManagement/Edit/Change/Name</Value>
+                                <Value>/AccountManagement/Edit/Change/Email</Value>
+                                <Value>/AccountManagement/Edit/Change/CompanyAddress</Value>
+                                <Value>/AccountManagement/Edit/Change/Groups</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="SavePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>AddAccount</Value>
-                                <Value>RemoveAccount</Value>
-                                <Value>ChangeCustomerId</Value>
-                                <Value>ChangeAccountDescription</Value>
-                                <Value>ChangeAccountName</Value>
-                                <Value>ChangeAccountEmail</Value>
-                                <Value>ChangeCompanyAddress</Value>
-                                <Value>ChangeAccountGroups</Value>
+                                <Value>/AccountManagement/Edit/Add</Value>
+                                <Value>/AccountManagement/Edit/Remove</Value>
+                                <Value>/AccountManagement/Edit/Change/CustomerId</Value>
+                                <Value>/AccountManagement/Edit/Change/Description</Value>
+                                <Value>/AccountManagement/Edit/Change/Name</Value>
+                                <Value>/AccountManagement/Edit/Change/Email</Value>
+                                <Value>/AccountManagement/Edit/Change/CompanyAddress</Value>
+                                <Value>/AccountManagement/Edit/Change/Groups</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -436,14 +436,14 @@
                     <AttributeInfo Id="UndoPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>AddAccount</Value>
-                                <Value>RemoveAccount</Value>
-                                <Value>ChangeCustomerId</Value>
-                                <Value>ChangeAccountDescription</Value>
-                                <Value>ChangeAccountName</Value>
-                                <Value>ChangeAccountEmail</Value>
-                                <Value>ChangeCompanyAddress</Value>
-                                <Value>ChangeAccountGroups</Value>
+                                <Value>/AccountManagement/Edit/Add</Value>
+                                <Value>/AccountManagement/Edit/Remove</Value>
+                                <Value>/AccountManagement/Edit/Change/CustomerId</Value>
+                                <Value>/AccountManagement/Edit/Change/Description</Value>
+                                <Value>/AccountManagement/Edit/Change/Name</Value>
+                                <Value>/AccountManagement/Edit/Change/Email</Value>
+                                <Value>/AccountManagement/Edit/Change/CompanyAddress</Value>
+                                <Value>/AccountManagement/Edit/Change/Groups</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

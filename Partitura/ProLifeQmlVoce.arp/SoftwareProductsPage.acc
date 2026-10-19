@@ -138,7 +138,7 @@
                         <Data IsEnabled="true" Value="CheckPermissionOr"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PermissionId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="ViewAllLicenses"/>
+                        <Data IsEnabled="true" Value="/LicenseManagement/ViewAll"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
@@ -213,21 +213,8 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>SoftwarePermissions</Value>
-                                <Value>RevisionPermissions</Value>
                             </Values>
                         </Data>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="RevisionPermissions" PackageId="ImtCoreVoce" ComponentId="RevisionPermissions">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
-                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -470,7 +457,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewRevisions</Value>
+                                            <Value>/LicenseManagement/Revisions/View</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -504,13 +491,13 @@
                                 <AttributeInfo Id="EditPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewLicenses</Value>
-                                            <Value>ChangeProjectForLicense</Value>
-                                            <Value>ChangeProductForLicense</Value>
-                                            <Value>ChangeOrderForLicense</Value>
-                                            <Value>ChangeProductLicenses</Value>
-                                            <Value>ChangeExpiration</Value>
-                                            <Value>ChangeLicenseNumber</Value>
+                                            <Value>/LicenseManagement/View</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Project</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Product</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Order</Value>
+                                            <Value>/LicenseManagement/Edit/Change/ProductLicenses</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Expiration</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Number</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -523,14 +510,14 @@
                                 <AttributeInfo Id="NewPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>AddLicense</Value>
+                                            <Value>/LicenseManagement/Edit/Add</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="RemovePermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>RemoveLicense</Value>
+                                            <Value>/LicenseManagement/Edit/Remove</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -561,13 +548,13 @@
                                 <AttributeInfo Id="ClosePermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewLicenses</Value>
-                                            <Value>ChangeProjectForLicense</Value>
-                                            <Value>ChangeProductForLicense</Value>
-                                            <Value>ChangeOrderForLicense</Value>
-                                            <Value>ChangeProductLicenses</Value>
-                                            <Value>ChangeExpiration</Value>
-                                            <Value>ChangeLicenseNumber</Value>
+                                            <Value>/LicenseManagement/View</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Project</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Product</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Order</Value>
+                                            <Value>/LicenseManagement/Edit/Change/ProductLicenses</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Expiration</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Number</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -577,7 +564,7 @@
                                 <AttributeInfo Id="HistoryPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewLicenseHistory</Value>
+                                            <Value>/LicenseManagement/ViewHistory</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -590,26 +577,26 @@
                                 <AttributeInfo Id="RedoPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ChangeProjectForLicense</Value>
-                                            <Value>ChangeProductForLicense</Value>
-                                            <Value>ChangeOrderForLicense</Value>
-                                            <Value>ChangeProductLicenses</Value>
-                                            <Value>ChangeExpiration</Value>
-                                            <Value>ChangeLicenseNumber</Value>
-                                            <Value>AddLicense</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Project</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Product</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Order</Value>
+                                            <Value>/LicenseManagement/Edit/Change/ProductLicenses</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Expiration</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Number</Value>
+                                            <Value>/LicenseManagement/Edit/Add</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="SavePermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ChangeProjectForLicense</Value>
-                                            <Value>ChangeProductForLicense</Value>
-                                            <Value>ChangeOrderForLicense</Value>
-                                            <Value>ChangeProductLicenses</Value>
-                                            <Value>ChangeExpiration</Value>
-                                            <Value>ChangeLicenseNumber</Value>
-                                            <Value>AddLicense</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Project</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Product</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Order</Value>
+                                            <Value>/LicenseManagement/Edit/Change/ProductLicenses</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Expiration</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Number</Value>
+                                            <Value>/LicenseManagement/Edit/Add</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -625,13 +612,13 @@
                                 <AttributeInfo Id="UndoPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ChangeProjectForLicense</Value>
-                                            <Value>ChangeProductForLicense</Value>
-                                            <Value>ChangeOrderForLicense</Value>
-                                            <Value>ChangeProductLicenses</Value>
-                                            <Value>ChangeExpiration</Value>
-                                            <Value>ChangeLicenseNumber</Value>
-                                            <Value>AddLicense</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Project</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Product</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Order</Value>
+                                            <Value>/LicenseManagement/Edit/Change/ProductLicenses</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Expiration</Value>
+                                            <Value>/LicenseManagement/Edit/Change/Number</Value>
+                                            <Value>/LicenseManagement/Edit/Add</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>

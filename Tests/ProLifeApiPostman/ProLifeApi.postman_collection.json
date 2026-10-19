@@ -2114,12 +2114,12 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi Full Access {{randomInt}}\", description: \"Created by ProLifeApiPostman - full access scenario role\", roleId: \"ProLifeApiFullAccess{{randomInt}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/WorkspaceManagement/ViewWorkspace\", direct: true}, {id: \"/AccountManagement/ViewAccounts\", direct: true}, {id: \"/SensorManagement/ViewSensors\", direct: true}, {id: \"/OrderManagement/ViewOrders\", direct: true}, {id: \"/LicenseManagement/ViewLicenses\", direct: true}, {id: \"/Administration/ViewAdministration/ViewUsers\", direct: true}, {id: \"/Administration/ViewAdministration/ViewRoles\", direct: true}, {id: \"/Administration/ViewAdministration/ViewGroups\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi Full Access {{randomInt}}\", description: \"Created by ProLifeApiPostman - full access scenario role\", roleId: \"ProLifeApiFullAccess{{randomInt}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/WorkspaceManagement/ViewPage\", direct: true}, {id: \"/AccountManagement/ViewPage\", direct: true}, {id: \"/AccountManagement/View\", direct: true}, {id: \"/SensorManagement/ViewPage\", direct: true}, {id: \"/SensorManagement/View\", direct: true}, {id: \"/OrderManagement/ViewPage\", direct: true}, {id: \"/OrderManagement/View\", direct: true}, {id: \"/LicenseManagement/ViewPage\", direct: true}, {id: \"/LicenseManagement/View\", direct: true}, {id: \"/Administration/Users/ViewPage\", direct: true}, {id: \"/Administration/Users/View\", direct: true}, {id: \"/Administration/Roles/ViewPage\", direct: true}, {id: \"/Administration/Roles/View\", direct: true}, {id: \"/Administration/Groups/ViewPage\", direct: true}, {id: \"/Administration/Groups/View\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
                 "variables": ""
               }
             },
             "url": "{{baseUrl}}/graphql",
-            "description": "Infra only, not domain field coverage (per user instruction, Roles/Users/Groups fields themselves are not being tested here). Creates a role with a broad permission set (ViewWorkspace/ViewAccounts/ViewSensors/ViewOrders/ViewLicenses/ViewUsers/ViewRoles/ViewGroups - the exact FeatureId codes declared in ProLifeFeatures.xml and referenced by each page's PagePermissions list in Partitura/ProLifeQmlVoce.arp/Pages.acc and ImtCore's PagesController.acc) purely so the PagesData/GetCommands/GetProfile checks below have a real high-privilege actor to compare against. permissions is a ';'-delimited string, confirmed against Tests/backend/postman_collection.json's RoleUpdate example."
+            "description": "Infra only, not domain field coverage (per user instruction, Roles/Users/Groups fields themselves are not being tested here). Creates a role with a broad permission set (the ViewPage and View leaves of Workspace, Accounts, Sensors, Orders, Licenses and of /Administration/Users, Roles, Groups - the paths declared in ProLifeFeatures.h and referenced by each page's PagePermissions list in Partitura/ProLifeQmlVoce.arp/Pages.acc and ImtCore's PagesController.acc) purely so the PagesData/GetCommands/GetProfile checks below have a real high-privilege actor to compare against. permissions is a ';'-delimited string, confirmed against Tests/backend/postman_collection.json's RoleUpdate example."
           },
           "event": [
             {
@@ -2146,7 +2146,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi Accounts Viewer {{randomInt}}\", description: \"Created by ProLifeApiPostman - narrow permission scenario role\", roleId: \"ProLifeApiAccountsViewer{{randomInt}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/AccountManagement/ViewAccounts\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{randomUuid}}\", item: { id: \"{{randomUuid}}\", name: \"ProLifeApi Accounts Viewer {{randomInt}}\", description: \"Created by ProLifeApiPostman - narrow permission scenario role\", roleId: \"ProLifeApiAccountsViewer{{randomInt}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/AccountManagement/ViewPage\", direct: true}, {id: \"/AccountManagement/View\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
                 "variables": ""
               }
             },
@@ -2376,7 +2376,7 @@
                   "  pm.expect(pageIds).to.include('Orders');",
                   "  pm.expect(pageIds).to.include('SoftwareProducts');",
                   "});",
-                  "pm.test('Full Access actor sees the Administration page (granted via ViewUsers/ViewRoles/ViewGroups)', function () {",
+                  "pm.test('Full Access actor sees the Administration page (granted via the ViewPage leaves of /Administration/Users, Roles, Groups)', function () {",
                   "  pm.expect(pageIds).to.include('Administration');",
                   "});"
                 ]
@@ -2451,8 +2451,8 @@
                   "});",
                   "const permIds = json.data.GetProfile.permissions.map(function (p) { return p.id; });",
                   "pm.test('Full Access actor profile includes ViewAccounts and ViewSensors permissions', function () {",
-                  "  pm.expect(permIds).to.include('/AccountManagement/ViewAccounts');",
-                  "  pm.expect(permIds).to.include('/SensorManagement/ViewSensors');",
+                  "  pm.expect(permIds).to.include('/AccountManagement/View');",
+                  "  pm.expect(permIds).to.include('/SensorManagement/View');",
                   "});"
                 ]
               }
@@ -2609,8 +2609,8 @@
                   "});",
                   "const permIds = json.data.GetProfile.permissions.map(function (p) { return p.id; });",
                   "pm.test('Accounts Viewer profile includes ViewAccounts but not ViewSensors', function () {",
-                  "  pm.expect(permIds).to.include('/AccountManagement/ViewAccounts');",
-                  "  pm.expect(permIds).to.not.include('/SensorManagement/ViewSensors');",
+                  "  pm.expect(permIds).to.include('/AccountManagement/View');",
+                  "  pm.expect(permIds).to.not.include('/SensorManagement/View');",
                   "});"
                 ]
               }
@@ -2767,8 +2767,8 @@
                   "});",
                   "const permIds = json.data.GetProfile.permissions.map(function (p) { return p.id; });",
                   "pm.test('No Access actor profile does not include ViewAccounts or ViewSensors', function () {",
-                  "  pm.expect(permIds).to.not.include('/AccountManagement/ViewAccounts');",
-                  "  pm.expect(permIds).to.not.include('/SensorManagement/ViewSensors');",
+                  "  pm.expect(permIds).to.not.include('/AccountManagement/View');",
+                  "  pm.expect(permIds).to.not.include('/SensorManagement/View');",
                   "});"
                 ]
               }
@@ -3041,7 +3041,7 @@
                   "});",
                   "const allEntryIds = groups.reduce(function (acc, g) { return acc.concat(g.entries.map(function (e) { return e.permissionId; })); }, []);",
                   "pm.test('GetProductPermissions includes the ViewAccounts permission used by the scenario roles above', function () {",
-                  "  pm.expect(allEntryIds).to.include('/AccountManagement/ViewAccounts');",
+                  "  pm.expect(allEntryIds).to.include('/AccountManagement/View');",
                   "});"
                 ]
               }
@@ -3742,7 +3742,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{qaDescRoleId}}\", item: { id: \"{{qaDescRoleId}}\", name: \"{{qaDescRoleCode}}\", description: \"QA regression role\", roleId: \"{{qaDescRoleCode}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/SensorManagement/ViewSensors\", direct: true}, {id: \"/SensorManagement/EditSensor/ChangeSensor/ChangeDescriptionForSensor\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{qaDescRoleId}}\", item: { id: \"{{qaDescRoleId}}\", name: \"{{qaDescRoleCode}}\", description: \"QA regression role\", roleId: \"{{qaDescRoleCode}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/SensorManagement/View\", direct: true}, {id: \"/SensorManagement/Edit/Change/Description\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
                 "variables": ""
               }
             },
@@ -3802,7 +3802,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{qaOrderRoleId}}\", item: { id: \"{{qaOrderRoleId}}\", name: \"{{qaOrderRoleCode}}\", description: \"QA regression role\", roleId: \"{{qaOrderRoleCode}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/OrderManagement/ViewOrders\", direct: true}, {id: \"/OrderManagement/EditOrder/AddOrder\", direct: true}, {id: \"/OrderManagement/EditOrder/ChangeOrder/ChangeOrderProducts\", direct: true}, {id: \"/LicenseManagement/ViewLicenses\", direct: true}, {id: \"/SensorManagement/ViewSensors\", direct: true}, {id: \"/AccountManagement/ViewAccounts\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{qaOrderRoleId}}\", item: { id: \"{{qaOrderRoleId}}\", name: \"{{qaOrderRoleCode}}\", description: \"QA regression role\", roleId: \"{{qaOrderRoleCode}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/OrderManagement/View\", direct: true}, {id: \"/OrderManagement/Edit/Add\", direct: true}, {id: \"/OrderManagement/Edit/Change/Products\", direct: true}, {id: \"/LicenseManagement/View\", direct: true}, {id: \"/SensorManagement/View\", direct: true}, {id: \"/AccountManagement/View\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
                 "variables": ""
               }
             },
@@ -5128,7 +5128,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{rpcRoleId}}\", item: { id: \"{{rpcRoleId}}\", name: \"{{rpcRoleCode}}\", description: \"Created by ProLifeApiPostman - remote permission scenario\", roleId: \"{{rpcRoleCode}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/SensorManagement/ViewSensors\", direct: true}, {id: \"/OrderManagement/ViewOrders\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{rpcRoleId}}\", item: { id: \"{{rpcRoleId}}\", name: \"{{rpcRoleCode}}\", description: \"Created by ProLifeApiPostman - remote permission scenario\", roleId: \"{{rpcRoleCode}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/SensorManagement/View\", direct: true}, {id: \"/OrderManagement/View\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
                 "variables": ""
               }
             },
@@ -5218,7 +5218,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{rpcUserId}}\", name: \"ProLifeApi remote permission token\", scopes: [\"/SensorManagement/ViewSensors\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { token success message } }",
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{rpcUserId}}\", name: \"ProLifeApi remote permission token\", scopes: [\"/SensorManagement/View\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { token success message } }",
                 "variables": ""
               }
             },
@@ -5308,7 +5308,7 @@
                   "((payload && payload.groups) || []).forEach(function (g) { (g.entries || []).forEach(function (e) { ids.push(e.permissionId); }); });",
                   "pm.test('A token used before any other permission read gets the role permission within its scope', function () {",
                   "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
-                  "  pm.expect(ids.sort(), JSON.stringify(json)).to.eql([\"/SensorManagement/ViewSensors\"]);",
+                  "  pm.expect(ids.sort(), JSON.stringify(json)).to.eql([\"/SensorManagement/View\"]);",
                   "});"
                 ]
               }
@@ -5361,7 +5361,7 @@
                   "((payload && payload.groups) || []).forEach(function (g) { (g.entries || []).forEach(function (e) { ids.push(e.permissionId); }); });",
                   "pm.test('The user holds both role permissions', function () {",
                   "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
-                  "  pm.expect(ids.sort(), JSON.stringify(json)).to.eql([\"/OrderManagement/ViewOrders\",\"/SensorManagement/ViewSensors\"]);",
+                  "  pm.expect(ids.sort(), JSON.stringify(json)).to.eql([\"/OrderManagement/View\",\"/SensorManagement/View\"]);",
                   "});"
                 ]
               }
@@ -5376,7 +5376,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RoleUpdate { RoleUpdate(input: { id: \"{{rpcRoleId}}\", typeId: \"Role\", productId: \"{{productId}}\", item: { id: \"{{rpcRoleId}}\", name: \"{{rpcRoleCode}}\", roleId: \"{{rpcRoleCode}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/OrderManagement/ViewOrders\", direct: true}, {id: \"/AccountManagement/ViewAccounts\", direct: true}] } }) { id } }",
+                "query": "mutation RoleUpdate { RoleUpdate(input: { id: \"{{rpcRoleId}}\", typeId: \"Role\", productId: \"{{productId}}\", item: { id: \"{{rpcRoleId}}\", name: \"{{rpcRoleCode}}\", roleId: \"{{rpcRoleCode}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/OrderManagement/View\", direct: true}, {id: \"/AccountManagement/View\", direct: true}] } }) { id } }",
                 "variables": ""
               }
             },
@@ -5443,7 +5443,7 @@
                   "((payload && payload.groups) || []).forEach(function (g) { (g.entries || []).forEach(function (e) { ids.push(e.permissionId); }); });",
                   "pm.test('Permissions added to and removed from the role reach ProLife', function () {",
                   "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
-                  "  pm.expect(ids.sort(), JSON.stringify(json)).to.eql([\"/AccountManagement/ViewAccounts\",\"/OrderManagement/ViewOrders\"]);",
+                  "  pm.expect(ids.sort(), JSON.stringify(json)).to.eql([\"/AccountManagement/View\",\"/OrderManagement/View\"]);",
                   "});"
                 ]
               }
@@ -5629,6 +5629,809 @@
             "url": "{{baseUrl}}/graphql"
           },
           "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Scenario role removed', function () {",
+                  "  pm.expect(json.data && json.data.RemoveElements && json.data.RemoveElements.success, JSON.stringify(json)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "11 Permission Model - Product, Scopes, Client Permissions",
+      "description": "The permission model of a product server: the product of the server decides which role permissions apply, PAT scopes match by the permission rule, and GetPermissions tells the client exactly what the server allows - including what the role permissions include through the requirements of the product. Each check holds whatever direction the requirements of ProLife are written in.",
+      "item": [
+        {
+          "name": "PMD: Auth SU and seed ids",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{suLogin}}\", password: \"{{suPassword}}\", productId: \"{{productId}}\" }) { token } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only. The actor of this folder holds /SensorManagement/View and /OrderManagement/View of ProLife and nothing else."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('SU authorized for the permission model scenario', function () {",
+                  "  pm.expect(auth && auth.token, JSON.stringify(json)).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('pmdSuToken', auth.token);",
+                  "pm.environment.set('token', auth.token);",
+                  "pm.environment.set('pmdRoleId', pm.variables.replaceIn('{{$guid}}'));",
+                  "pm.environment.set('pmdUserId', pm.variables.replaceIn('{{$guid}}'));",
+                  "pm.environment.set('pmdDeviceId', pm.variables.replaceIn('{{$guid}}'));",
+                  "const suffix = String(Date.now());",
+                  "pm.environment.set('pmdRoleCode', 'ProLifeApiPermissionModel' + suffix);",
+                  "pm.environment.set('pmdLogin', 'prolifeapi_pmd_' + suffix);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PMD: RoleAdd granting the View leaves of sensors and orders",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{pmdRoleId}}\", item: { id: \"{{pmdRoleId}}\", name: \"{{pmdRoleCode}}\", description: \"Created by ProLifeApiPostman - permission model scenario\", roleId: \"{{pmdRoleCode}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/SensorManagement/View\", direct: true}, {id: \"/OrderManagement/View\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('token', pm.environment.get('pmdSuToken'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Role created', function () {",
+                  "  pm.expect(json.data && json.data.RoleAdd && json.data.RoleAdd.id, JSON.stringify(json)).to.eql(pm.environment.get('pmdRoleId'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PMD: UserAdd holding only that role",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{pmdUserId}}\", item: { id: \"{{pmdUserId}}\", productId: \"{{productId}}\", name: \"ProLifeApi Permission Model User\", username: \"{{pmdLogin}}\", password: \"PermissionModel_2026!\", email: \"{{pmdLogin}}@prolifeapi.test\", groups: [], roles: [{id: \"{{pmdRoleId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('token', pm.environment.get('pmdSuToken'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('User created', function () {",
+                  "  pm.expect(json.data && json.data.UserAdd && json.data.UserAdd.id, JSON.stringify(json)).to.eql(pm.environment.get('pmdUserId'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PMD: Auth the user",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{pmdLogin}}\", password: \"PermissionModel_2026!\", productId: \"{{productId}}\" }) { token userId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('User authorized', function () {",
+                  "  pm.expect(auth && auth.token, JSON.stringify(json)).to.be.a('string').and.not.empty;",
+                  "  pm.expect(auth.userId).to.eql(pm.environment.get('pmdUserId'));",
+                  "});",
+                  "pm.environment.set('pmdUserToken', auth.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PMD: CreateToken scoped by a path",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{pmdUserId}}\", name: \"ProLifeApi permission model token\", scopes: [\"/OrderManagement/View\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { token success message } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only. A scope is a permission path; the token opens what the role holds inside its scopes."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('token', pm.environment.get('pmdSuToken'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.CreateToken;",
+                  "pm.test('Token created', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(payload && payload.token).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('pmdPat', payload && payload.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PMD: CreateToken scoped by a bare feature id",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateToken { CreateToken(input: { userId: \"{{pmdUserId}}\", name: \"ProLifeApi permission model token\", scopes: [\"ViewOrders\"], expiresAt: \"2099-12-31T23:59:59Z\" }) { token success message } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Infra only. Only paths are permissions: a scope written as a bare feature id covers nothing."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('token', pm.environment.get('pmdSuToken'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.CreateToken;",
+                  "pm.test('Token created', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(payload && payload.token).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('pmdBarePat', payload && payload.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PMD: DevicesList with the product header of another product",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query DevicesList { DevicesList(input: { viewParams: { count: 5, offset: 0 } }) { items { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "A server of one product checks its own permissions whatever product the client names."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('token', pm.environment.get('pmdUserToken'));",
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Lisa' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; });",
+                  "const refused = messages.some(function (m) { return m.indexOf('Invalid permissions') >= 0; });",
+                  "",
+                  "pm.test('The permissions of ProLife apply although the client names Lisa', function () {",
+                  "  pm.expect(refused, 'unexpected refusal: ' + messages.join(' | ')).to.eql(false);",
+                  "  pm.expect(json.data && json.data.DevicesList && Array.isArray(json.data.DevicesList.items), JSON.stringify(json)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PMD: PagesData shows no page for data held without ViewPage",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query PagesData { PagesData { items { pageId } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "ViewPage and View are independent: the role holds /SensorManagement/View and /OrderManagement/View, so the lists are open but their pages are not."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('token', pm.environment.get('pmdUserToken'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const items = (json.data && json.data.PagesData && json.data.PagesData.items) || [];",
+                  "const pageIds = items.map(function (i) { return i.id || i.pageId; });",
+                  "pm.test('PagesData answers without errors', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(json.data && json.data.PagesData && Array.isArray(json.data.PagesData.items), JSON.stringify(json)).to.eql(true);",
+                  "});",
+                  "pm.test('Devices and Orders pages stay hidden although their data is open', function () {",
+                  "  pm.expect(pageIds, 'the page list must name the pages it holds').to.include('Search');",
+                  "  pm.expect(pageIds, JSON.stringify(pageIds)).to.not.include('Devices');",
+                  "  pm.expect(pageIds, JSON.stringify(pageIds)).to.not.include('Orders');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PMD: DevicesList without a product header",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query DevicesList { DevicesList(input: { viewParams: { count: 5, offset: 0 } }) { items { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('token', pm.environment.get('pmdUserToken'));",
+                  "pm.request.headers.remove('productid');"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; });",
+                  "const refused = messages.some(function (m) { return m.indexOf('Invalid permissions') >= 0; });",
+                  "",
+                  "pm.test('The permissions of ProLife apply without a product header', function () {",
+                  "  pm.expect(refused, 'unexpected refusal: ' + messages.join(' | ')).to.eql(false);",
+                  "  pm.expect(json.data && json.data.DevicesList && Array.isArray(json.data.DevicesList.items), JSON.stringify(json)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PMD: SoftwareProductsList is refused whatever product the client names",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query SoftwareProductsList { SoftwareProductsList(input: { viewParams: { count: 5, offset: 0 } }) { items { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('token', pm.environment.get('pmdUserToken'));",
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Lisa' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; });",
+                  "const refused = messages.some(function (m) { return m.indexOf('Invalid permissions') >= 0; });",
+                  "",
+                  "pm.test('Naming another product grants nothing the user does not hold', function () {",
+                  "  pm.expect(refused, 'expected an Invalid permissions refusal, got: ' + JSON.stringify(json)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PMD: OrdersList with a token scoped by a path",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query OrdersList { OrdersList(input: { viewParams: { count: 5, offset: 0 } }) { items { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('token', pm.environment.get('pmdPat'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; });",
+                  "const refused = messages.some(function (m) { return m.indexOf('Invalid permissions') >= 0; });",
+                  "",
+                  "pm.test('A path scope opens the role permission inside it', function () {",
+                  "  pm.expect(refused, 'unexpected refusal: ' + messages.join(' | ')).to.eql(false);",
+                  "  pm.expect(json.data && json.data.OrdersList && Array.isArray(json.data.OrdersList.items), JSON.stringify(json)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PMD: DevicesList with that token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query DevicesList { DevicesList(input: { viewParams: { count: 5, offset: 0 } }) { items { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('token', pm.environment.get('pmdPat'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; });",
+                  "const refused = messages.some(function (m) { return m.indexOf('Invalid permissions') >= 0; });",
+                  "",
+                  "pm.test('A permission of the role outside the token scopes stays closed', function () {",
+                  "  pm.expect(refused, 'expected an Invalid permissions refusal, got: ' + JSON.stringify(json)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PMD: OrdersList with a token scoped by a bare feature id",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query OrdersList { OrdersList(input: { viewParams: { count: 5, offset: 0 } }) { items { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('token', pm.environment.get('pmdBarePat'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; });",
+                  "const refused = messages.some(function (m) { return m.indexOf('Invalid permissions') >= 0; });",
+                  "",
+                  "pm.test('A bare scope covers nothing although the role holds the path', function () {",
+                  "  pm.expect(refused, 'expected an Invalid permissions refusal, got: ' + JSON.stringify(json)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PMD: GetPermissions of the user",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetPermissions { GetPermissions(input: { accessToken: \"{{pmdUserToken}}\" }) { permissions } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "What the client is told it holds: the role permissions and what they include through the requirements of the product."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('token', pm.environment.get('pmdUserToken'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const permissions = (json.data && json.data.GetPermissions && json.data.GetPermissions.permissions) || [];",
+                  "pm.test('GetPermissions lists the permissions of the role', function () {",
+                  "  pm.expect(permissions.filter(function (p) { return p.charAt(0) !== '/'; }), 'bare ids listed').to.have.length(0);",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(permissions).to.include.members(['/SensorManagement/View', '/OrderManagement/View']);",
+                  "});",
+                  "pm.environment.set('pmdClientPermissions', JSON.stringify(permissions));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PMD: DeviceAdd is allowed exactly when the client was told /SensorManagement/Edit/Add",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation DeviceAdd { DeviceAdd(input: { typeId: \"Device\", id: \"{{pmdDeviceId}}\", item: { id: \"{{pmdDeviceId}}\", name: \"ProLifeApi Permission Model Device {{randomInt}}\", description: \"Created by ProLifeApiPostman\", macAddress: \"AA:BB:CC:DD:EF:{{randomInt}}\", serialNumber: \"SN-PMD-{{randomInt}}\", deviceType: \"{{deviceTypeId}}\", orderId: \"\", licenseName: \"{{deviceConfigurationId}}\", project: \"\", productionStatus: \"Finished\" } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('token', pm.environment.get('pmdUserToken'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; });",
+                  "const refused = messages.some(function (m) { return m.indexOf('Invalid permissions') >= 0; });",
+                  "",
+                  "const listed = JSON.parse(pm.environment.get('pmdClientPermissions') || '[]');",
+                  "const declared = [\"/SensorManagement/Edit/Add\"];",
+                  "function holds(held, requested) {",
+                  "  return requested.charAt(0) === '/' && (held === requested || held.indexOf(requested + '/') === 0);",
+                  "}",
+                  "const isListed = declared.some(function (d) { return listed.some(function (p) { return holds(p, d); }); });",
+                  "pm.test('The server allows DeviceAdd exactly when GetPermissions lists /SensorManagement/Edit/Add', function () {",
+                  "  pm.expect(refused, (isListed ? 'listed but refused: ' : 'not listed but allowed: ') + JSON.stringify(json) + ' listed: ' + JSON.stringify(listed)).to.eql(!isListed);",
+                  "});",
+                  "if (!refused && json.data && json.data.DeviceAdd && json.data.DeviceAdd.id) {",
+                  "  pm.environment.set('pmdDeviceCreated', 'true');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PMD: AccountsList is allowed exactly when the client was told one of its permissions",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query AccountsList { AccountsList(input: { viewParams: { count: 5, offset: 0 } }) { items { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('token', pm.environment.get('pmdUserToken'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; });",
+                  "const refused = messages.some(function (m) { return m.indexOf('Invalid permissions') >= 0; });",
+                  "",
+                  "const listed = JSON.parse(pm.environment.get('pmdClientPermissions') || '[]');",
+                  "const declared = [\"/AccountManagement/View\",\"/OrderManagement/Edit/Change/Customer\"];",
+                  "function holds(held, requested) {",
+                  "  return requested.charAt(0) === '/' && (held === requested || held.indexOf(requested + '/') === 0);",
+                  "}",
+                  "const isListed = declared.some(function (d) { return listed.some(function (p) { return holds(p, d); }); });",
+                  "pm.test('The server allows AccountsList exactly when GetPermissions lists /AccountManagement/View or /OrderManagement/Edit/Change/Customer', function () {",
+                  "  pm.expect(refused, (isListed ? 'listed but refused: ' : 'not listed but allowed: ') + JSON.stringify(json) + ' listed: ' + JSON.stringify(listed)).to.eql(!isListed);",
+                  "});",
+                  "if (!refused && json.data && json.data.AccountsList && json.data.AccountsList.id) {",
+                  "  pm.environment.set('pmdDeviceCreated', 'true');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PMD: RemoveElements device",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"Devices\", elementIds: [\"{{pmdDeviceId}}\"] }) { success } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('token', pm.environment.get('pmdSuToken'));",
+                  "if (pm.environment.get('pmdDeviceCreated') !== 'true') {",
+                  "  pm.execution.skipRequest();",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Scenario device removed', function () {",
+                  "  pm.expect(json.data && json.data.RemoveElements && json.data.RemoveElements.success, JSON.stringify(json)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PMD: RemoveElements users",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"Users\", elementIds: [\"{{pmdUserId}}\"] }) { success } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('token', pm.environment.get('pmdSuToken'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Scenario user removed', function () {",
+                  "  pm.expect(json.data && json.data.RemoveElements && json.data.RemoveElements.success, JSON.stringify(json)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PMD: RemoveElements roles",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"Roles\", elementIds: [\"{{pmdRoleId}}\"] }) { success } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('token', pm.environment.get('pmdSuToken'));"
+                ]
+              }
+            },
             {
               "listen": "test",
               "script": {

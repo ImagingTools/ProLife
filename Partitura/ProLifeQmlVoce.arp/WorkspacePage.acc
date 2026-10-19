@@ -19,7 +19,7 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewAnalytics</Value>
+                                <Value>/WorkspaceManagement/ViewAnalytics</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -90,7 +90,7 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewWorkspace</Value>
+                                <Value>/WorkspaceManagement/ViewPage</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -148,7 +148,7 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewOrders</Value>
+                                <Value>/OrderManagement/View</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -197,8 +197,8 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewLicenses</Value>
-                                <Value>ViewSensors</Value>
+                                <Value>/LicenseManagement/View</Value>
+                                <Value>/SensorManagement/View</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -238,7 +238,7 @@
                     <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewUserActions</Value>
+                                <Value>/WorkspaceManagement/ViewUserActions</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -355,7 +355,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewSensors</Value>
+                                            <Value>/SensorManagement/View</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -374,7 +374,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewSensors</Value>
+                                            <Value>/SensorManagement/View</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -393,7 +393,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewSensors</Value>
+                                            <Value>/SensorManagement/View</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -412,7 +412,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewSensors</Value>
+                                            <Value>/SensorManagement/View</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -431,7 +431,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewSensors</Value>
+                                            <Value>/SensorManagement/View</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -450,7 +450,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewSensors</Value>
+                                            <Value>/SensorManagement/View</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -469,7 +469,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewLicenses</Value>
+                                            <Value>/LicenseManagement/View</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -488,7 +488,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewOrders</Value>
+                                            <Value>/OrderManagement/View</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -507,7 +507,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewLicenses</Value>
+                                            <Value>/LicenseManagement/View</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -526,7 +526,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewLicenses</Value>
+                                            <Value>/LicenseManagement/View</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -545,7 +545,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewLicenses</Value>
+                                            <Value>/LicenseManagement/View</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -564,7 +564,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewLicenses</Value>
+                                            <Value>/LicenseManagement/View</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>

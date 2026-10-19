@@ -37,13 +37,13 @@ ViewBase {
 	}
 
 	Component.onCompleted: {
-		let viewLicenses = PermissionsController.checkPermission("ViewLicenses")
-		let viewSensors = PermissionsController.checkPermission("ViewSensors")
+		let viewLicenses = PermissionsController.checkPermission("/LicenseManagement/View")
+		let viewSensors = PermissionsController.checkPermission("/SensorManagement/View")
 		if (viewLicenses || viewSensors){
 			stackView.addPage(softwareHadrwarePageComp)
 		}
 
-		if (PermissionsController.checkPermission("ViewOrders")){
+		if (PermissionsController.checkPermission("/OrderManagement/View")){
 			stackView.addPage(ordersPageComp)
 		}
 
@@ -132,14 +132,14 @@ ViewBase {
 						visible: false
 						
 						Component.onCompleted: {
-							let viewLicenses = PermissionsController.checkPermission("ViewLicenses")
+							let viewLicenses = PermissionsController.checkPermission("/LicenseManagement/View")
 							if (viewLicenses){
 								row1.visible = true
 								getSoftwareCreationBarChart.updateModel()
 								getSoftwareCreationBarChart.visible = true
 							}
 							
-							let viewHardware = PermissionsController.checkPermission("ViewSensors")
+							let viewHardware = PermissionsController.checkPermission("/SensorManagement/View")
 							if (viewHardware){
 								row1.visible = true
 								getHardwareCreationBarChart.updateModel()
@@ -209,12 +209,12 @@ ViewBase {
 						spacing: root.spacing
 						
 						Component.onCompleted: {
-							let viewLicenses = PermissionsController.checkPermission("ViewLicenses")
+							let viewLicenses = PermissionsController.checkPermission("/LicenseManagement/View")
 							if (viewLicenses){
 								getSoftwareCustomerPieChart.visible = true
 							}
 							
-							let viewHardware = PermissionsController.checkPermission("ViewSensors")
+							let viewHardware = PermissionsController.checkPermission("/SensorManagement/View")
 							if (viewHardware){
 								getHardwareCustomerPieChart.visible = true
 								getHardwareConfigurationPieChart.visible = true

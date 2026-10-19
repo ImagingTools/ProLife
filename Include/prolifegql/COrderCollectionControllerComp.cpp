@@ -844,12 +844,12 @@ bool COrderCollectionControllerComp::CheckNewProductPermissions(
 		}
 
 		const QByteArray categoryId = product->categoryId ? *product->categoryId : QByteArray();
-		if (categoryId == QByteArrayLiteral("Hardware") && !imtauth::HasPermission(permissions, QByteArrayLiteral("/SensorManagement/EditSensor/AddSensor"))){
+		if (categoryId == QByteArrayLiteral("Hardware") && !imtauth::HasPermission(permissions, QByteArrayLiteral("/SensorManagement/Edit/Add"))){
 			errorMessage = QStringLiteral("No permission to create new hardware");
 			return false;
 		}
 
-		if (categoryId == QByteArrayLiteral("Software") && !imtauth::HasPermission(permissions, QByteArrayLiteral("/LicenseManagement/EditLicense/AddLicense"))){
+		if (categoryId == QByteArrayLiteral("Software") && !imtauth::HasPermission(permissions, QByteArrayLiteral("/LicenseManagement/Edit/Add"))){
 			errorMessage = QStringLiteral("No permission to create new software");
 			return false;
 		}

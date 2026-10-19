@@ -18,6 +18,7 @@ import prolifeDeviceCollectionDocumentServiceSdl 1.0
 
 DocCollectionViewDelegate {
 	id: container;
+	revisionsPermissionPath: "/SensorManagement/Revisions"
 
 	Component.onCompleted: {
 		registerDocumentType("Device", qsTr("General Device"))
@@ -70,7 +71,7 @@ DocCollectionViewDelegate {
 			property DocumentId documentIdInput: DocumentId {}
 			property GqlSdlRequestSender getDeviceRequest: GqlSdlRequestSender {
 				gqlCommandId: ProlifeDeviceCollectionDocumentServiceSdlCommandIds.s_getDeviceRepresentation
-				permissionPath: "/SensorManagement/ViewSensors"
+				permissionPath: "/SensorManagement/View"
 				sdlObjectComp: Component {
 					DeviceData {
 						onFinished: {
@@ -84,7 +85,7 @@ DocCollectionViewDelegate {
 			property UpdateDeviceInput updateDeviceInput: UpdateDeviceInput {}
 			property GqlSdlRequestSender updateDeviceRequest: GqlSdlRequestSender {
 				gqlCommandId: ProlifeDeviceCollectionDocumentServiceSdlCommandIds.s_updateDeviceFromRepresentation
-				permissionPath: "/SensorManagement/EditSensor/ChangeSensor"
+				permissionPath: "/SensorManagement/Edit/Change"
 				requestType: 1
 				sdlObjectComp: Component {
 					DocumentOperationStatus {
@@ -799,7 +800,7 @@ DocCollectionViewDelegate {
 							devicePickerView.collectionFilter.addFieldFilter(productionStatusFilter)
 							devicePickerView.registerFieldFilterDelegate("SoftwareCount", licensesDelegateFilterComp)
 							devicePickerView.registerFieldFilterDelegate("DeviceType", productsDelegateFilterComp)
-							if (PermissionsController.checkPermission("ViewAccounts")){
+							if (PermissionsController.checkPermission("/AccountManagement/View")){
 								devicePickerView.registerFieldFilterDelegate("Customers", customersDelegateFilterComp)
 							}
 						}

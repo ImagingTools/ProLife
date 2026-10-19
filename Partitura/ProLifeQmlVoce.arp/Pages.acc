@@ -34,15 +34,7 @@
                     <AttributeInfo Id="PagePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewAccounts</Value>
-                                <Value>AddAccount</Value>
-                                <Value>RemoveAccount</Value>
-                                <Value>ChangeCustomerId</Value>
-                                <Value>ChangeAccountDescription</Value>
-                                <Value>ChangeAccountName</Value>
-                                <Value>ChangeAccountEmail</Value>
-                                <Value>ChangeCompanyAddress</Value>
-                                <Value>ChangeAccountGroups</Value>
+                                <Value>/AccountManagement/ViewPage</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -79,17 +71,7 @@
                     <AttributeInfo Id="PagePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewSensors</Value>
-                                <Value>AddSensor</Value>
-                                <Value>Remove</Value>
-                                <Value>ChangeProjectForSensor</Value>
-                                <Value>ChangeMacAddress</Value>
-                                <Value>ChangeSerialNumberForSensor</Value>
-                                <Value>ChangeDescriptionForSensor</Value>
-                                <Value>ChangeDeviceType</Value>
-                                <Value>ChangeHardwareConfiguration</Value>
-                                <Value>ChangeProductionStatus</Value>
-                                <Value>ChangeOrderForSensor</Value>
+                                <Value>/SensorManagement/ViewPage</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -113,6 +95,17 @@
                                 <Value>Orders</Value>
                                 <Value>Accounts</Value>
                                 <Value>HardwareBindings</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RevisionPermissionPaths" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/SensorManagement/Revisions</Value>
+                                <Value>/LicenseManagement/Revisions</Value>
+                                <Value>/OrderManagement/Revisions</Value>
+                                <Value>/AccountManagement/Revisions</Value>
+                                <Value>/SensorManagement/Revisions</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -163,15 +156,7 @@
                     <AttributeInfo Id="PagePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewOrders</Value>
-                                <Value>AddOrder</Value>
-                                <Value>RemoveOrder</Value>
-                                <Value>ChangeDeliveryId</Value>
-                                <Value>ChangePurchaseOrderId</Value>
-                                <Value>ChangeDescriptionForOrder</Value>
-                                <Value>ChangeCustomer</Value>
-                                <Value>ChangeOrderStatus</Value>
-                                <Value>ChangeOrderProducts</Value>
+                                <Value>/OrderManagement/ViewPage</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -297,7 +282,7 @@
                     <AttributeInfo Id="PagePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewLicenses</Value>
+                                <Value>/LicenseManagement/ViewPage</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -340,7 +325,7 @@
                     <AttributeInfo Id="PagePermissions" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>ViewOrganizations</Value>
+                                <Value>/OrganizationManagement/ViewPage</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

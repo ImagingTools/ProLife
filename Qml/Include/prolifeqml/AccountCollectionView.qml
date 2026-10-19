@@ -15,10 +15,11 @@ RemoteCollectionView {
 	collectionId: "Accounts";
 
 	permissionPaths: ({
-		"AccountsList": "/AccountManagement/ViewAccounts"
+		"AccountsList": "/AccountManagement/View"
 	})
 
 	commandsDelegateComp: Component {DocumentCollectionViewDelegate {
+			revisionsPermissionPath: "/AccountManagement/Revisions";
 			collectionView: container;
 			
 			documentTypeIds: ["Account"]
@@ -51,7 +52,7 @@ RemoteCollectionView {
 						contextMenuModel.setData("icon", "Icons/Delete", index);
 					}
 					
-					let ok = PermissionsController.checkPermission("/AccountManagement/EditAccount/ChangeAccount/ChangeAccountDescription");
+					let ok = PermissionsController.checkPermission("/AccountManagement/Edit/Change/Description");
 					if (ok){
 						let index = contextMenuModel.insertNewItem();
 						
@@ -114,9 +115,9 @@ RemoteCollectionView {
 			gqlUpdateCommandId: ProlifeAccountsSdlCommandIds.s_accountUpdate;
 			gqlAddCommandId: ProlifeAccountsSdlCommandIds.s_accountAdd;
 			
-			getPermissionPath: "/AccountManagement/ViewAccounts";
-			addPermissionPath: "/AccountManagement/EditAccount/AddAccount";
-			updatePermissionPath: "/AccountManagement/EditAccount/ChangeAccount";
+			getPermissionPath: "/AccountManagement/View";
+			addPermissionPath: "/AccountManagement/Edit/Add";
+			updatePermissionPath: "/AccountManagement/Edit/Change";
 			
 			typeId: "Account";
 			documentName: accountData ? accountData.m_name: "";
