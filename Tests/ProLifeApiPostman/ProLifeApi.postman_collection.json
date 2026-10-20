@@ -2948,7 +2948,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "query GetApplicationInfo { GetApplicationInfo(input: { productId: \"{{productId}}\" }) { applicationId applicationName version tenantsEnabled } }",
+                "query": "query GetApplicationInfo { GetApplicationInfo(input: { productId: \"{{productId}}\" }) { applicationId applicationName version tenantsEnabled externalLoginEnabled } }",
                 "variables": ""
               }
             },
@@ -2967,6 +2967,9 @@
                   "});",
                   "pm.test('GetApplicationInfo reports tenants enabled for ProLife', function () {",
                   "  pm.expect(json.data.GetApplicationInfo.tenantsEnabled).to.eql(true);",
+                  "});",
+                  "pm.test('GetApplicationInfo reports external sign-in enabled for ProLife (ExternalLoginEnabled in ProLifeHandlers.acc)', function () {",
+                  "  pm.expect(json.data.GetApplicationInfo.externalLoginEnabled).to.eql(true);",
                   "});"
                 ]
               }
