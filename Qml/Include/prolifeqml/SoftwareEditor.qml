@@ -126,29 +126,29 @@ ViewBase {
 			return
 		}
 
-		let canAddLicense = PermissionsController.checkPermission("AddLicense")
+		let canAddLicense = PermissionsController.checkPermission("/LicenseManagement/Edit/Add")
 		if (isNew && canAddLicense) {
 			setReadOnly(false)
 		}
 		else {
 			if (additionalPage) {
-				let canChangeProject = PermissionsController.checkPermission("ChangeProjectForLicense")
+				let canChangeProject = PermissionsController.checkPermission("/LicenseManagement/Edit/Change/Project")
 				additionalPage.projectInput.readOnly = !canChangeProject
 
-				let canChangeOrder = PermissionsController.checkPermission("ChangeOrderForLicense")
+				let canChangeOrder = PermissionsController.checkPermission("/LicenseManagement/Edit/Change/Order")
 				additionalPage.orderSelect.changeable = canChangeOrder
 			}
 
-			let canChangeProduct = PermissionsController.checkPermission("ChangeProductForLicense")
+			let canChangeProduct = PermissionsController.checkPermission("/LicenseManagement/Edit/Change/Product")
 			generalPage.productSelect.changeable = canChangeProduct
 
-			let canChangeLicense = PermissionsController.checkPermission("ChangeProductLicenses")
+			let canChangeLicense = PermissionsController.checkPermission("/LicenseManagement/Edit/Change/ProductLicenses")
 			generalPage.licenseSelect.changeable = canChangeLicense
 
-			let canChangeLicenseNumber = PermissionsController.checkPermission("ChangeLicenseNumber")
+			let canChangeLicenseNumber = PermissionsController.checkPermission("/LicenseManagement/Edit/Change/Number")
 			generalPage.serialNumberInput.readOnly = !canChangeLicenseNumber
 
-			let canChangeExpiration = PermissionsController.checkPermission("ChangeExpiration")
+			let canChangeExpiration = PermissionsController.checkPermission("/LicenseManagement/Edit/Change/Expiration")
 			expirationPage.expirationEditor.readOnly = !canChangeExpiration
 			expirationPage.unlimitedSwitch.readOnly = !canChangeExpiration
 
@@ -157,8 +157,8 @@ ViewBase {
 				canChangeLicense ||
 				canChangeLicenseNumber ||
 				canChangeExpiration ||
-				PermissionsController.checkPermission("ChangeProjectForLicense") ||
-				PermissionsController.checkPermission("ChangeOrderForLicense")
+				PermissionsController.checkPermission("/LicenseManagement/Edit/Change/Project") ||
+				PermissionsController.checkPermission("/LicenseManagement/Edit/Change/Order")
 
 			if (commandsController && !root.embedded) {
 				commandsController.setCommandVisible("Undo", ok)
@@ -343,7 +343,7 @@ ViewBase {
 			if (root.showLicenseHierarchy && !root.embedded) {
 				multiPageView.addPage("Hierarchy", qsTr("Hierarchy"), hierarchyPageComp, "Icons/Workflow")
 			}
-			if (!root.embedded && PermissionsController.checkPermission("ViewRevisions")) {
+			if (!root.embedded && PermissionsController.checkPermission("/LicenseManagement/Revisions/View")) {
 				multiPageView.addPage("History", qsTr("History"), historyPageComp, "Icons/History")
 			}
 
@@ -619,7 +619,7 @@ ViewBase {
 
 				root.softwareProductData.m_project = projectInput.text
 
-				if (PermissionsController.checkPermission("ChangeOrderForLicense")) {
+				if (PermissionsController.checkPermission("/LicenseManagement/Edit/Change/Order")) {
 					root.softwareProductData.m_orderUuid = orderSelect.selectedId
 					root.softwareProductData.m_orderName = orderSelect.selectedText
 				}

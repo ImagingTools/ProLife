@@ -101,7 +101,7 @@ ViewBase {
 			multiPageView.addPage("AccountInformation", qsTr("Account"), accountPageComp, "Icons/Settings")
 			multiPageView.addPage("CompanyAddress", qsTr("Address"), addressPageComp, "Icons/Organization")
 			multiPageView.addPage("Groups", qsTr("Groups"), groupsPageComp, "Icons/MultipleUser")
-			if (PermissionsController.checkPermission("ViewRevisions")){
+			if (PermissionsController.checkPermission("/AccountManagement/Revisions/View")){
 				multiPageView.addPage("History", qsTr("History"), historyPageComp, "Icons/History")
 			}
 			multiPageView.currentIndex = 0
@@ -198,7 +198,7 @@ ViewBase {
 							}
 
 							Component.onCompleted: {
-								let ok = PermissionsController.checkPermission("ChangeCustomerId");
+								let ok = PermissionsController.checkPermission("/AccountManagement/Edit/Change/CustomerId");
 								customerIdInput.readOnly = !ok;
 							}
 						}
@@ -305,7 +305,7 @@ ViewBase {
 							KeyNavigation.tab: accountDescriptionInput;
 
 							Component.onCompleted: {
-								let ok = PermissionsController.checkPermission("ChangeAccountName");
+								let ok = PermissionsController.checkPermission("/AccountManagement/Edit/Change/Name");
 								accountNameInput.readOnly = !ok;
 							}
 
@@ -330,7 +330,7 @@ ViewBase {
 							KeyNavigation.backtab: accountNameInput;
 
 							Component.onCompleted: {
-								let ok = PermissionsController.checkPermission("ChangeAccountDescription");
+								let ok = PermissionsController.checkPermission("/AccountManagement/Edit/Change/Description");
 								accountDescriptionInput.readOnly = !ok;
 							}
 						}
@@ -355,7 +355,7 @@ ViewBase {
 							KeyNavigation.backtab: accountDescriptionInput;
 
 							Component.onCompleted: {
-								let ok = PermissionsController.checkPermission("ChangeAccountEmail");
+								let ok = PermissionsController.checkPermission("/AccountManagement/Edit/Change/Email");
 								emailInput.readOnly = !ok;
 							}
 						}
@@ -467,7 +467,7 @@ ViewBase {
 							KeyNavigation.tab: cityInput;
 
 							Component.onCompleted: {
-								let ok = PermissionsController.checkPermission("ChangeCompanyAddress");
+								let ok = PermissionsController.checkPermission("/AccountManagement/Edit/Change/CompanyAddress");
 								countryInput.readOnly = !ok;
 							}
 						}
@@ -487,7 +487,7 @@ ViewBase {
 							KeyNavigation.backtab: countryInput;
 
 							Component.onCompleted: {
-								let ok = PermissionsController.checkPermission("ChangeCompanyAddress");
+								let ok = PermissionsController.checkPermission("/AccountManagement/Edit/Change/CompanyAddress");
 								cityInput.readOnly = !ok;
 							}
 						}
@@ -507,7 +507,7 @@ ViewBase {
 							KeyNavigation.backtab: cityInput;
 
 							Component.onCompleted: {
-								let ok = PermissionsController.checkPermission("ChangeCompanyAddress");
+								let ok = PermissionsController.checkPermission("/AccountManagement/Edit/Change/CompanyAddress");
 								postalCodeInput.readOnly = !ok;
 							}
 						}
@@ -526,7 +526,7 @@ ViewBase {
 							KeyNavigation.backtab: postalCodeInput;
 
 							Component.onCompleted: {
-								let ok = PermissionsController.checkPermission("ChangeCompanyAddress");
+								let ok = PermissionsController.checkPermission("/AccountManagement/Edit/Change/CompanyAddress");
 								streetInput.readOnly = !ok;
 							}
 						}
@@ -672,7 +672,7 @@ ViewBase {
 									groupsElement.table.elements = groupCollectionDataProvider.collectionModel;
 									tableConn.enabled = true;
 
-									let ok = PermissionsController.checkPermission("ChangeAccountGroups");
+									let ok = PermissionsController.checkPermission("/AccountManagement/Edit/Change/Groups");
 									groupsElement.table.readOnly = !ok;
 								}
 							}
@@ -718,6 +718,7 @@ ViewBase {
 
 			DocumentHistoryView {
 				id: historyView
+				revisionsPermissionPath: "/AccountManagement/Revisions"
 				anchors.left: centeredContainer.left
 				anchors.top: historyHeader.bottom
 				anchors.topMargin: Style.marginM

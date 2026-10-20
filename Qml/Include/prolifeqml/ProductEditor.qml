@@ -40,7 +40,7 @@ Item {
 	property bool isSoftware: true
 	property bool isCreateMode: false
 	property int batchQuantity: 1
-	readonly property bool canCreateNew: productEditor.isSoftware ? PermissionsController.checkPermission("AddLicense") : PermissionsController.checkPermission("AddSensor")
+	readonly property bool canCreateNew: productEditor.isSoftware ? PermissionsController.checkPermission("/LicenseManagement/Edit/Add") : PermissionsController.checkPermission("/SensorManagement/Edit/Add")
 
 	readonly property bool isEditing: productEditor.index >= 0
 	readonly property bool chromeLocked: productEditor.isEditing
@@ -577,8 +577,8 @@ Item {
 		}
 		else {
 			let canAdd = productEditor.isSoftware
-				? PermissionsController.checkPermission("AddLicense")
-				: PermissionsController.checkPermission("AddSensor")
+				? PermissionsController.checkPermission("/LicenseManagement/Edit/Add")
+				: PermissionsController.checkPermission("/SensorManagement/Edit/Add")
 			productEditor.isCreateMode = canAdd
 			productItem.m_isNew = productEditor.isCreateMode
 			productEditor.hasLinkedSelection = false

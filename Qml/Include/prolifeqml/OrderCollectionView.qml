@@ -16,10 +16,11 @@ RemoteCollectionView {
 	documentCollectionFilter: null
 
 	permissionPaths: ({
-		"OrdersList": "/OrderManagement/ViewOrders"
+		"OrdersList": "/OrderManagement/View"
 	})
 
 	commandsDelegateComp: Component {DocumentCollectionViewDelegate {
+			revisionsPermissionPath: "/OrderManagement/Revisions";
 			collectionView: container;
 			documentTypeIds: ["Order"]
 			documentViewsComp: [orderEditorComp]
@@ -51,7 +52,7 @@ RemoteCollectionView {
 						contextMenuModel.setData("icon", "Icons/Delete", index);
 					}
 					
-					let ok = PermissionsController.checkPermission("/OrderManagement/EditOrder/ChangeOrder/ChangeDescriptionForOrder");
+					let ok = PermissionsController.checkPermission("/OrderManagement/Edit/Change/Description");
 					if (ok){
 						let index = contextMenuModel.insertNewItem();
 						
@@ -151,9 +152,9 @@ RemoteCollectionView {
 			gqlUpdateCommandId: ProlifeOrdersSdlCommandIds.s_orderUpdate;
 			gqlAddCommandId: ProlifeOrdersSdlCommandIds.s_orderAdd;
 			
-			getPermissionPath: "/OrderManagement/ViewOrders";
-			addPermissionPath: "/OrderManagement/EditOrder/AddOrder";
-			updatePermissionPath: "/OrderManagement/EditOrder/ChangeOrder";
+			getPermissionPath: "/OrderManagement/View";
+			addPermissionPath: "/OrderManagement/Edit/Add";
+			updatePermissionPath: "/OrderManagement/Edit/Change";
 			
 			typeId: "Order";
 			documentName: orderData ? orderData.m_orderId: "";

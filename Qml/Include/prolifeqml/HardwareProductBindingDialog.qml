@@ -194,7 +194,7 @@ Dialog {
 			}
 
 			function updateBindState(){
-				if (!PermissionsController.checkPermission("BindSensor") || content.checkedIndexes.length === 0){
+				if (!PermissionsController.checkPermission("/SensorManagement/Bind") || content.checkedIndexes.length === 0){
 					content.bindIssue = ""
 					confirmBindButton.enabled = false
 					return
@@ -420,7 +420,7 @@ Dialog {
 								anchors.verticalCenter: parent.verticalCenter
 
 								text: qsTr("Bind Licenses")
-								enabled: content.productUuid !== "" && PermissionsController.checkPermission("BindSensor")
+								enabled: content.productUuid !== "" && PermissionsController.checkPermission("/SensorManagement/Bind")
 								tooltipText: qsTr("Pick licenses to bind to this device")
 								iconSource: openAvailableButton.enabled ? "../../../" + Style.getIconPath("Icons/Link", Icon.State.On, Icon.Mode.Normal) :
 																	  "../../../" + Style.getIconPath("Icons/Link", Icon.State.On, Icon.Mode.Disabled)
@@ -850,7 +850,7 @@ Dialog {
 					onReused: {
 						if (unbindCellDelegate.rowIndex >= 0){
 							let inUse = boundTable.elements.getData("inUse", unbindCellDelegate.rowIndex)
-							unbindRowButton.visible = !inUse || PermissionsController.checkPermission("UnbindSensor")
+							unbindRowButton.visible = !inUse || PermissionsController.checkPermission("/SensorManagement/Unbind")
 						}
 					}
 				}
@@ -997,7 +997,7 @@ Dialog {
 		id: getDeviceBindingRequest
 
 		gqlCommandId: ProlifeSensorsSdlCommandIds.s_getDeviceBinding
-		permissionPath: "/SensorManagement/BindSensor"
+		permissionPath: "/SensorManagement/Bind"
 
 		inputObjectComp: Component {
 			GetDeviceBindingInput {
@@ -1023,7 +1023,7 @@ Dialog {
 
 		requestType: 1
 		gqlCommandId: ProlifeSensorsSdlCommandIds.s_updateDeviceBinding
-		permissionPath: "/SensorManagement/BindSensor"
+		permissionPath: "/SensorManagement/Bind"
 
 		sdlObjectComp: Component {
 			UpdatedNotificationPayload {

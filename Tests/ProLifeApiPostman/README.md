@@ -34,7 +34,8 @@ Everything else (`accountId`, `orderId`, `deviceId`, `roleFullAccessId`, `fullAc
 2. `01 Accounts` -> `02 Orders` (includes the order/product lifecycle scenario, see below) -> `03 Devices` -> `04 Software Products - Licenses` -> `05 Device Document Service` -> `06 Workspace Dashboards` (read-only, run last so it sees seeded data).
 3. `07 Multi-role Scenario - Pages, Commands, Profile` - creates 3 roles + 3 users from scratch (Full Access / Accounts Viewer / No Access, see below), switches the active `token` between them, and asserts `PagesData`/`GetCommands`/`GetProfile` visibility differs correctly per permission set. Re-authenticates as `su` at the end and covers the remaining app-level infra fields (`GetSettings`, `SetSettings`, `GetStyleData`, `GetWebSocketUrl`, `Search`, `GetProductPermissions`).
 4. `08 Meta Info Propagation - Account & Order Field Sync` - verifies that renaming an Account, or changing an Order's delivery/purchase id, is immediately reflected in `DevicesList`/`SoftwareProductsList`/`OrdersList` for everything linked to them (see below).
-5. `99 Cleanup` - best-effort removal of everything created (including the roles/users from folder `07` and the fixtures from folder `08`); CI mainly relies on the full DB reset instead.
+5. `11 Permission Model - Product, Scopes, Client Permissions` - creates its own role + user + PAT and removes them again (see below).
+6. `99 Cleanup` - best-effort removal of everything created (including the roles/users from folder `07` and the fixtures from folder `08`); CI mainly relies on the full DB reset instead.
 
 ## Order/Product Lifecycle Scenario (folder `02 Orders`)
 
@@ -66,6 +67,16 @@ Permission codes are the exact `FeatureId` strings declared in `Impl\ProLifeServ
 **Important - the `productid` request header:** `PagesData` (unlike `GetProfile`/`GetCommands`) carries no `productId` argument in its GraphQL schema, so the server reads the active product from a `productid` HTTP header instead. Server side, `CGqlRepresentationDataControllerComp::CreateContextParams` pulls `productId` from the request's input argument *or* the `productid` header; the page filter in `CGuiElementModelRepresentationControllerComp::GetRepresentationFromDataModel` then only calls `userInfoParamPtr->GetPermissions(productId)` when `productId` is non-empty. If the header is missing, `productId` is empty, `GetPermissions` is never called, resolved permissions come back empty, and **every permission-gated page is hidden** - leaving only the two ungated pages (Search, Tickets). This is correct server behaviour (the real GUI client always sends the header); the collection reproduces it by injecting `productid: {{productId}}` on every request from the collection-level pre-request script. An earlier draft of this README mis-attributed the resulting "only Search/Tickets" symptom to a server permission-propagation bug - that was wrong; it was purely a missing header in the test.
 
 `GetCommands(input:{typeId:"Devices"})` is cross-checked only as a monotonic comparison (Full Access element count >= the other two), since the exact command-to-permission mapping isn't confirmed from any source read for this suite. `GetProfile`'s `permissions[].id` list is cross-checked against the same expectations for each actor, as an independent verification path - `GetProfile` correctly reports `ViewAccounts`/`ViewSensors` etc. for these actors.
+
+## Permission Model (folder `11`)
+
+The actor holds `/SensorManagement/ViewSensors` and `/OrderManagement/ViewOrders` of ProLife and nothing else. Every check holds whatever direction the requirements in `ProLifeFeatures.h` are written in, so the folder does not have to change when they are.
+
+- **The product of the server decides.** `DevicesList` is allowed although the request names `productid: Lisa`, and without any `productid` header; `SoftwareProductsList` stays refused under `productid: Lisa`. `CAuthenticationManagerComp` takes the product from its own `FeatureContainer` and falls back to the header only where a server has no product (Puma).
+- **PAT scopes match by the permission rule.** A token scoped by the bare id `ViewOrders` opens `OrdersList` for the role permission stored as `/OrderManagement/ViewOrders`, and keeps `DevicesList` closed.
+- **`GetPermissions` tells the client what the server allows.** `DeviceAdd` is refused exactly when the list lacks `AddSensor`, and `AccountsList` exactly when it lacks both `ViewAccounts` and `ChangeCustomer` - whatever the requirements of the role permissions include. The product server adds those to the list it forwards from Puma (`CRemoteAuthorizationControllerComp`).
+
+Each of these assertions was confirmed to fail against the previous behaviour (product taken from the header, exact scope match, `GetPermissions` without included permissions).
 
 ## Newman
 

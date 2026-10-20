@@ -99,7 +99,7 @@
                         <Data IsEnabled="true" Value="CheckPermissionOr"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PermissionId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="ViewAllOrders"/>
+                        <Data IsEnabled="true" Value="/OrderManagement/ViewAll"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
@@ -393,7 +393,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewRevisions</Value>
+                                            <Value>/OrderManagement/Revisions/View</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -427,13 +427,13 @@
                                 <AttributeInfo Id="EditPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewOrders</Value>
-                                            <Value>ChangeDeliveryId</Value>
-                                            <Value>ChangePurchaseOrderId</Value>
-                                            <Value>ChangeDescriptionForOrder</Value>
-                                            <Value>ChangeCustomer</Value>
-                                            <Value>ChangeOrderStatus</Value>
-                                            <Value>ChangeOrderProducts</Value>
+                                            <Value>/OrderManagement/View</Value>
+                                            <Value>/OrderManagement/Edit/Change/DeliveryId</Value>
+                                            <Value>/OrderManagement/Edit/Change/PurchaseOrderId</Value>
+                                            <Value>/OrderManagement/Edit/Change/Description</Value>
+                                            <Value>/OrderManagement/Edit/Change/Customer</Value>
+                                            <Value>/OrderManagement/Edit/Change/Status</Value>
+                                            <Value>/OrderManagement/Edit/Change/Products</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -446,14 +446,14 @@
                                 <AttributeInfo Id="NewPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>AddOrder</Value>
+                                            <Value>/OrderManagement/Edit/Add</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="RemovePermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>RemoveOrder</Value>
+                                            <Value>/OrderManagement/Edit/Remove</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -488,14 +488,14 @@
                                 <AttributeInfo Id="ClosePermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewOrders</Value>
-                                            <Value>ChangeDeliveryId</Value>
-                                            <Value>ChangePurchaseOrderId</Value>
-                                            <Value>ChangeDescriptionForOrder</Value>
-                                            <Value>ChangeCustomer</Value>
-                                            <Value>ChangeOrderStatus</Value>
-                                            <Value>ChangeOrderProducts</Value>
-                                            <Value>AddOrder</Value>
+                                            <Value>/OrderManagement/View</Value>
+                                            <Value>/OrderManagement/Edit/Change/DeliveryId</Value>
+                                            <Value>/OrderManagement/Edit/Change/PurchaseOrderId</Value>
+                                            <Value>/OrderManagement/Edit/Change/Description</Value>
+                                            <Value>/OrderManagement/Edit/Change/Customer</Value>
+                                            <Value>/OrderManagement/Edit/Change/Status</Value>
+                                            <Value>/OrderManagement/Edit/Change/Products</Value>
+                                            <Value>/OrderManagement/Edit/Add</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -505,7 +505,7 @@
                                 <AttributeInfo Id="HistoryPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewOrderHistory</Value>
+                                            <Value>/OrderManagement/ViewHistory</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -518,26 +518,26 @@
                                 <AttributeInfo Id="RedoPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ChangeDeliveryId</Value>
-                                            <Value>ChangePurchaseOrderId</Value>
-                                            <Value>ChangeDescriptionForOrder</Value>
-                                            <Value>ChangeCustomer</Value>
-                                            <Value>ChangeOrderStatus</Value>
-                                            <Value>ChangeOrderProducts</Value>
-                                            <Value>AddOrder</Value>
+                                            <Value>/OrderManagement/Edit/Change/DeliveryId</Value>
+                                            <Value>/OrderManagement/Edit/Change/PurchaseOrderId</Value>
+                                            <Value>/OrderManagement/Edit/Change/Description</Value>
+                                            <Value>/OrderManagement/Edit/Change/Customer</Value>
+                                            <Value>/OrderManagement/Edit/Change/Status</Value>
+                                            <Value>/OrderManagement/Edit/Change/Products</Value>
+                                            <Value>/OrderManagement/Edit/Add</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="SavePermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ChangeDeliveryId</Value>
-                                            <Value>ChangePurchaseOrderId</Value>
-                                            <Value>ChangeDescriptionForOrder</Value>
-                                            <Value>ChangeCustomer</Value>
-                                            <Value>ChangeOrderStatus</Value>
-                                            <Value>ChangeOrderProducts</Value>
-                                            <Value>AddOrder</Value>
+                                            <Value>/OrderManagement/Edit/Change/DeliveryId</Value>
+                                            <Value>/OrderManagement/Edit/Change/PurchaseOrderId</Value>
+                                            <Value>/OrderManagement/Edit/Change/Description</Value>
+                                            <Value>/OrderManagement/Edit/Change/Customer</Value>
+                                            <Value>/OrderManagement/Edit/Change/Status</Value>
+                                            <Value>/OrderManagement/Edit/Change/Products</Value>
+                                            <Value>/OrderManagement/Edit/Add</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -553,13 +553,13 @@
                                 <AttributeInfo Id="UndoPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ChangeDeliveryId</Value>
-                                            <Value>ChangePurchaseOrderId</Value>
-                                            <Value>ChangeDescriptionForOrder</Value>
-                                            <Value>ChangeCustomer</Value>
-                                            <Value>ChangeOrderStatus</Value>
-                                            <Value>ChangeOrderProducts</Value>
-                                            <Value>AddOrder</Value>
+                                            <Value>/OrderManagement/Edit/Change/DeliveryId</Value>
+                                            <Value>/OrderManagement/Edit/Change/PurchaseOrderId</Value>
+                                            <Value>/OrderManagement/Edit/Change/Description</Value>
+                                            <Value>/OrderManagement/Edit/Change/Customer</Value>
+                                            <Value>/OrderManagement/Edit/Change/Status</Value>
+                                            <Value>/OrderManagement/Edit/Change/Products</Value>
+                                            <Value>/OrderManagement/Edit/Add</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>

@@ -9,6 +9,7 @@ import prolifeLicensesSdl 1.0
 
 DocumentCollectionViewDelegate {
 	id: container;
+	revisionsPermissionPath: "/LicenseManagement/Revisions";
 
 	removeDialogTitle: qsTr("Removing the software instance");
 	removeMessage: qsTr("Do you really want to remove this product? In case of deletion, it will disappear in all orders in which it is present.");

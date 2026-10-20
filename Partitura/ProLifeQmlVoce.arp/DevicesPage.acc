@@ -511,7 +511,7 @@
                         <Data IsEnabled="true" Value="CheckPermissionOr"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PermissionId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="ViewAllSensors"/>
+                        <Data IsEnabled="true" Value="/SensorManagement/ViewAll"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
@@ -638,7 +638,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>BindSensor</Value>
+                                            <Value>/SensorManagement/Bind</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -717,7 +717,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>CreateLicenseFile</Value>
+                                            <Value>/SensorManagement/CreateLicenseFile</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -754,7 +754,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>DecryptLicenseFile</Value>
+                                            <Value>/SensorManagement/DecryptLicenseFile</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -791,7 +791,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ResetTransferCounter</Value>
+                                            <Value>/SensorManagement/ResetTransferCounter</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -831,7 +831,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewRevisions</Value>
+                                            <Value>/SensorManagement/Revisions/View</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -865,15 +865,15 @@
                                 <AttributeInfo Id="EditPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewSensors</Value>
-                                            <Value>ChangeProjectForSensor</Value>
-                                            <Value>ChangeMacAddress</Value>
-                                            <Value>ChangeSerialNumberForSensor</Value>
-                                            <Value>ChangeDescriptionForSensor</Value>
-                                            <Value>ChangeDeviceType</Value>
-                                            <Value>ChangeHardwareConfiguration</Value>
-                                            <Value>ChangeProductionStatus</Value>
-                                            <Value>ChangeOrderForSensor</Value>
+                                            <Value>/SensorManagement/View</Value>
+                                            <Value>/SensorManagement/Edit/Change/Project</Value>
+                                            <Value>/SensorManagement/Edit/Change/MacAddress</Value>
+                                            <Value>/SensorManagement/Edit/Change/SerialNumber</Value>
+                                            <Value>/SensorManagement/Edit/Change/Description</Value>
+                                            <Value>/SensorManagement/Edit/Change/DeviceType</Value>
+                                            <Value>/SensorManagement/Edit/Change/HardwareConfiguration</Value>
+                                            <Value>/SensorManagement/Edit/Change/ProductionStatus</Value>
+                                            <Value>/SensorManagement/Edit/Change/Order</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -886,14 +886,14 @@
                                 <AttributeInfo Id="NewPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>AddSensor</Value>
+                                            <Value>/SensorManagement/Edit/Add</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="RemovePermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>RemoveSensor</Value>
+                                            <Value>/SensorManagement/Edit/Remove</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -915,7 +915,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>TransferLicenses</Value>
+                                            <Value>/SensorManagement/TransferLicenses</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -967,7 +967,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>BindSensor</Value>
+                                            <Value>/SensorManagement/Bind</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -1007,7 +1007,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>CreateLicenseFile</Value>
+                                            <Value>/SensorManagement/CreateLicenseFile</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -1115,22 +1115,22 @@
                                 <AttributeInfo Id="ClosePermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewSensors</Value>
-                                            <Value>ChangeProjectForSensor</Value>
-                                            <Value>ChangeMacAddress</Value>
-                                            <Value>ChangeSerialNumberForSensor</Value>
-                                            <Value>ChangeDescriptionForSensor</Value>
-                                            <Value>ChangeDeviceType</Value>
-                                            <Value>ChangeHardwareConfiguration</Value>
-                                            <Value>ChangeProductionStatus</Value>
-                                            <Value>ChangeOrderForSensor</Value>
+                                            <Value>/SensorManagement/View</Value>
+                                            <Value>/SensorManagement/Edit/Change/Project</Value>
+                                            <Value>/SensorManagement/Edit/Change/MacAddress</Value>
+                                            <Value>/SensorManagement/Edit/Change/SerialNumber</Value>
+                                            <Value>/SensorManagement/Edit/Change/Description</Value>
+                                            <Value>/SensorManagement/Edit/Change/DeviceType</Value>
+                                            <Value>/SensorManagement/Edit/Change/HardwareConfiguration</Value>
+                                            <Value>/SensorManagement/Edit/Change/ProductionStatus</Value>
+                                            <Value>/SensorManagement/Edit/Change/Order</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="HistoryPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ViewSensorHistory</Value>
+                                            <Value>/SensorManagement/ViewHistory</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -1140,30 +1140,30 @@
                                 <AttributeInfo Id="RedoPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ChangeProjectForSensor</Value>
-                                            <Value>ChangeMacAddress</Value>
-                                            <Value>ChangeSerialNumberForSensor</Value>
-                                            <Value>ChangeDescriptionForSensor</Value>
-                                            <Value>ChangeDeviceType</Value>
-                                            <Value>ChangeHardwareConfiguration</Value>
-                                            <Value>ChangeProductionStatus</Value>
-                                            <Value>ChangeOrderForSensor</Value>
-                                            <Value>AddSensor</Value>
+                                            <Value>/SensorManagement/Edit/Change/Project</Value>
+                                            <Value>/SensorManagement/Edit/Change/MacAddress</Value>
+                                            <Value>/SensorManagement/Edit/Change/SerialNumber</Value>
+                                            <Value>/SensorManagement/Edit/Change/Description</Value>
+                                            <Value>/SensorManagement/Edit/Change/DeviceType</Value>
+                                            <Value>/SensorManagement/Edit/Change/HardwareConfiguration</Value>
+                                            <Value>/SensorManagement/Edit/Change/ProductionStatus</Value>
+                                            <Value>/SensorManagement/Edit/Change/Order</Value>
+                                            <Value>/SensorManagement/Edit/Add</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
                                 <AttributeInfo Id="SavePermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ChangeProjectForSensor</Value>
-                                            <Value>ChangeMacAddress</Value>
-                                            <Value>ChangeSerialNumberForSensor</Value>
-                                            <Value>ChangeDescriptionForSensor</Value>
-                                            <Value>ChangeDeviceType</Value>
-                                            <Value>ChangeHardwareConfiguration</Value>
-                                            <Value>ChangeProductionStatus</Value>
-                                            <Value>ChangeOrderForSensor</Value>
-                                            <Value>AddSensor</Value>
+                                            <Value>/SensorManagement/Edit/Change/Project</Value>
+                                            <Value>/SensorManagement/Edit/Change/MacAddress</Value>
+                                            <Value>/SensorManagement/Edit/Change/SerialNumber</Value>
+                                            <Value>/SensorManagement/Edit/Change/Description</Value>
+                                            <Value>/SensorManagement/Edit/Change/DeviceType</Value>
+                                            <Value>/SensorManagement/Edit/Change/HardwareConfiguration</Value>
+                                            <Value>/SensorManagement/Edit/Change/ProductionStatus</Value>
+                                            <Value>/SensorManagement/Edit/Change/Order</Value>
+                                            <Value>/SensorManagement/Edit/Add</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -1176,15 +1176,15 @@
                                 <AttributeInfo Id="UndoPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>ChangeProjectForSensor</Value>
-                                            <Value>ChangeMacAddress</Value>
-                                            <Value>ChangeSerialNumberForSensor</Value>
-                                            <Value>ChangeDescriptionForSensor</Value>
-                                            <Value>ChangeDeviceType</Value>
-                                            <Value>ChangeHardwareConfiguration</Value>
-                                            <Value>ChangeProductionStatus</Value>
-                                            <Value>ChangeOrderForSensor</Value>
-                                            <Value>AddSensor</Value>
+                                            <Value>/SensorManagement/Edit/Change/Project</Value>
+                                            <Value>/SensorManagement/Edit/Change/MacAddress</Value>
+                                            <Value>/SensorManagement/Edit/Change/SerialNumber</Value>
+                                            <Value>/SensorManagement/Edit/Change/Description</Value>
+                                            <Value>/SensorManagement/Edit/Change/DeviceType</Value>
+                                            <Value>/SensorManagement/Edit/Change/HardwareConfiguration</Value>
+                                            <Value>/SensorManagement/Edit/Change/ProductionStatus</Value>
+                                            <Value>/SensorManagement/Edit/Change/Order</Value>
+                                            <Value>/SensorManagement/Edit/Add</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -1200,7 +1200,7 @@
                                 <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
-                                            <Value>TransferLicenses</Value>
+                                            <Value>/SensorManagement/TransferLicenses</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
