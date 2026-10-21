@@ -6,6 +6,7 @@
 #include <QtCore/QUuid>
 
 // ImtCore includes
+#include <imtservergql/DocumentSharing.h>
 #include <imtbase/CComplexCollectionFilter.h>
 #include <imtbase/IObjectCollectionIterator.h>
 #include <imtbase/CObjectLink.h>
@@ -412,7 +413,7 @@ istd::IChangeableUniquePtr COrderCollectionControllerComp::CreateObjectFromReque
 	sdl::V1_0::prolife::COrderAddGqlRequest orderAddRequest(gqlRequest, false);
 	if (orderAddRequest.IsValid()){
 		sdl::V1_0::prolife::OrderAddRequestArguments arguments = orderAddRequest.GetRequestedArguments();
-		if (arguments.input && arguments.input->item && !CheckNewProductPermissions(*arguments.input->item, gqlRequest, errorMessage)){
+		if (arguments.input && arguments.input->item && (!CheckNewProductPermissions(*arguments.input->item, gqlRequest, errorMessage) || !CheckReferencedObjects(*arguments.input->item, gqlRequest, errorMessage))){
 			return nullptr;
 		}
 	}
@@ -672,7 +673,7 @@ bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 	}
 
 	sdl::V1_0::prolife::COrderData orderData = *inputArguments.input->item;
-	if (!CheckNewProductPermissions(orderData, rawGqlRequest, errorMessage)){
+	if (!CheckNewProductPermissions(orderData, rawGqlRequest, errorMessage) || !CheckReferencedObjects(orderData, rawGqlRequest, errorMessage)){
 		return false;
 	}
 	QByteArray objectId;
@@ -814,6 +815,61 @@ imtbase::ICollectionInfo::Ids COrderCollectionControllerComp::GetProductIdsForOr
 	filterParam.SetEditableParameter("ComplexFilter", &complexFilter);
 
 	return productCollectionPtr->GetElementIds(0, -1, &filterParam);
+}
+
+
+bool COrderCollectionControllerComp::CheckReferencedObjects(
+	const sdl::V1_0::prolife::COrderData& orderData,
+	const imtgql::CGqlRequest& gqlRequest,
+	QString& errorMessage) const
+{
+	// The customer is only read, an existing product is changed by linking it to the order
+	QByteArrayList customerIds;
+	if (orderData.customerId && !orderData.customerId->isEmpty()){
+		customerIds.append(*orderData.customerId);
+	}
+
+	if (orderData.customerRoles){
+		for (const istd::TNullableValue<sdl::V1_0::prolife::COrderCustomerRole>& role : *orderData.customerRoles){
+			if (role->customerId && !role->customerId->isEmpty()){
+				customerIds.append(*role->customerId);
+			}
+		}
+	}
+
+	if (m_accountCollectionCompPtr.IsValid()
+				&& !imtservergql::HasObjectAccess(*m_accountCollectionCompPtr, m_documentShareManagerCompPtr.GetPtr(), gqlRequest, customerIds, imtauth::IDocumentShareInfo::DAL_VIEW)){
+		errorMessage = QStringLiteral("Customer does not exist");
+		return false;
+	}
+
+	if (!orderData.orderProducts){
+		return true;
+	}
+
+	QByteArrayList deviceIds;
+	QByteArrayList softwareIds;
+	for (const istd::TNullableValue<sdl::V1_0::prolife::COrderedProduct>& product : *orderData.orderProducts){
+		if ((product->isNew && *product->isNew) || !product->id){
+			continue;
+		}
+
+		const QByteArray categoryId = product->categoryId ? *product->categoryId : QByteArray();
+		if (categoryId == QByteArrayLiteral("Hardware")){
+			deviceIds.append(*product->id);
+		}
+		else if (categoryId == QByteArrayLiteral("Software")){
+			softwareIds.append(*product->id);
+		}
+	}
+
+	if (		!imtservergql::HasObjectAccess(*m_deviceCollectionCompPtr, m_documentShareManagerCompPtr.GetPtr(), gqlRequest, deviceIds, imtauth::IDocumentShareInfo::DAL_EDIT) ||
+				!imtservergql::HasObjectAccess(*m_softwareInstanceCollectionCompPtr, m_documentShareManagerCompPtr.GetPtr(), gqlRequest, softwareIds, imtauth::IDocumentShareInfo::DAL_EDIT)){
+		errorMessage = QStringLiteral("Product does not exist or the organization may not change it");
+		return false;
+	}
+
+	return true;
 }
 
 

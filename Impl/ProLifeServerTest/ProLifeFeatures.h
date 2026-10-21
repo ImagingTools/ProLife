@@ -247,6 +247,17 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 
 	sensorManagementFeatureInfo->InsertSubFeature(sensorManagementEditFeatureInfo.PopPtr());
 
+	istd::TDelPtr<imtlic::CFeatureInfo> sensorManagementShareFeatureInfo;
+	sensorManagementShareFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	sensorManagementShareFeatureInfo->SetFeatureId("Share");
+	sensorManagementShareFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Share Sensors"));
+	sensorManagementShareFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "Allows sharing Sensors with related organizations."));
+	sensorManagementShareFeatureInfo->SetOptional(false);
+	sensorManagementShareFeatureInfo->SetIsPermission(true);
+	sensorManagementShareFeatureInfo->SetRequirements(QByteArray("/SensorManagement/View").split(';'));
+
+	sensorManagementFeatureInfo->InsertSubFeature(sensorManagementShareFeatureInfo.PopPtr());
+
 	istd::TDelPtr<imtlic::CFeatureInfo> sensorManagementRevisionsFeatureInfo;
 	sensorManagementRevisionsFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
 	sensorManagementRevisionsFeatureInfo->SetFeatureId("Revisions");
@@ -661,6 +672,17 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 
 	licenseManagementFeatureInfo->InsertSubFeature(licenseManagementEditFeatureInfo.PopPtr());
 
+	istd::TDelPtr<imtlic::CFeatureInfo> licenseManagementShareFeatureInfo;
+	licenseManagementShareFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	licenseManagementShareFeatureInfo->SetFeatureId("Share");
+	licenseManagementShareFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Share Licenses"));
+	licenseManagementShareFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "Allows sharing Licenses with related organizations."));
+	licenseManagementShareFeatureInfo->SetOptional(false);
+	licenseManagementShareFeatureInfo->SetIsPermission(true);
+	licenseManagementShareFeatureInfo->SetRequirements(QByteArray("/LicenseManagement/View").split(';'));
+
+	licenseManagementFeatureInfo->InsertSubFeature(licenseManagementShareFeatureInfo.PopPtr());
+
 	istd::TDelPtr<imtlic::CFeatureInfo> licenseManagementRevisionsFeatureInfo;
 	licenseManagementRevisionsFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
 	licenseManagementRevisionsFeatureInfo->SetFeatureId("Revisions");
@@ -857,6 +879,17 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 	accountManagementEditFeatureInfo->InsertSubFeature(accountManagementEditChangeFeatureInfo.PopPtr());
 
 	accountManagementFeatureInfo->InsertSubFeature(accountManagementEditFeatureInfo.PopPtr());
+
+	istd::TDelPtr<imtlic::CFeatureInfo> accountManagementShareFeatureInfo;
+	accountManagementShareFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	accountManagementShareFeatureInfo->SetFeatureId("Share");
+	accountManagementShareFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Share Accounts"));
+	accountManagementShareFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "Allows sharing Accounts with related organizations."));
+	accountManagementShareFeatureInfo->SetOptional(false);
+	accountManagementShareFeatureInfo->SetIsPermission(true);
+	accountManagementShareFeatureInfo->SetRequirements(QByteArray("/AccountManagement/View").split(';'));
+
+	accountManagementFeatureInfo->InsertSubFeature(accountManagementShareFeatureInfo.PopPtr());
 
 	istd::TDelPtr<imtlic::CFeatureInfo> accountManagementRevisionsFeatureInfo;
 	accountManagementRevisionsFeatureInfo.SetPtr(new imtlic::CFeatureInfo);

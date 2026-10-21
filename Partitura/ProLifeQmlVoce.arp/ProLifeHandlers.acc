@@ -72,6 +72,7 @@
                             <Values>
                                 <Value>Demultiplexer</Value>
                                 <Value>Pages</Value>
+                                <Value>DocumentShareController</Value>
                                 <Value>HardwareFilterableSelectController</Value>
                                 <Value>SoftwareFilterableSelectController</Value>
                                 <Value>OrdersFilterableSelectController</Value>
@@ -102,6 +103,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="WorkspacePageQmlPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="qrc:/qml/ProLife/WorkspacePage.qml"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DocumentSharingEnabled" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="true"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -187,6 +191,31 @@
                                 <Value>UserGroupParamsSetJoiner</Value>
                             </Values>
                         </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="DocumentShareController" PackageId="ImtUserAdministrationVoce" ComponentId="DocumentShareController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/OrganizationManagement/View</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DocumentShareManager" Type="Reference" ExportId="DocumentShareManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
@@ -370,6 +399,9 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="DocumentShareManager" Type="Reference" ExportId="DocumentShareManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>

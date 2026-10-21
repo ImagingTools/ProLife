@@ -46,6 +46,12 @@ QString CSoftwareProductDatabaseDelegateComp::CreateAdditionalFiltersQuery(const
 				filterQuery += QString(R"(users."Document"->>'Id' = '%1')").arg(qPrintable(userId));
 			}
 		}
+
+		// The group visibility limits the own software only, not the one other organizations shared
+		const QString receivedFilterQuery = CreateReceivedDocumentFilterQuery(filterParams);
+		if (!filterQuery.isEmpty() && !receivedFilterQuery.isEmpty()){
+			filterQuery = QStringLiteral("(") + filterQuery + QStringLiteral(") OR ") + receivedFilterQuery;
+		}
 	}
 
 	if (paramIds.contains("LicenseCreationTimeFilter")){

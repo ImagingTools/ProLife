@@ -15,6 +15,7 @@
 #include <imtbase/CObjectLink.h>
 #include <imtlic/IProductInfo.h>
 #include <imtgql/imtgql.h>
+#include <imtservergql/DocumentSharing.h>
 
 // ProLife includes
 #include <prolifedata/prolifedata.h>
@@ -91,6 +92,13 @@ sdl::V1_0::prolife::CSplitLicensePayload CSoftwareControllerComp::OnSplitLicense
 	int licenseCount = *input.licenseCount;
 	QByteArray accountId = *input.accountId;
 	QByteArray targetLicenseId = input.targetLicenseId ? *input.targetLicenseId : QByteArray();
+
+	// Splitting creates licenses of the own organization, so only its own licenses are split
+	if (		!CheckAccess(gqlRequest, *m_softwareProductCollectionCompPtr, {licenseId, targetLicenseId}, imtauth::IDocumentShareInfo::DAL_OWNER, errorMessage) ||
+				!CheckAccess(gqlRequest, *m_accountCollectionCompPtr, {accountId}, imtauth::IDocumentShareInfo::DAL_VIEW, errorMessage)){
+		retVal.message = errorMessage;
+		return retVal;
+	}
 
 	// Validate license count
 	if (licenseCount <= 0){
@@ -334,7 +342,7 @@ sdl::V1_0::prolife::CSplitLicensePayload CSoftwareControllerComp::OnSplitLicense
 
 sdl::V1_0::prolife::CChildLicensesListPayload CSoftwareControllerComp::OnChildLicensesList(
 			const sdl::V1_0::prolife::CChildLicensesListGqlRequest& childLicensesRequest,
-			const ::imtgql::CGqlRequest& /*gqlRequest*/,
+			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
 	sdl::V1_0::prolife::CChildLicensesListPayload retVal;
@@ -362,6 +370,11 @@ sdl::V1_0::prolife::CChildLicensesListPayload CSoftwareControllerComp::OnChildLi
 	}
 
 	QByteArray parentLicenseId = *input.parentLicenseId;
+
+	if (!CheckAccess(gqlRequest, *m_softwareProductCollectionCompPtr, {parentLicenseId}, imtauth::IDocumentShareInfo::DAL_VIEW, errorMessage)){
+		retVal.message = errorMessage;
+		return retVal;
+	}
 
 	imtbase::IComplexCollectionFilter::FieldFilter fieldFilter;
 	fieldFilter.fieldId = "ParentInstanceId";
@@ -493,6 +506,11 @@ sdl::V1_0::prolife::CRevokeLicensePayload CSoftwareControllerComp::OnRevokeLicen
 
 	QByteArray childLicenseId = *input.childLicenseId;
 	int revokeCount = *input.revokeCount;
+
+	if (!CheckAccess(gqlRequest, *m_softwareProductCollectionCompPtr, {childLicenseId}, imtauth::IDocumentShareInfo::DAL_OWNER, errorMessage)){
+		retVal.message = errorMessage;
+		return retVal;
+	}
 
 	if (revokeCount <= 0){
 		errorMessage = QString("Unable to revoke license. Error: Revoke count must be greater than 0");
@@ -686,6 +704,26 @@ imtauth::IUserRecentAction::UserInfo CSoftwareControllerComp::GetUserInfoFromCon
 	return userInfo;
 }
 
+
+
+bool CSoftwareControllerComp::CheckAccess(
+			const imtgql::CGqlRequest& gqlRequest,
+			const imtbase::IObjectCollection& collection,
+			const QByteArrayList& objectIds,
+			imtauth::IDocumentShareInfo::AccessLevel accessLevel,
+			QString& errorMessage) const
+{
+	if (imtservergql::HasObjectAccess(collection, m_documentShareManagerCompPtr.GetPtr(), gqlRequest, objectIds, accessLevel)){
+		return true;
+	}
+
+	// The objects of other organizations are reported as missing, not as forbidden
+	errorMessage = accessLevel == imtauth::IDocumentShareInfo::DAL_VIEW
+				? QStringLiteral("Object does not exist")
+				: QStringLiteral("Object does not exist or the organization may not change it");
+
+	return false;
+}
 
 } // namespace prolifegql
 

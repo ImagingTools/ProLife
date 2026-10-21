@@ -25,6 +25,12 @@ public:
 	I_END_COMPONENT;
 
 protected:
+	// reimplemented (sdl::V1_0::imtbase::CImtCollectionGqlHandlerCompBase)
+	virtual sdl::V1_0::imtbase::CVisualStatus OnGetObjectVisualStatus(
+				const sdl::V1_0::imtbase::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
+				const ::imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const override;
+
 	virtual void OnAfterSetObjectDescription(
 				const QByteArray& objectId,
 				const QString& description,

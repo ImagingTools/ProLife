@@ -18,6 +18,7 @@
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
 #include <prolifedata/CHardwareProductBinding.h>
 #include <prolifedata/CGroupFilter.h>
+#include <prolifegql/prolifegql.h>
 
 
 namespace prolifegql
@@ -376,6 +377,24 @@ bool CSoftwareProductCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	return true;
+}
+
+
+istd::IChangeableUniquePtr CSoftwareProductCollectionControllerComp::CreateObjectFromRequest(
+	const imtgql::CGqlRequest& gqlRequest,
+	QByteArray& newObjectId,
+	QString& errorMessage) const
+{
+	sdl::V1_0::prolife::CSoftwareProductAddGqlRequest softwareAddRequest(gqlRequest, false);
+	if (softwareAddRequest.IsValid()){
+		sdl::V1_0::prolife::SoftwareProductAddRequestArguments arguments = softwareAddRequest.GetRequestedArguments();
+		const QByteArray orderId = arguments.input && arguments.input->item && arguments.input->item->orderUuid ? QByteArray(*arguments.input->item->orderUuid) : QByteArray();
+		if (!CheckOrderReference(*m_orderCollectionCompPtr, m_documentShareManagerCompPtr.GetPtr(), gqlRequest, QByteArray(), orderId, errorMessage)){
+			return nullptr;
+		}
+	}
+
+	return BaseClass::CreateObjectFromRequest(gqlRequest, newObjectId, errorMessage);
 }
 
 
@@ -792,7 +811,7 @@ void CSoftwareProductCollectionControllerComp::OnComponentCreated()
 
 
 bool CSoftwareProductCollectionControllerComp::UpdateObjectFromRepresentationRequest(
-	const imtgql::CGqlRequest& /*rawGqlRequest*/,
+	const imtgql::CGqlRequest& rawGqlRequest,
 	const sdl::V1_0::prolife::CSoftwareProductUpdateGqlRequest& softwareProductUpdateRequest,
 	istd::IChangeable& object,
 	QString& errorMessage) const
@@ -828,6 +847,11 @@ bool CSoftwareProductCollectionControllerComp::UpdateObjectFromRepresentationReq
 		return false;
 	}
 	
+	const QByteArray newOrderId = softwareData.orderUuid ? QByteArray(*softwareData.orderUuid) : QByteArray();
+	if (!CheckOrderReference(*m_orderCollectionCompPtr, m_documentShareManagerCompPtr.GetPtr(), rawGqlRequest, softwareInfoPtr->GetOrderId(), newOrderId, errorMessage)){
+		return false;
+	}
+
 	softwareInfoPtr->ResetData();
 	
 	// ResetData clear UUID 

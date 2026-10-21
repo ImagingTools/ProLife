@@ -46,6 +46,12 @@ QString COrderDatabaseDelegateComp::CreateAdditionalFiltersQuery(const iprm::IPa
 				filterQuery += QString(R"(users."Document"->>'Id' = '%1')").arg(qPrintable(userId));
 			}
 		}
+
+		// The group visibility limits the own orders only, not the ones other organizations shared
+		const QString receivedFilterQuery = CreateReceivedDocumentFilterQuery(filterParams);
+		if (!filterQuery.isEmpty() && !receivedFilterQuery.isEmpty()){
+			filterQuery = QStringLiteral("(") + filterQuery + QStringLiteral(") OR ") + receivedFilterQuery;
+		}
 	}
 
 	return filterQuery;

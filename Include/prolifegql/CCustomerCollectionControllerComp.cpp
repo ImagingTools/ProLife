@@ -18,6 +18,31 @@ namespace prolifegql
 
 // protected methods
 
+// reimplemented (sdl::V1_0::imtbase::CImtCollectionGqlHandlerCompBase)
+
+sdl::V1_0::imtbase::CVisualStatus CCustomerCollectionControllerComp::OnGetObjectVisualStatus(
+			const sdl::V1_0::imtbase::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
+			const ::imtgql::CGqlRequest& gqlRequest,
+			QString& errorMessage) const
+{
+	sdl::V1_0::imtbase::CVisualStatus retVal = BaseClass::OnGetObjectVisualStatus(getObjectVisualStatusRequest, gqlRequest, errorMessage);
+	if (!errorMessage.isEmpty() || !retVal.objectId){
+		return retVal;
+	}
+
+	// The name of an account is kept in the document, the collection element has none
+	imtbase::IObjectCollection::DataPtr dataPtr;
+	if (m_objectCollectionCompPtr->GetObjectData(*retVal.objectId, dataPtr)){
+		const prolifedata::CCustomerInfo* customerInfoPtr = dynamic_cast<const prolifedata::CCustomerInfo*>(dataPtr.GetPtr());
+		if (customerInfoPtr != nullptr){
+			retVal.text = customerInfoPtr->GetName();
+		}
+	}
+
+	return retVal;
+}
+
+
 void CCustomerCollectionControllerComp::OnAfterSetObjectDescription(
 			const QByteArray& objectId,
 			const QString& description,

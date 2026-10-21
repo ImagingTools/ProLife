@@ -76,6 +76,10 @@ private:
 				const sdl::V1_0::prolife::COrderData& orderData,
 				const imtgql::CGqlRequest& gqlRequest,
 				QString& errorMessage) const;
+	bool CheckReferencedObjects(
+				const sdl::V1_0::prolife::COrderData& orderData,
+				const imtgql::CGqlRequest& gqlRequest,
+				QString& errorMessage) const;
 	bool FillObjectFromRepresentation(
 				const sdl::V1_0::prolife::COrderData& representation,
 				istd::IChangeable& object,

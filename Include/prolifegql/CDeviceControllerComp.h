@@ -10,6 +10,7 @@
 #include <imtcrypt/IEncryption.h>
 #include <imtmail/ISmtpClient.h>
 #include <imtmail/ISmtpMessageCreator.h>
+#include <imtauth/IDocumentShareManager.h>
 
 // ProLife includes
 #include <prolifedata/IHardwareProductBinding.h>
@@ -65,6 +66,7 @@ public:
 		I_ASSIGN(m_bindingOperationContextControllerCompPtr, "BindingOperationContextController", "Hardware binding operation context controller", false, "BindingOperationContextController");
 		I_ASSIGN(m_smtpMessageCreatorCompPtr, "SmtpMessageCreator", "Smtp message creator", true, "SmtpMessageCreator");
 		I_ASSIGN(m_smtpClientCompPtr, "SmtpClient", "Smtp client", true, "SmtpClient");
+		I_ASSIGN(m_documentShareManagerCompPtr, "DocumentShareManager", "Document shares granting access to devices of other organizations", false, "DocumentShareManager");
 	I_END_COMPONENT
 
 protected:
@@ -93,6 +95,12 @@ private:
 	void CreateDeviceOperationContext(const QByteArray& deviceId, const QByteArray& project, QByteArrayList addedLicenses, QByteArrayList removedLicenses) const;
 	void CreateSoftwareOperationContext(const QByteArray& deviceId, const QByteArray& project, QByteArrayList addedLicenses, QByteArrayList removedLicenses) const;
 	QByteArrayList GetAllLicenseDependencies(const QByteArray& licenseId) const;
+	bool CheckAccess(
+				const imtgql::CGqlRequest& gqlRequest,
+				const imtbase::IObjectCollection& collection,
+				const QByteArrayList& objectIds,
+				imtauth::IDocumentShareInfo::AccessLevel accessLevel,
+				QString& errorMessage) const;
 
 protected:
 	I_REF(imtbase::IObjectCollection, m_softwareProductCollectionCompPtr);
@@ -108,6 +116,7 @@ protected:
 	I_REF(imtbase::IOperationContextController, m_bindingOperationContextControllerCompPtr);
 	I_REF(imtmail::ISmtpClient, m_smtpClientCompPtr);
 	I_REF(imtmail::ISmtpMessageCreator, m_smtpMessageCreatorCompPtr);
+	I_REF(imtauth::IDocumentShareManager, m_documentShareManagerCompPtr);
 
 private:
 	mutable QByteArray m_productInstanceId;
