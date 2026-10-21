@@ -46,6 +46,12 @@ QString CDeviceDatabaseDelegateComp::CreateAdditionalFiltersQuery(const iprm::IP
 				filterQuery += QString(R"(users."Document"->>'Id' = '%1')").arg(qPrintable(userId));
 			}
 		}
+
+		// The group visibility limits the own devices only, not the ones other organizations shared
+		const QString receivedFilterQuery = CreateReceivedDocumentFilterQuery(filterParams);
+		if (!filterQuery.isEmpty() && !receivedFilterQuery.isEmpty()){
+			filterQuery = QStringLiteral("(") + filterQuery + QStringLiteral(") OR ") + receivedFilterQuery;
+		}
 	}
 
 	if (paramIds.contains("LicenseCreationTimeFilter")){

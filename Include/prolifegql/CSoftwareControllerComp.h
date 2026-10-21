@@ -4,6 +4,7 @@
 // ImtCore includes
 #include <imtlic/IProductInstanceInfo.h>
 #include <imtauth/IUserActionManager.h>
+#include <imtauth/IDocumentShareManager.h>
 
 // ProLife includes
 #include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Licenses_fwd.h>
@@ -25,6 +26,7 @@ public:
 		I_ASSIGN(m_softwareInfoFactCompPtr, "SoftwareFactory", "Factory for software instance", true, "SoftwareFactory");
 		I_ASSIGN(m_softwareOperationContextControllerCompPtr, "SoftwareOperationContextController", "Software operation context controller", true, "SoftwareOperationContextController");
 		I_ASSIGN(m_userActionManagerCompPtr, "UserActionManager", "User action manager", false, "UserActionManager");
+		I_ASSIGN(m_documentShareManagerCompPtr, "DocumentShareManager", "Document shares granting access to software and accounts of other organizations", false, "DocumentShareManager");
 	I_END_COMPONENT
 
 protected:
@@ -45,6 +47,12 @@ protected:
 private:
 	// Helper method to extract user info from GQL request context
 	imtauth::IUserRecentAction::UserInfo GetUserInfoFromContext(const ::imtgql::CGqlRequest& gqlRequest) const;
+	bool CheckAccess(
+				const imtgql::CGqlRequest& gqlRequest,
+				const imtbase::IObjectCollection& collection,
+				const QByteArrayList& objectIds,
+				imtauth::IDocumentShareInfo::AccessLevel accessLevel,
+				QString& errorMessage) const;
 
 	I_REF(imtbase::IObjectCollection, m_softwareProductCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_hardwareBindingCollectionCompPtr);
@@ -52,6 +60,7 @@ private:
 	I_REF(imtauth::IUserActionManager, m_userActionManagerCompPtr);
 	I_FACT(imtlic::IProductInstanceInfo, m_softwareInfoFactCompPtr);
 	I_REF(imtbase::IOperationContextController, m_softwareOperationContextControllerCompPtr);
+	I_REF(imtauth::IDocumentShareManager, m_documentShareManagerCompPtr);
 };
 
 

@@ -6,6 +6,7 @@
 #include <imtauth/imtauth.h>
 #include <imtauth/IUserInfo.h>
 #include <imtgql/IGqlContext.h>
+#include <imtservergql/DocumentSharing.h>
 
 // ProLife includes
 #include <prolifedata/prolifedata.h>
@@ -13,6 +14,28 @@
 
 namespace prolifegql
 {
+
+
+bool CheckOrderReference(
+			const imtbase::IObjectCollection& orderCollection,
+			const imtauth::IDocumentShareManager* shareManagerPtr,
+			const imtgql::CGqlRequest& gqlRequest,
+			const QByteArray& currentOrderId,
+			const QByteArray& newOrderId,
+			QString& errorMessage)
+{
+	if (newOrderId.isEmpty() || newOrderId == currentOrderId){
+		return true;
+	}
+
+	if (imtservergql::HasObjectAccess(orderCollection, shareManagerPtr, gqlRequest, {newOrderId}, imtauth::IDocumentShareInfo::DAL_EDIT)){
+		return true;
+	}
+
+	errorMessage = QStringLiteral("Order does not exist or the organization may not change it");
+
+	return false;
+}
 
 
 bool CheckDeviceChangePermissions(

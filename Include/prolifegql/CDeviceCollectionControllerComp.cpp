@@ -365,6 +365,24 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 }
 
 
+istd::IChangeableUniquePtr CDeviceCollectionControllerComp::CreateObjectFromRequest(
+			const imtgql::CGqlRequest& gqlRequest,
+			QByteArray& newObjectId,
+			QString& errorMessage) const
+{
+	sdl::V1_0::prolife::CDeviceAddGqlRequest deviceAddRequest(gqlRequest, false);
+	if (deviceAddRequest.IsValid()){
+		sdl::V1_0::prolife::DeviceAddRequestArguments arguments = deviceAddRequest.GetRequestedArguments();
+		const QByteArray orderId = arguments.input && arguments.input->item && arguments.input->item->orderId ? arguments.input->item->orderId->toUtf8() : QByteArray();
+		if (!CheckOrderReference(*m_orderCollectionCompPtr, m_documentShareManagerCompPtr.GetPtr(), gqlRequest, QByteArray(), orderId, errorMessage)){
+			return nullptr;
+		}
+	}
+
+	return BaseClass::CreateObjectFromRequest(gqlRequest, newObjectId, errorMessage);
+}
+
+
 istd::IChangeableUniquePtr CDeviceCollectionControllerComp::CreateObjectFromRepresentation(
 			const sdl::V1_0::prolife::CDeviceData& deviceDataRepresentation,
 			QByteArray& newObjectId,
@@ -532,6 +550,11 @@ bool CDeviceCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 	Q_ASSERT(deviceInfoPtr != nullptr);
 
 	if (!CheckDeviceChangePermissions(*deviceInfoPtr, deviceInfoPtr->GetOrderId(), deviceData, rawGqlRequest, false, errorMessage)){
+		return false;
+	}
+
+	const QByteArray newOrderId = deviceData.orderId ? deviceData.orderId->toUtf8() : QByteArray();
+	if (!CheckOrderReference(*m_orderCollectionCompPtr, m_documentShareManagerCompPtr.GetPtr(), rawGqlRequest, deviceInfoPtr->GetOrderId(), newOrderId, errorMessage)){
 		return false;
 	}
 

@@ -19,6 +19,7 @@
 #include <imtlic/IProductInfo.h>
 #include <imtlic/IFeatureInfo.h>
 #include <imtauth/CUserInfo.h>
+#include <imtservergql/DocumentSharing.h>
 
 // ProLife includes
 #include <prolifedata/CHardwareProductBinding.h>
@@ -35,8 +36,8 @@ namespace prolifegql
 
 sdl::V1_0::prolife::CDeviceBindingData CDeviceControllerComp::OnGetDeviceBinding(
 			const sdl::V1_0::prolife::CGetDeviceBindingGqlRequest& getDeviceBindingRequest,
-			const ::imtgql::CGqlRequest& /*gqlRequest*/,
-			QString& /*errorMessage*/) const
+			const ::imtgql::CGqlRequest& gqlRequest,
+			QString& errorMessage) const
 {
 	sdl::V1_0::prolife::CDeviceBindingData retVal;
 	
@@ -52,6 +53,10 @@ sdl::V1_0::prolife::CDeviceBindingData CDeviceControllerComp::OnGetDeviceBinding
 	QByteArray deviceId;
 	if (inputArguments.input->id){
 		deviceId = *inputArguments.input->id;
+	}
+
+	if (!CheckAccess(gqlRequest, *m_deviceCollectionCompPtr, {deviceId}, imtauth::IDocumentShareInfo::DAL_VIEW, errorMessage)){
+		return retVal;
 	}
 	
 	istd::TOptDelPtr<prolifedata::CHardwareProductBinding> hardwareProductBindingPtr;
@@ -107,7 +112,7 @@ sdl::V1_0::prolife::CDeviceBindingData CDeviceControllerComp::OnGetDeviceBinding
 
 sdl::V1_0::imtbase::CUpdatedNotificationPayload CDeviceControllerComp::OnUpdateDeviceBinding(
 			const sdl::V1_0::prolife::CUpdateDeviceBindingGqlRequest& updateDeviceBindingRequest,
-			const ::imtgql::CGqlRequest& /*gqlRequest*/,
+			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
 	sdl::V1_0::imtbase::CUpdatedNotificationPayload retVal;
@@ -134,6 +139,13 @@ sdl::V1_0::imtbase::CUpdatedNotificationPayload CDeviceControllerComp::OnUpdateD
 	QString project;
 	if (inputArguments.input->project){
 		project = *inputArguments.input->project;
+	}
+
+	// The binding changes the device and the bound software, so both must be changeable
+	const QByteArrayList boundSoftwareIds = deviceBindingData.softwareIds ? deviceBindingData.softwareIds->ToList() : QByteArrayList();
+	if (		!CheckAccess(gqlRequest, *m_deviceCollectionCompPtr, {deviceId}, imtauth::IDocumentShareInfo::DAL_EDIT, errorMessage) ||
+				!CheckAccess(gqlRequest, *m_softwareProductCollectionCompPtr, boundSoftwareIds, imtauth::IDocumentShareInfo::DAL_EDIT, errorMessage)){
+		return retVal;
 	}
 
 	istd::TOptDelPtr<prolifedata::CHardwareProductBinding> deviceBindingInfoPtr;
@@ -291,7 +303,7 @@ sdl::V1_0::imtbase::CUpdatedNotificationPayload CDeviceControllerComp::OnUpdateD
 
 sdl::V1_0::prolife::CTransferLicensesPayload CDeviceControllerComp::OnTransferLicenses(
 			const sdl::V1_0::prolife::CTransferLicensesGqlRequest& transferLicensesRequest,
-			const ::imtgql::CGqlRequest& /*gqlRequest*/,
+			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
 	if (!m_softwareTransferCollectionCompPtr.IsValid()){
@@ -325,6 +337,11 @@ sdl::V1_0::prolife::CTransferLicensesPayload CDeviceControllerComp::OnTransferLi
 	QByteArray toDeviceId;
 	if (inputArguments.input->toDeviceId){
 		toDeviceId = *inputArguments.input->toDeviceId;
+	}
+
+	// Licenses move between the devices of the own organization only
+	if (!CheckAccess(gqlRequest, *m_deviceCollectionCompPtr, {fromDeviceId, toDeviceId}, imtauth::IDocumentShareInfo::DAL_OWNER, errorMessage)){
+		return retVal;
 	}
 
 	// Get FROM device binding data
@@ -520,7 +537,7 @@ sdl::V1_0::prolife::CTransferLicensesPayload CDeviceControllerComp::OnTransferLi
 
 sdl::V1_0::prolife::CCreateLicenseFilePayload CDeviceControllerComp::OnCreateLicenseFile(
 			const sdl::V1_0::prolife::CCreateLicenseFileGqlRequest& createLicenseFileRequest,
-			const ::imtgql::CGqlRequest& /*gqlRequest*/,
+			const ::imtgql::CGqlRequest& gqlRequest,
 			QString& errorMessage) const
 {
 	sdl::V1_0::prolife::CCreateLicenseFilePayload retVal;
@@ -541,6 +558,10 @@ sdl::V1_0::prolife::CCreateLicenseFilePayload CDeviceControllerComp::OnCreateLic
 	bool encrypt = true;
 	if (arguments.input->encrypt){
 		encrypt = *arguments.input->encrypt;
+	}
+
+	if (!CheckAccess(gqlRequest, *m_deviceCollectionCompPtr, {deviceId}, imtauth::IDocumentShareInfo::DAL_EDIT, errorMessage)){
+		return retVal;
 	}
 
 	imtbase::IObjectCollection::DataPtr deviceDataPtr;
@@ -935,6 +956,10 @@ sdl::V1_0::prolife::CRequestTransferLicensesPayload CDeviceControllerComp::OnReq
 		toDeviceId = *arguments.input->toDeviceId;
 	}
 
+	if (!CheckAccess(gqlRequest, *m_deviceCollectionCompPtr, {fromDeviceId, toDeviceId}, imtauth::IDocumentShareInfo::DAL_OWNER, errorMessage)){
+		return response;
+	}
+
 	istd::TDelPtr<prolifedata::IHardwareProductBinding> fromDeviceBindingInfoPtr = GetOrCreateDeviceBinding(fromDeviceId);
 	if (!fromDeviceBindingInfoPtr.IsValid()){
 		errorMessage = QString("Unable to request transfer license. Error: From device is invalid");
@@ -1080,6 +1105,10 @@ sdl::V1_0::prolife::CResetTransferCounterPayload CDeviceControllerComp::OnResetT
 	QByteArray hardwareId;
 	if (arguments.input->hardwareId){
 		hardwareId = *arguments.input->hardwareId;
+	}
+
+	if (!CheckAccess(gqlRequest, *m_deviceCollectionCompPtr, {hardwareId}, imtauth::IDocumentShareInfo::DAL_OWNER, errorMessage)){
+		return response;
 	}
 
 	istd::TDelPtr<prolifedata::IHardwareProductBinding> fromDeviceBindingInfoPtr = GetOrCreateDeviceBinding(hardwareId);
@@ -1289,6 +1318,26 @@ QByteArrayList CDeviceControllerComp::GetAllLicenseDependencies(const QByteArray
 	return retVal;
 }
 
+
+
+bool CDeviceControllerComp::CheckAccess(
+			const imtgql::CGqlRequest& gqlRequest,
+			const imtbase::IObjectCollection& collection,
+			const QByteArrayList& objectIds,
+			imtauth::IDocumentShareInfo::AccessLevel accessLevel,
+			QString& errorMessage) const
+{
+	if (imtservergql::HasObjectAccess(collection, m_documentShareManagerCompPtr.GetPtr(), gqlRequest, objectIds, accessLevel)){
+		return true;
+	}
+
+	// The objects of other organizations are reported as missing, not as forbidden
+	errorMessage = accessLevel == imtauth::IDocumentShareInfo::DAL_VIEW
+				? QStringLiteral("Object does not exist")
+				: QStringLiteral("Object does not exist or the organization may not change it");
+
+	return false;
+}
 
 } // namespace prolifegql
 

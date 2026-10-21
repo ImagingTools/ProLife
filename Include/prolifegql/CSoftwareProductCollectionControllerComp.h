@@ -31,6 +31,11 @@ public:
 	I_END_COMPONENT;
 
 protected:
+	// reimplemented (imtservergql::CObjectCollectionControllerCompBase)
+	virtual istd::IChangeableUniquePtr CreateObjectFromRequest(
+				const imtgql::CGqlRequest& gqlRequest,
+				QByteArray& newObjectId,
+				QString& errorMessage) const override;
 	// reimplemented (sdl::V1_0::imtbase::CImtCollectionGqlHandlerCompBase)
 	virtual sdl::V1_0::imtbase::CVisualStatus OnGetObjectVisualStatus(
 				const sdl::V1_0::imtbase::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,

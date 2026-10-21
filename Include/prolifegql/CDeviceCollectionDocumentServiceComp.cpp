@@ -160,6 +160,12 @@ sdl::V1_0::imtbase::CDocumentOperationStatus CDeviceCollectionDocumentServiceCom
 		return response;
 	}
 
+	const QByteArray newOrderId = deviceData.orderId ? deviceData.orderId->toUtf8() : QByteArray();
+	if (!CheckOrderReference(*m_orderCollectionCompPtr, nullptr, gqlRequest, deviceInfoPtr->GetOrderId(), newOrderId, permissionError)){
+		response.message = permissionError;
+		return response;
+	}
+
 	QString macAddress;
 	if (deviceData.macAddress){
 		macAddress = *deviceData.macAddress;

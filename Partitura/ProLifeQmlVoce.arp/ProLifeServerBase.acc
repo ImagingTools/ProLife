@@ -195,6 +195,9 @@
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="DocumentShareManager" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/DocumentShareManager"/>
+                    </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
@@ -424,6 +427,9 @@
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="DocumentShareManager" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repositories/DocumentShareManager"/>
+                    </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
@@ -536,6 +542,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RelationshipProvider" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/RemoteTenantController"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -803,6 +812,12 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="UserActionManager" Type="Reference" ExportId="UserActionManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="DeviceRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="DocumentShareManager" Type="Reference" ExportId="DocumentShareManager">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
@@ -1360,10 +1375,33 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
+                    <Element Id="DocumentSharing" PackageId="ImtUserAdministrationVoce" ComponentId="DocumentSharing">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="RelationshipProvider" Type="Reference" ExportId="RelationshipProvider">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
                 </ElementsList>
                 <EmbeddedRegistriesList/>
                 <ExportedInterfaces/>
                 <ExportedComponents>
+                    <Component ExportedId="DocumentShareManager" ComponentId="DocumentSharing/DocumentShareManager"/>
+                    <Component ExportedId="DocumentShareRepository" ComponentId="DocumentSharing/DocumentShareRepository"/>
                     <Component ExportedId="AccountDatabaseDelegate" ComponentId="AccountSqlRepository/AccountDatabaseDelegate"/>
                     <Component ExportedId="AccountSqlRepository" ComponentId="AccountSqlRepository"/>
                     <Component ExportedId="BindingProductsDatabaseDelegate" ComponentId="BindingProductsRepository/SqlDatabaseJsonDelegate"/>

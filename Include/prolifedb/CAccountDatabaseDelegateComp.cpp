@@ -42,6 +42,12 @@ QString CAccountDatabaseDelegateComp::CreateAdditionalFiltersQuery(const iprm::I
 				filterQuery = QString(R"((%0) OR users."Document"->>'Id' = '%1')").arg(filterQuery, qPrintable(userId));
 			}
 		}
+
+		// The group visibility limits the own accounts only, not the ones other organizations shared
+		const QString receivedFilterQuery = CreateReceivedDocumentFilterQuery(filterParams);
+		if (!filterQuery.isEmpty() && !receivedFilterQuery.isEmpty()){
+			filterQuery = QStringLiteral("(") + filterQuery + QStringLiteral(") OR ") + receivedFilterQuery;
+		}
 	}
 
 	return filterQuery;
