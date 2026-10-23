@@ -28,6 +28,12 @@
                     <AttributeInfo Id="DeskPageVisible" Type="Boolean" ExportId="">
                         <Data IsEnabled="true" Value="true"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="DocumentSharingEnabled" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="true"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ExternalLoginEnabled" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="true"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="FileAccessCommandId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="ProLife/files/*"/>
                     </AttributeInfo>
@@ -83,9 +89,6 @@
                     <AttributeInfo Id="SuperuserProvider" Type="Reference" ExportId="SuperuserProvider">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ExternalLoginEnabled" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="true"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="TenantsEnabled" Type="Boolean" ExportId="">
                         <Data IsEnabled="true" Value="true"/>
                     </AttributeInfo>
@@ -103,9 +106,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="WorkspacePageQmlPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="qrc:/qml/ProLife/WorkspacePage.qml"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DocumentSharingEnabled" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="true"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -201,6 +201,18 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="Demultiplexer" PackageId="ImtServerGqlPck" ComponentId="GraphQLDemultiplexer">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="GqlRequestHandlers" Type="Reference[]" ExportId="ExternRequestHandlers">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="DocumentShareController" PackageId="ImtUserAdministrationVoce" ComponentId="DocumentShareController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -214,6 +226,13 @@
                     <AttributeInfo Id="DocumentShareManager" Type="Reference" ExportId="DocumentShareManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="EditCommandPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/OrganizationManagement/Shares/Edit</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -221,18 +240,6 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="Demultiplexer" PackageId="ImtServerGqlPck" ComponentId="GraphQLDemultiplexer">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="GqlRequestHandlers" Type="Reference[]" ExportId="ExternRequestHandlers">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
@@ -353,6 +360,9 @@
                     <AttributeInfo Id="DeviceRepository" Type="Reference" ExportId="DeviceRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="DocumentShareManager" Type="Reference" ExportId="DocumentShareManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="FeatureCollection" Type="Reference" ExportId="FeatureCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -399,9 +409,6 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DocumentShareManager" Type="Reference" ExportId="DocumentShareManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>

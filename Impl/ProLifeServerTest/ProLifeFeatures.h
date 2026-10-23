@@ -1028,6 +1028,27 @@ static void FillProduct(imtlic::IProductInfo& productInfo){
 
 	organizationManagementFeatureInfo->InsertSubFeature(organizationManagementRevisionsFeatureInfo.PopPtr());
 
+	istd::TDelPtr<imtlic::CFeatureInfo> organizationManagementSharesFeatureInfo;
+	organizationManagementSharesFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	organizationManagementSharesFeatureInfo->SetFeatureId("Shares");
+	organizationManagementSharesFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Document Shares"));
+	organizationManagementSharesFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "Provides access to the documents the organization shares and receives."));
+	organizationManagementSharesFeatureInfo->SetOptional(false);
+	organizationManagementSharesFeatureInfo->SetIsPermission(true);
+
+	istd::TDelPtr<imtlic::CFeatureInfo> organizationManagementSharesEditFeatureInfo;
+	organizationManagementSharesEditFeatureInfo.SetPtr(new imtlic::CFeatureInfo);
+	organizationManagementSharesEditFeatureInfo->SetFeatureId("Edit");
+	organizationManagementSharesEditFeatureInfo->SetFeatureName(QT_TRANSLATE_NOOP("Feature", "Manage Document Shares"));
+	organizationManagementSharesEditFeatureInfo->SetFeatureDescription(QT_TRANSLATE_NOOP("Feature", "Allows restricting, accepting and removing the document shares of the organization."));
+	organizationManagementSharesEditFeatureInfo->SetOptional(false);
+	organizationManagementSharesEditFeatureInfo->SetIsPermission(true);
+	organizationManagementSharesEditFeatureInfo->SetRequirements(QByteArray("/OrganizationManagement/View").split(';'));
+
+	organizationManagementSharesFeatureInfo->InsertSubFeature(organizationManagementSharesEditFeatureInfo.PopPtr());
+
+	organizationManagementFeatureInfo->InsertSubFeature(organizationManagementSharesFeatureInfo.PopPtr());
+
 	productInfo.AddFeature("f1b9f9b0-7d54-4fd1-9d17-8d2f8c5f2cf0", *organizationManagementFeatureInfo.GetPtr());
 
 	istd::TDelPtr<imtlic::CIdentifiableFeatureInfo> searchManagementFeatureInfo;

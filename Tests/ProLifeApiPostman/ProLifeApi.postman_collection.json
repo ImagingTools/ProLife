@@ -6507,6 +6507,66 @@
           ]
         },
         {
+          "name": "SH: The products permissions for the scopes of the organizations",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetProductPermissions { GetProductPermissions(input: { productId: \"{{productId}}\" }) { groups { entries { permissionId } } errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{shSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  const ids = [].concat(...((payload('GetProductPermissions') && payload('GetProductPermissions').groups) || []).map((g) => (g.entries || []).map((e) => e.permissionId)));",
+                  "  pm.test('The product declares the account permissions', () => ['/AccountManagement/ViewPage', '/AccountManagement/View', '/AccountManagement/ViewAll'].forEach((id) => pm.expect(ids, JSON.stringify(json)).to.include(id)));",
+                  "  pm.environment.set('shProductScope', JSON.stringify(ids));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
           "name": "SH: RoleAdd sharing role",
           "request": {
             "method": "POST",
@@ -6693,6 +6753,64 @@
                   "  const env = (key) => pm.environment.get(key);",
                   "  pm.test('Organization A created', () => pm.expect(ok('CreateTenant') && payload('CreateTenant').tenantId, JSON.stringify(json)).to.be.a('string').and.not.empty);",
                   "  pm.environment.set('shATenantId', payload('CreateTenant').tenantId);",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SH: The creator gives A the whole product",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateTenant { UpdateTenant(input: { tenantId: \"{{shATenantId}}\", name: \"Sharing Org A {{shRun}}\", tenantPermissions: {{shProductScope}} }) { success errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{shSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('The scope of A is the whole product', () => pm.expect(ok('UpdateTenant') && payload('UpdateTenant').success, JSON.stringify(json)).to.eql(true));",
                   "})();"
                 ]
               }
@@ -6931,6 +7049,64 @@
           ]
         },
         {
+          "name": "SH: The creator gives B the whole product",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateTenant { UpdateTenant(input: { tenantId: \"{{shBTenantId}}\", name: \"Sharing Org B {{shRun}}\", tenantPermissions: {{shProductScope}} }) { success errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{shSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('The scope of B is the whole product', () => pm.expect(ok('UpdateTenant') && payload('UpdateTenant').success, JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
           "name": "SH: Auth owner of B",
           "request": {
             "method": "POST",
@@ -7162,6 +7338,64 @@
           ]
         },
         {
+          "name": "SH: The creator gives C the whole product",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateTenant { UpdateTenant(input: { tenantId: \"{{shCTenantId}}\", name: \"Sharing Org C {{shRun}}\", tenantPermissions: {{shProductScope}} }) { success errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{shSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('The scope of C is the whole product', () => pm.expect(ok('UpdateTenant') && payload('UpdateTenant').success, JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
           "name": "SH: Auth owner of C",
           "request": {
             "method": "POST",
@@ -7386,6 +7620,64 @@
                   "  const env = (key) => pm.environment.get(key);",
                   "  pm.test('Organization D created', () => pm.expect(ok('CreateTenant') && payload('CreateTenant').tenantId, JSON.stringify(json)).to.be.a('string').and.not.empty);",
                   "  pm.environment.set('shDTenantId', payload('CreateTenant').tenantId);",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SH: The creator gives D the whole product",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateTenant { UpdateTenant(input: { tenantId: \"{{shDTenantId}}\", name: \"Sharing Org D {{shRun}}\", tenantPermissions: {{shProductScope}} }) { success errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{shSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('The scope of D is the whole product', () => pm.expect(ok('UpdateTenant') && payload('UpdateTenant').success, JSON.stringify(json)).to.eql(true));",
                   "})();"
                 ]
               }
@@ -11308,7 +11600,8 @@
                   "  pm.environment.set('shPoll', 0);",
                   "  pm.test('GetTenantRepresentation B loaded', () => pm.expect(p && p.id, JSON.stringify(json)).to.be.a('string').and.not.empty);",
                   "  ",
-                  "  const permissions = Array.from(new Set((p.tenantPermissions || []).concat(['/AccountManagement/ViewPage', '/AccountManagement/View', '/AccountManagement/ViewAll'])));",
+                  "  pm.test('B holds the whole product its creator gave it', () => pm.expect((p.tenantPermissions || []).slice().sort()).to.eql(JSON.parse(env('shProductScope')).slice().sort()));",
+                  "  const permissions = (p.tenantPermissions || []).filter((id) => id !== '/AccountManagement/ViewAll');",
                   "  pm.environment.set('shTenantBName', p.name);",
                   "  pm.environment.set('shTenantBOwner', p.ownerId);",
                   "  pm.environment.set('shTenantBMembers', '[' + (p.members || []).map((m) => '{ id: \"' + m.id + '\", name: \"' + m.name + '\" }').join(', ') + ']');",
@@ -11320,7 +11613,7 @@
           ]
         },
         {
-          "name": "SH: UpdateTenantFromRepresentation B allows the account permissions",
+          "name": "SH: The owner of B cannot narrow the scope of B",
           "request": {
             "method": "POST",
             "header": [],
@@ -11370,7 +11663,8 @@
                   "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
                   "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
                   "  const env = (key) => pm.environment.get(key);",
-                  "  pm.test('Updated', () => pm.expect(payload('UpdateTenantFromRepresentation') && payload('UpdateTenantFromRepresentation').status, JSON.stringify(json)).to.eql('Success'));",
+                  "  const messages = errors.map((e) => e && e.message).concat(payload('UpdateTenantFromRepresentation') && payload('UpdateTenantFromRepresentation').message ? [payload('UpdateTenantFromRepresentation').message] : []);",
+                  "  pm.test('Only the creator changes the scope', () => pm.expect(messages, JSON.stringify(json)).to.include('Only the creator of the organization can change its permissions'));",
                   "})();"
                 ]
               }
@@ -12403,7 +12697,30 @@
               ]
             }
           },
-          "event": []
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  const messages = errors.map((e) => e && e.message);",
+                  "  pm.test('Managing the shares needs /OrganizationManagement/Shares/Edit', () => { pm.expect(messages.length, JSON.stringify(json)).to.eql(1); pm.expect(messages[0]).to.match(/^Invalid permissions for the user '/); });",
+                  "})();"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "SH: A cannot restrict the share of B",
@@ -12439,7 +12756,29 @@
               ]
             }
           },
-          "event": []
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Only the receiving organization restricts the share', () => pm.expect(errors.map((e) => e && e.message), JSON.stringify(json)).to.eql(['Only the organization receiving the document can change its share']));",
+                  "})();"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "SH: The member still sees A7",
@@ -18940,6 +19279,283 @@
                   "  const env = (key) => pm.environment.get(key);",
                   "  pm.test('AccountsList answered', () => pm.expect(errors, JSON.stringify(json)).to.have.length(0));",
                   "  pm.test('B keeps A2', () => pm.expect(access('AccountsList', env('shAccA2'))).to.eql('Edit'));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SH: Creator creates from inside A an organization owned by the owner of B",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateTenant { CreateTenant(input: { name: \"Sharing Org Owned By B {{shRun}}\", ownerId: \"{{shBUserId}}\" }) { tenantId errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{shAToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('The organization is created', () => pm.expect(ok('CreateTenant') && payload('CreateTenant').tenantId, JSON.stringify(json)).to.be.a('string').and.not.empty);",
+                  "  pm.environment.set('shCreatedTenantId', payload('CreateTenant') ? payload('CreateTenant').tenantId : '');",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SH: Creator signs in again",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"sh_a_{{shRun}}\", password: \"ShareApi_2026!\", productId: \"{{productId}}\" }) { token userId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Signed in', () => pm.expect(payload('Authorization') && payload('Authorization').token, JSON.stringify(json)).to.be.a('string').and.not.empty);",
+                  "  pm.environment.set('shCreatorLoginToken', payload('Authorization') ? payload('Authorization').token : '');",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SH: Creator enters the organization owned by another user",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SelectTenant { SelectTenant(input: { tenantId: \"{{shCreatedTenantId}}\" }) { ok errorMessage userSession { accessToken tenantId } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{shCreatorLoginToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  const session = payload('SelectTenant') && payload('SelectTenant').userSession;",
+                  "  pm.test('The creator works in the organization', () => { pm.expect(payload('SelectTenant') && payload('SelectTenant').ok, JSON.stringify(json)).to.eql(true); pm.expect(session.tenantId).to.eql(env('shCreatedTenantId')); });",
+                  "  pm.environment.set('shCreatorTenantToken', session ? session.accessToken : '');",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SH: Creator keeps a valid session inside it",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetPermissions { GetPermissions(input: { accessToken: \"{{shCreatorTenantToken}}\" }) { permissions } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{shCreatorTenantToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('No access refusal for the creator', () => { pm.expect(pm.response.code, 'HTTP status').to.eql(200); pm.expect(errors, JSON.stringify(json)).to.have.length(0); pm.expect(payload('GetPermissions') && Array.isArray(payload('GetPermissions').permissions), JSON.stringify(json)).to.eql(true); });",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SH: Creator organization is removed",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveTenant { RemoveTenant(input: { tenantId: \"{{shCreatedTenantId}}\" }) { success errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{shSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Removed', () => pm.expect(ok('RemoveTenant') && payload('RemoveTenant').success, JSON.stringify(json)).to.eql(true));",
                   "})();"
                 ]
               }
