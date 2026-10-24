@@ -76,9 +76,6 @@
                     <AttributeInfo Id="LisaHttpPort" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="17776"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="LisaWebSocketPort" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="18776"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Application/Log"/>
                     </AttributeInfo>
@@ -88,9 +85,6 @@
                     <AttributeInfo Id="PumaHttpPort" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="17788"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="PumaWebSocketPort" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="18788"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="RuntimeStatus" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Application/RuntimeStatus"/>
                     </AttributeInfo>
@@ -99,9 +93,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="VersionInfo"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="WebSocketPort" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="18778"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
