@@ -12480,7 +12480,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "query GetTenantRelationships { GetTenantRelationships(input: { tenantId: \"{{shBTenantId}}\" }) { relationships { id sourceTenantId targetTenantId status scope description createdAt } errorMessage } }",
+                "query": "query GetTenantRelationships { GetTenantRelationships(input: { tenantId: \"{{shBTenantId}}\" }) { relationships { id sourceTenantId targetTenantId status scope description createdAt relatedSince } errorMessage } }",
                 "variables": ""
               }
             },
@@ -12531,6 +12531,8 @@
                   "  \tpm.expect(r.description || '').to.eql('');",
                   "  \tpm.expect(r.createdAt || '').to.eql('');",
                   "  }));",
+                  "  // The shares with a partner belong to the period the organizations have been related, so every member learns its start",
+                  "  pm.test('The members see since when the organizations are related', () => relationships.forEach((r) => pm.expect(isNaN(Date.parse(r.relatedSince || '')), JSON.stringify(r)).to.eql(false)));",
                   "})();"
                 ]
               }
@@ -19220,6 +19222,187 @@
                   "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
                   "  const env = (key) => pm.environment.get(key);",
                   "  pm.test('The share is refused', () => pm.expect(refused('ShareDocuments') || (payload('ShareDocuments').shareIds || []).length === 0, JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SH: The shares of A with C are revoked with the relationship",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetOrganizationDocumentShares { GetOrganizationDocumentShares(input: { direction: \"Outgoing\" }) { shares { id objectId status targetTenantId ownerTenantId } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{shAToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  const shares = ((payload('GetOrganizationDocumentShares') || {}).shares) || [];",
+                  "  pm.test('Listed', () => pm.expect(errors, JSON.stringify(json)).to.have.length(0));",
+                  "  pm.test('No share of A with C is left', () => pm.expect(shares.filter((s) => s.targetTenantId === env('shCTenantId')), JSON.stringify(shares)).to.have.length(0));",
+                  "  pm.test('The shares of A with B stay', () => pm.expect(shares.filter((s) => s.targetTenantId === env('shBTenantId')).length, JSON.stringify(shares)).to.be.above(0));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SH: C receives no share of A after the relationship ended",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetOrganizationDocumentShares { GetOrganizationDocumentShares(input: { direction: \"Incoming\" }) { shares { id objectId status targetTenantId ownerTenantId } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{shCToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  const shares = ((payload('GetOrganizationDocumentShares') || {}).shares) || [];",
+                  "  pm.test('Listed', () => pm.expect(errors, JSON.stringify(json)).to.have.length(0));",
+                  "  pm.test('Nothing of A is received', () => pm.expect(shares.filter((s) => s.ownerTenantId === env('shATenantId')), JSON.stringify(shares)).to.have.length(0));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SH: A6 is shared with nobody after the relationship ended",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetDocumentShares { GetDocumentShares(input: { collectionId: \"Accounts\", objectId: \"{{shAccA6}}\" }) { shares { id targetTenantId status } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{shAToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  const shares = ((payload('GetDocumentShares') || {}).shares) || [];",
+                  "  pm.test('Listed', () => pm.expect(errors, JSON.stringify(json)).to.have.length(0));",
+                  "  pm.test('No share of A6 is left', () => pm.expect(shares, JSON.stringify(shares)).to.have.length(0));",
                   "})();"
                 ]
               }
