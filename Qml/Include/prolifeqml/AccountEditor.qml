@@ -136,7 +136,7 @@ ViewBase {
 			}
 
 			function applyReadOnly(readOnly){
-				customerIdInput.readOnly = readOnly;
+				customerIdInput.readOnly = readOnly || !PermissionsController.checkPermission("/AccountManagement/Edit/Change/CustomerId");
 			}
 
 			Component.onCompleted: {
@@ -196,11 +196,6 @@ ViewBase {
 							onEditingFinished: {
 								accountEditorContainer.doUpdateModel();
 							}
-
-							Component.onCompleted: {
-								let ok = PermissionsController.checkPermission("/AccountManagement/Edit/Change/CustomerId");
-								customerIdInput.readOnly = !ok;
-							}
 						}
 					}
 				}
@@ -236,9 +231,9 @@ ViewBase {
 			}
 
 			function applyReadOnly(readOnly){
-				accountNameInput.readOnly = readOnly;
-				accountDescriptionInput.readOnly = readOnly;
-				emailInput.readOnly = readOnly;
+				accountNameInput.readOnly = readOnly || !PermissionsController.checkPermission("/AccountManagement/Edit/Change/Name");
+				accountDescriptionInput.readOnly = readOnly || !PermissionsController.checkPermission("/AccountManagement/Edit/Change/Description");
+				emailInput.readOnly = readOnly || !PermissionsController.checkPermission("/AccountManagement/Edit/Change/Email");
 			}
 
 			Component.onCompleted: {
@@ -303,12 +298,6 @@ ViewBase {
 							}
 
 							KeyNavigation.tab: accountDescriptionInput;
-
-							Component.onCompleted: {
-								let ok = PermissionsController.checkPermission("/AccountManagement/Edit/Change/Name");
-								accountNameInput.readOnly = !ok;
-							}
-
 							RegularExpressionValidator {
 								id: accountNameRegexp;
 								regularExpression: /^(?!\s*$).+/;
@@ -328,11 +317,6 @@ ViewBase {
 
 							KeyNavigation.tab: emailInput;
 							KeyNavigation.backtab: accountNameInput;
-
-							Component.onCompleted: {
-								let ok = PermissionsController.checkPermission("/AccountManagement/Edit/Change/Description");
-								accountDescriptionInput.readOnly = !ok;
-							}
 						}
 
 						TextInputElementView {
@@ -353,11 +337,6 @@ ViewBase {
 							}
 
 							KeyNavigation.backtab: accountDescriptionInput;
-
-							Component.onCompleted: {
-								let ok = PermissionsController.checkPermission("/AccountManagement/Edit/Change/Email");
-								emailInput.readOnly = !ok;
-							}
 						}
 
 						RegularExpressionValidator {
@@ -400,10 +379,11 @@ ViewBase {
 			}
 
 			function applyReadOnly(readOnly){
-				countryInput.readOnly = readOnly;
-				cityInput.readOnly = readOnly;
-				postalCodeInput.readOnly = readOnly;
-				streetInput.readOnly = readOnly;
+				let canChange = PermissionsController.checkPermission("/AccountManagement/Edit/Change/CompanyAddress");
+				countryInput.readOnly = readOnly || !canChange;
+				cityInput.readOnly = readOnly || !canChange;
+				postalCodeInput.readOnly = readOnly || !canChange;
+				streetInput.readOnly = readOnly || !canChange;
 			}
 
 			Component.onCompleted: {
@@ -465,11 +445,6 @@ ViewBase {
 							}
 
 							KeyNavigation.tab: cityInput;
-
-							Component.onCompleted: {
-								let ok = PermissionsController.checkPermission("/AccountManagement/Edit/Change/CompanyAddress");
-								countryInput.readOnly = !ok;
-							}
 						}
 
 						TextInputElementView {
@@ -485,11 +460,6 @@ ViewBase {
 
 							KeyNavigation.tab: postalCodeInput;
 							KeyNavigation.backtab: countryInput;
-
-							Component.onCompleted: {
-								let ok = PermissionsController.checkPermission("/AccountManagement/Edit/Change/CompanyAddress");
-								cityInput.readOnly = !ok;
-							}
 						}
 
 						TextInputElementView {
@@ -505,11 +475,6 @@ ViewBase {
 
 							KeyNavigation.tab: streetInput;
 							KeyNavigation.backtab: cityInput;
-
-							Component.onCompleted: {
-								let ok = PermissionsController.checkPermission("/AccountManagement/Edit/Change/CompanyAddress");
-								postalCodeInput.readOnly = !ok;
-							}
 						}
 
 						TextInputElementView {
@@ -524,11 +489,6 @@ ViewBase {
 							}
 
 							KeyNavigation.backtab: postalCodeInput;
-
-							Component.onCompleted: {
-								let ok = PermissionsController.checkPermission("/AccountManagement/Edit/Change/CompanyAddress");
-								streetInput.readOnly = !ok;
-							}
 						}
 					}
 				}
@@ -586,7 +546,9 @@ ViewBase {
 			}
 
 			function applyReadOnly(readOnly){
-				groupsElement.table.readOnly = readOnly;
+				if (groupsElement.table){
+					groupsElement.table.readOnly = readOnly || !PermissionsController.checkPermission("/AccountManagement/Edit/Change/Groups");
+				}
 			}
 
 			function updateHeaders(){
@@ -671,9 +633,7 @@ ViewBase {
 									tableConn.enabled = false;
 									groupsElement.table.elements = groupCollectionDataProvider.collectionModel;
 									tableConn.enabled = true;
-
-									let ok = PermissionsController.checkPermission("/AccountManagement/Edit/Change/Groups");
-									groupsElement.table.readOnly = !ok;
+									groupsPage.applyReadOnly(accountEditorContainer.readOnly);
 								}
 							}
 
