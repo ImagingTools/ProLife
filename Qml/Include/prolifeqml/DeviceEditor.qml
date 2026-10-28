@@ -661,8 +661,6 @@ DocumentViewBase {
 							groupFilters: [hardwareCategoryGroup]
 							placeHolderText: qsTr("Select a device type")
 							filterPlaceholder: qsTr("Search by product name")
-							KeyNavigation.tab: configurationSelect
-							KeyNavigation.backtab: macAddressInput
 							isSelectionRequired: true
 							errorText: qsTr("Please select a device type")
 
@@ -687,8 +685,6 @@ DocumentViewBase {
 							groupFilters: [productConfigurationsGroup]
 							placeHolderText: productSelect.selectedId !== "" ? qsTr("Select a configuration") : qsTr("Select a device type first")
 							filterPlaceholder: qsTr("Search by configuration name or article")
-							KeyNavigation.tab: articleText
-							KeyNavigation.backtab: productSelect
 							isSelectionRequired: true
 							errorText: qsTr("Please select a configuration")
 
@@ -703,8 +699,6 @@ DocumentViewBase {
 							objectName: "ArticleInput"
 							name: qsTr("Article")
 							readOnly: true
-							KeyNavigation.tab: descriptionInput
-							KeyNavigation.backtab: configurationSelect
 						}
 
 						TextInputElementView {
@@ -717,8 +711,6 @@ DocumentViewBase {
 								deviceEditorContainer.doUpdateModel()
 							}
 
-							KeyNavigation.tab: serialNumberInput
-							KeyNavigation.backtab: articleText
 						}
 
 						TextInputElementView {
@@ -740,8 +732,6 @@ DocumentViewBase {
 								}
 							}
 
-							KeyNavigation.tab: macAddressInput
-							KeyNavigation.backtab: descriptionInput
 						}
 
 						MacAddressElementView {
@@ -761,8 +751,6 @@ DocumentViewBase {
 								}
 							}
 
-							KeyNavigation.tab: productSelect
-							KeyNavigation.backtab: serialNumberInput
 						}
 					}
 				}
@@ -883,8 +871,6 @@ DocumentViewBase {
 							placeHolderText: qsTr("Select an order")
 							filterPlaceholder: qsTr("Search by order or customer")
 							clearable: true
-							KeyNavigation.tab: statusCB
-							KeyNavigation.backtab: internalUseSwitchElementView
 
 							onItemSelected: {
 								deviceEditorContainer.doUpdateModel()
@@ -897,8 +883,6 @@ DocumentViewBase {
 							name: qsTr("Production Status")
 							model: productionStatus.m_statusModel
 							nameId: "m_name"
-							KeyNavigation.tab: projectInput
-							KeyNavigation.backtab: orderSelect
 
 							onCurrentIndexChanged: {
 								deviceEditorContainer.doUpdateModel()
@@ -915,8 +899,6 @@ DocumentViewBase {
 							name: qsTr("Project")
 							placeHolderText: qsTr("Enter the project")
 							readOnly: deviceEditorContainer.readOnly
-							KeyNavigation.tab: internalUseSwitchElementView
-							KeyNavigation.backtab: statusCB
 
 							onEditingFinished: {
 								deviceEditorContainer.doUpdateModel()
@@ -929,8 +911,6 @@ DocumentViewBase {
 							name: qsTr("Internal Use")
 							description: qsTr("Activate if the sensor is for internal use")
 							readOnly: deviceEditorContainer.readOnly
-							KeyNavigation.tab: orderSelect
-							KeyNavigation.backtab: projectInput
 							onCheckedChanged: {
 								deviceEditorContainer.doUpdateModel()
 							}

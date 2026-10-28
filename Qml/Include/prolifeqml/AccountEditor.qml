@@ -297,7 +297,6 @@ ViewBase {
 								accountEditorContainer.doUpdateModel();
 							}
 
-							KeyNavigation.tab: accountDescriptionInput;
 							RegularExpressionValidator {
 								id: accountNameRegexp;
 								regularExpression: /^(?!\s*$).+/;
@@ -315,8 +314,6 @@ ViewBase {
 								accountEditorContainer.doUpdateModel();
 							}
 
-							KeyNavigation.tab: emailInput;
-							KeyNavigation.backtab: accountNameInput;
 						}
 
 						TextInputElementView {
@@ -336,7 +333,6 @@ ViewBase {
 								accountEditorContainer.doUpdateModel();
 							}
 
-							KeyNavigation.backtab: accountDescriptionInput;
 						}
 
 						RegularExpressionValidator {
@@ -444,7 +440,6 @@ ViewBase {
 								accountEditorContainer.doUpdateModel();
 							}
 
-							KeyNavigation.tab: cityInput;
 						}
 
 						TextInputElementView {
@@ -458,8 +453,6 @@ ViewBase {
 								accountEditorContainer.doUpdateModel();
 							}
 
-							KeyNavigation.tab: postalCodeInput;
-							KeyNavigation.backtab: countryInput;
 						}
 
 						TextInputElementView {
@@ -473,8 +466,6 @@ ViewBase {
 								accountEditorContainer.doUpdateModel();
 							}
 
-							KeyNavigation.tab: streetInput;
-							KeyNavigation.backtab: cityInput;
 						}
 
 						TextInputElementView {
@@ -488,7 +479,6 @@ ViewBase {
 								accountEditorContainer.doUpdateModel();
 							}
 
-							KeyNavigation.backtab: postalCodeInput;
 						}
 					}
 				}
