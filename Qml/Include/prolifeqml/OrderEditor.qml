@@ -382,8 +382,6 @@ ViewBase {
 							placeHolderText: qsTr("Enter the delivery-ID")
 							readOnly: orderEditorContainer.readOnly
 							maximumLength: 8
-							KeyNavigation.tab: purchaseIdInput
-							KeyNavigation.backtab: orderStatusCB
 							bottomComp: acceptableInput ? undefined : errorComp
 
 							onEditingFinished: {
@@ -420,8 +418,6 @@ ViewBase {
 							name: qsTr("Purchase Order-ID")
 							placeHolderText: qsTr("Enter the Purchase-ID")
 							readOnly: orderEditorContainer.readOnly
-							KeyNavigation.tab: descriptionInput
-							KeyNavigation.backtab: instanceIdInput
 
 							onEditingFinished: {
 								orderEditorContainer.doUpdateModel()
@@ -434,8 +430,6 @@ ViewBase {
 							name: qsTr("Description")
 							placeHolderText: qsTr("Enter the comment")
 							readOnly: orderEditorContainer.readOnly
-							KeyNavigation.tab: customerSelect
-							KeyNavigation.backtab: purchaseIdInput
 
 							onEditingFinished: {
 								orderEditorContainer.doUpdateModel()
@@ -457,8 +451,6 @@ ViewBase {
 							changeable: !orderEditorContainer.readOnly
 							isSelectionRequired: true
 							errorText: qsTr("Please select a customer")
-							KeyNavigation.tab: orderStatusCB
-							KeyNavigation.backtab: descriptionInput
 
 							onItemSelected: {
 								orderEditorContainer.doUpdateModel()
@@ -471,8 +463,6 @@ ViewBase {
 							name: qsTr("Order Status")
 							changeable: !orderEditorContainer.readOnly
 							model: orderStatus.statusModel
-							KeyNavigation.tab: instanceIdInput
-							KeyNavigation.backtab: customerSelect
 
 							onCurrentIndexChanged: {
 								orderEditorContainer.doUpdateModel()

@@ -506,8 +506,6 @@ ViewBase {
 							placeHolderText: qsTr("Select a product")
 							filterPlaceholder: qsTr("Search by product name")
 							changeable: !root.readOnly
-							KeyNavigation.tab: licenseSelect
-							KeyNavigation.backtab: internalUseSwitchElementView
 							isSelectionRequired: true
 							errorText: qsTr("Please select a product")
 
@@ -532,8 +530,6 @@ ViewBase {
 							groupFilters: [productLicensesGroup]
 							placeHolderText: productSelect.selectedId !== "" ? qsTr("Select a license") : qsTr("Select a product first")
 							filterPlaceholder: qsTr("Search by license name or article")
-							KeyNavigation.tab: articleText
-							KeyNavigation.backtab: productSelect
 							isSelectionRequired: true
 							errorText: qsTr("Please select a license")
 
@@ -548,8 +544,6 @@ ViewBase {
 							objectName: "ArticleInput"
 							name: qsTr("Article")
 							readOnly: true
-							KeyNavigation.tab: serialNumberInput
-							KeyNavigation.backtab: licenseSelect
 						}
 
 						TextInputElementView {
@@ -557,8 +551,6 @@ ViewBase {
 							objectName: "SerialNumberInput"
 							placeHolderText: qsTr("Enter the software-ID")
 							name: qsTr("Software-ID")
-							KeyNavigation.tab: internalUseSwitchElementView
-							KeyNavigation.backtab: articleText
 							textInputValidator: serialNumberRegexp
 							showErrorWhenInvalid: true
 							errorText: qsTr("Please enter the software-ID")
@@ -579,8 +571,6 @@ ViewBase {
 							name: qsTr("Internal Use")
 							description: qsTr("Activate if the license is for internal use")
 							readOnly: root.readOnly
-							KeyNavigation.tab: productSelect
-							KeyNavigation.backtab: serialNumberInput
 							onCheckedChanged: {
 								root.doUpdateModel()
 							}
@@ -672,8 +662,6 @@ ViewBase {
 							name: qsTr("Project")
 							placeHolderText: qsTr("Enter the project")
 							readOnly: root.readOnly
-							KeyNavigation.tab: orderSelect
-							KeyNavigation.backtab: orderSelect
 
 							onEditingFinished: {
 								root.doUpdateModel()
@@ -693,8 +681,6 @@ ViewBase {
 							filterPlaceholder: qsTr("Search by order or customer")
 							clearable: true
 							changeable: !root.readOnly
-							KeyNavigation.tab: projectInput
-							KeyNavigation.backtab: projectInput
 
 							onItemSelected: {
 								root.doUpdateModel()
@@ -799,8 +785,6 @@ ViewBase {
 								? qsTr("Deactivate it if you want to set the expiration date manually")
 								: qsTr("Activate it if you want to set an unlimited expiration date")
 							readOnly: root.readOnly
-							KeyNavigation.tab: expirationEditor
-							KeyNavigation.backtab: expirationEditor
 
 							onCheckedChanged: {
 								root.doUpdateModel()
@@ -819,8 +803,6 @@ ViewBase {
 							name: qsTr("Expiration")
 							visible: !unlimitedSwitch.checked
 							readOnly: root.readOnly
-							KeyNavigation.tab: unlimitedSwitch
-							KeyNavigation.backtab: unlimitedSwitch
 
 							onDatePickerChanged: {
 								if (datePicker) {
