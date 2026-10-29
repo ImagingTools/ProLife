@@ -69,39 +69,27 @@ DocCollectionViewDelegate {
 			}
 			
 			property DocumentId documentIdInput: DocumentId {}
-			property GqlSdlRequestSender getDeviceRequest: GqlSdlRequestSender {
-				gqlCommandId: ProlifeDeviceCollectionDocumentServiceSdlCommandIds.s_getDeviceRepresentation
+			property DocumentRepresentationRequestSender getDeviceRequest: DocumentRepresentationRequestSender {
+				representationController: root
 				permissionPath: "/SensorManagement/View"
+				gqlCommandId: ProlifeDeviceCollectionDocumentServiceSdlCommandIds.s_getDeviceRepresentation
 				sdlObjectComp: Component {
-					DeviceData {
-						onFinished: {
-							root.representationModel.copyFrom(this)
-							root.representationUpdated(root.documentId, root.representationModel)
-						}
-					}
+					DeviceData {}
 				}
 			}
 			
 			property UpdateDeviceInput updateDeviceInput: UpdateDeviceInput {}
-			property GqlSdlRequestSender updateDeviceRequest: GqlSdlRequestSender {
-				gqlCommandId: ProlifeDeviceCollectionDocumentServiceSdlCommandIds.s_updateDeviceFromRepresentation
+			property DocumentUpdateRequestSender updateDeviceRequest: DocumentUpdateRequestSender {
+				representationController: root
 				permissionPath: "/SensorManagement/Edit/Change"
-				requestType: 1
-				sdlObjectComp: Component {
-					DocumentOperationStatus {
-						onFinished: {
-							if (m_status === "Success"){
-								root.documentUpdated(root.documentId)
-							}
-							else{
-								if (m_message){
-									PopupManager.addErrorMessage(m_message)
-								}
-								root.updateDocumentFailed(root.documentId, "")
-								root.updateRepresentationFromDocument()
-							}
-						}
+				gqlCommandId: ProlifeDeviceCollectionDocumentServiceSdlCommandIds.s_updateDeviceFromRepresentation
+
+				// The reason of a refusal is shown here, the collection host gets none
+				function refuse(message){
+					if (message){
+						PopupManager.addErrorMessage(message)
 					}
+					root.updateDocumentFailed(root.documentId, "")
 				}
 			}
 		}
@@ -139,37 +127,25 @@ DocCollectionViewDelegate {
 			}
 			
 			property DocumentId documentIdInput: DocumentId {}
-			property GqlSdlRequestSender getIotDeviceRequest: GqlSdlRequestSender {
+			property DocumentRepresentationRequestSender getIotDeviceRequest: DocumentRepresentationRequestSender {
+				representationController: iotRoot
 				gqlCommandId: ProlifeDeviceCollectionDocumentServiceSdlCommandIds.s_getIotDeviceRepresentation
 				sdlObjectComp: Component {
-					IotDeviceData {
-						onFinished: {
-							iotRoot.representationModel.copyFrom(this)
-							iotRoot.representationUpdated(iotRoot.documentId, iotRoot.representationModel)
-						}
-					}
+					IotDeviceData {}
 				}
 			}
 			
 			property UpdateIotDeviceInput updateIotDeviceInput: UpdateIotDeviceInput {}
-			property GqlSdlRequestSender updateIotDeviceRequest: GqlSdlRequestSender {
+			property DocumentUpdateRequestSender updateIotDeviceRequest: DocumentUpdateRequestSender {
+				representationController: iotRoot
 				gqlCommandId: ProlifeDeviceCollectionDocumentServiceSdlCommandIds.s_updateIotDeviceFromRepresentation
-				requestType: 1
-				sdlObjectComp: Component {
-					DocumentOperationStatus {
-						onFinished: {
-							if (m_status === "Success"){
-								iotRoot.documentUpdated(iotRoot.documentId)
-							}
-							else{
-								if (m_message){
-									PopupManager.addErrorMessage(m_message)
-								}
-								iotRoot.updateDocumentFailed(iotRoot.documentId, "")
-								iotRoot.updateRepresentationFromDocument()
-							}
-						}
+
+				// The reason of a refusal is shown here, the collection host gets none
+				function refuse(message){
+					if (message){
+						PopupManager.addErrorMessage(message)
 					}
+					iotRoot.updateDocumentFailed(iotRoot.documentId, "")
 				}
 			}
 		}
