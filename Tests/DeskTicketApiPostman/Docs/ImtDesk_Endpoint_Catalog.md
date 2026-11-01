@@ -152,8 +152,10 @@ Attachment behavior:
 
 ## Subscriptions and notifications (integration points)
 
-- `CTicketAssigneeNotifierComp`: notifies newly added assignees.
-- `CTicketMessageNotifierComp`: notifies participants (reporter/assignees/admin) on new messages.
+- `CTicketNotificationProducerComp` sends the ticket notifications to the notification center of Puma (`imtnotify`):
+  `TicketAssigned` to each newly added assignee (withdrawn when the assignee is removed), `TicketMessage` to the reporter
+  and the assignees on a new message (grouped per ticket). The client receives them over `OnNotificationEvent`;
+  the old subscriptions `OnTicketAssigneeChanged` and `OnTicketMessageReceived` are gone.
 - Message/attachment domain is integrated via `imtchat` and attachment storage.
 
 ## Data model and DB constraints

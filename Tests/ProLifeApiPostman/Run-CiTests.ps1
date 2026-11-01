@@ -177,6 +177,9 @@ param(
     [string]$JUnitReportPath = (Join-Path $ScriptDir "junit-report.xml"),
     [string]$JsonReportPath = (Join-Path $ScriptDir "run-report.json"),
     [string]$WsJUnitReportPath = (Join-Path $ScriptDir "junit-report-ws.xml"),
+    [string]$NotificationCenterCollectionPath = (Join-Path $ScriptDir "Notification_Center_ProLife.postman_collection.json"),
+    [string]$NotificationCenterJUnitReportPath = (Join-Path $ScriptDir "junit-report-notification-center.xml"),
+    [string]$NotificationCenterJsonReportPath = (Join-Path $ScriptDir "run-report-notification-center.json"),
     [int]$WebSocketPort = 18778,
     [int]$StartupTimeoutSeconds = 60
 )
@@ -390,6 +393,38 @@ function Start-LisaTestServer {
     Write-Host "Lisa test server is accepting connections on port $LisaHttpPort"
 }
 
+# The ticket notifications of ProLife are sent to Puma with the access token of a server account, which the server
+# reads only from IMT_NOTIFICATION_ACCESS_TOKEN. The token is issued here by su for this run and handed to
+# ProLifeServerTest.exe through its environment; it is never written anywhere.
+function Set-NotificationServerToken {
+    Write-Step "Issuing the notification server token of ProLife in Puma"
+    $environment = Get-Content -Raw -Path $EnvironmentPath | ConvertFrom-Json
+    $suLogin = ($environment.values | Where-Object { $_.key -eq "suLogin" }).value
+    $suPassword = ($environment.values | Where-Object { $_.key -eq "suPassword" }).value
+    $pumaUrl = "http://localhost:$PumaHttpPort/Puma/graphql"
+
+    $invoke = {
+        param([string]$query, [string]$token)
+        $headers = @{ "productId" = "Puma" }
+        if ($token) { $headers["x-authentication-token"] = $token }
+        $body = [System.Text.Encoding]::UTF8.GetBytes((@{ query = $query } | ConvertTo-Json -Compress))
+        Invoke-RestMethod -Uri $pumaUrl -Method Post -ContentType "application/json; charset=utf-8" -Headers $headers -Body $body
+    }
+
+    $auth = (& $invoke ('query { Authorization(input: { login: ' + ($suLogin | ConvertTo-Json) + ', password: ' + ($suPassword | ConvertTo-Json) + ', productId: "Puma" }) { userId token } }') $null).data.Authorization
+    if (-not $auth -or -not $auth.token) {
+        throw "su could not sign in to Puma to issue the notification server token"
+    }
+
+    $created = (& $invoke ('mutation { CreateToken(input: { userId: "' + $auth.userId + '", productId: "Puma", name: "prolife-notification-server", scopes: ["notifications:send:ProLife"] }) { token success message } }') $auth.token).data.CreateToken
+    if (-not $created -or -not $created.success -or -not $created.token) {
+        throw "the notification server token of ProLife could not be issued"
+    }
+
+    $env:IMT_NOTIFICATION_ACCESS_TOKEN = $created.token
+    Write-Host "The token is set for ProLifeServerTest.exe"
+}
+
 function Start-TestServer {
     Write-Step "Starting ProLifeServerTest.exe"
     if (-not (Test-Path $ServerExePath)) {
@@ -437,10 +472,14 @@ function Install-NewmanIfNeeded {
     return $newmanCmd
 }
 
-function Invoke-NewmanSuite {
+function Invoke-NewmanSuite(
+        [string]$Collection = $CollectionPath,
+        [string]$JUnitReport = $JUnitReportPath,
+        [string]$JsonReport = $JsonReportPath,
+        [string]$Title = "newman suite") {
     $newmanCmd = Install-NewmanIfNeeded
 
-    Write-Step "Running newman suite"
+    Write-Step "Running $Title"
     # NOT .../ProLife/graphql - every request in the collection templates its
     # URL as "{{baseUrl}}/graphql" already (confirmed against
     # ProLifeApi.postman_collection.json), so including the segment here
@@ -451,12 +490,13 @@ function Invoke-NewmanSuite {
     # apparently stopped short of reading the full newman output).
     $baseUrl = "http://localhost:$HttpPort/ProLife"
     $newmanArgs = @(
-        "run", $CollectionPath,
+        "run", $Collection,
         "-e", $EnvironmentPath,
         "--env-var", "baseUrl=$baseUrl",
+        "--env-var", "pumaUrl=http://localhost:$PumaHttpPort/Puma",
         "--reporters", "cli,junit,json",
-        "--reporter-junit-export", $JUnitReportPath,
-        "--reporter-json-export", $JsonReportPath
+        "--reporter-junit-export", $JUnitReport,
+        "--reporter-json-export", $JsonReport
     )
     & $newmanCmd @newmanArgs | Out-Host
     return $LASTEXITCODE
@@ -517,6 +557,7 @@ try {
 
     Restore-DatabaseFromBackup $DbName $ProLifeBackupPath
     Repair-ProLifeForeignServers
+    Set-NotificationServerToken
     Start-TestServer
 
     $exitCode = Invoke-NewmanSuite
@@ -525,6 +566,10 @@ try {
     # ProLife -> Puma subscription chain rather than either server alone.
     $wsExitCode = Invoke-WsSuite
     if ($exitCode -eq 0) { $exitCode = $wsExitCode }
+
+    # The notification center seen from ProLife: forwarded inbox, catalog of the product, ticket notifications
+    $centerExitCode = Invoke-NewmanSuite $NotificationCenterCollectionPath $NotificationCenterJUnitReportPath $NotificationCenterJsonReportPath "notification center suite"
+    if ($exitCode -eq 0) { $exitCode = $centerExitCode }
 }
 finally {
     # Tear down in reverse start order: ProLife depends on Lisa/Puma being

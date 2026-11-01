@@ -577,9 +577,9 @@ const clientSubscriptions = [
 	'OnUsersForInvitationCollectionChanged',
 	'OnTenantRelationshipsCollectionChanged',
 	'OnCrossOrgGrantsCollectionChanged',
+	// Notification center, forwarded to Puma.
+	'OnNotificationEvent',
 	// Desk, forwarded.
-	'OnTicketMessageReceived',
-	'OnTicketAssigneeChanged',
 	'OnTicketsCollectionChanged',
 	// Licensing, forwarded to Lisa.
 	'OnProductsCollectionChanged',

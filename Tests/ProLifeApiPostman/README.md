@@ -134,6 +134,24 @@ Teardown stops all three in reverse order. Puma/Lisa checkouts are located via t
 
 `prolife_test`'s `Roles`/`Users`/`UserGroups`/`UserSessions` tables are `postgres_fdw` **foreign tables**, all backed by a single foreign server literally named `PumaServer`. As restored from the dev export, that foreign server's `dbname` option is `puma` (the real, non-test database) - on a dev machine that also has a real local `puma` checkout, leaving this uncorrected means any query touching those tables would silently read (and, if the mapping allows, write) the developer's real data instead of `puma_test`. `Run-CiTests.ps1`'s `Repair-ProLifeForeignServers` runs `ALTER SERVER "PumaServer" OPTIONS (SET dbname 'puma_test')` immediately after every `prolife_test` restore to fix this. (There's also a dormant `setup_foreign_table_lisaserver()` helper function in the dump, but it's never invoked - no `LisaServer` foreign server actually exists, so nothing needs repointing for Lisa.)
 
+## Notification center (`Notification_Center_ProLife.postman_collection.json`)
+
+The notification center seen from ProLife: the inbox commands forwarded to Puma, the catalog the product server
+answers itself and the ticket notifications of `CTicketNotificationProducerComp`. Creates its own users in Puma
+(`pumaUrl`, default `http://localhost:7788/Puma`) and its own ticket.
+
+- `01 Access` - an anonymous inbox is refused; a client may not send or withdraw through the product server.
+- `02 Catalog` - the organization types and the ticket types with their messages, in English and Russian.
+- `03 Forwarded inbox` - list, unread count, read (only the own), sync, acknowledgements, the notifications page and
+  removal, all through ProLife.
+- `04 Ticket notifications` - the assignee is told by the reporter; two comments make one notification with both,
+  the writer is not told; a removed assignee loses the assignment, a new assignment is told again; a removed ticket
+  withdraws its notifications.
+
+ProLife sends the ticket notifications with the token of a server account, read only from
+`IMT_NOTIFICATION_ACCESS_TOKEN`. `Run-CiTests.ps1` has su issue it in Puma (`Set-NotificationServerToken`) and starts
+`ProLifeServerTest.exe` with it; a manual run needs the same, otherwise `04` fails.
+
 ## WebSocket subscriptions (`ws/ws-subscriptions.js`)
 
 Newman does not execute Postman WebSocket requests — it runs HTTP requests only —
