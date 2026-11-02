@@ -1839,7 +1839,7 @@
 		},
 		{
 			"name": "04 Ticket notifications",
-			"description": "The ticket producer of ProLife: an assignee is told, the participants of the conversation are told about new messages, grouped per ticket; a removed assignee and a removed ticket withdraw them. ProLife sends them with the session of the user who made the change.",
+			"description": "The ticket producer of ProLife: an assignee is told, the participants of the conversation are told about new messages, grouped per ticket; a removed assignee loses the assignment and the messages of the ticket, a removed ticket withdraws them. ProLife sends them with the session of the user who made the change.",
 			"item": [
 				{
 					"id": "56d87793-c344-4b18-a0e0-0ed8351a442d",
@@ -2599,7 +2599,7 @@
 				},
 				{
 					"id": "d1dad52f-e56d-4f2c-add4-ec6908a9ddc2",
-					"name": "The assignment of the agent is withdrawn",
+					"name": "The assignment and the messages of the ticket are withdrawn from the agent",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -2659,7 +2659,9 @@
 									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
 									"const p = payload('NotificationsList');",
 									"const items = p.items || [];",
-									"pm.test('withdrawn', function () { pm.expect(aboutTicket(items, 'imtdesk.TicketAssigned')).to.have.lengthOf(0); });"
+									"pm.test('withdrawn', function () { pm.expect(aboutTicket(items, 'imtdesk.TicketAssigned')).to.have.lengthOf(0); });",
+									"// A removed assignee has no access to the ticket: its messages lead nowhere",
+									"pm.test('the messages withdrawn', function () { pm.expect(aboutTicket(items, 'imtdesk.TicketMessage')).to.have.lengthOf(0); });"
 								]
 							}
 						}
