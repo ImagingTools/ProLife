@@ -149,9 +149,8 @@ answers itself and the ticket notifications of `CTicketNotificationProducerComp`
   the writer is not told; a removed assignee loses the assignment, a new assignment is told again; a removed ticket
   withdraws its notifications.
 
-ProLife sends the ticket notifications with the token of a server account, read only from
-`IMT_NOTIFICATION_ACCESS_TOKEN`. `Run-CiTests.ps1` has su issue it in Puma (`Set-NotificationServerToken`) and starts
-`ProLifeServerTest.exe` with it; a manual run needs the same, otherwise `04` fails.
+ProLife sends the ticket notifications to Puma with the session of the user who made the change; nothing has to be
+configured. A product server has no identity of its own yet (ImagingTools/ImtCore#1059).
 
 ## WebSocket subscriptions (`ws/ws-subscriptions.js`)
 

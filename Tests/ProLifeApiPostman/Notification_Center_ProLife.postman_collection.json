@@ -11,7 +11,7 @@
 	"item": [
 		{
 			"name": "00 Bootstrap",
-			"description": "The users of the product, the server token of Puma for the cases that send directly, a ticket of the reporter su.",
+			"description": "The users of the product, the session of su in Puma for the cases that send directly, a ticket of the reporter su.",
 			"item": [
 				{
 					"id": "fd00eee8-d7dd-4b26-90e8-d59a9cdeebdc",
@@ -438,84 +438,6 @@
 									"const p = payload('Authorization');",
 									"pm.test('signed in', function () { pm.expect(p.token).to.be.a('string').and.not.empty; });",
 									"pm.environment.set('ncp_viewer_token', p.token);"
-								]
-							}
-						}
-					]
-				},
-				{
-					"id": "d7a8a01b-da16-47c4-9eb9-279f296b96a3",
-					"name": "A server token of ProLife in Puma",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "graphql",
-							"graphql": {
-								"query": "mutation CreateToken { CreateToken(input: { userId: \"{{ncp_su_id}}\", productId: \"Puma\", name: \"ncp_{{ncp_run}}\", scopes: [\"notifications:send:ProLife\"] }) { token success } }",
-								"variables": ""
-							}
-						},
-						"url": "{{pumaUrl}}/graphql",
-						"auth": {
-							"type": "apikey",
-							"apikey": [
-								{
-									"key": "key",
-									"value": "x-authentication-token",
-									"type": "string"
-								},
-								{
-									"key": "value",
-									"value": "{{ncp_su_puma_token}}",
-									"type": "string"
-								},
-								{
-									"key": "in",
-									"value": "header",
-									"type": "string"
-								}
-							]
-						}
-					},
-					"response": [],
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"id": "2537f3d0-a318-4bb0-9937-2418486de363",
-								"type": "text/javascript",
-								"exec": [
-									"pm.request.headers.upsert({ key: 'productid', value: 'Puma' });"
-								]
-							}
-						},
-						{
-							"listen": "test",
-							"script": {
-								"id": "123135fa-8f6e-41a2-9fe7-7543ce220f12",
-								"type": "text/javascript",
-								"exec": [
-									"const __json = (function () { try { return pm.response.json(); } catch (e) { return {}; } })();",
-									"const __data = (__json && __json.data) || {};",
-									"const __errors = (__json && __json.errors) || [];",
-									"function payload(command) {",
-									"  pm.test(command + ': no GraphQL errors', function () { pm.expect(__errors, JSON.stringify(__errors)).to.eql([]); });",
-									"  pm.test(command + ': has a payload', function () { pm.expect(__data[command], JSON.stringify(__json).slice(0, 300)).to.be.an('object'); });",
-									"  return __data[command] || {};",
-									"}",
-									"function refused(command, reason) {",
-									"  pm.test(command + ' is refused: ' + reason, function () {",
-									"    pm.expect(__errors.length, 'expected a refusal, got ' + JSON.stringify(__json).slice(0, 300)).to.be.above(0);",
-									"    pm.expect(__errors[0].message).to.match(reason);",
-									"  });",
-									"}",
-									"function env(key) { return pm.environment.get(key); }",
-									"function ofType(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId; }); }",
-									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
-									"const p = payload('CreateToken');",
-									"pm.test('issued', function () { pm.expect(p.success).to.eql(true); });",
-									"pm.environment.set('ncp_pat_token', p.token);"
 								]
 							}
 						}
@@ -1029,7 +951,7 @@
 								},
 								{
 									"key": "value",
-									"value": "{{ncp_pat_token}}",
+									"value": "{{ncp_su_puma_token}}",
 									"type": "string"
 								},
 								{
@@ -1106,7 +1028,7 @@
 								},
 								{
 									"key": "value",
-									"value": "{{ncp_pat_token}}",
+									"value": "{{ncp_su_puma_token}}",
 									"type": "string"
 								},
 								{
@@ -1183,7 +1105,7 @@
 								},
 								{
 									"key": "value",
-									"value": "{{ncp_pat_token}}",
+									"value": "{{ncp_su_puma_token}}",
 									"type": "string"
 								},
 								{
@@ -1912,88 +1834,12 @@
 							}
 						}
 					]
-				},
-				{
-					"id": "541416d1-45bb-41f6-81b4-9ff7c07a1dc9",
-					"name": "A server token of ProLife may not send Puma notifications",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "graphql",
-							"graphql": {
-								"query": "mutation SendNotification { SendNotification(input: { productId: \"Puma\", userIds: [\"{{ncp_viewer_id}}\"], typeId: \"ncp.Puma\" }) { success } }",
-								"variables": ""
-							}
-						},
-						"url": "{{pumaUrl}}/graphql",
-						"auth": {
-							"type": "apikey",
-							"apikey": [
-								{
-									"key": "key",
-									"value": "x-authentication-token",
-									"type": "string"
-								},
-								{
-									"key": "value",
-									"value": "{{ncp_pat_token}}",
-									"type": "string"
-								},
-								{
-									"key": "in",
-									"value": "header",
-									"type": "string"
-								}
-							]
-						}
-					},
-					"response": [],
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"id": "6dc61e3d-7722-4b4e-b5fb-a1aa86f789a5",
-								"type": "text/javascript",
-								"exec": [
-									"pm.request.headers.upsert({ key: 'productid', value: 'Puma' });"
-								]
-							}
-						},
-						{
-							"listen": "test",
-							"script": {
-								"id": "79811d3f-4e01-4afc-a9d8-b1f1994f01dc",
-								"type": "text/javascript",
-								"exec": [
-									"const __json = (function () { try { return pm.response.json(); } catch (e) { return {}; } })();",
-									"const __data = (__json && __json.data) || {};",
-									"const __errors = (__json && __json.errors) || [];",
-									"function payload(command) {",
-									"  pm.test(command + ': no GraphQL errors', function () { pm.expect(__errors, JSON.stringify(__errors)).to.eql([]); });",
-									"  pm.test(command + ': has a payload', function () { pm.expect(__data[command], JSON.stringify(__json).slice(0, 300)).to.be.an('object'); });",
-									"  return __data[command] || {};",
-									"}",
-									"function refused(command, reason) {",
-									"  pm.test(command + ' is refused: ' + reason, function () {",
-									"    pm.expect(__errors.length, 'expected a refusal, got ' + JSON.stringify(__json).slice(0, 300)).to.be.above(0);",
-									"    pm.expect(__errors[0].message).to.match(reason);",
-									"  });",
-									"}",
-									"function env(key) { return pm.environment.get(key); }",
-									"function ofType(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId; }); }",
-									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
-									"refused('SendNotification', /may not send notifications of the product/);"
-								]
-							}
-						}
-					]
 				}
 			]
 		},
 		{
 			"name": "04 Ticket notifications",
-			"description": "The ticket producer of ProLife: an assignee is told, the participants of the conversation are told about new messages, grouped per ticket; a removed assignee and a removed ticket withdraw them. Needs the server token in IMT_NOTIFICATION_ACCESS_TOKEN of ProLifeServer.",
+			"description": "The ticket producer of ProLife: an assignee is told, the participants of the conversation are told about new messages, grouped per ticket; a removed assignee and a removed ticket withdraw them. ProLife sends them with the session of the user who made the change.",
 			"item": [
 				{
 					"id": "56d87793-c344-4b18-a0e0-0ed8351a442d",
