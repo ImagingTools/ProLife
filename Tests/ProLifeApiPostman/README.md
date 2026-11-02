@@ -36,7 +36,8 @@ Everything else (`accountId`, `orderId`, `deviceId`, `roleFullAccessId`, `fullAc
 4. `08 Meta Info Propagation - Account & Order Field Sync` - verifies that renaming an Account, or changing an Order's delivery/purchase id, is immediately reflected in `DevicesList`/`SoftwareProductsList`/`OrdersList` for everything linked to them (see below).
 5. `11 Permission Model - Product, Scopes, Client Permissions` - creates its own role + user + PAT and removes them again (see below).
 6. `12 Document Sharing - Isolation Between Organizations` - creates four organizations with their owners, relationships and documents and checks what each organization may see and do with the shared documents (see below). Needs only `00 Bootstrap` before it.
-7. `99 Cleanup` - best-effort removal of everything created (including the roles/users from folder `07` and the fixtures from folder `08`); CI mainly relies on the full DB reset instead.
+7. `13 Delegated Access - Working in a Delegated Organization` - connects two organizations, gives B delegated access to A, switches the owner of B into A and checks that ProLife serves that session (`GetPermissions`, `NotificationsSync`, the own account) while an account outside of A stays hidden. ProLife reads the account of the token from Puma on every request; when that read was refused, every request of the delegated organization was a 403 and the client signed out. Needs only `00 Bootstrap` before it.
+8. `99 Cleanup` - best-effort removal of everything created (including the roles/users from folder `07` and the fixtures from folder `08`); CI mainly relies on the full DB reset instead.
 
 ## Order/Product Lifecycle Scenario (folder `02 Orders`)
 

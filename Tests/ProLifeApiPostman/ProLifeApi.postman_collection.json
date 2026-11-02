@@ -19748,6 +19748,1488 @@
       ]
     },
     {
+      "name": "13 Delegated Access - Working in a Delegated Organization",
+      "item": [
+        {
+          "name": "DA: Auth SU and start the run",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{suLogin}}\", password: \"{{suPassword}}\", productId: \"{{productId}}\" }) { token userId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('daRun', Date.now().toString(36));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('SU authorized', () => pm.expect(payload('Authorization') && payload('Authorization').token, JSON.stringify(json)).to.be.a('string').and.not.empty);",
+                  "  pm.environment.set('daSuToken', payload('Authorization').token);",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: The products permissions for the scopes of the organizations",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetProductPermissions { GetProductPermissions(input: { productId: \"{{productId}}\" }) { groups { entries { permissionId } } errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  const ids = [].concat(...((payload('GetProductPermissions') && payload('GetProductPermissions').groups) || []).map((g) => (g.entries || []).map((e) => e.permissionId)));",
+                  "  pm.test('The product declares the account permissions', () => ['/AccountManagement/ViewPage', '/AccountManagement/View', '/AccountManagement/ViewAll'].forEach((id) => pm.expect(ids, JSON.stringify(json)).to.include(id)));",
+                  "  pm.environment.set('daProductScope', JSON.stringify(ids));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: RoleAdd delegation role",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{daRoleId}}\", item: { id: \"{{daRoleId}}\", name: \"Delegation Api {{daRun}}\", description: \"Created by ProLifeApiPostman\", roleId: \"DelegationApi{{daRun}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/AccountManagement/ViewPage\", direct: true}, {id: \"/AccountManagement/View\", direct: true}, {id: \"/AccountManagement/ViewAll\", direct: true}, {id: \"/AccountManagement/Edit\", direct: true}, {id: \"/AccountManagement/Edit/Add\", direct: true}, {id: \"/AccountManagement/Edit/Remove\", direct: true}, {id: \"/AccountManagement/Edit/Change\", direct: true}, {id: \"/AccountManagement/Share\", direct: true}, {id: \"/SensorManagement/ViewPage\", direct: true}, {id: \"/SensorManagement/View\", direct: true}, {id: \"/SensorManagement/Edit\", direct: true}, {id: \"/SensorManagement/Edit/Add\", direct: true}, {id: \"/SensorManagement/Share\", direct: true}, {id: \"/LicenseManagement/ViewPage\", direct: true}, {id: \"/LicenseManagement/View\", direct: true}, {id: \"/LicenseManagement/Edit\", direct: true}, {id: \"/LicenseManagement/Edit/Add\", direct: true}, {id: \"/LicenseManagement/Share\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('daRoleId', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Role created', () => pm.expect(ok('RoleAdd'), JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: UserAdd owner of A",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{daAUserId}}\", item: { id: \"{{daAUserId}}\", productId: \"{{productId}}\", name: \"Delegation Owner A\", username: \"da_a_{{daRun}}\", password: \"ShareApi_2026!\", email: \"da_a_{{daRun}}@prolifeapi.test\", groups: [], roles: [{id: \"{{daRoleId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('daAUserId', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Owner of A created', () => pm.expect(ok('UserAdd'), JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: CreateTenant A",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateTenant { CreateTenant(input: { name: \"Delegation Org A {{daRun}}\", ownerId: \"{{daAUserId}}\" }) { tenantId errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Organization A created', () => pm.expect(ok('CreateTenant') && payload('CreateTenant').tenantId, JSON.stringify(json)).to.be.a('string').and.not.empty);",
+                  "  pm.environment.set('daATenantId', payload('CreateTenant').tenantId);",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: The creator gives A the whole product",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateTenant { UpdateTenant(input: { tenantId: \"{{daATenantId}}\", name: \"Delegation Org A {{daRun}}\", tenantPermissions: {{daProductScope}} }) { success errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('The scope of A is the whole product', () => pm.expect(ok('UpdateTenant') && payload('UpdateTenant').success, JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: Auth owner of A",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"da_a_{{daRun}}\", password: \"ShareApi_2026!\", productId: \"{{productId}}\" }) { token userId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Owner of A authorized', () => pm.expect(payload('Authorization') && payload('Authorization').token, JSON.stringify(json)).to.be.a('string').and.not.empty);",
+                  "  pm.environment.set('daALoginToken', payload('Authorization').token);",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: SelectTenant A",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SelectTenant { SelectTenant(input: { tenantId: \"{{daATenantId}}\" }) { ok errorMessage userSession { accessToken tenantId } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daALoginToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  const session = payload('SelectTenant') && payload('SelectTenant').userSession;",
+                  "  pm.test('Owner of A works in A', () => {",
+                  "  \tpm.expect(payload('SelectTenant') && payload('SelectTenant').ok, JSON.stringify(json)).to.eql(true);",
+                  "  \tpm.expect(session.tenantId).to.eql(env('daATenantId'));",
+                  "  });",
+                  "  pm.environment.set('daAToken', session.accessToken);",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: UserAdd owner of B",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{daBUserId}}\", item: { id: \"{{daBUserId}}\", productId: \"{{productId}}\", name: \"Delegation Owner B\", username: \"da_b_{{daRun}}\", password: \"ShareApi_2026!\", email: \"da_b_{{daRun}}@prolifeapi.test\", groups: [], roles: [{id: \"{{daRoleId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('daBUserId', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Owner of B created', () => pm.expect(ok('UserAdd'), JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: CreateTenant B",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateTenant { CreateTenant(input: { name: \"Delegation Org B {{daRun}}\", ownerId: \"{{daBUserId}}\" }) { tenantId errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Organization B created', () => pm.expect(ok('CreateTenant') && payload('CreateTenant').tenantId, JSON.stringify(json)).to.be.a('string').and.not.empty);",
+                  "  pm.environment.set('daBTenantId', payload('CreateTenant').tenantId);",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: The creator gives B the whole product",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateTenant { UpdateTenant(input: { tenantId: \"{{daBTenantId}}\", name: \"Delegation Org B {{daRun}}\", tenantPermissions: {{daProductScope}} }) { success errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('The scope of B is the whole product', () => pm.expect(ok('UpdateTenant') && payload('UpdateTenant').success, JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: Auth owner of B",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"da_b_{{daRun}}\", password: \"ShareApi_2026!\", productId: \"{{productId}}\" }) { token userId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Owner of B authorized', () => pm.expect(payload('Authorization') && payload('Authorization').token, JSON.stringify(json)).to.be.a('string').and.not.empty);",
+                  "  pm.environment.set('daBLoginToken', payload('Authorization').token);",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: SelectTenant B",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SelectTenant { SelectTenant(input: { tenantId: \"{{daBTenantId}}\" }) { ok errorMessage userSession { accessToken tenantId } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daBLoginToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  const session = payload('SelectTenant') && payload('SelectTenant').userSession;",
+                  "  pm.test('Owner of B works in B', () => {",
+                  "  \tpm.expect(payload('SelectTenant') && payload('SelectTenant').ok, JSON.stringify(json)).to.eql(true);",
+                  "  \tpm.expect(session.tenantId).to.eql(env('daBTenantId'));",
+                  "  });",
+                  "  pm.environment.set('daBToken', session.accessToken);",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: GetConnectionCode A for B",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetConnectionCode { GetConnectionCode(input: { tenantId: \"{{daATenantId}}\" }) { connectionCode { connectionCode } errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daAToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('A has a connection code', () => pm.expect(ok('GetConnectionCode'), JSON.stringify(json)).to.eql(true));",
+                  "  pm.environment.set('daCode', payload('GetConnectionCode').connectionCode.connectionCode);",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: CreateConnectionRequest B to A",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateConnectionRequest { CreateConnectionRequest(input: { sourceTenantId: \"{{daBTenantId}}\", connectionCode: \"{{daCode}}\", message: \"Delegation\" }) { requestId errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daBToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('B requested a connection', () => pm.expect(ok('CreateConnectionRequest'), JSON.stringify(json)).to.eql(true));",
+                  "  pm.environment.set('daRequestId', payload('CreateConnectionRequest').requestId);",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: ApproveConnectionRequest A-B",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation ApproveConnectionRequest { ApproveConnectionRequest(input: { requestId: \"{{daRequestId}}\", tenantId: \"{{daATenantId}}\" }) { connectionId errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daAToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('A approved the connection', () => pm.expect(ok('ApproveConnectionRequest'), JSON.stringify(json)).to.eql(true));",
+                  "  pm.environment.set('daConnectionId', payload('ApproveConnectionRequest').connectionId);",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: UserAdd outsider",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{daOutsiderUserId}}\", item: { id: \"{{daOutsiderUserId}}\", productId: \"{{productId}}\", name: \"Delegation Outsider\", username: \"da_out_{{daRun}}\", password: \"ShareApi_2026!\", email: \"da_out_{{daRun}}@prolifeapi.test\", groups: [], roles: [{id: \"{{daRoleId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('daOutsiderUserId', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Outsider created', () => pm.expect(ok('UserAdd'), JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: Owner of A grants B delegated access",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateCrossOrgGrant { CreateCrossOrgGrant(input: { sourceTenantId: \"{{daATenantId}}\", targetTenantId: \"{{daBTenantId}}\", roleIds: [], description: \"ProLifeApiPostman delegated access\" }) { grantId errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daAToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('The grant is created', () => pm.expect(ok('CreateCrossOrgGrant') && payload('CreateCrossOrgGrant').grantId, JSON.stringify(json)).to.be.a('string').and.not.empty);",
+                  "  pm.environment.set('daGrantId', payload('CreateCrossOrgGrant').grantId);",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: Owner of B sees A as delegated",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetUserOrganizations { GetUserOrganizations(input: { id: \"{{daBUserId}}\", productId: \"{{productId}}\" }) { organizations { id isDelegated isActive } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daBToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  const organizations = (payload('GetUserOrganizations') || {}).organizations || [];",
+                  "  const delegated = organizations.find((o) => o.id === env('daATenantId'));",
+                  "  pm.test('A is listed as delegated', () => pm.expect(delegated && delegated.isDelegated, JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: Owner of B switches to the delegated A",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SelectTenant { SelectTenant(input: { tenantId: \"{{daATenantId}}\" }) { ok errorMessage userSession { accessToken tenantId } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daBToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  const session = payload('SelectTenant') && payload('SelectTenant').userSession;",
+                  "  pm.test('Owner of B works in A', () => {",
+                  "  \tpm.expect(payload('SelectTenant') && payload('SelectTenant').ok, JSON.stringify(json)).to.eql(true);",
+                  "  \tpm.expect(session.tenantId).to.eql(env('daATenantId'));",
+                  "  });",
+                  "  pm.environment.set('daDelegatedToken', session.accessToken);",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: The permissions are read in the delegated A",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetPermissions { GetPermissions(input: { accessToken: \"{{daDelegatedToken}}\" }) { permissions } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daDelegatedToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('The session of the delegated organization is accepted', () => pm.expect(errors, JSON.stringify(json)).to.eql([]));",
+                  "  pm.test('The permissions are a list', () => pm.expect((payload('GetPermissions') || {}).permissions).to.be.an('array'));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: The notifications are read in the delegated A",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query NotificationsSync { NotificationsSync(input: { pageSize: 5, maxUndelivered: 3 }) { totalCount unreadCount } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daDelegatedToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('The inbox is read', () => pm.expect(errors.length === 0 && payload('NotificationsSync') && typeof payload('NotificationsSync').totalCount, JSON.stringify(json)).to.eql('number'));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: The own account is read in the delegated A",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query UserItem { UserItem(input: { id: \"{{daBUserId}}\", productId: \"{{productId}}\" }) { id username } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daDelegatedToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('The own account', () => pm.expect(errors.length === 0 && payload('UserItem') && payload('UserItem').id, JSON.stringify(json)).to.eql(env('daBUserId')));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: An account outside of A stays hidden in the delegated A",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query UserItem { UserItem(input: { id: \"{{daOutsiderUserId}}\", productId: \"{{productId}}\" }) { id username } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daDelegatedToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('The account of the outsider is not read', () => pm.expect(errors.length > 0 || !payload('UserItem') || payload('UserItem').id !== env('daOutsiderUserId'), JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: Owner of B returns to B",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SelectTenant { SelectTenant(input: { tenantId: \"{{daBTenantId}}\" }) { ok errorMessage userSession { accessToken tenantId } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daDelegatedToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  const session = payload('SelectTenant') && payload('SelectTenant').userSession;",
+                  "  pm.test('Owner of B works in B again', () => {",
+                  "  \tpm.expect(payload('SelectTenant') && payload('SelectTenant').ok, JSON.stringify(json)).to.eql(true);",
+                  "  \tpm.expect(session.tenantId).to.eql(env('daBTenantId'));",
+                  "  });",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "99 Cleanup",
       "item": [
         {
