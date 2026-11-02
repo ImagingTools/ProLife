@@ -25,8 +25,8 @@ public:
 
 	// reimplemented (imtdoc::IDocumentNameProvider)
 	virtual QString GetDefaultDocumentName(
-				const QByteArray& objectId,
-				const istd::IChangeable& document) const override;
+				const istd::IChangeable& document,
+				const iprm::IParamsSet* paramsPtr = nullptr) const override;
 
 private:
 	I_REF(imtbase::IObjectCollection, m_objectCollectionCompPtr);

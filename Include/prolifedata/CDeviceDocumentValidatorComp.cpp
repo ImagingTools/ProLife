@@ -4,6 +4,9 @@
 // Qt includes
 #include <QtCore/QString>
 
+// ImtCore includes
+#include <imtdoc/imtdoc.h>
+
 // ProLife includes
 #include <prolifedata/prolifedata.h>
 #include <prolifedata/CDeviceInfo.h>
@@ -16,11 +19,14 @@ namespace prolifedata
 // reimplemented (imtdoc::IDocumentValidator)
 
 bool CDeviceDocumentValidatorComp::ValidateDocumentData(
-			const QByteArray& objectId,
 			const istd::IChangeable& document,
 			QString& errorMessage,
+			const iprm::IParamsSet* paramsPtr,
 			const imtbase::IOperationContext* /*operationContextPtr*/) const
 {
+	// Empty for a document never saved: the device itself is not taken for a duplicate
+	const QByteArray objectId = imtdoc::GetObjectIdFromParams(paramsPtr);
+
 	const prolifedata::COrderedIdentifiableDeviceInfo* deviceInfoPtr =
 		dynamic_cast<const prolifedata::COrderedIdentifiableDeviceInfo*>(&document);
 	if (deviceInfoPtr == nullptr){
