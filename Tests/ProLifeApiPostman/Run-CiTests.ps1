@@ -485,7 +485,7 @@ function Invoke-WsSuite {
     $wsBaseUrl = "http://localhost:$HttpPort/ProLife"
     $wsUrl = "ws://localhost:$WebSocketPort"
 
-    & node $wsScript --http $wsBaseUrl --ws $wsUrl --env $EnvironmentPath --junit $WsJUnitReportPath | Out-Host
+    & node $wsScript --http $wsBaseUrl --ws $wsUrl --puma "http://localhost:$PumaHttpPort/Puma" --env $EnvironmentPath --junit $WsJUnitReportPath | Out-Host
     return $LASTEXITCODE
 }
 
