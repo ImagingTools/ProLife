@@ -25,10 +25,10 @@ public:
 
 	// reimplemented (imtdoc::IDocumentValidator)
 	virtual bool ValidateDocumentData(
-				const QByteArray& objectId,
 				const istd::IChangeable& document,
 				QString& errorMessage,
-				const imtbase::IOperationContext* operationContextPtr) const override;
+				const iprm::IParamsSet* paramsPtr = nullptr,
+				const imtbase::IOperationContext* operationContextPtr = nullptr) const override;
 
 private:
 	I_REF(imtbase::IObjectCollection, m_objectCollectionCompPtr);

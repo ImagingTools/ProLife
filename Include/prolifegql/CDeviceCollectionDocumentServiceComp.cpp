@@ -251,7 +251,7 @@ bool CDeviceCollectionDocumentServiceComp::IsNewDocument(const QByteArray& userI
 	const imtdoc::IDocumentService::DocumentList documents = m_documentServiceCompPtr->GetOpenedDocumentList(userId);
 	for (const imtdoc::IDocumentService::DocumentListItem& document : documents){
 		if (document.documentId == documentId){
-			return document.url.isEmpty();
+			return document.documentSourceRef.isEmpty();
 		}
 	}
 

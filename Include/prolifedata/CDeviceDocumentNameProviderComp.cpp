@@ -4,6 +4,9 @@
 // Qt includes
 #include <QtCore/QString>
 
+// ImtCore includes
+#include <imtdoc/imtdoc.h>
+
 // ProLife includes
 #include <prolifedata/CDeviceInfo.h>
 
@@ -15,8 +18,8 @@ namespace prolifedata
 // reimplemented (imtdoc::IDocumentNameProvider)
 
 QString CDeviceDocumentNameProviderComp::GetDefaultDocumentName(
-			const QByteArray& objectId,
-			const istd::IChangeable& document) const
+			const istd::IChangeable& document,
+			const iprm::IParamsSet* paramsPtr) const
 {
 	const prolifedata::IDeviceInfo* deviceInfoPtr =
 		dynamic_cast<const prolifedata::IDeviceInfo*>(&document);
@@ -24,6 +27,8 @@ QString CDeviceDocumentNameProviderComp::GetDefaultDocumentName(
 		return QString();
 	}
 
+	// The product name is read from the stored device; a document never saved has none
+	const QByteArray objectId = imtdoc::GetObjectIdFromParams(paramsPtr);
 	if (objectId.isEmpty()){
 		return QString();
 	}
