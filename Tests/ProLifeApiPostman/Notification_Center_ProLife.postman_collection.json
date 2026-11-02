@@ -3004,6 +3004,1378 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "05 Organizations",
+			"description": "Through ProLife: a personal notification is seen in every organization of the user, a notification of an organization only while the user works in it - in the panel, on the notifications page and in the unread count.",
+			"item": [
+				{
+					"id": "fb51032a-5980-44fa-b5b4-d78b12a8e7d0",
+					"name": "Register the member of two organizations",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation RegisterUser { RegisterUser(input: { userData: { name: \"NCP Iso {{ncp_run}}\", username: \"ncp_iso_{{ncp_run}}\", password: \"Notify_2026!x\", email: \"ncp_iso_{{ncp_run}}@test.local\" }, productId: \"Puma\" }) { id } }",
+								"variables": ""
+							}
+						},
+						"url": "{{pumaUrl}}/graphql",
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "x-authentication-token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{ncp_su_puma_token}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "3df7288b-0d04-4f25-9e9f-07b4b199b371",
+								"type": "text/javascript",
+								"exec": [
+									"pm.request.headers.upsert({ key: 'productid', value: 'Puma' });"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "e69df21b-5471-4c21-8220-9f289eb8e65e",
+								"type": "text/javascript",
+								"exec": [
+									"const __json = (function () { try { return pm.response.json(); } catch (e) { return {}; } })();",
+									"const __data = (__json && __json.data) || {};",
+									"const __errors = (__json && __json.errors) || [];",
+									"function payload(command) {",
+									"  pm.test(command + ': no GraphQL errors', function () { pm.expect(__errors, JSON.stringify(__errors)).to.eql([]); });",
+									"  pm.test(command + ': has a payload', function () { pm.expect(__data[command], JSON.stringify(__json).slice(0, 300)).to.be.an('object'); });",
+									"  return __data[command] || {};",
+									"}",
+									"function refused(command, reason) {",
+									"  pm.test(command + ' is refused: ' + reason, function () {",
+									"    pm.expect(__errors.length, 'expected a refusal, got ' + JSON.stringify(__json).slice(0, 300)).to.be.above(0);",
+									"    pm.expect(__errors[0].message).to.match(reason);",
+									"  });",
+									"}",
+									"function env(key) { return pm.environment.get(key); }",
+									"function ofType(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId; }); }",
+									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
+									"const p = payload('RegisterUser');",
+									"pm.test('registered', function () { pm.expect(p.id).to.be.a('string').and.not.empty; });",
+									"pm.environment.set('ncp_iso_id', p.id);"
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": "6ea3615b-e507-4328-9f45-247d008ee6c5",
+					"name": "Organization A of the member",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation CreateTenant { CreateTenant(input: { name: \"NCP Iso A {{ncp_run}}\", description: \"isolation\", ownerId: \"{{ncp_iso_id}}\" }) { tenantId errorMessage } }",
+								"variables": ""
+							}
+						},
+						"url": "{{pumaUrl}}/graphql",
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "x-authentication-token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{ncp_su_puma_token}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "bc601afe-417b-44e7-ab29-d34c97af4c4a",
+								"type": "text/javascript",
+								"exec": [
+									"pm.request.headers.upsert({ key: 'productid', value: 'Puma' });"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "042e6be3-70c8-497a-b613-ec19bd981141",
+								"type": "text/javascript",
+								"exec": [
+									"const __json = (function () { try { return pm.response.json(); } catch (e) { return {}; } })();",
+									"const __data = (__json && __json.data) || {};",
+									"const __errors = (__json && __json.errors) || [];",
+									"function payload(command) {",
+									"  pm.test(command + ': no GraphQL errors', function () { pm.expect(__errors, JSON.stringify(__errors)).to.eql([]); });",
+									"  pm.test(command + ': has a payload', function () { pm.expect(__data[command], JSON.stringify(__json).slice(0, 300)).to.be.an('object'); });",
+									"  return __data[command] || {};",
+									"}",
+									"function refused(command, reason) {",
+									"  pm.test(command + ' is refused: ' + reason, function () {",
+									"    pm.expect(__errors.length, 'expected a refusal, got ' + JSON.stringify(__json).slice(0, 300)).to.be.above(0);",
+									"    pm.expect(__errors[0].message).to.match(reason);",
+									"  });",
+									"}",
+									"function env(key) { return pm.environment.get(key); }",
+									"function ofType(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId; }); }",
+									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
+									"const p = payload('CreateTenant');",
+									"pm.test('created', function () { pm.expect(p.tenantId).to.be.a('string').and.not.empty; });",
+									"pm.environment.set('ncp_iso_a', p.tenantId);"
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": "0e6a3131-33d5-4248-8221-5af1c0c32a11",
+					"name": "Organization B of the member",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation CreateTenant { CreateTenant(input: { name: \"NCP Iso B {{ncp_run}}\", description: \"isolation\", ownerId: \"{{ncp_iso_id}}\" }) { tenantId errorMessage } }",
+								"variables": ""
+							}
+						},
+						"url": "{{pumaUrl}}/graphql",
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "x-authentication-token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{ncp_su_puma_token}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "caaea39a-bc90-4e82-9d9f-f6ced9be6590",
+								"type": "text/javascript",
+								"exec": [
+									"pm.request.headers.upsert({ key: 'productid', value: 'Puma' });"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "017c3d88-4d5a-4543-a9d4-075f6992c22e",
+								"type": "text/javascript",
+								"exec": [
+									"const __json = (function () { try { return pm.response.json(); } catch (e) { return {}; } })();",
+									"const __data = (__json && __json.data) || {};",
+									"const __errors = (__json && __json.errors) || [];",
+									"function payload(command) {",
+									"  pm.test(command + ': no GraphQL errors', function () { pm.expect(__errors, JSON.stringify(__errors)).to.eql([]); });",
+									"  pm.test(command + ': has a payload', function () { pm.expect(__data[command], JSON.stringify(__json).slice(0, 300)).to.be.an('object'); });",
+									"  return __data[command] || {};",
+									"}",
+									"function refused(command, reason) {",
+									"  pm.test(command + ' is refused: ' + reason, function () {",
+									"    pm.expect(__errors.length, 'expected a refusal, got ' + JSON.stringify(__json).slice(0, 300)).to.be.above(0);",
+									"    pm.expect(__errors[0].message).to.match(reason);",
+									"  });",
+									"}",
+									"function env(key) { return pm.environment.get(key); }",
+									"function ofType(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId; }); }",
+									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
+									"const p = payload('CreateTenant');",
+									"pm.test('created', function () { pm.expect(p.tenantId).to.be.a('string').and.not.empty; });",
+									"pm.environment.set('ncp_iso_b', p.tenantId);"
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": "1c23d340-ea2e-4870-b561-dabceaf8d05c",
+					"name": "A ProLife notification: personal",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation SendNotification { SendNotification(input: { productId: \"ProLife\", userIds: [\"{{ncp_iso_id}}\"], typeId: \"imtdesk.TicketMessage\", subject: { id: \"iso-personal\", typeId: \"SupportTicket\", name: \"Iso personal\" } }) { success } }",
+								"variables": ""
+							}
+						},
+						"url": "{{pumaUrl}}/graphql",
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "x-authentication-token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{ncp_su_puma_token}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "f100d7d8-c95d-4323-80c3-7240be78cb91",
+								"type": "text/javascript",
+								"exec": [
+									"pm.request.headers.upsert({ key: 'productid', value: 'ProLife' });"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "37741a37-e469-4811-a595-8fc669a8a62e",
+								"type": "text/javascript",
+								"exec": [
+									"const __json = (function () { try { return pm.response.json(); } catch (e) { return {}; } })();",
+									"const __data = (__json && __json.data) || {};",
+									"const __errors = (__json && __json.errors) || [];",
+									"function payload(command) {",
+									"  pm.test(command + ': no GraphQL errors', function () { pm.expect(__errors, JSON.stringify(__errors)).to.eql([]); });",
+									"  pm.test(command + ': has a payload', function () { pm.expect(__data[command], JSON.stringify(__json).slice(0, 300)).to.be.an('object'); });",
+									"  return __data[command] || {};",
+									"}",
+									"function refused(command, reason) {",
+									"  pm.test(command + ' is refused: ' + reason, function () {",
+									"    pm.expect(__errors.length, 'expected a refusal, got ' + JSON.stringify(__json).slice(0, 300)).to.be.above(0);",
+									"    pm.expect(__errors[0].message).to.match(reason);",
+									"  });",
+									"}",
+									"function env(key) { return pm.environment.get(key); }",
+									"function ofType(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId; }); }",
+									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
+									"const p = payload('SendNotification');",
+									"pm.test('sent', function () { pm.expect(p.success).to.eql(true); });"
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": "2bed8eee-b67b-4257-9ad1-7e968d4d86a5",
+					"name": "A ProLife notification: of organization A",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation SendNotification { SendNotification(input: { productId: \"ProLife\", tenantId: \"{{ncp_iso_a}}\", userIds: [\"{{ncp_iso_id}}\"], typeId: \"imtdesk.TicketMessage\", subject: { id: \"iso-a\", typeId: \"SupportTicket\", name: \"Iso a\" } }) { success } }",
+								"variables": ""
+							}
+						},
+						"url": "{{pumaUrl}}/graphql",
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "x-authentication-token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{ncp_su_puma_token}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "3fbadc36-34cc-4665-b977-1f5dcbddbbd0",
+								"type": "text/javascript",
+								"exec": [
+									"pm.request.headers.upsert({ key: 'productid', value: 'ProLife' });"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "0e201efd-39c2-48b4-a7f0-2d35de665f9b",
+								"type": "text/javascript",
+								"exec": [
+									"const __json = (function () { try { return pm.response.json(); } catch (e) { return {}; } })();",
+									"const __data = (__json && __json.data) || {};",
+									"const __errors = (__json && __json.errors) || [];",
+									"function payload(command) {",
+									"  pm.test(command + ': no GraphQL errors', function () { pm.expect(__errors, JSON.stringify(__errors)).to.eql([]); });",
+									"  pm.test(command + ': has a payload', function () { pm.expect(__data[command], JSON.stringify(__json).slice(0, 300)).to.be.an('object'); });",
+									"  return __data[command] || {};",
+									"}",
+									"function refused(command, reason) {",
+									"  pm.test(command + ' is refused: ' + reason, function () {",
+									"    pm.expect(__errors.length, 'expected a refusal, got ' + JSON.stringify(__json).slice(0, 300)).to.be.above(0);",
+									"    pm.expect(__errors[0].message).to.match(reason);",
+									"  });",
+									"}",
+									"function env(key) { return pm.environment.get(key); }",
+									"function ofType(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId; }); }",
+									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
+									"const p = payload('SendNotification');",
+									"pm.test('sent', function () { pm.expect(p.success).to.eql(true); });"
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": "73f114e6-ae91-42e6-9b86-cad1f5b0445e",
+					"name": "A ProLife notification: of organization B",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation SendNotification { SendNotification(input: { productId: \"ProLife\", tenantId: \"{{ncp_iso_b}}\", userIds: [\"{{ncp_iso_id}}\"], typeId: \"imtdesk.TicketMessage\", subject: { id: \"iso-b\", typeId: \"SupportTicket\", name: \"Iso b\" } }) { success } }",
+								"variables": ""
+							}
+						},
+						"url": "{{pumaUrl}}/graphql",
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "x-authentication-token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{ncp_su_puma_token}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "942f2168-51fe-4059-951d-5720ba787949",
+								"type": "text/javascript",
+								"exec": [
+									"pm.request.headers.upsert({ key: 'productid', value: 'ProLife' });"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "c3b7729b-9076-4e92-ad5f-73b69389fbf5",
+								"type": "text/javascript",
+								"exec": [
+									"const __json = (function () { try { return pm.response.json(); } catch (e) { return {}; } })();",
+									"const __data = (__json && __json.data) || {};",
+									"const __errors = (__json && __json.errors) || [];",
+									"function payload(command) {",
+									"  pm.test(command + ': no GraphQL errors', function () { pm.expect(__errors, JSON.stringify(__errors)).to.eql([]); });",
+									"  pm.test(command + ': has a payload', function () { pm.expect(__data[command], JSON.stringify(__json).slice(0, 300)).to.be.an('object'); });",
+									"  return __data[command] || {};",
+									"}",
+									"function refused(command, reason) {",
+									"  pm.test(command + ' is refused: ' + reason, function () {",
+									"    pm.expect(__errors.length, 'expected a refusal, got ' + JSON.stringify(__json).slice(0, 300)).to.be.above(0);",
+									"    pm.expect(__errors[0].message).to.match(reason);",
+									"  });",
+									"}",
+									"function env(key) { return pm.environment.get(key); }",
+									"function ofType(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId; }); }",
+									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
+									"const p = payload('SendNotification');",
+									"pm.test('sent', function () { pm.expect(p.success).to.eql(true); });"
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": "749b3835-172b-43a0-9be7-0d64cb3711cb",
+					"name": "Sign in the member (no organization)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query Authorization { Authorization(input: { login: \"ncp_iso_{{ncp_run}}\", password: \"Notify_2026!x\", productId: \"{{productId}}\" }) { userId token } }",
+								"variables": ""
+							}
+						},
+						"url": "{{baseUrl}}/graphql",
+						"auth": {
+							"type": "noauth"
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "71167e7d-5ab5-4368-8d55-c025fea2d637",
+								"type": "text/javascript",
+								"exec": [
+									"const __json = (function () { try { return pm.response.json(); } catch (e) { return {}; } })();",
+									"const __data = (__json && __json.data) || {};",
+									"const __errors = (__json && __json.errors) || [];",
+									"function payload(command) {",
+									"  pm.test(command + ': no GraphQL errors', function () { pm.expect(__errors, JSON.stringify(__errors)).to.eql([]); });",
+									"  pm.test(command + ': has a payload', function () { pm.expect(__data[command], JSON.stringify(__json).slice(0, 300)).to.be.an('object'); });",
+									"  return __data[command] || {};",
+									"}",
+									"function refused(command, reason) {",
+									"  pm.test(command + ' is refused: ' + reason, function () {",
+									"    pm.expect(__errors.length, 'expected a refusal, got ' + JSON.stringify(__json).slice(0, 300)).to.be.above(0);",
+									"    pm.expect(__errors[0].message).to.match(reason);",
+									"  });",
+									"}",
+									"function env(key) { return pm.environment.get(key); }",
+									"function ofType(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId; }); }",
+									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
+									"const p = payload('Authorization');",
+									"pm.test('signed in', function () { pm.expect(p.token).to.be.a('string').and.not.empty; });",
+									"pm.environment.set('ncp_iso_token', p.token);"
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": "1f2c3fa5-7666-4769-8f80-aa00f09736f6",
+					"name": "The panel without an organization: personal",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query NotificationsList { NotificationsList(input: { pageSize: 100 }) { totalCount unreadCount items { id subject { id } } } }",
+								"variables": ""
+							}
+						},
+						"url": "{{baseUrl}}/graphql",
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "x-authentication-token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{ncp_iso_token}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f4118f58-4fd1-4977-ac70-f728ab44fd93",
+								"type": "text/javascript",
+								"exec": [
+									"const __json = (function () { try { return pm.response.json(); } catch (e) { return {}; } })();",
+									"const __data = (__json && __json.data) || {};",
+									"const __errors = (__json && __json.errors) || [];",
+									"function payload(command) {",
+									"  pm.test(command + ': no GraphQL errors', function () { pm.expect(__errors, JSON.stringify(__errors)).to.eql([]); });",
+									"  pm.test(command + ': has a payload', function () { pm.expect(__data[command], JSON.stringify(__json).slice(0, 300)).to.be.an('object'); });",
+									"  return __data[command] || {};",
+									"}",
+									"function refused(command, reason) {",
+									"  pm.test(command + ' is refused: ' + reason, function () {",
+									"    pm.expect(__errors.length, 'expected a refusal, got ' + JSON.stringify(__json).slice(0, 300)).to.be.above(0);",
+									"    pm.expect(__errors[0].message).to.match(reason);",
+									"  });",
+									"}",
+									"function env(key) { return pm.environment.get(key); }",
+									"function ofType(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId; }); }",
+									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
+									"const p = payload('NotificationsList');",
+									"const subjects = function (list) { return (list || []).map(function (i) { return i.subject && i.subject.id; }).filter(function (id) { return id && id.indexOf('iso-') === 0; }).sort(); };",
+									"pm.test('exactly these', function () { pm.expect(subjects(p.items)).to.eql([\"iso-personal\"]); });",
+									"pm.test('counted', function () { pm.expect(p.totalCount).to.eql(1); pm.expect(p.unreadCount).to.eql(1); });"
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": "e735656c-118b-49ed-81d2-fa00c653b65b",
+					"name": "The notifications page without an organization: personal",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query UserNotificationsList { UserNotificationsList(input: { viewParams: { offset: 0, count: 100 } }) { items { id subject { id } } } }",
+								"variables": ""
+							}
+						},
+						"url": "{{baseUrl}}/graphql",
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "x-authentication-token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{ncp_iso_token}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2a96cc31-9182-40ac-bd30-c913c713c48a",
+								"type": "text/javascript",
+								"exec": [
+									"const __json = (function () { try { return pm.response.json(); } catch (e) { return {}; } })();",
+									"const __data = (__json && __json.data) || {};",
+									"const __errors = (__json && __json.errors) || [];",
+									"function payload(command) {",
+									"  pm.test(command + ': no GraphQL errors', function () { pm.expect(__errors, JSON.stringify(__errors)).to.eql([]); });",
+									"  pm.test(command + ': has a payload', function () { pm.expect(__data[command], JSON.stringify(__json).slice(0, 300)).to.be.an('object'); });",
+									"  return __data[command] || {};",
+									"}",
+									"function refused(command, reason) {",
+									"  pm.test(command + ' is refused: ' + reason, function () {",
+									"    pm.expect(__errors.length, 'expected a refusal, got ' + JSON.stringify(__json).slice(0, 300)).to.be.above(0);",
+									"    pm.expect(__errors[0].message).to.match(reason);",
+									"  });",
+									"}",
+									"function env(key) { return pm.environment.get(key); }",
+									"function ofType(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId; }); }",
+									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
+									"const p = payload('UserNotificationsList');",
+									"const subjects = function (list) { return (list || []).map(function (i) { return i.subject && i.subject.id; }).filter(function (id) { return id && id.indexOf('iso-') === 0; }).sort(); };",
+									"pm.test('exactly these', function () { pm.expect(subjects(p.items)).to.eql([\"iso-personal\"]); });"
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": "0503dc3b-a2ea-4f73-bdb3-4b3d8831a0b1",
+					"name": "The unread count without an organization: 1",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query NotificationsUnreadCount { NotificationsUnreadCount { unreadCount } }",
+								"variables": ""
+							}
+						},
+						"url": "{{baseUrl}}/graphql",
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "x-authentication-token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{ncp_iso_token}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4dd1e187-8345-4861-9c97-bd7a9a1a7963",
+								"type": "text/javascript",
+								"exec": [
+									"const __json = (function () { try { return pm.response.json(); } catch (e) { return {}; } })();",
+									"const __data = (__json && __json.data) || {};",
+									"const __errors = (__json && __json.errors) || [];",
+									"function payload(command) {",
+									"  pm.test(command + ': no GraphQL errors', function () { pm.expect(__errors, JSON.stringify(__errors)).to.eql([]); });",
+									"  pm.test(command + ': has a payload', function () { pm.expect(__data[command], JSON.stringify(__json).slice(0, 300)).to.be.an('object'); });",
+									"  return __data[command] || {};",
+									"}",
+									"function refused(command, reason) {",
+									"  pm.test(command + ' is refused: ' + reason, function () {",
+									"    pm.expect(__errors.length, 'expected a refusal, got ' + JSON.stringify(__json).slice(0, 300)).to.be.above(0);",
+									"    pm.expect(__errors[0].message).to.match(reason);",
+									"  });",
+									"}",
+									"function env(key) { return pm.environment.get(key); }",
+									"function ofType(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId; }); }",
+									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
+									"const p = payload('NotificationsUnreadCount');",
+									"pm.test('counted', function () { pm.expect(p.unreadCount).to.eql(1); });"
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": "5574351e-2cbe-4c31-a532-f64e07cb8631",
+					"name": "Sign in the member (for A)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query Authorization { Authorization(input: { login: \"ncp_iso_{{ncp_run}}\", password: \"Notify_2026!x\", productId: \"{{productId}}\" }) { userId token } }",
+								"variables": ""
+							}
+						},
+						"url": "{{baseUrl}}/graphql",
+						"auth": {
+							"type": "noauth"
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "58a8698c-f26a-44e7-9e80-0f3472f00041",
+								"type": "text/javascript",
+								"exec": [
+									"const __json = (function () { try { return pm.response.json(); } catch (e) { return {}; } })();",
+									"const __data = (__json && __json.data) || {};",
+									"const __errors = (__json && __json.errors) || [];",
+									"function payload(command) {",
+									"  pm.test(command + ': no GraphQL errors', function () { pm.expect(__errors, JSON.stringify(__errors)).to.eql([]); });",
+									"  pm.test(command + ': has a payload', function () { pm.expect(__data[command], JSON.stringify(__json).slice(0, 300)).to.be.an('object'); });",
+									"  return __data[command] || {};",
+									"}",
+									"function refused(command, reason) {",
+									"  pm.test(command + ' is refused: ' + reason, function () {",
+									"    pm.expect(__errors.length, 'expected a refusal, got ' + JSON.stringify(__json).slice(0, 300)).to.be.above(0);",
+									"    pm.expect(__errors[0].message).to.match(reason);",
+									"  });",
+									"}",
+									"function env(key) { return pm.environment.get(key); }",
+									"function ofType(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId; }); }",
+									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
+									"const p = payload('Authorization');",
+									"pm.test('signed in', function () { pm.expect(p.token).to.be.a('string').and.not.empty; });",
+									"pm.environment.set('ncp_iso_token', p.token);"
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": "c9339835-e358-4332-a376-8a830f2be5f1",
+					"name": "Work in organization A",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation SelectTenant { SelectTenant(input: { tenantId: \"{{ncp_iso_a}}\" }) { ok errorMessage userSession { accessToken tenantId } } }",
+								"variables": ""
+							}
+						},
+						"url": "{{baseUrl}}/graphql",
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "x-authentication-token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{ncp_iso_token}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fad8b98c-35a6-4261-9c9e-86573dee6dae",
+								"type": "text/javascript",
+								"exec": [
+									"const __json = (function () { try { return pm.response.json(); } catch (e) { return {}; } })();",
+									"const __data = (__json && __json.data) || {};",
+									"const __errors = (__json && __json.errors) || [];",
+									"function payload(command) {",
+									"  pm.test(command + ': no GraphQL errors', function () { pm.expect(__errors, JSON.stringify(__errors)).to.eql([]); });",
+									"  pm.test(command + ': has a payload', function () { pm.expect(__data[command], JSON.stringify(__json).slice(0, 300)).to.be.an('object'); });",
+									"  return __data[command] || {};",
+									"}",
+									"function refused(command, reason) {",
+									"  pm.test(command + ' is refused: ' + reason, function () {",
+									"    pm.expect(__errors.length, 'expected a refusal, got ' + JSON.stringify(__json).slice(0, 300)).to.be.above(0);",
+									"    pm.expect(__errors[0].message).to.match(reason);",
+									"  });",
+									"}",
+									"function env(key) { return pm.environment.get(key); }",
+									"function ofType(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId; }); }",
+									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
+									"const p = payload('SelectTenant');",
+									"pm.test('in the organization', function () { pm.expect(p.ok, JSON.stringify(p)).to.eql(true); pm.expect(p.userSession.tenantId).to.eql(env('ncp_iso_a')); });",
+									"pm.environment.set('ncp_iso_token', p.userSession.accessToken);"
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": "4831e795-3ee0-4935-b535-acd3b1c634be",
+					"name": "The panel in A: a, personal",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query NotificationsList { NotificationsList(input: { pageSize: 100 }) { totalCount unreadCount items { id subject { id } } } }",
+								"variables": ""
+							}
+						},
+						"url": "{{baseUrl}}/graphql",
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "x-authentication-token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{ncp_iso_token}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e52fa3e7-e460-405b-be18-8f359add1e04",
+								"type": "text/javascript",
+								"exec": [
+									"const __json = (function () { try { return pm.response.json(); } catch (e) { return {}; } })();",
+									"const __data = (__json && __json.data) || {};",
+									"const __errors = (__json && __json.errors) || [];",
+									"function payload(command) {",
+									"  pm.test(command + ': no GraphQL errors', function () { pm.expect(__errors, JSON.stringify(__errors)).to.eql([]); });",
+									"  pm.test(command + ': has a payload', function () { pm.expect(__data[command], JSON.stringify(__json).slice(0, 300)).to.be.an('object'); });",
+									"  return __data[command] || {};",
+									"}",
+									"function refused(command, reason) {",
+									"  pm.test(command + ' is refused: ' + reason, function () {",
+									"    pm.expect(__errors.length, 'expected a refusal, got ' + JSON.stringify(__json).slice(0, 300)).to.be.above(0);",
+									"    pm.expect(__errors[0].message).to.match(reason);",
+									"  });",
+									"}",
+									"function env(key) { return pm.environment.get(key); }",
+									"function ofType(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId; }); }",
+									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
+									"const p = payload('NotificationsList');",
+									"const subjects = function (list) { return (list || []).map(function (i) { return i.subject && i.subject.id; }).filter(function (id) { return id && id.indexOf('iso-') === 0; }).sort(); };",
+									"pm.test('exactly these', function () { pm.expect(subjects(p.items)).to.eql([\"iso-a\", \"iso-personal\"]); });",
+									"pm.test('counted', function () { pm.expect(p.totalCount).to.eql(2); pm.expect(p.unreadCount).to.eql(2); });"
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": "769ed57f-0cad-488c-9de0-65e88c8a89cc",
+					"name": "The notifications page in A: a, personal",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query UserNotificationsList { UserNotificationsList(input: { viewParams: { offset: 0, count: 100 } }) { items { id subject { id } } } }",
+								"variables": ""
+							}
+						},
+						"url": "{{baseUrl}}/graphql",
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "x-authentication-token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{ncp_iso_token}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d7a552c3-b610-40bc-aa22-1c923a9dced3",
+								"type": "text/javascript",
+								"exec": [
+									"const __json = (function () { try { return pm.response.json(); } catch (e) { return {}; } })();",
+									"const __data = (__json && __json.data) || {};",
+									"const __errors = (__json && __json.errors) || [];",
+									"function payload(command) {",
+									"  pm.test(command + ': no GraphQL errors', function () { pm.expect(__errors, JSON.stringify(__errors)).to.eql([]); });",
+									"  pm.test(command + ': has a payload', function () { pm.expect(__data[command], JSON.stringify(__json).slice(0, 300)).to.be.an('object'); });",
+									"  return __data[command] || {};",
+									"}",
+									"function refused(command, reason) {",
+									"  pm.test(command + ' is refused: ' + reason, function () {",
+									"    pm.expect(__errors.length, 'expected a refusal, got ' + JSON.stringify(__json).slice(0, 300)).to.be.above(0);",
+									"    pm.expect(__errors[0].message).to.match(reason);",
+									"  });",
+									"}",
+									"function env(key) { return pm.environment.get(key); }",
+									"function ofType(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId; }); }",
+									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
+									"const p = payload('UserNotificationsList');",
+									"const subjects = function (list) { return (list || []).map(function (i) { return i.subject && i.subject.id; }).filter(function (id) { return id && id.indexOf('iso-') === 0; }).sort(); };",
+									"pm.test('exactly these', function () { pm.expect(subjects(p.items)).to.eql([\"iso-a\", \"iso-personal\"]); });"
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": "df03a500-4e62-42aa-946b-e6d709e06b42",
+					"name": "The unread count in A: 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query NotificationsUnreadCount { NotificationsUnreadCount { unreadCount } }",
+								"variables": ""
+							}
+						},
+						"url": "{{baseUrl}}/graphql",
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "x-authentication-token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{ncp_iso_token}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8a956500-be09-45fb-b13c-819daad2e8e4",
+								"type": "text/javascript",
+								"exec": [
+									"const __json = (function () { try { return pm.response.json(); } catch (e) { return {}; } })();",
+									"const __data = (__json && __json.data) || {};",
+									"const __errors = (__json && __json.errors) || [];",
+									"function payload(command) {",
+									"  pm.test(command + ': no GraphQL errors', function () { pm.expect(__errors, JSON.stringify(__errors)).to.eql([]); });",
+									"  pm.test(command + ': has a payload', function () { pm.expect(__data[command], JSON.stringify(__json).slice(0, 300)).to.be.an('object'); });",
+									"  return __data[command] || {};",
+									"}",
+									"function refused(command, reason) {",
+									"  pm.test(command + ' is refused: ' + reason, function () {",
+									"    pm.expect(__errors.length, 'expected a refusal, got ' + JSON.stringify(__json).slice(0, 300)).to.be.above(0);",
+									"    pm.expect(__errors[0].message).to.match(reason);",
+									"  });",
+									"}",
+									"function env(key) { return pm.environment.get(key); }",
+									"function ofType(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId; }); }",
+									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
+									"const p = payload('NotificationsUnreadCount');",
+									"pm.test('counted', function () { pm.expect(p.unreadCount).to.eql(2); });"
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": "8559eaaf-746d-494d-9da7-5d511b28cd21",
+					"name": "Sign in the member (for B)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query Authorization { Authorization(input: { login: \"ncp_iso_{{ncp_run}}\", password: \"Notify_2026!x\", productId: \"{{productId}}\" }) { userId token } }",
+								"variables": ""
+							}
+						},
+						"url": "{{baseUrl}}/graphql",
+						"auth": {
+							"type": "noauth"
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5b764b4d-f3ec-48d0-8a84-d78ced72ae75",
+								"type": "text/javascript",
+								"exec": [
+									"const __json = (function () { try { return pm.response.json(); } catch (e) { return {}; } })();",
+									"const __data = (__json && __json.data) || {};",
+									"const __errors = (__json && __json.errors) || [];",
+									"function payload(command) {",
+									"  pm.test(command + ': no GraphQL errors', function () { pm.expect(__errors, JSON.stringify(__errors)).to.eql([]); });",
+									"  pm.test(command + ': has a payload', function () { pm.expect(__data[command], JSON.stringify(__json).slice(0, 300)).to.be.an('object'); });",
+									"  return __data[command] || {};",
+									"}",
+									"function refused(command, reason) {",
+									"  pm.test(command + ' is refused: ' + reason, function () {",
+									"    pm.expect(__errors.length, 'expected a refusal, got ' + JSON.stringify(__json).slice(0, 300)).to.be.above(0);",
+									"    pm.expect(__errors[0].message).to.match(reason);",
+									"  });",
+									"}",
+									"function env(key) { return pm.environment.get(key); }",
+									"function ofType(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId; }); }",
+									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
+									"const p = payload('Authorization');",
+									"pm.test('signed in', function () { pm.expect(p.token).to.be.a('string').and.not.empty; });",
+									"pm.environment.set('ncp_iso_token', p.token);"
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": "d546def9-bd03-4f14-a174-dba3beff019c",
+					"name": "Work in organization B",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation SelectTenant { SelectTenant(input: { tenantId: \"{{ncp_iso_b}}\" }) { ok errorMessage userSession { accessToken tenantId } } }",
+								"variables": ""
+							}
+						},
+						"url": "{{baseUrl}}/graphql",
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "x-authentication-token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{ncp_iso_token}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5cd58628-211e-4eaf-87f4-ea321b92f2e2",
+								"type": "text/javascript",
+								"exec": [
+									"const __json = (function () { try { return pm.response.json(); } catch (e) { return {}; } })();",
+									"const __data = (__json && __json.data) || {};",
+									"const __errors = (__json && __json.errors) || [];",
+									"function payload(command) {",
+									"  pm.test(command + ': no GraphQL errors', function () { pm.expect(__errors, JSON.stringify(__errors)).to.eql([]); });",
+									"  pm.test(command + ': has a payload', function () { pm.expect(__data[command], JSON.stringify(__json).slice(0, 300)).to.be.an('object'); });",
+									"  return __data[command] || {};",
+									"}",
+									"function refused(command, reason) {",
+									"  pm.test(command + ' is refused: ' + reason, function () {",
+									"    pm.expect(__errors.length, 'expected a refusal, got ' + JSON.stringify(__json).slice(0, 300)).to.be.above(0);",
+									"    pm.expect(__errors[0].message).to.match(reason);",
+									"  });",
+									"}",
+									"function env(key) { return pm.environment.get(key); }",
+									"function ofType(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId; }); }",
+									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
+									"const p = payload('SelectTenant');",
+									"pm.test('in the organization', function () { pm.expect(p.ok, JSON.stringify(p)).to.eql(true); pm.expect(p.userSession.tenantId).to.eql(env('ncp_iso_b')); });",
+									"pm.environment.set('ncp_iso_token', p.userSession.accessToken);"
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": "562d67bc-8d16-4dd6-919b-2db4f9eb8fda",
+					"name": "The panel in B: b, personal",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query NotificationsList { NotificationsList(input: { pageSize: 100 }) { totalCount unreadCount items { id subject { id } } } }",
+								"variables": ""
+							}
+						},
+						"url": "{{baseUrl}}/graphql",
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "x-authentication-token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{ncp_iso_token}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "05479ea6-751d-4b69-8f8c-ecfd1d213d58",
+								"type": "text/javascript",
+								"exec": [
+									"const __json = (function () { try { return pm.response.json(); } catch (e) { return {}; } })();",
+									"const __data = (__json && __json.data) || {};",
+									"const __errors = (__json && __json.errors) || [];",
+									"function payload(command) {",
+									"  pm.test(command + ': no GraphQL errors', function () { pm.expect(__errors, JSON.stringify(__errors)).to.eql([]); });",
+									"  pm.test(command + ': has a payload', function () { pm.expect(__data[command], JSON.stringify(__json).slice(0, 300)).to.be.an('object'); });",
+									"  return __data[command] || {};",
+									"}",
+									"function refused(command, reason) {",
+									"  pm.test(command + ' is refused: ' + reason, function () {",
+									"    pm.expect(__errors.length, 'expected a refusal, got ' + JSON.stringify(__json).slice(0, 300)).to.be.above(0);",
+									"    pm.expect(__errors[0].message).to.match(reason);",
+									"  });",
+									"}",
+									"function env(key) { return pm.environment.get(key); }",
+									"function ofType(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId; }); }",
+									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
+									"const p = payload('NotificationsList');",
+									"const subjects = function (list) { return (list || []).map(function (i) { return i.subject && i.subject.id; }).filter(function (id) { return id && id.indexOf('iso-') === 0; }).sort(); };",
+									"pm.test('exactly these', function () { pm.expect(subjects(p.items)).to.eql([\"iso-b\", \"iso-personal\"]); });",
+									"pm.test('counted', function () { pm.expect(p.totalCount).to.eql(2); pm.expect(p.unreadCount).to.eql(2); });"
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": "28eb559e-525f-4630-98de-ee8c752cae16",
+					"name": "The notifications page in B: b, personal",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query UserNotificationsList { UserNotificationsList(input: { viewParams: { offset: 0, count: 100 } }) { items { id subject { id } } } }",
+								"variables": ""
+							}
+						},
+						"url": "{{baseUrl}}/graphql",
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "x-authentication-token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{ncp_iso_token}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f13733bf-b1ec-4c7c-934b-9cac5946e19e",
+								"type": "text/javascript",
+								"exec": [
+									"const __json = (function () { try { return pm.response.json(); } catch (e) { return {}; } })();",
+									"const __data = (__json && __json.data) || {};",
+									"const __errors = (__json && __json.errors) || [];",
+									"function payload(command) {",
+									"  pm.test(command + ': no GraphQL errors', function () { pm.expect(__errors, JSON.stringify(__errors)).to.eql([]); });",
+									"  pm.test(command + ': has a payload', function () { pm.expect(__data[command], JSON.stringify(__json).slice(0, 300)).to.be.an('object'); });",
+									"  return __data[command] || {};",
+									"}",
+									"function refused(command, reason) {",
+									"  pm.test(command + ' is refused: ' + reason, function () {",
+									"    pm.expect(__errors.length, 'expected a refusal, got ' + JSON.stringify(__json).slice(0, 300)).to.be.above(0);",
+									"    pm.expect(__errors[0].message).to.match(reason);",
+									"  });",
+									"}",
+									"function env(key) { return pm.environment.get(key); }",
+									"function ofType(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId; }); }",
+									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
+									"const p = payload('UserNotificationsList');",
+									"const subjects = function (list) { return (list || []).map(function (i) { return i.subject && i.subject.id; }).filter(function (id) { return id && id.indexOf('iso-') === 0; }).sort(); };",
+									"pm.test('exactly these', function () { pm.expect(subjects(p.items)).to.eql([\"iso-b\", \"iso-personal\"]); });"
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": "dac4f482-6d47-4c87-a9f2-1bd17f3ea2f9",
+					"name": "The unread count in B: 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query NotificationsUnreadCount { NotificationsUnreadCount { unreadCount } }",
+								"variables": ""
+							}
+						},
+						"url": "{{baseUrl}}/graphql",
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "x-authentication-token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{ncp_iso_token}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "823a9ea5-5804-408b-a4f2-91a3dd681d8b",
+								"type": "text/javascript",
+								"exec": [
+									"const __json = (function () { try { return pm.response.json(); } catch (e) { return {}; } })();",
+									"const __data = (__json && __json.data) || {};",
+									"const __errors = (__json && __json.errors) || [];",
+									"function payload(command) {",
+									"  pm.test(command + ': no GraphQL errors', function () { pm.expect(__errors, JSON.stringify(__errors)).to.eql([]); });",
+									"  pm.test(command + ': has a payload', function () { pm.expect(__data[command], JSON.stringify(__json).slice(0, 300)).to.be.an('object'); });",
+									"  return __data[command] || {};",
+									"}",
+									"function refused(command, reason) {",
+									"  pm.test(command + ' is refused: ' + reason, function () {",
+									"    pm.expect(__errors.length, 'expected a refusal, got ' + JSON.stringify(__json).slice(0, 300)).to.be.above(0);",
+									"    pm.expect(__errors[0].message).to.match(reason);",
+									"  });",
+									"}",
+									"function env(key) { return pm.environment.get(key); }",
+									"function ofType(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId; }); }",
+									"function aboutTicket(items, typeId) { return (items || []).filter(function (i) { return i.typeId === typeId && i.subject && i.subject.id === env('ncp_ticket'); }); }",
+									"const p = payload('NotificationsUnreadCount');",
+									"pm.test('counted', function () { pm.expect(p.unreadCount).to.eql(2); });"
+								]
+							}
+						}
+					]
+				}
+			]
 		}
 	],
 	"event": [

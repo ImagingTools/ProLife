@@ -148,6 +148,9 @@ answers itself and the ticket notifications of `CTicketNotificationProducerComp`
 - `04 Ticket notifications` - the assignee is told by the reporter; two comments make one notification with both,
   the writer is not told; a removed assignee loses the assignment, a new assignment is told again; a removed ticket
   withdraws its notifications.
+- `05 Organizations` - a member of two organizations: a personal notification is seen in every organization, a
+  notification of an organization only while working in it - in the panel, on the notifications page and in the unread
+  count, all through ProLife.
 
 ProLife sends the ticket notifications to Puma with the session of the user who made the change; nothing has to be
 configured. A product server has no identity of its own yet (ImagingTools/ImtCore#1059).
