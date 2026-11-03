@@ -2948,12 +2948,12 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "query GetApplicationInfo { GetApplicationInfo(input: { productId: \"{{productId}}\" }) { applicationId applicationName version tenantsEnabled externalLoginEnabled } }",
+                "query": "query GetApplicationInfo { GetApplicationInfo(input: { productId: \"{{productId}}\" }) { applicationId applicationName version buildTime authServer { version versionKind buildTime } tenantsEnabled externalLoginEnabled } }",
                 "variables": ""
               }
             },
             "url": "{{baseUrl}}/graphql",
-            "description": "Covers GetApplicationInfo (imtapp/1.0 Application.sdl). The ProLife server enables tenants (TenantsEnabled=true in ProLifeHandlers.acc); clients start tenant/organization requests only when this flag is set."
+            "description": "Covers GetApplicationInfo (imtapp/1.0 Application.sdl). The ProLife server enables tenants (TenantsEnabled=true in ProLifeHandlers.acc); clients start tenant/organization requests only when this flag is set. buildTime is the modification time of the server executable; authServer is the version Puma reported to ProLife after the WebSocket connection to Puma was established (AuthServerVersionInfo in PumaGQLClientEngine.acc), shown as Puma Version on the About page."
           },
           "event": [
             {
@@ -2970,6 +2970,22 @@
                   "});",
                   "pm.test('GetApplicationInfo reports external sign-in enabled for ProLife (ExternalLoginEnabled in ProLifeHandlers.acc)', function () {",
                   "  pm.expect(json.data.GetApplicationInfo.externalLoginEnabled).to.eql(true);",
+                  "});",
+                  "// An ISO date in UTC that is not in the future: the executable was built before it runs",
+                  "function expectBuildTime(value, what) {",
+                  "  pm.expect(value, what).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$/);",
+                  "  const time = Date.parse(value);",
+                  "  pm.expect(time, what).to.be.above(Date.parse('2020-01-01T00:00:00Z'));",
+                  "  pm.expect(time, what).to.be.at.most(Date.now() + 60000);",
+                  "}",
+                  "pm.test('GetApplicationInfo reports the build time of the ProLife server', function () {",
+                  "  expectBuildTime(json.data.GetApplicationInfo.buildTime, 'buildTime');",
+                  "});",
+                  "pm.test('GetApplicationInfo reports the version and build time of Puma', function () {",
+                  "  const authServer = json.data.GetApplicationInfo.authServer;",
+                  "  pm.expect(authServer, JSON.stringify(json.data.GetApplicationInfo)).to.be.an('object');",
+                  "  pm.expect(authServer.version, 'authServer.version').to.match(/^\\d+\\.\\d+\\.\\d+/);",
+                  "  expectBuildTime(authServer.buildTime, 'authServer.buildTime');",
                   "});"
                 ]
               }

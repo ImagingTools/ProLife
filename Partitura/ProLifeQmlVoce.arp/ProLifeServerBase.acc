@@ -348,6 +348,9 @@
                     <AttributeInfo Id="BindingProductRepository" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="Repositories/BindingProductsRepository"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="AuthServerVersionInfo" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/AuthServerVersionInfo"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="DatabaseConnectionChecker" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="DatabaseEngine/PgSqlDatabaseEngine"/>
                     </AttributeInfo>
