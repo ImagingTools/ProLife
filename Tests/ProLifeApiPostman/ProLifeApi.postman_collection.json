@@ -2990,6 +2990,16 @@
                   "  pm.expect(authServer.applicationName, 'AuthServer.applicationName').to.eql('Puma');",
                   "  pm.expect(authServer.version, 'AuthServer.version').to.match(/^\\d+\\.\\d+\\.\\d+/);",
                   "  expectBuildTime(authServer.buildTime, 'AuthServer.buildTime');",
+                  "});",
+                  "pm.test('GetApplicationInfo reports Lisa as a connected dependency with its version and build time', function () {",
+                  "  const dependencies = json.data.GetApplicationInfo.dependencies;",
+                  "  pm.expect(dependencies, JSON.stringify(json.data.GetApplicationInfo)).to.be.an('array');",
+                  "  const lisa = dependencies.find(dependency => dependency.serviceId === 'Lisa');",
+                  "  pm.expect(lisa, JSON.stringify(dependencies)).to.be.an('object');",
+                  "  pm.expect(lisa.status, 'Lisa.status').to.eql('CONNECTED');",
+                  "  pm.expect(lisa.applicationName, 'Lisa.applicationName').to.eql('Lisa');",
+                  "  pm.expect(lisa.version, 'Lisa.version').to.match(/^\\d+\\.\\d+\\.\\d+/);",
+                  "  expectBuildTime(lisa.buildTime, 'Lisa.buildTime');",
                   "});"
                 ]
               }

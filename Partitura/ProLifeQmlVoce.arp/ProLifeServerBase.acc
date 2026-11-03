@@ -351,6 +351,7 @@
                     <AttributeInfo Id="ServiceDependencies" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
+                                <Value>LisaGQLEngine/LisaServiceInfo</Value>
                                 <Value>AuthorizableServerFramework/AuthServerVersionInfo</Value>
                             </Values>
                         </Data>
