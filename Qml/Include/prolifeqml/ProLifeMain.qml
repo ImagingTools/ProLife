@@ -6,6 +6,7 @@ import imtlicgui 1.0
 import imtauthgui 1.0
 import imtcontrols 1.0
 import imtguigql 1.0
+import imtnotifygui 1.0
 import prolifeqml 1.0
 
 ApplicationMain {
@@ -14,6 +15,15 @@ ApplicationMain {
 	useWebSocketSubscription: true;
 	// canRecoveryPassword: false;
 	authConnectionState: pumaConnectionChecker.status
+
+	property GqlBasedNotificationApiClient notificationApiClient: GqlBasedNotificationApiClient {}
+
+	Component.onCompleted: {
+		NotificationTypeRegistry.registerRoute("SupportTicket", "Tickets/Ticket/{id}")
+		NotificationTypeRegistry.registerRoute("Tenant", "Tenants/Tenant/{id}")
+		NotificationCenter.pageRoute = "Notifications"
+		NotificationCenter.apiClient = window.notificationApiClient
+	}
 
 	WebSocketConnectionChecker {
 		id: pumaConnectionChecker;

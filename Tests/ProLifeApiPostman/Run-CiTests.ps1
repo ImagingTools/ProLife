@@ -177,6 +177,9 @@ param(
     [string]$JUnitReportPath = (Join-Path $ScriptDir "junit-report.xml"),
     [string]$JsonReportPath = (Join-Path $ScriptDir "run-report.json"),
     [string]$WsJUnitReportPath = (Join-Path $ScriptDir "junit-report-ws.xml"),
+    [string]$NotificationCenterCollectionPath = (Join-Path $ScriptDir "Notification_Center_ProLife.postman_collection.json"),
+    [string]$NotificationCenterJUnitReportPath = (Join-Path $ScriptDir "junit-report-notification-center.xml"),
+    [string]$NotificationCenterJsonReportPath = (Join-Path $ScriptDir "run-report-notification-center.json"),
     [int]$WebSocketPort = 18778,
     [int]$StartupTimeoutSeconds = 60
 )
@@ -437,10 +440,14 @@ function Install-NewmanIfNeeded {
     return $newmanCmd
 }
 
-function Invoke-NewmanSuite {
+function Invoke-NewmanSuite(
+        [string]$Collection = $CollectionPath,
+        [string]$JUnitReport = $JUnitReportPath,
+        [string]$JsonReport = $JsonReportPath,
+        [string]$Title = "newman suite") {
     $newmanCmd = Install-NewmanIfNeeded
 
-    Write-Step "Running newman suite"
+    Write-Step "Running $Title"
     # NOT .../ProLife/graphql - every request in the collection templates its
     # URL as "{{baseUrl}}/graphql" already (confirmed against
     # ProLifeApi.postman_collection.json), so including the segment here
@@ -451,12 +458,13 @@ function Invoke-NewmanSuite {
     # apparently stopped short of reading the full newman output).
     $baseUrl = "http://localhost:$HttpPort/ProLife"
     $newmanArgs = @(
-        "run", $CollectionPath,
+        "run", $Collection,
         "-e", $EnvironmentPath,
         "--env-var", "baseUrl=$baseUrl",
+        "--env-var", "pumaUrl=http://localhost:$PumaHttpPort/Puma",
         "--reporters", "cli,junit,json",
-        "--reporter-junit-export", $JUnitReportPath,
-        "--reporter-json-export", $JsonReportPath
+        "--reporter-junit-export", $JUnitReport,
+        "--reporter-json-export", $JsonReport
     )
     & $newmanCmd @newmanArgs | Out-Host
     return $LASTEXITCODE
@@ -477,7 +485,7 @@ function Invoke-WsSuite {
     $wsBaseUrl = "http://localhost:$HttpPort/ProLife"
     $wsUrl = "ws://localhost:$WebSocketPort"
 
-    & node $wsScript --http $wsBaseUrl --ws $wsUrl --env $EnvironmentPath --junit $WsJUnitReportPath | Out-Host
+    & node $wsScript --http $wsBaseUrl --ws $wsUrl --puma "http://localhost:$PumaHttpPort/Puma" --env $EnvironmentPath --junit $WsJUnitReportPath | Out-Host
     return $LASTEXITCODE
 }
 
@@ -525,6 +533,10 @@ try {
     # ProLife -> Puma subscription chain rather than either server alone.
     $wsExitCode = Invoke-WsSuite
     if ($exitCode -eq 0) { $exitCode = $wsExitCode }
+
+    # The notification center seen from ProLife: forwarded inbox, catalog of the product, ticket notifications
+    $centerExitCode = Invoke-NewmanSuite $NotificationCenterCollectionPath $NotificationCenterJUnitReportPath $NotificationCenterJsonReportPath "notification center suite"
+    if ($exitCode -eq 0) { $exitCode = $centerExitCode }
 }
 finally {
     # Tear down in reverse start order: ProLife depends on Lisa/Puma being

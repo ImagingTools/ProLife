@@ -36,7 +36,8 @@ Everything else (`accountId`, `orderId`, `deviceId`, `roleFullAccessId`, `fullAc
 4. `08 Meta Info Propagation - Account & Order Field Sync` - verifies that renaming an Account, or changing an Order's delivery/purchase id, is immediately reflected in `DevicesList`/`SoftwareProductsList`/`OrdersList` for everything linked to them (see below).
 5. `11 Permission Model - Product, Scopes, Client Permissions` - creates its own role + user + PAT and removes them again (see below).
 6. `12 Document Sharing - Isolation Between Organizations` - creates four organizations with their owners, relationships and documents and checks what each organization may see and do with the shared documents (see below). Needs only `00 Bootstrap` before it.
-7. `99 Cleanup` - best-effort removal of everything created (including the roles/users from folder `07` and the fixtures from folder `08`); CI mainly relies on the full DB reset instead.
+7. `13 Delegated Access - Working in a Delegated Organization` - connects two organizations, gives B delegated access to A, switches the owner of B into A and checks that ProLife serves that session (`GetPermissions`, `NotificationsSync`, the own account) while an account outside of A stays hidden. ProLife reads the account of the token from Puma on every request; when that read was refused, every request of the delegated organization was a 403 and the client signed out. Needs only `00 Bootstrap` before it.
+8. `99 Cleanup` - best-effort removal of everything created (including the roles/users from folder `07` and the fixtures from folder `08`); CI mainly relies on the full DB reset instead.
 
 ## Order/Product Lifecycle Scenario (folder `02 Orders`)
 
@@ -133,6 +134,26 @@ Teardown stops all three in reverse order. Puma/Lisa checkouts are located via t
 ### The `PumaServer` FDW foreign server
 
 `prolife_test`'s `Roles`/`Users`/`UserGroups`/`UserSessions` tables are `postgres_fdw` **foreign tables**, all backed by a single foreign server literally named `PumaServer`. As restored from the dev export, that foreign server's `dbname` option is `puma` (the real, non-test database) - on a dev machine that also has a real local `puma` checkout, leaving this uncorrected means any query touching those tables would silently read (and, if the mapping allows, write) the developer's real data instead of `puma_test`. `Run-CiTests.ps1`'s `Repair-ProLifeForeignServers` runs `ALTER SERVER "PumaServer" OPTIONS (SET dbname 'puma_test')` immediately after every `prolife_test` restore to fix this. (There's also a dormant `setup_foreign_table_lisaserver()` helper function in the dump, but it's never invoked - no `LisaServer` foreign server actually exists, so nothing needs repointing for Lisa.)
+
+## Notification center (`Notification_Center_ProLife.postman_collection.json`)
+
+The notification center seen from ProLife: the inbox commands forwarded to Puma, the catalog the product server
+answers itself and the ticket notifications of `CTicketNotificationProducerComp`. Creates its own users in Puma
+(`pumaUrl`, default `http://localhost:7788/Puma`) and its own ticket.
+
+- `01 Access` - an anonymous inbox is refused; a client may not send or withdraw through the product server.
+- `02 Catalog` - the organization types and the ticket types with their messages, in English and Russian.
+- `03 Forwarded inbox` - list, unread count, read (only the own), sync, acknowledgements, the notifications page and
+  removal, all through ProLife.
+- `04 Ticket notifications` - the assignee is told by the reporter; two comments make one notification with both,
+  the writer is not told; a removed assignee loses the assignment, a new assignment is told again; a removed ticket
+  withdraws its notifications.
+- `05 Organizations` - a member of two organizations: a personal notification is seen in every organization, a
+  notification of an organization only while working in it - in the panel, on the notifications page and in the unread
+  count, all through ProLife.
+
+ProLife sends the ticket notifications to Puma with the session of the user who made the change; nothing has to be
+configured. A product server has no identity of its own yet (ImagingTools/ImtCore#1059).
 
 ## WebSocket subscriptions (`ws/ws-subscriptions.js`)
 

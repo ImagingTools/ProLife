@@ -37,6 +37,7 @@
                                 <Value>ProLifeServerBase/UsersModelUpdateBridge</Value>
                                 <Value>ProLifeServerBase/RolesModelUpdateBridge</Value>
                                 <Value>ProLifeServerBase/GroupsModelUpdateBridge</Value>
+                                <Value>ProLifeServerBase/TicketNotificationProducer</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>

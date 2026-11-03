@@ -69,6 +69,8 @@ const wsUrl = args.ws || process.env.WS_TEST_WS_URL || deriveWsUrl(httpUrl);
 const suLogin = args['su-login'] || envValues.suLogin || 'su';
 const suPassword = args['su-password'] || envValues.suPassword || '1';
 const productId = args['product-id'] || envValues.productId || 'ProLife';
+// Puma itself, for the cases that need a change made there
+const pumaHttpUrl = args.puma || envValues.pumaUrl || 'http://localhost:17788/Puma';
 const junitPath = args.junit || path.join(__dirname, '..', 'junit-report-ws.xml');
 const frameTimeoutMs = Number(args.timeout || 15000);
 // How long a refusal has to arrive before a registration counts as accepted.
@@ -95,9 +97,9 @@ function gqlString(value) {
 	return JSON.stringify(String(value));
 }
 
-function gql(query, token) {
+function gql(query, token, url) {
 	return new Promise((resolve, reject) => {
-		const u = new URL(httpUrl);
+		const u = new URL(url || httpUrl);
 		const body = JSON.stringify({ query });
 		const headers = {
 			'Content-Type': 'application/json',
@@ -344,7 +346,8 @@ class SubscriptionSession {
 	headers() {
 		const headers = {};
 		if (this.token) { headers['x-authentication-token'] = this.token; }
-		if (productId) { headers['productId'] = productId; }
+		// The web client sends no product: the product server knows its own
+		if (productId && !this.omitsProduct) { headers['productId'] = productId; }
 		return headers;
 	}
 
@@ -577,9 +580,9 @@ const clientSubscriptions = [
 	'OnUsersForInvitationCollectionChanged',
 	'OnTenantRelationshipsCollectionChanged',
 	'OnCrossOrgGrantsCollectionChanged',
+	// Notification center, forwarded to Puma.
+	'OnNotificationEvent',
 	// Desk, forwarded.
-	'OnTicketMessageReceived',
-	'OnTicketAssigneeChanged',
 	'OnTicketsCollectionChanged',
 	// Licensing, forwarded to Lisa.
 	'OnProductsCollectionChanged',
@@ -834,6 +837,33 @@ async function main() {
 		await closeDocument(su.token, 'Tenants', info.documentId);
 		await closeDocument(su.token, 'Tenants', second.documentId);
 		await session.stop(witnessId);
+	});
+
+	// --- the notification center through the bridge
+
+	await test('a push of the notification center reaches a web client that names no product', async () => {
+		// The web client registers without a product header; Puma shows a session only the notifications of its
+		// product, so the bridge has to forward the subscription for the product of this server, or the push is
+		// silently filtered out upstream while the inbox still fills (the notifications appear only after a reload)
+		session.omitsProduct = true;
+		const subscriptionId = await session.subscribe('OnNotificationEvent',
+			'subscription OnNotificationEvent { OnNotificationEvent { kind items { id typeId } } }');
+		session.omitsProduct = false;
+
+		const typeId = `ws.WebPush.${crypto.randomUUID()}`;
+		const mark = session.mark();
+		const sent = await gql(`mutation SendNotification { SendNotification(input: { productId: ${gqlString(productId)},` +
+			` userIds: [${gqlString(su.userId)}], typeId: ${gqlString(typeId)} }) { success } }`,
+			su.token, pumaHttpUrl.replace(/[/]+$/, '') + '/graphql');
+		assert(sent && sent.data && sent.data.SendNotification && sent.data.SendNotification.success === true,
+			`the notification was not stored in Puma: ${JSON.stringify(sent).slice(0, 300)}`);
+
+		const frame = await session.waitFor(f => f.type === 'data' && f.id === subscriptionId &&
+			JSON.stringify(f.payload).includes(typeId), frameTimeoutMs, mark);
+		const event = notificationOf(frame, 'OnNotificationEvent');
+		assert(event && event.kind === 'Created', `expected a Created event, got ${JSON.stringify(event).slice(0, 300)}`);
+
+		await session.stop(subscriptionId);
 	});
 
 	// --- protocol hygiene on the forwarding server

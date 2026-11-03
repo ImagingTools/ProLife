@@ -5,6 +5,7 @@
 #include <imtcore/CImtCoreDeskInitializer.h>
 #include <imtcore/CImtCoreLicInitializer.h>
 #include <imtcore/CImtCoreLocalizationInitializer.h>
+#include <imtcore/CImtCoreNotifyInitializer.h>
 #include <imtcore/CImtCoreStyleInitializer.h>
 
 // ProLife includes
@@ -36,6 +37,7 @@ static void InitializeProLifeClientResources()
 	ImtCoreInitAuthQmlResources();
 	ImtCoreInitLicQmlResources();
 	ImtCoreInitDeskQmlResources();
+	ImtCoreInitNotifyQmlResources();
 
 	InitializeImtCoreStyle();
 }

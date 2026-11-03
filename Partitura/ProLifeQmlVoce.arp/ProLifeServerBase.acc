@@ -112,6 +112,13 @@
                     <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="ProductNotificationTypes" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>TicketNotificationTypes</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
@@ -653,6 +660,11 @@
                         </Data>
                     </AttributeInfo>
                 </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="TicketNotificationTypes" PackageId="ImtDeskVoce" ComponentId="TicketNotificationTypes">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
             </Data>
         </Element>
     </ElementsList>
@@ -1574,5 +1586,6 @@
         <Component ExportedId="RolesModelUpdateBridge" ComponentId="RolesModelUpdateBridge"/>
         <Component ExportedId="UsersModelUpdateBridge" ComponentId="UsersModelUpdateBridge"/>
         <Component ExportedId="WebSocketServerFramework" ComponentId="AuthorizableServerFramework/WebSocketServerFramework"/>
+        <Component ExportedId="TicketNotificationProducer" ComponentId="AuthorizableServerFramework/TicketNotificationProducer"/>
     </ExportedComponents>
 </Acf>

@@ -58,6 +58,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	ProLifeLoc
 	ImtCore::ImtCoreLoc
 	ImtCore::imtdesksdl
+	ImtCore::imtnotifysdl
 	ImtCore::imtlicsdl
 	ImtCore::imtcontrolsqml
 	ImtCore::imtstylecontrolsqml
@@ -68,6 +69,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	ImtCore::imtdocguiqml
 	ImtCore::imtlicguiqml
 	ImtCore::imtdeskguiqml
+	ImtCore::imtnotifyguiqml
 	Qt${QT_VERSION_MAJOR}::QuickControls2
 )
 
