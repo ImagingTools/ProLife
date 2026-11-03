@@ -2948,12 +2948,12 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "query GetApplicationInfo { GetApplicationInfo(input: { productId: \"{{productId}}\" }) { applicationId applicationName version buildTime authServer { version versionKind buildTime } tenantsEnabled externalLoginEnabled } }",
+                "query": "query GetApplicationInfo { GetApplicationInfo(input: { productId: \"{{productId}}\" }) { applicationId applicationName version buildTime dependencies { serviceId status applicationName version versionKind buildTime dependencies { serviceId } } tenantsEnabled externalLoginEnabled } }",
                 "variables": ""
               }
             },
             "url": "{{baseUrl}}/graphql",
-            "description": "Covers GetApplicationInfo (imtapp/1.0 Application.sdl). The ProLife server enables tenants (TenantsEnabled=true in ProLifeHandlers.acc); clients start tenant/organization requests only when this flag is set. buildTime is the modification time of the server executable; authServer is the version Puma reported to ProLife after the WebSocket connection to Puma was established (AuthServerVersionInfo in PumaGQLClientEngine.acc), shown as Puma Version on the About page."
+            "description": "Covers GetApplicationInfo (imtapp/1.0 Application.sdl). The ProLife server enables tenants (TenantsEnabled=true in ProLifeHandlers.acc); clients start tenant/organization requests only when this flag is set. buildTime is the modification time of the server executable; dependencies are the services ProLife depends on with their runtime status, the AuthServer entry is what Puma reported to ProLife after the WebSocket connection to Puma was established (AuthServerVersionInfo in PumaGQLClientEngine.acc, ServiceDependencies in ProLifeServerBase.acc), shown as a row on the About page."
           },
           "event": [
             {
@@ -2981,11 +2981,15 @@
                   "pm.test('GetApplicationInfo reports the build time of the ProLife server', function () {",
                   "  expectBuildTime(json.data.GetApplicationInfo.buildTime, 'buildTime');",
                   "});",
-                  "pm.test('GetApplicationInfo reports the version and build time of Puma', function () {",
-                  "  const authServer = json.data.GetApplicationInfo.authServer;",
-                  "  pm.expect(authServer, JSON.stringify(json.data.GetApplicationInfo)).to.be.an('object');",
-                  "  pm.expect(authServer.version, 'authServer.version').to.match(/^\\d+\\.\\d+\\.\\d+/);",
-                  "  expectBuildTime(authServer.buildTime, 'authServer.buildTime');",
+                  "pm.test('GetApplicationInfo reports Puma as a connected dependency with its version and build time', function () {",
+                  "  const dependencies = json.data.GetApplicationInfo.dependencies;",
+                  "  pm.expect(dependencies, JSON.stringify(json.data.GetApplicationInfo)).to.be.an('array');",
+                  "  const authServer = dependencies.find(dependency => dependency.serviceId === 'AuthServer');",
+                  "  pm.expect(authServer, JSON.stringify(dependencies)).to.be.an('object');",
+                  "  pm.expect(authServer.status, 'AuthServer.status').to.eql('CONNECTED');",
+                  "  pm.expect(authServer.applicationName, 'AuthServer.applicationName').to.eql('Puma');",
+                  "  pm.expect(authServer.version, 'AuthServer.version').to.match(/^\\d+\\.\\d+\\.\\d+/);",
+                  "  expectBuildTime(authServer.buildTime, 'AuthServer.buildTime');",
                   "});"
                 ]
               }
