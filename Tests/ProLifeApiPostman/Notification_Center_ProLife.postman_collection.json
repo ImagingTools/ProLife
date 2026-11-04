@@ -1988,6 +1988,80 @@
 					]
 				},
 				{
+					"name": "Wait for the ticket document to load",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "x-authentication-token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{ncp_su_token}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetTicketRepresentation { GetTicketRepresentation(input: { id: \"{{ncp_document}}\" }) { id } }",
+								"variables": ""
+							}
+						},
+						"url": "{{baseUrl}}/graphql",
+						"description": "OpenDocument only registers the document; its data is loaded in a background thread (TCollectionDocumentServiceWrap in ImtCore) and every read of a still-loading document fails, so this request polls the representation until it becomes readable."
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"// Postman's sandbox does not honour setTimeout for pacing, so space the re-polls",
+									"// with a short bounded busy-wait and only on an actual retry.",
+									"if (parseInt(pm.environment.get('ncp_document_load_attempt') || '0', 10) > 0) {",
+									"  const until = Date.now() + 100;",
+									"  while (Date.now() < until) { /* spin */ }",
+									"}"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const json = pm.response.json();",
+									"const rep = json.data && json.data.GetTicketRepresentation;",
+									"const attempt = parseInt(pm.environment.get('ncp_document_load_attempt') || '0', 10);",
+									"const maxAttempts = 50;",
+									"if (rep && rep.id) {",
+									"  pm.environment.set('ncp_document_load_attempt', '0');",
+									"  pm.test('the ticket document finished loading', function () { pm.expect(rep.id).to.be.a('string').and.not.empty; });",
+									"} else if (attempt < maxAttempts) {",
+									"  pm.environment.set('ncp_document_load_attempt', String(attempt + 1));",
+									"  postman.setNextRequest('Wait for the ticket document to load');",
+									"} else {",
+									"  pm.environment.set('ncp_document_load_attempt', '0');",
+									"  pm.test('the ticket document finished loading', function () { pm.expect.fail('document still not readable after ' + maxAttempts + ' polls: ' + JSON.stringify(json)); });",
+									"}"
+								]
+							}
+						}
+					]
+				},
+				{
 					"id": "da4847c9-7137-4f90-8df6-70058dff18da",
 					"name": "The ticket number",
 					"request": {

@@ -141,6 +141,8 @@ $serverProcess = $null
 $pumaProcess = $null
 $exitCode = 1
 
+. (Join-Path $RepoRoot "Tests\ProLifeApiPostman\ServerLogCheck.ps1")
+
 if ([string]::IsNullOrWhiteSpace($ServerExePath)) {
     $ServerExePath = Join-Path $RepoRoot "Bin\$BuildConfig\ProLifeServerTest.exe"
 }
@@ -406,6 +408,9 @@ finally {
         Stop-Process -Id $pumaProcess.Id -Force -ErrorAction SilentlyContinue
     }
 }
+
+# Only Puma: this suite creates the ProLife database from scratch, and its empty migration_12.sql logs a failed empty query
+if (-not (Test-ServerLogs @($pumaStdout, $pumaStderr)) -and $exitCode -eq 0) { $exitCode = 1 }
 
 if ($exitCode -eq 0) {
     Write-Host "`nAll tests passed." -ForegroundColor Green

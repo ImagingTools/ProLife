@@ -5466,18 +5466,42 @@
           },
           "event": [
             {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Postman's sandbox does not honour setTimeout for pacing, so space the re-polls",
+                  "// with a short bounded busy-wait and only on an actual retry.",
+                  "if (Number(pm.environment.get('rpcPermAttempt') || 0) > 0) {",
+                  "  const until = Date.now() + 100;",
+                  "  while (Date.now() < until) { /* spin */ }",
+                  "}"
+                ]
+              }
+            },
+            {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
                 "exec": [
+                  "// ProLife caches the roles and users of Puma and drops them when Puma reports the change,",
+                  "// so the change reaches ProLife some time after the mutation: poll until it has arrived.",
                   "const json = pm.response.json();",
                   "const payload = json.data && json.data.GetUserPermissions;",
                   "const ids = [];",
                   "((payload && payload.groups) || []).forEach(function (g) { (g.entries || []).forEach(function (e) { ids.push(e.permissionId); }); });",
-                  "pm.test('Permissions added to and removed from the role reach ProLife', function () {",
-                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
-                  "  pm.expect(ids.sort(), JSON.stringify(json)).to.eql([\"/AccountManagement/View\",\"/OrderManagement/View\"]);",
-                  "});"
+                  "const expected = [\"/AccountManagement/View\",\"/OrderManagement/View\"];",
+                  "const attempt = Number(pm.environment.get('rpcPermAttempt') || 0);",
+                  "if (JSON.stringify(ids.sort()) !== JSON.stringify(expected) && attempt < 50) {",
+                  "  pm.environment.set('rpcPermAttempt', attempt + 1);",
+                  "  postman.setNextRequest(pm.info.requestName);",
+                  "} else {",
+                  "  pm.environment.unset('rpcPermAttempt');",
+                  "  pm.test('Permissions added to and removed from the role reach ProLife', function () {",
+                  "    pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "    pm.expect(ids, JSON.stringify(json)).to.eql(expected);",
+                  "  });",
+                  "}"
                 ]
               }
             }
@@ -5519,18 +5543,42 @@
           },
           "event": [
             {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Postman's sandbox does not honour setTimeout for pacing, so space the re-polls",
+                  "// with a short bounded busy-wait and only on an actual retry.",
+                  "if (Number(pm.environment.get('rpcPermAttempt') || 0) > 0) {",
+                  "  const until = Date.now() + 100;",
+                  "  while (Date.now() < until) { /* spin */ }",
+                  "}"
+                ]
+              }
+            },
+            {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
                 "exec": [
+                  "// ProLife caches the roles and users of Puma and drops them when Puma reports the change,",
+                  "// so the change reaches ProLife some time after the mutation: poll until it has arrived.",
                   "const json = pm.response.json();",
                   "const payload = json.data && json.data.GetUserPermissions;",
                   "const ids = [];",
                   "((payload && payload.groups) || []).forEach(function (g) { (g.entries || []).forEach(function (e) { ids.push(e.permissionId); }); });",
-                  "pm.test('The token neither keeps the revoked permission nor gains the new ones outside its scope', function () {",
-                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
-                  "  pm.expect(ids.sort(), JSON.stringify(json)).to.eql([]);",
-                  "});"
+                  "const expected = [];",
+                  "const attempt = Number(pm.environment.get('rpcPermAttempt') || 0);",
+                  "if (JSON.stringify(ids.sort()) !== JSON.stringify(expected) && attempt < 50) {",
+                  "  pm.environment.set('rpcPermAttempt', attempt + 1);",
+                  "  postman.setNextRequest(pm.info.requestName);",
+                  "} else {",
+                  "  pm.environment.unset('rpcPermAttempt');",
+                  "  pm.test('The token neither keeps the revoked permission nor gains the new ones outside its scope', function () {",
+                  "    pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "    pm.expect(ids, JSON.stringify(json)).to.eql(expected);",
+                  "  });",
+                  "}"
                 ]
               }
             }
@@ -5601,18 +5649,42 @@
           },
           "event": [
             {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Postman's sandbox does not honour setTimeout for pacing, so space the re-polls",
+                  "// with a short bounded busy-wait and only on an actual retry.",
+                  "if (Number(pm.environment.get('rpcPermAttempt') || 0) > 0) {",
+                  "  const until = Date.now() + 100;",
+                  "  while (Date.now() < until) { /* spin */ }",
+                  "}"
+                ]
+              }
+            },
+            {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
                 "exec": [
+                  "// ProLife caches the roles and users of Puma and drops them when Puma reports the change,",
+                  "// so the change reaches ProLife some time after the mutation: poll until it has arrived.",
                   "const json = pm.response.json();",
                   "const payload = json.data && json.data.GetUserPermissions;",
                   "const ids = [];",
                   "((payload && payload.groups) || []).forEach(function (g) { (g.entries || []).forEach(function (e) { ids.push(e.permissionId); }); });",
-                  "pm.test('Removing the role in Puma revokes the permission in ProLife', function () {",
-                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
-                  "  pm.expect(ids.sort(), JSON.stringify(json)).to.eql([]);",
-                  "});"
+                  "const expected = [];",
+                  "const attempt = Number(pm.environment.get('rpcPermAttempt') || 0);",
+                  "if (JSON.stringify(ids.sort()) !== JSON.stringify(expected) && attempt < 50) {",
+                  "  pm.environment.set('rpcPermAttempt', attempt + 1);",
+                  "  postman.setNextRequest(pm.info.requestName);",
+                  "} else {",
+                  "  pm.environment.unset('rpcPermAttempt');",
+                  "  pm.test('Removing the role in Puma revokes the permission in ProLife', function () {",
+                  "    pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "    pm.expect(ids, JSON.stringify(json)).to.eql(expected);",
+                  "  });",
+                  "}"
                 ]
               }
             }

@@ -131,6 +131,8 @@ Starts a dedicated, isolated `ProLifeServerTest.exe` (see `Impl\ProLifeServerTes
 
 Teardown stops all three in reverse order. Puma/Lisa checkouts are located via the `PUMADIR`/`LISADIR` environment variables (falling back to `Puma`/`Lisa` siblings of the ProLife checkout) - pass `-PumaRepoRoot`/`-LisaRepoRoot` explicitly if your agent lays checkouts out differently.
 
+After teardown the run also fails if any server log (`%TEMP%\{prolife,puma,lisa}_{stdout,stderr}_<PID>.log`) has a database error - `ServerLogCheck.ps1`, shared with the DeskTicket and PatToken runners. A server can answer every request correctly while it loses data behind them; the log is the only place that shows it.
+
 ### The `PumaServer` FDW foreign server
 
 `prolife_test`'s `Roles`/`Users`/`UserGroups`/`UserSessions` tables are `postgres_fdw` **foreign tables**, all backed by a single foreign server literally named `PumaServer`. As restored from the dev export, that foreign server's `dbname` option is `puma` (the real, non-test database) - on a dev machine that also has a real local `puma` checkout, leaving this uncorrected means any query touching those tables would silently read (and, if the mapping allows, write) the developer's real data instead of `puma_test`. `Run-CiTests.ps1`'s `Repair-ProLifeForeignServers` runs `ALTER SERVER "PumaServer" OPTIONS (SET dbname 'puma_test')` immediately after every `prolife_test` restore to fix this. (There's also a dormant `setup_foreign_table_lisaserver()` helper function in the dump, but it's never invoked - no `LisaServer` foreign server actually exists, so nothing needs repointing for Lisa.)
