@@ -111,6 +111,8 @@ $serverProcess = $null
 $pumaProcess = $null
 $exitCode = 1
 
+. (Join-Path $RepoRoot "Tests\ProLifeApiPostman\ServerLogCheck.ps1")
+
 if ([string]::IsNullOrWhiteSpace($ServerExePath)) {
     $ServerExePath = Join-Path $RepoRoot "Bin\$BuildConfig\ProLifeServerTest.exe"
 }
@@ -361,6 +363,8 @@ finally {
         Stop-Process -Id $pumaProcess.Id -Force -ErrorAction SilentlyContinue
     }
 }
+
+if (-not (Test-ServerLogs @($serverStdout, $serverStderr, $pumaStdout, $pumaStderr)) -and $exitCode -eq 0) { $exitCode = 1 }
 
 if ($exitCode -eq 0) {
     Write-Host "`nAll tests passed." -ForegroundColor Green
