@@ -10,6 +10,7 @@
 #include <imtbase/CObjectLink.h>
 #include <imtbase/IObjectCollectionIterator.h>
 #include <imtdoc/CDocumentSavedEvent.h>
+#include <imtservergql/DocumentChange.h>
 
 // ProLife includes
 #include <prolifegql/prolifegql.h>
@@ -223,7 +224,7 @@ sdl::V1_0::imtbase::CDocumentOperationStatus CDeviceCollectionDocumentServiceCom
 	// Order-collection membership (see ProcessEvent below) is reconciled strictly
 	// after the document is actually saved, reading the saved OrderId straight
 	// back off the device collection rather than tracking it through here.
-	m_documentServiceCompPtr->SetDocumentData(userId, documentId, *deviceInfoPtr);
+	m_documentServiceCompPtr->SetDocumentData(userId, documentId, *deviceInfoPtr, imtservergql::GetDocumentChangeId(gqlRequest));
 
 	response.status = sdl::V1_0::imtbase::EDocumentOperationStatus::Success;
 
@@ -415,7 +416,7 @@ sdl::V1_0::imtbase::CDocumentOperationStatus CDeviceCollectionDocumentServiceCom
 		iotDeviceInfoPtr->SetManufacturer(*iotDeviceData.manufacturer);
 	}
 
-	m_documentServiceCompPtr->SetDocumentData(userId, documentId, *iotDeviceInfoPtr);
+	m_documentServiceCompPtr->SetDocumentData(userId, documentId, *iotDeviceInfoPtr, imtservergql::GetDocumentChangeId(gqlRequest));
 
 	response.status = sdl::V1_0::imtbase::EDocumentOperationStatus::Success;
 
