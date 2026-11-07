@@ -367,16 +367,30 @@ function Wait-ForPort([string]$serverLabel, [System.Diagnostics.Process]$process
     throw "$serverLabel did not open port $port within $StartupTimeoutSeconds seconds"
 }
 
-function Invoke-PumaGql([string]$Query, [string]$Token) {
-    $headers = @{ productid = 'Puma' }
+function Invoke-ProductGql([string]$ProductId, [int]$Port, [string]$Query, [string]$Token) {
+    $headers = @{ productid = $ProductId }
     if ($Token) { $headers['x-authentication-token'] = $Token }
     $body = [Text.Encoding]::UTF8.GetBytes((@{ query = $Query } | ConvertTo-Json -Compress))
-    return Invoke-RestMethod -Uri "http://localhost:$PumaHttpPort/Puma/graphql" -Method Post -Headers $headers -ContentType 'application/json; charset=utf-8' -Body $body
+    return Invoke-RestMethod -Uri "http://localhost:$Port/$ProductId/graphql" -Method Post -Headers $headers -ContentType 'application/json; charset=utf-8' -Body $body
 }
 
-function New-ServerToken([string]$SuToken, [string]$ClientProductId, [string]$ReceiverProductId, [string[]]$Scopes) {
-    $scopeList = ($Scopes | ForEach-Object { "`"$_`"" }) -join ', '
-    $response = Invoke-PumaGql "mutation CreateServerToken { CreateServerToken(input: { clientProductId: `"$ClientProductId`", productId: `"$ReceiverProductId`", name: `"$ClientProductId for $ReceiverProductId`", scopes: [$scopeList] }) { token success message } }" $SuToken
+# A receiver issues its tokens to its superuser (Lisa forwards the sign-in to Puma)
+function Get-SuperuserToken([string]$ProductId, [int]$Port) {
+    $environmentFile = Join-Path $ScriptDir 'ProLifeApi-Dev.postman_environment.json'
+    $suPassword = (Get-Content $environmentFile -Raw | ConvertFrom-Json).values | Where-Object { $_.key -eq 'suPassword' } | Select-Object -ExpandProperty value
+    $response = Invoke-ProductGql $ProductId $Port "query Authorization { Authorization(input: { login: `"su`", password: `"$suPassword`", productId: `"$ProductId`" }) { token } }" ''
+    $suToken = $response.data.Authorization.token
+    if (-not $suToken) { throw "Unable to log in to $ProductId to issue the server tokens" }
+    return $suToken
+}
+
+# The token holds every permission the receiver offers the client: the suite exercises everything the products do
+function New-ServerToken([string]$ReceiverProductId, [int]$Port, [string]$SuToken, [string]$ClientProductId) {
+    $response = Invoke-ProductGql $ReceiverProductId $Port "query GetServerTokenReceivers { GetServerTokenReceivers(input: { clientProductId: `"$ClientProductId`" }) { productServers { productId groups { entries { permissionId } } } } }" $SuToken
+    $server = $response.data.GetServerTokenReceivers.productServers | Where-Object { $_.productId -eq $ReceiverProductId }
+    $scopeList = (@($server.groups | ForEach-Object { $_.entries } | ForEach-Object { "`"$($_.permissionId)`"" })) -join ', '
+
+    $response = Invoke-ProductGql $ReceiverProductId $Port "mutation CreateServerToken { CreateServerToken(input: { clientProductId: `"$ClientProductId`", productId: `"$ReceiverProductId`", name: `"$ClientProductId for $ReceiverProductId`", scopes: [$scopeList] }) { token success message } }" $SuToken
     if (-not $response.data.CreateServerToken.success) {
         throw "Unable to issue the token of $ClientProductId for ${ReceiverProductId}: $($response | ConvertTo-Json -Depth 6 -Compress)"
     }
@@ -385,36 +399,22 @@ function New-ServerToken([string]$SuToken, [string]$ClientProductId, [string]$Re
 
 # The servers watch each other's collections with tokens of their own: without
 # them the subscriptions are refused and the caches of a product get stale.
-function New-ProductServerTokens {
-    Write-Step "Issuing the tokens of the product servers"
-    $environmentFile = Join-Path $ScriptDir 'ProLifeApi-Dev.postman_environment.json'
-    $suPassword = (Get-Content $environmentFile -Raw | ConvertFrom-Json).values | Where-Object { $_.key -eq 'suPassword' } | Select-Object -ExpandProperty value
-    $response = Invoke-PumaGql "query Authorization { Authorization(input: { login: `"su`", password: `"$suPassword`", productId: `"Puma`" }) { token } }" ''
-    $suToken = $response.data.Authorization.token
-    if (-not $suToken) { throw "Unable to log in to Puma to issue the server tokens" }
+function New-PumaServerTokens {
+    Write-Step "Issuing the tokens of the product servers for Puma"
+    $suToken = Get-SuperuserToken 'Puma' $PumaHttpPort
 
     foreach ($productId in 'ProLife', 'Lisa') {
         $id = [guid]::NewGuid().ToString()
-        $response = Invoke-PumaGql "mutation ConnectedProductAdd { ConnectedProductAdd(input: { id: `"$id`", typeId: `"ConnectedProduct`", item: { id: `"$id`", productId: `"$productId`", name: `"$productId`" } }) { id } }" $suToken
+        $response = Invoke-ProductGql 'Puma' $PumaHttpPort "mutation ConnectedProductAdd { ConnectedProductAdd(input: { id: `"$id`", typeId: `"ConnectedProduct`", item: { id: `"$id`", productId: `"$productId`", name: `"$productId`" } }) { id } }" $suToken
         if (-not $response.data.ConnectedProductAdd.id) {
             throw "Unable to add the product ${productId}: $($response | ConvertTo-Json -Depth 6 -Compress)"
         }
     }
 
-    # The suite exercises everything the products do, so the tokens hold every permission of their receivers
-    $pumaPermissions = Get-ServerTokenPermissions $suToken 'Puma'
-
     return @{
-        LisaForPuma    = New-ServerToken $suToken 'Lisa' 'Puma' $pumaPermissions
-        ProLifeForPuma = New-ServerToken $suToken 'ProLife' 'Puma' $pumaPermissions
+        LisaForPuma    = New-ServerToken 'Puma' $PumaHttpPort $suToken 'Lisa'
+        ProLifeForPuma = New-ServerToken 'Puma' $PumaHttpPort $suToken 'ProLife'
     }
-}
-
-# The permissions a token for a server can hold: the leaves of its permission tree
-function Get-ServerTokenPermissions([string]$SuToken, [string]$ReceiverProductId) {
-    $response = Invoke-PumaGql "query GetServerTokenReceivers { GetServerTokenReceivers(input: {}) { productServers { productId groups { entries { permissionId } } } } }" $SuToken
-    $server = $response.data.GetServerTokenReceivers.productServers | Where-Object { $_.productId -eq $ReceiverProductId }
-    return @($server.groups | ForEach-Object { $_.entries } | ForEach-Object { $_.permissionId })
 }
 
 function Start-PumaTestServer {
@@ -571,18 +571,21 @@ try {
 
     Restore-DatabaseFromBackup $PumaDbName $PumaBackupPath
     Start-PumaTestServer
-    $serverTokens = New-ProductServerTokens
+    $pumaTokens = New-PumaServerTokens
 
     Restore-DatabaseFromBackup $LisaDbName $LisaBackupPath
-    $env:IMT_PUMA_SERVER_CREDENTIAL = $serverTokens.LisaForPuma
+    $env:IMT_PUMA_SERVER_CREDENTIAL = $pumaTokens.LisaForPuma
     Start-LisaTestServer
+    Write-Step "Issuing the token of ProLife for Lisa"
+    $proLifeForLisa = New-ServerToken 'Lisa' $LisaHttpPort (Get-SuperuserToken 'Lisa' $LisaHttpPort) 'ProLife'
 
     Restore-DatabaseFromBackup $DbName $ProLifeBackupPath
     Repair-ProLifeForeignServers
-    # Puma issues tokens for itself only; Lisa will issue its own
-    $env:IMT_PUMA_SERVER_CREDENTIAL = $serverTokens.ProLifeForPuma
+    # Every receiver issues the tokens for itself
+    $env:IMT_PUMA_SERVER_CREDENTIAL = $pumaTokens.ProLifeForPuma
+    $env:IMT_LISA_SERVER_CREDENTIAL = $proLifeForLisa
     Start-TestServer
-    Remove-Item Env:\IMT_PUMA_SERVER_CREDENTIAL
+    Remove-Item Env:\IMT_PUMA_SERVER_CREDENTIAL, Env:\IMT_LISA_SERVER_CREDENTIAL
 
     $exitCode = Invoke-NewmanSuite
 
