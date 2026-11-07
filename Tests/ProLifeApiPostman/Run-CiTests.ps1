@@ -386,11 +386,10 @@ function Get-SuperuserToken([string]$ProductId, [int]$Port) {
 
 # The token holds every permission the receiver offers the client: the suite exercises everything the products do
 function New-ServerToken([string]$ReceiverProductId, [int]$Port, [string]$SuToken, [string]$ClientProductId) {
-    $response = Invoke-ProductGql $ReceiverProductId $Port "query GetServerTokenReceivers { GetServerTokenReceivers(input: { clientProductId: `"$ClientProductId`" }) { productServers { productId groups { entries { permissionId } } } } }" $SuToken
-    $server = $response.data.GetServerTokenReceivers.productServers | Where-Object { $_.productId -eq $ReceiverProductId }
-    $scopeList = (@($server.groups | ForEach-Object { $_.entries } | ForEach-Object { "`"$($_.permissionId)`"" })) -join ', '
+    $response = Invoke-ProductGql $ReceiverProductId $Port "query GetServerTokenReceiver { GetServerTokenReceiver(input: { clientProductId: `"$ClientProductId`" }) { groups { entries { permissionId } } } }" $SuToken
+    $scopeList = (@($response.data.GetServerTokenReceiver.groups | ForEach-Object { $_.entries } | ForEach-Object { "`"$($_.permissionId)`"" })) -join ', '
 
-    $response = Invoke-ProductGql $ReceiverProductId $Port "mutation CreateServerToken { CreateServerToken(input: { clientProductId: `"$ClientProductId`", productId: `"$ReceiverProductId`", name: `"$ClientProductId for $ReceiverProductId`", scopes: [$scopeList] }) { token success message } }" $SuToken
+    $response = Invoke-ProductGql $ReceiverProductId $Port "mutation CreateServerToken { CreateServerToken(input: { clientProductId: `"$ClientProductId`", name: `"$ClientProductId for $ReceiverProductId`", scopes: [$scopeList] }) { token success message } }" $SuToken
     if (-not $response.data.CreateServerToken.success) {
         throw "Unable to issue the token of $ClientProductId for ${ReceiverProductId}: $($response | ConvertTo-Json -Depth 6 -Compress)"
     }

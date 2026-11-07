@@ -31,9 +31,6 @@
         <Element Id="AuthorizableServerFramework" PackageId="ImtHttpServerVoce" ComponentId="AuthorizableServerFramework">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="DenyUndeclaredUserSubscriptions" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="true"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="ActionDataFactories" Type="Factory[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
