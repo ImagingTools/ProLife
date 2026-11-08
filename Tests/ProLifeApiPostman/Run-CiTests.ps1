@@ -389,7 +389,7 @@ function New-ServerToken([string]$ReceiverProductId, [int]$Port, [string]$SuToke
     $response = Invoke-ProductGql $ReceiverProductId $Port "query GetServerTokenReceiver { GetServerTokenReceiver(input: { clientProductId: `"$ClientProductId`" }) { groups { entries { permissionId } } } }" $SuToken
     $scopeList = (@($response.data.GetServerTokenReceiver.groups | ForEach-Object { $_.entries } | ForEach-Object { "`"$($_.permissionId)`"" })) -join ', '
 
-    $response = Invoke-ProductGql $ReceiverProductId $Port "mutation CreateServerToken { CreateServerToken(input: { clientProductId: `"$ClientProductId`", name: `"$ClientProductId for $ReceiverProductId`", scopes: [$scopeList] }) { token success message } }" $SuToken
+    $response = Invoke-ProductGql $ReceiverProductId $Port "mutation CreateServerToken { CreateServerToken(input: { clientProductId: `"$ClientProductId`", name: `"$ClientProductId for $ReceiverProductId`", scopes: [$scopeList] }) { token success } }" $SuToken
     if (-not $response.data.CreateServerToken.success) {
         throw "Unable to issue the token of $ClientProductId for ${ReceiverProductId}: $($response | ConvertTo-Json -Depth 6 -Compress)"
     }
