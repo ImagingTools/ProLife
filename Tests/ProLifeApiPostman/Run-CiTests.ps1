@@ -513,6 +513,7 @@ function Invoke-NewmanSuite(
         "-e", $EnvironmentPath,
         "--env-var", "baseUrl=$baseUrl",
         "--env-var", "pumaUrl=http://localhost:$PumaHttpPort/Puma",
+        "--env-var", "lisaUrl=http://localhost:$LisaHttpPort/Lisa",
         "--reporters", "cli,junit,json",
         "--reporter-junit-export", $JUnitReport,
         "--reporter-json-export", $JsonReport

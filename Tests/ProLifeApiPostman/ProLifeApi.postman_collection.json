@@ -31,6 +31,9 @@
       "script": {
         "type": "text/javascript",
         "exec": [
+          "// A request may expect a refusal status by setting this variable in its own pre-request script",
+          "pm.variables.set('expectedHttpStatus', 200);",
+          "",
           "function uuidv4() {",
           "  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {",
           "    const r = Math.random() * 16 | 0;",
@@ -64,8 +67,9 @@
       "script": {
         "type": "text/javascript",
         "exec": [
-          "pm.test('HTTP status is 200', function () {",
-          "  pm.response.to.have.status(200);",
+          "const __expectedHttpStatus = Number(pm.variables.get('expectedHttpStatus') || 200);",
+          "pm.test('HTTP status is ' + __expectedHttpStatus, function () {",
+          "  pm.response.to.have.status(__expectedHttpStatus);",
           "});",
           "",
           "let __globalJson = null;",
@@ -21324,6 +21328,1333 @@
                   "  \tpm.expect(session.tenantId).to.eql(env('daBTenantId'));",
                   "  });",
                   "})();"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "14 Server tokens - Connections Between the Product Servers",
+      "description": "ProLife works with Puma and Lisa through tokens each of them issued for itself. Run-CiTests.ps1 issues them before ProLife starts.",
+      "item": [
+        {
+          "name": "ST seed: su of ProLife",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{suLogin}}\", password: \"{{suPassword}}\", productId: \"ProLife\" }) { token userId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'ProLife' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.Authorization;",
+                  "pm.test('Authorization answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "pm.environment.set('stProLifeSu', payload.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST seed: su of Puma",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{suLogin}}\", password: \"{{suPassword}}\", productId: \"Puma\" }) { token userId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{pumaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Puma' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.Authorization;",
+                  "pm.test('Authorization answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "pm.environment.set('stPumaSu', payload.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST seed: su of Lisa",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{suLogin}}\", password: \"{{suPassword}}\", productId: \"Lisa\" }) { token userId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{lisaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Lisa' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.Authorization;",
+                  "pm.test('Authorization answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "pm.environment.set('stLisaSu', payload.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: ProLife reaches Puma and Lisa with valid tokens",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetApplicationInfo { GetApplicationInfo(input: {}) { applicationId version dependencies { applicationName status credentialStatus version dependencies { applicationName status credentialStatus } } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'ProLife' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.GetApplicationInfo;",
+                  "pm.test('GetApplicationInfo answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "const byName = {}; (payload.dependencies || []).forEach(function (d) { byName[d.applicationName] = d; });",
+                  "pm.test('Puma: connected, the token is valid', function () { pm.expect(byName.Puma, JSON.stringify(payload.dependencies)).to.include({ status: 'CONNECTED', credentialStatus: 'VALID' }); pm.expect(byName.Puma.version).to.not.be.empty; });",
+                  "pm.test('Lisa: connected, the token is valid', function () { pm.expect(byName.Lisa, JSON.stringify(payload.dependencies)).to.include({ status: 'CONNECTED', credentialStatus: 'VALID' }); });",
+                  "pm.test('Lisa reaches Puma with its own valid token', function () { const puma = (byName.Lisa.dependencies || []).find(function (d) { return d.applicationName === 'Puma'; }); pm.expect(puma, JSON.stringify(byName.Lisa)).to.include({ status: 'CONNECTED', credentialStatus: 'VALID' }); });",
+                  "pm.environment.set('stProLifeVersion', payload.version);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: the catalog of Puma shows ProLife online with the version it published",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stPumaSu}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query ConnectedProductsList { ConnectedProductsList(input: { viewParams: { offset: 0, count: 100 } }) { items { productId status productVersion tokenCreatedAt lastUsedAt } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{pumaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Puma' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.ConnectedProductsList;",
+                  "pm.test('ConnectedProductsList answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "const byId = {}; (payload.items || []).forEach(function (i) { byId[i.productId] = i; });",
+                  "pm.test('ProLife is online and published its version', function () { pm.expect(byId.ProLife, JSON.stringify(payload.items)).to.include({ status: 'Online', productVersion: pm.environment.get('stProLifeVersion') }); pm.expect(byId.ProLife.lastUsedAt).to.match(/^\\d{2}\\.\\d{2}\\.\\d{4} \\d{2}:\\d{2}:\\d{2}$/); });",
+                  "pm.test('Lisa is online', function () { pm.expect(byId.Lisa, JSON.stringify(payload.items)).to.include({ status: 'Online' }); });",
+                  "pm.test('Puma is the server itself', function () { pm.expect(byId.Puma.status).to.eql('This server'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: Puma lists the token ProLife works with",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stPumaSu}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetServerTokenList { GetServerTokenList(input: { clientProductId: \"ProLife\" }) { tokens { name clientProductId productId scopes revoked lastUsedAt } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{pumaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Puma' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.GetServerTokenList;",
+                  "pm.test('GetServerTokenList answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "const token = (payload.tokens || []).find(function (t) { return t.name === 'ProLife for Puma'; });",
+                  "pm.test('in use and valid', function () { pm.expect(token, JSON.stringify(payload.tokens)).to.include({ clientProductId: 'ProLife', productId: 'Puma', revoked: false }); pm.expect(token.lastUsedAt).to.not.be.empty; pm.expect(token.scopes).to.include.members(['/ProductServer/SignIn', '/ProductServer/PublishPermissions', '/ProductServer/Roles/Edit']); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: Puma holds the permissions ProLife published",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stPumaSu}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetProductPermissions { GetProductPermissions(input: { productId: \"ProLife\" }) { groups { entries { permissionId } } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{pumaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Puma' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.GetProductPermissions;",
+                  "pm.test('GetProductPermissions answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "const ids = []; (payload.groups || []).forEach(function (g) { (g.entries || []).forEach(function (e) { ids.push(e.permissionId); }); });",
+                  "pm.test('the tree of ProLife', function () { pm.expect(ids).to.include('/SensorManagement/ViewPage'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: ProLife offers its roles the permissions Puma gives",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stProLifeSu}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetProductPermissions { GetProductPermissions(input: { productId: \"ProLife\" }) { groups { entries { permissionId } } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'ProLife' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.GetProductPermissions;",
+                  "pm.test('GetProductPermissions answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "const ids = []; (payload.groups || []).forEach(function (g) { (g.entries || []).forEach(function (e) { ids.push(e.permissionId); }); });",
+                  "pm.test('its own permissions', function () { pm.expect(ids).to.include('/SensorManagement/ViewPage'); });",
+                  "pm.test('the administration of Puma, fetched with the token', function () { pm.expect(ids.filter(function (id) { return id.indexOf('/Administration/') === 0; })).to.not.be.empty; });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: a user signs in to ProLife through its server",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{suLogin}}\", password: \"{{suPassword}}\", productId: \"ProLife\" }) { token userId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'ProLife' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.Authorization;",
+                  "pm.test('Authorization answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "pm.test('signed in', function () { pm.expect(payload.token).to.not.be.empty; pm.expect(payload.userId).to.not.be.empty; });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: Puma refuses the sign-in to ProLife that skips its server",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{suLogin}}\", password: \"{{suPassword}}\", productId: \"ProLife\" }) { token userId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{pumaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'ProLife' });",
+                  "pm.variables.set('expectedHttpStatus', 403);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
+                  "pm.test('refused: /The product ProLife is not connected: its server sends no valid token/', function () { pm.expect(messages, JSON.stringify(json)).to.match(/The product 'ProLife' is not connected: its server sends no valid token/); });",
+                  "pm.test('no data', function () { const data = json.data || {}; Object.keys(data).forEach(function (k) { pm.expect(data[k], k).to.eql(null); }); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: Lisa offers ProLife its own permissions",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stLisaSu}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetServerTokenReceiver { GetServerTokenReceiver(input: { clientProductId: \"ProLife\" }) { productId requiredPermissions groups { entries { permissionId } } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{lisaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Lisa' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.GetServerTokenReceiver;",
+                  "pm.test('GetServerTokenReceiver answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "const ids = []; (payload.groups || []).forEach(function (g) { (g.entries || []).forEach(function (e) { ids.push(e.permissionId); }); });",
+                  "pm.test('Lisa receives', function () { pm.expect(payload.productId).to.eql('Lisa'); pm.expect(payload.requiredPermissions || []).to.eql([]); });",
+                  "pm.test('the permissions of Lisa only', function () { pm.expect(ids).to.include('/FeatureManagement/View'); pm.expect(ids.filter(function (id) { return id.indexOf('/ProductServer/') === 0; })).to.eql([]); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: Lisa serves only its clients",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stLisaSu}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetServerTokenReceiver { GetServerTokenReceiver(input: { clientProductId: \"Puma\" }) { productId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{lisaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Lisa' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
+                  "pm.test('refused: /The product Puma is not a client of this server/', function () { pm.expect(messages, JSON.stringify(json)).to.match(/The product 'Puma' is not a client of this server/); });",
+                  "pm.test('no data', function () { const data = json.data || {}; Object.keys(data).forEach(function (k) { pm.expect(data[k], k).to.eql(null); }); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: Lisa lists the token ProLife works with",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stLisaSu}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetServerTokenList { GetServerTokenList(input: { clientProductId: \"ProLife\" }) { tokens { name clientProductId productId revoked lastUsedAt } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{lisaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Lisa' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.GetServerTokenList;",
+                  "pm.test('GetServerTokenList answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "const token = (payload.tokens || []).find(function (t) { return t.name === 'ProLife for Lisa'; });",
+                  "pm.test('in use and valid', function () { pm.expect(token, JSON.stringify(payload.tokens)).to.include({ clientProductId: 'ProLife', productId: 'Lisa', revoked: false }); pm.expect(token.lastUsedAt).to.not.be.empty; });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: Lisa does not give the permissions of Puma",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stLisaSu}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateServerToken { CreateServerToken(input: { clientProductId: \"ProLife\", name: \"st foreign permission\", scopes: [\"/ProductServer/Users/View\"] }) { id token success scopes } }",
+                "variables": ""
+              }
+            },
+            "url": "{{lisaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Lisa' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
+                  "pm.test('refused: /The permission /ProductServer/Users/View cannot be given to a server token/', function () { pm.expect(messages, JSON.stringify(json)).to.match(/The permission '\\/ProductServer\\/Users\\/View' cannot be given to a server token/); });",
+                  "pm.test('no data', function () { const data = json.data || {}; Object.keys(data).forEach(function (k) { pm.expect(data[k], k).to.eql(null); }); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: Lisa issues a token without permissions",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stLisaSu}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateServerToken { CreateServerToken(input: { clientProductId: \"ProLife\", name: \"st probe\", scopes: [] }) { id token success scopes } }",
+                "variables": ""
+              }
+            },
+            "url": "{{lisaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Lisa' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.CreateServerToken;",
+                  "pm.test('CreateServerToken answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "pm.test('nothing is required by Lisa', function () { pm.expect(payload.success).to.eql(true); pm.expect(payload.scopes).to.eql([]); });",
+                  "pm.environment.set('stLisaPlainId', payload.id);",
+                  "pm.environment.set('stLisaPlain', payload.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: Lisa issues a token for the features",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stLisaSu}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateServerToken { CreateServerToken(input: { clientProductId: \"ProLife\", name: \"st features\", scopes: [\"/FeatureManagement/Edit/Add\"] }) { id token success scopes } }",
+                "variables": ""
+              }
+            },
+            "url": "{{lisaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Lisa' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.CreateServerToken;",
+                  "pm.test('CreateServerToken answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "pm.test('adding brings viewing', function () { pm.expect(payload.scopes).to.have.members(['/FeatureManagement/View', '/FeatureManagement/Edit/Add']); });",
+                  "pm.environment.set('stLisaFeaturesId', payload.id);",
+                  "pm.environment.set('stLisaFeatures', payload.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: Puma issues a token of ProLife for the cross check",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stPumaSu}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateServerToken { CreateServerToken(input: { clientProductId: \"ProLife\", name: \"st probe\", scopes: [] }) { id token success scopes } }",
+                "variables": ""
+              }
+            },
+            "url": "{{pumaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Puma' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.CreateServerToken;",
+                  "pm.test('CreateServerToken answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "pm.environment.set('stPumaProbeId', payload.id);",
+                  "pm.environment.set('stPumaProbe', payload.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: Lisa answers the server of ProLife within its token",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stLisaFeatures}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query FeaturesList { FeaturesList(input: { viewParams: { offset: 0, count: 1 } }) { items { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{lisaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.remove('productid');"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.FeaturesList;",
+                  "pm.test('FeaturesList answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "pm.test('the features are read', function () { pm.expect(payload.items.length).to.eql(1); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: Lisa refuses a command outside the token",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stLisaPlain}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query FeaturesList { FeaturesList(input: { viewParams: { offset: 0, count: 1 } }) { items { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{lisaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.remove('productid');",
+                  "pm.variables.set('expectedHttpStatus', 403);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
+                  "pm.test('refused: /The server of ProLife may not send FeaturesList: its token lacks /FeatureManagement/View/', function () { pm.expect(messages, JSON.stringify(json)).to.match(/The server of 'ProLife' may not send 'FeaturesList': its token lacks '\\/FeatureManagement\\/View'/); });",
+                  "pm.test('no data', function () { const data = json.data || {}; Object.keys(data).forEach(function (k) { pm.expect(data[k], k).to.eql(null); }); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: Lisa closes the token management to the servers",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stLisaFeatures}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetServerTokenList { GetServerTokenList(input: { clientProductId: \"ProLife\" }) { tokens { id } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{lisaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.remove('productid');",
+                  "pm.variables.set('expectedHttpStatus', 403);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
+                  "pm.test('refused: /The request GetServerTokenList is closed to the servers of products/', function () { pm.expect(messages, JSON.stringify(json)).to.match(/The request 'GetServerTokenList' is closed to the servers of products/); });",
+                  "pm.test('no data', function () { const data = json.data || {}; Object.keys(data).forEach(function (k) { pm.expect(data[k], k).to.eql(null); }); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: Lisa takes its token under the header of ProLife",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-server-token",
+                "value": "{{stLisaPlain}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetApplicationInfo { GetApplicationInfo(input: {}) { applicationId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{lisaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'ProLife' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.GetApplicationInfo;",
+                  "pm.test('GetApplicationInfo answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "pm.test('Lisa answers', function () { pm.expect(payload.applicationId).to.eql('Lisa'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: Lisa refuses a token Puma issued",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-server-token",
+                "value": "{{stPumaProbe}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetApplicationInfo { GetApplicationInfo(input: {}) { applicationId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{lisaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.remove('productid');",
+                  "pm.variables.set('expectedHttpStatus', 403);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
+                  "pm.test('refused: /Invalid personal access token/', function () { pm.expect(messages, JSON.stringify(json)).to.match(/Invalid personal access token/); });",
+                  "pm.test('no data', function () { const data = json.data || {}; Object.keys(data).forEach(function (k) { pm.expect(data[k], k).to.eql(null); }); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: Puma refuses a token Lisa issued",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-server-token",
+                "value": "{{stLisaPlain}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetApplicationInfo { GetApplicationInfo(input: {}) { applicationId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{pumaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.remove('productid');",
+                  "pm.variables.set('expectedHttpStatus', 403);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
+                  "pm.test('refused: /Invalid personal access token/', function () { pm.expect(messages, JSON.stringify(json)).to.match(/Invalid personal access token/); });",
+                  "pm.test('no data', function () { const data = json.data || {}; Object.keys(data).forEach(function (k) { pm.expect(data[k], k).to.eql(null); }); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: Lisa refuses ProLife without the token of its server",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetApplicationInfo { GetApplicationInfo(input: {}) { applicationId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{lisaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'ProLife' });",
+                  "pm.variables.set('expectedHttpStatus', 403);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
+                  "pm.test('refused: /The product ProLife is not connected: its server sends no valid token/', function () { pm.expect(messages, JSON.stringify(json)).to.match(/The product 'ProLife' is not connected: its server sends no valid token/); });",
+                  "pm.test('no data', function () { const data = json.data || {}; Object.keys(data).forEach(function (k) { pm.expect(data[k], k).to.eql(null); }); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: Lisa revokes its tokens",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stLisaSu}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RevokeServerToken { RevokeServerToken(input: { id: \"{{stLisaPlainId}}\" }) { success } }",
+                "variables": ""
+              }
+            },
+            "url": "{{lisaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Lisa' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.RevokeServerToken;",
+                  "pm.test('RevokeServerToken answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "pm.test('revoked', function () { pm.expect(payload.success).to.eql(true); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: Lisa refuses the revoked token at once",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-server-token",
+                "value": "{{stLisaPlain}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetApplicationInfo { GetApplicationInfo(input: {}) { applicationId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{lisaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.remove('productid');",
+                  "pm.variables.set('expectedHttpStatus', 403);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
+                  "pm.test('refused: /Invalid personal access token/', function () { pm.expect(messages, JSON.stringify(json)).to.match(/Invalid personal access token/); });",
+                  "pm.test('no data', function () { const data = json.data || {}; Object.keys(data).forEach(function (k) { pm.expect(data[k], k).to.eql(null); }); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST cleanup: Lisa revokes the token for the features",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stLisaSu}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RevokeServerToken { RevokeServerToken(input: { id: \"{{stLisaFeaturesId}}\" }) { success } }",
+                "variables": ""
+              }
+            },
+            "url": "{{lisaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Lisa' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.RevokeServerToken;",
+                  "pm.test('RevokeServerToken answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "pm.test('revoked', function () { pm.expect(payload.success).to.eql(true); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST cleanup: Puma revokes the token of the cross check",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stPumaSu}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RevokeServerToken { RevokeServerToken(input: { id: \"{{stPumaProbeId}}\" }) { success } }",
+                "variables": ""
+              }
+            },
+            "url": "{{pumaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Puma' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.RevokeServerToken;",
+                  "pm.test('RevokeServerToken answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "pm.test('revoked', function () { pm.expect(payload.success).to.eql(true); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: ProLife still reaches Puma and Lisa",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetApplicationInfo { GetApplicationInfo(input: {}) { applicationId version dependencies { applicationName status credentialStatus version dependencies { applicationName status credentialStatus } } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'ProLife' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.GetApplicationInfo;",
+                  "pm.test('GetApplicationInfo answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "const byName = {}; (payload.dependencies || []).forEach(function (d) { byName[d.applicationName] = d; });",
+                  "pm.test('the tokens of ProLife were not touched', function () { pm.expect(byName.Puma.credentialStatus).to.eql('VALID'); pm.expect(byName.Lisa.credentialStatus).to.eql('VALID'); });"
                 ]
               }
             }

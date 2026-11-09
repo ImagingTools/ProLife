@@ -97,7 +97,8 @@ function gqlString(value) {
 	return JSON.stringify(String(value));
 }
 
-function gql(query, token, url) {
+// productOverride: the product of this request instead of the one of the run
+function gql(query, token, url, productOverride) {
 	return new Promise((resolve, reject) => {
 		const u = new URL(url || httpUrl);
 		const body = JSON.stringify({ query });
@@ -106,7 +107,7 @@ function gql(query, token, url) {
 			'Content-Length': Buffer.byteLength(body)
 		};
 		if (token) { headers['x-authentication-token'] = token; }
-		if (productId) { headers['productId'] = productId; }
+		if (productOverride || productId) { headers['productId'] = productOverride || productId; }
 
 		const lib = u.protocol === 'https:' ? https : http;
 		const req = lib.request({
@@ -177,6 +178,7 @@ class SubscriptionSession {
 		this.activeIds = new Map();      // id -> command id its data frames must carry
 		this.retiredIds = new Map();     // id -> { commandId, at } once its complete arrived
 		this.expectErrorIds = new Set();
+		this.ackedIds = new Set();
 		this.expectCompleteIds = new Set();
 	}
 
@@ -247,6 +249,18 @@ class SubscriptionSession {
 			if (!this.expectErrorIds.has(frame.id)) {
 				this.violation(`unsolicited error for id "${frame.id}": ${JSON.stringify(frame.payload).slice(0, 250)}`);
 			}
+			return;
+		}
+
+		// The server confirms every subscription it accepts, once
+		if (frame.type === 'start_ack') {
+			if (!this.activeIds.has(frame.id) && !this.expectErrorIds.has(frame.id)) {
+				this.violation(`start_ack for an id the suite never started: "${frame.id}"`);
+			}
+			if (this.ackedIds.has(frame.id)) {
+				this.violation(`second start_ack for "${frame.id}"`);
+			}
+			this.ackedIds.add(frame.id);
 			return;
 		}
 
@@ -359,10 +373,8 @@ class SubscriptionSession {
 		return { id, headers: this.headers(), type: 'stop', payload: {} };
 	}
 
-	// A successful "start" is answered with silence: nothing in ImtCore ever emits
-	// start_ack (CWebSocketRequest only parses one), and CWebSocketServletComp
-	// returns an empty response on success. So a refusal is the only registration
-	// outcome that produces a frame, and the absence of one is the acceptance.
+	// A "start" is answered with start_ack when the server accepted it and with an
+	// error frame when it refused; the grace window bounds the wait for either.
 	settle(id, waitMs) {
 		const isOutcome = (f) => f.id === id && (f.type === 'error' || f.type === 'start_ack');
 		const existing = this.frames.find(isOutcome);
@@ -398,6 +410,9 @@ class SubscriptionSession {
 			throw new Error(`Subscription refused: ${JSON.stringify(refusal.payload).slice(0, 400)}`);
 		}
 		this.expectErrorIds.delete(id);
+		if (!this.ackedIds.has(id)) {
+			throw new Error(`Subscription ${id} was neither confirmed by start_ack nor refused`);
+		}
 		return id;
 	}
 
@@ -850,11 +865,23 @@ async function main() {
 			'subscription OnNotificationEvent { OnNotificationEvent { kind items { id typeId } } }');
 		session.omitsProduct = false;
 
+		// Puma takes notifications from the server of a product only: the test acts as the server of ProLife
+		const pumaGraphQl = pumaHttpUrl.replace(/[/]+$/, '') + '/graphql';
+		const pumaSu = await gql(`query Authorization { Authorization(input: { login: ${gqlString(suLogin)}, password: ${gqlString(suPassword)}, productId: "Puma" }) { token } }`,
+			null, pumaGraphQl, 'Puma');
+		const issued = await gql(`mutation CreateServerToken { CreateServerToken(input: { clientProductId: ${gqlString(productId)},` +
+			' name: "ws notifications", scopes: ["/ProductServer/Notifications/Send"] }) { id token } }',
+			pumaSu.data.Authorization.token, pumaGraphQl, 'Puma');
+		const serverToken = issued && issued.data && issued.data.CreateServerToken;
+		assert(serverToken && serverToken.token, `no server token for the notification: ${JSON.stringify(issued).slice(0, 300)}`);
+
 		const typeId = `ws.WebPush.${crypto.randomUUID()}`;
 		const mark = session.mark();
 		const sent = await gql(`mutation SendNotification { SendNotification(input: { productId: ${gqlString(productId)},` +
 			` userIds: [${gqlString(su.userId)}], typeId: ${gqlString(typeId)} }) { success } }`,
-			su.token, pumaHttpUrl.replace(/[/]+$/, '') + '/graphql');
+			serverToken.token, pumaGraphQl);
+		await gql(`mutation RevokeServerToken { RevokeServerToken(input: { id: ${gqlString(serverToken.id)} }) { success } }`,
+			pumaSu.data.Authorization.token, pumaGraphQl, 'Puma');
 		assert(sent && sent.data && sent.data.SendNotification && sent.data.SendNotification.success === true,
 			`the notification was not stored in Puma: ${JSON.stringify(sent).slice(0, 300)}`);
 

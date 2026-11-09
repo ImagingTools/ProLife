@@ -135,6 +135,65 @@
 					]
 				},
 				{
+					"name": "The server token of ProLife for its notifications",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.request.headers.upsert({ key: 'productid', value: 'Puma' });"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const json = pm.response.json();",
+									"const payload = json.data && json.data.CreateServerToken;",
+									"pm.test('issued with the permission to send', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload.success).to.eql(true); pm.expect(payload.scopes).to.include('/ProductServer/Notifications/Send'); });",
+									"pm.environment.set('ncp_prolife_server_token', payload.token);",
+									"pm.environment.set('ncp_prolife_server_token_id', payload.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation CreateServerToken { CreateServerToken(input: { clientProductId: \"ProLife\", name: \"ncp notifications of ProLife\", scopes: [\"/ProductServer/Notifications/Send\"] }) { id token success scopes } }",
+								"variables": ""
+							}
+						},
+						"url": "{{pumaUrl}}/graphql",
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "x-authentication-token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{ncp_su_puma_token}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						}
+					}
+				},
+				{
 					"id": "41d516db-4c99-4d08-8b70-b66274dc57c0",
 					"name": "Authorization SU in ProLife",
 					"request": {
@@ -951,7 +1010,7 @@
 								},
 								{
 									"key": "value",
-									"value": "{{ncp_su_puma_token}}",
+									"value": "{{ncp_prolife_server_token}}",
 									"type": "string"
 								},
 								{
@@ -1028,7 +1087,7 @@
 								},
 								{
 									"key": "value",
-									"value": "{{ncp_su_puma_token}}",
+									"value": "{{ncp_prolife_server_token}}",
 									"type": "string"
 								},
 								{
@@ -1105,7 +1164,7 @@
 								},
 								{
 									"key": "value",
-									"value": "{{ncp_su_puma_token}}",
+									"value": "{{ncp_prolife_server_token}}",
 									"type": "string"
 								},
 								{
@@ -3341,7 +3400,7 @@
 								},
 								{
 									"key": "value",
-									"value": "{{ncp_su_puma_token}}",
+									"value": "{{ncp_prolife_server_token}}",
 									"type": "string"
 								},
 								{
@@ -3418,7 +3477,7 @@
 								},
 								{
 									"key": "value",
-									"value": "{{ncp_su_puma_token}}",
+									"value": "{{ncp_prolife_server_token}}",
 									"type": "string"
 								},
 								{
@@ -3495,7 +3554,7 @@
 								},
 								{
 									"key": "value",
-									"value": "{{ncp_su_puma_token}}",
+									"value": "{{ncp_prolife_server_token}}",
 									"type": "string"
 								},
 								{
@@ -4448,6 +4507,62 @@
 							}
 						}
 					]
+				},
+				{
+					"name": "The server token of the notifications is revoked",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.request.headers.upsert({ key: 'productid', value: 'Puma' });"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const json = pm.response.json();",
+									"pm.test('revoked', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(json.data.RevokeServerToken.success).to.eql(true); });"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation RevokeServerToken { RevokeServerToken(input: { id: \"{{ncp_prolife_server_token_id}}\" }) { success } }",
+								"variables": ""
+							}
+						},
+						"url": "{{pumaUrl}}/graphql",
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "x-authentication-token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{ncp_su_puma_token}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						}
+					}
 				}
 			]
 		}
