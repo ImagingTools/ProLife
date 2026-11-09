@@ -21876,6 +21876,144 @@
           ]
         },
         {
+          "name": "ST: Lisa confirms a client of its configuration",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stLisaSu}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation AddServerTokenClient { AddServerTokenClient(input: { clientProductId: \"ProLife\", name: \"ProLife\" }) { success added } }",
+                "variables": ""
+              }
+            },
+            "url": "{{lisaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Lisa' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.AddServerTokenClient;",
+                  "pm.test('AddServerTokenClient answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "pm.test('a client already', function () { pm.expect(payload.success).to.eql(true); pm.expect(payload.added).to.eql(false); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: Lisa adds no client outside its configuration",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stLisaSu}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation AddServerTokenClient { AddServerTokenClient(input: { clientProductId: \"Puma\", name: \"Puma\" }) { success added } }",
+                "variables": ""
+              }
+            },
+            "url": "{{lisaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Lisa' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
+                  "pm.test('refused: /The clients of this server are set in its configuration, Puma is not one of them/', function () { pm.expect(messages, JSON.stringify(json)).to.match(/The clients of this server are set in its configuration, 'Puma' is not one of them/); });",
+                  "pm.test('no data', function () { const data = json.data || {}; Object.keys(data).forEach(function (k) { pm.expect(data[k], k).to.eql(null); }); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: Lisa still refuses the product it did not add",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stLisaSu}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetServerTokenReceiver { GetServerTokenReceiver(input: { clientProductId: \"Puma\" }) { productId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{lisaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Lisa' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
+                  "pm.test('refused: /The product Puma is not a client of this server/', function () { pm.expect(messages, JSON.stringify(json)).to.match(/The product 'Puma' is not a client of this server/); });",
+                  "pm.test('no data', function () { const data = json.data || {}; Object.keys(data).forEach(function (k) { pm.expect(data[k], k).to.eql(null); }); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
           "name": "ST: Lisa lists the token ProLife works with",
           "request": {
             "auth": {

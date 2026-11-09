@@ -134,6 +134,13 @@ st.push(item('ST: Lisa offers ProLife its own permissions', 'Lisa', 'query GetSe
 	])
 }));
 st.push(item('ST: Lisa serves only its clients', 'Lisa', 'query GetServerTokenReceiver { GetServerTokenReceiver(input: { clientProductId: "Puma" }) { productId } }', { auth: '{{stLisaSu}}', test: refused("/The product 'Puma' is not a client of this server/") }));
+// The clients of Lisa are set in its configuration: a configurator cannot add one there
+st.push(item('ST: Lisa confirms a client of its configuration', 'Lisa', 'mutation AddServerTokenClient { AddServerTokenClient(input: { clientProductId: "ProLife", name: "ProLife" }) { success added } }', {
+	auth: '{{stLisaSu}}',
+	test: accepted('AddServerTokenClient', ["pm.test('a client already', function () { pm.expect(payload.success).to.eql(true); pm.expect(payload.added).to.eql(false); });"])
+}));
+st.push(item('ST: Lisa adds no client outside its configuration', 'Lisa', 'mutation AddServerTokenClient { AddServerTokenClient(input: { clientProductId: "Puma", name: "Puma" }) { success added } }', { auth: '{{stLisaSu}}', test: refused("/The clients of this server are set in its configuration, 'Puma' is not one of them/") }));
+st.push(item('ST: Lisa still refuses the product it did not add', 'Lisa', 'query GetServerTokenReceiver { GetServerTokenReceiver(input: { clientProductId: "Puma" }) { productId } }', { auth: '{{stLisaSu}}', test: refused("/The product 'Puma' is not a client of this server/") }));
 st.push(item('ST: Lisa lists the token ProLife works with', 'Lisa', 'query GetServerTokenList { GetServerTokenList(input: { clientProductId: "ProLife" }) { tokens { name clientProductId productId revoked lastUsedAt } } }', {
 	auth: '{{stLisaSu}}',
 	test: accepted('GetServerTokenList', [
