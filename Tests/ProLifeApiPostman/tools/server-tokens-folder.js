@@ -134,13 +134,22 @@ st.push(item('ST: Lisa offers ProLife its own permissions', 'Lisa', 'query GetSe
 	])
 }));
 st.push(item('ST: Lisa serves only its clients', 'Lisa', 'query GetServerTokenReceiver { GetServerTokenReceiver(input: { clientProductId: "Puma" }) { productId } }', { auth: '{{stLisaSu}}', test: refused("/The product 'Puma' is not a client of this server/") }));
-// The clients of Lisa are set in its configuration: a configurator cannot add one there
-st.push(item('ST: Lisa confirms a client of its configuration', 'Lisa', 'mutation AddServerTokenClient { AddServerTokenClient(input: { clientProductId: "ProLife", name: "ProLife" }) { success added } }', {
+// Lisa keeps its clients in its own catalog, as Puma does: a configurator (Agentino) adds them
+const addLisaClient = (product) => `mutation AddServerTokenClient { AddServerTokenClient(input: { clientProductId: "${product}", name: "${product}" }) { success added } }`;
+st.push(item('ST: Lisa knows ProLife as its client', 'Lisa', addLisaClient('ProLife'), {
 	auth: '{{stLisaSu}}',
 	test: accepted('AddServerTokenClient', ["pm.test('a client already', function () { pm.expect(payload.success).to.eql(true); pm.expect(payload.added).to.eql(false); });"])
 }));
-st.push(item('ST: Lisa adds no client outside its configuration', 'Lisa', 'mutation AddServerTokenClient { AddServerTokenClient(input: { clientProductId: "Puma", name: "Puma" }) { success added } }', { auth: '{{stLisaSu}}', test: refused("/The clients of this server are set in its configuration, 'Puma' is not one of them/") }));
-st.push(item('ST: Lisa still refuses the product it did not add', 'Lisa', 'query GetServerTokenReceiver { GetServerTokenReceiver(input: { clientProductId: "Puma" }) { productId } }', { auth: '{{stLisaSu}}', test: refused("/The product 'Puma' is not a client of this server/") }));
+st.push(item('ST: Lisa adds a new client', 'Lisa', addLisaClient('StLisaClient'), {
+	auth: '{{stLisaSu}}',
+	test: accepted('AddServerTokenClient', ["pm.test('added now', function () { pm.expect(payload.success).to.eql(true); pm.expect(payload.added).to.eql(true); });"])
+}));
+st.push(item('ST: the new client of Lisa is offered the permissions of Lisa', 'Lisa', 'query GetServerTokenReceiver { GetServerTokenReceiver(input: { clientProductId: "StLisaClient" }) { productId groups { entries { permissionId } } } }', {
+	auth: '{{stLisaSu}}',
+	test: accepted('GetServerTokenReceiver', ["pm.test('Lisa receives', function () { pm.expect(payload.productId).to.eql('Lisa'); });"])
+}));
+st.push(item('ST: Lisa is not its own client', 'Lisa', addLisaClient('Lisa'), { auth: '{{stLisaSu}}', test: refused('/A server token is issued to the server of another product/') }));
+st.push(item('ST: Lisa still refuses the product nobody added', 'Lisa', 'query GetServerTokenReceiver { GetServerTokenReceiver(input: { clientProductId: "Puma" }) { productId } }', { auth: '{{stLisaSu}}', test: refused("/The product 'Puma' is not a client of this server/") }));
 st.push(item('ST: Lisa lists the token ProLife works with', 'Lisa', 'query GetServerTokenList { GetServerTokenList(input: { clientProductId: "ProLife" }) { tokens { name clientProductId productId revoked lastUsedAt } } }', {
 	auth: '{{stLisaSu}}',
 	test: accepted('GetServerTokenList', [
@@ -168,6 +177,7 @@ st.push(item('ST: Lisa answers the server of ProLife within its token', 'Lisa', 
 }));
 st.push(item('ST: Lisa refuses a command outside the token', 'Lisa', features, { auth: '{{stLisaPlain}}', product: null, status: 403, test: refused("/The server of 'ProLife' may not send 'FeaturesList': its token lacks '\\/FeatureManagement\\/View'/") }));
 st.push(item('ST: Lisa closes the token management to the servers', 'Lisa', 'query GetServerTokenList { GetServerTokenList(input: { clientProductId: "ProLife" }) { tokens { id } } }', { auth: '{{stLisaFeatures}}', product: null, status: 403, test: refused("/The request 'GetServerTokenList' is closed to the servers of products/") }));
+st.push(item('ST: the server of ProLife does not add clients at Lisa', 'Lisa', addLisaClient('StBySrv'), { auth: '{{stLisaFeatures}}', product: null, status: 403, test: refused("/The request 'AddServerTokenClient' is closed to the servers of products/") }));
 st.push(item('ST: Lisa takes its token under the header of ProLife', 'Lisa', 'query GetApplicationInfo { GetApplicationInfo(input: {}) { applicationId } }', {
 	server: '{{stLisaPlain}}', product: 'ProLife',
 	test: accepted('GetApplicationInfo', ["pm.test('Lisa answers', function () { pm.expect(payload.applicationId).to.eql('Lisa'); });"])

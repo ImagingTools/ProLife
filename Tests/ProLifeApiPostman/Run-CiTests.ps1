@@ -396,6 +396,14 @@ function New-ServerToken([string]$ReceiverProductId, [int]$Port, [string]$SuToke
     return $response.data.CreateServerToken.token
 }
 
+# A receiver issues tokens to its clients only: the configurator (Agentino) makes the product one first
+function Add-ServerTokenClient([string]$ReceiverProductId, [int]$Port, [string]$SuToken, [string]$ClientProductId) {
+    $response = Invoke-ProductGql $ReceiverProductId $Port "mutation AddServerTokenClient { AddServerTokenClient(input: { clientProductId: `"$ClientProductId`", name: `"$ClientProductId`" }) { success } }" $SuToken
+    if (-not $response.data.AddServerTokenClient.success) {
+        throw "Unable to make $ClientProductId a client of ${ReceiverProductId}: $($response | ConvertTo-Json -Depth 6 -Compress)"
+    }
+}
+
 # The servers watch each other's collections with tokens of their own: without
 # them the subscriptions are refused and the caches of a product get stale.
 function New-PumaServerTokens {
@@ -577,7 +585,9 @@ try {
     $env:IMT_PUMA_SERVER_CREDENTIAL = $pumaTokens.LisaForPuma
     Start-LisaTestServer
     Write-Step "Issuing the token of ProLife for Lisa"
-    $proLifeForLisa = New-ServerToken 'Lisa' $LisaHttpPort (Get-SuperuserToken 'Lisa' $LisaHttpPort) 'ProLife'
+    $lisaSuToken = Get-SuperuserToken 'Lisa' $LisaHttpPort
+    Add-ServerTokenClient 'Lisa' $LisaHttpPort $lisaSuToken 'ProLife'
+    $proLifeForLisa = New-ServerToken 'Lisa' $LisaHttpPort $lisaSuToken 'ProLife'
 
     Restore-DatabaseFromBackup $DbName $ProLifeBackupPath
     Repair-ProLifeForeignServers

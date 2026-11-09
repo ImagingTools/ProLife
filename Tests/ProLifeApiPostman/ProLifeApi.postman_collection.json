@@ -21876,7 +21876,7 @@
           ]
         },
         {
-          "name": "ST: Lisa confirms a client of its configuration",
+          "name": "ST: Lisa knows ProLife as its client",
           "request": {
             "auth": {
               "type": "noauth"
@@ -21922,7 +21922,7 @@
           ]
         },
         {
-          "name": "ST: Lisa adds no client outside its configuration",
+          "name": "ST: Lisa adds a new client",
           "request": {
             "auth": {
               "type": "noauth"
@@ -21937,7 +21937,99 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation AddServerTokenClient { AddServerTokenClient(input: { clientProductId: \"Puma\", name: \"Puma\" }) { success added } }",
+                "query": "mutation AddServerTokenClient { AddServerTokenClient(input: { clientProductId: \"StLisaClient\", name: \"StLisaClient\" }) { success added } }",
+                "variables": ""
+              }
+            },
+            "url": "{{lisaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Lisa' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.AddServerTokenClient;",
+                  "pm.test('AddServerTokenClient answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "pm.test('added now', function () { pm.expect(payload.success).to.eql(true); pm.expect(payload.added).to.eql(true); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: the new client of Lisa is offered the permissions of Lisa",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stLisaSu}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetServerTokenReceiver { GetServerTokenReceiver(input: { clientProductId: \"StLisaClient\" }) { productId groups { entries { permissionId } } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{lisaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Lisa' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const payload = json.data && json.data.GetServerTokenReceiver;",
+                  "pm.test('GetServerTokenReceiver answered', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload, JSON.stringify(json)).to.be.an('object'); });",
+                  "pm.test('Lisa receives', function () { pm.expect(payload.productId).to.eql('Lisa'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: Lisa is not its own client",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stLisaSu}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation AddServerTokenClient { AddServerTokenClient(input: { clientProductId: \"Lisa\", name: \"Lisa\" }) { success added } }",
                 "variables": ""
               }
             },
@@ -21960,7 +22052,7 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
-                  "pm.test('refused: /The clients of this server are set in its configuration, Puma is not one of them/', function () { pm.expect(messages, JSON.stringify(json)).to.match(/The clients of this server are set in its configuration, 'Puma' is not one of them/); });",
+                  "pm.test('refused: /A server token is issued to the server of another product/', function () { pm.expect(messages, JSON.stringify(json)).to.match(/A server token is issued to the server of another product/); });",
                   "pm.test('no data', function () { const data = json.data || {}; Object.keys(data).forEach(function (k) { pm.expect(data[k], k).to.eql(null); }); });"
                 ]
               }
@@ -21968,7 +22060,7 @@
           ]
         },
         {
-          "name": "ST: Lisa still refuses the product it did not add",
+          "name": "ST: Lisa still refuses the product nobody added",
           "request": {
             "auth": {
               "type": "noauth"
@@ -22383,6 +22475,53 @@
                   "const json = pm.response.json();",
                   "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
                   "pm.test('refused: /The request GetServerTokenList is closed to the servers of products/', function () { pm.expect(messages, JSON.stringify(json)).to.match(/The request 'GetServerTokenList' is closed to the servers of products/); });",
+                  "pm.test('no data', function () { const data = json.data || {}; Object.keys(data).forEach(function (k) { pm.expect(data[k], k).to.eql(null); }); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ST: the server of ProLife does not add clients at Lisa",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-authentication-token",
+                "value": "{{stLisaFeatures}}"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation AddServerTokenClient { AddServerTokenClient(input: { clientProductId: \"StBySrv\", name: \"StBySrv\" }) { success added } }",
+                "variables": ""
+              }
+            },
+            "url": "{{lisaUrl}}/graphql"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.remove('productid');",
+                  "pm.variables.set('expectedHttpStatus', 403);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
+                  "pm.test('refused: /The request AddServerTokenClient is closed to the servers of products/', function () { pm.expect(messages, JSON.stringify(json)).to.match(/The request 'AddServerTokenClient' is closed to the servers of products/); });",
                   "pm.test('no data', function () { const data = json.data || {}; Object.keys(data).forEach(function (k) { pm.expect(data[k], k).to.eql(null); }); });"
                 ]
               }
