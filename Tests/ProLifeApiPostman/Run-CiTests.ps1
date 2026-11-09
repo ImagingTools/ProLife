@@ -254,6 +254,9 @@ function Reset-Database([string]$name) {
         if ($LASTEXITCODE -ne 0) { throw "Failed to drop database '$name' (exit $LASTEXITCODE)" }
     }
     finally {
+    # The credentials of the servers do not outlive the run, whatever failed
+    Remove-Item Env:\IMT_PUMA_SERVER_CREDENTIAL, Env:\IMT_LISA_SERVER_CREDENTIAL -ErrorAction SilentlyContinue
+
         $ErrorActionPreference = $previousEap
         Remove-Item Env:\PGPASSWORD -ErrorAction SilentlyContinue
     }
@@ -378,7 +381,9 @@ function Invoke-ProductGql([string]$ProductId, [int]$Port, [string]$Query, [stri
 function Get-SuperuserToken([string]$ProductId, [int]$Port) {
     $environmentFile = Join-Path $ScriptDir 'ProLifeApi-Dev.postman_environment.json'
     $suPassword = (Get-Content $environmentFile -Raw | ConvertFrom-Json).values | Where-Object { $_.key -eq 'suPassword' } | Select-Object -ExpandProperty value
-    $response = Invoke-ProductGql $ProductId $Port "query Authorization { Authorization(input: { login: `"su`", password: `"$suPassword`", productId: `"$ProductId`" }) { token } }" ''
+    # A JSON string literal is a valid GraphQL one: quotes and backslashes in the password stay escaped
+    $passwordLiteral = ConvertTo-Json ([string]$suPassword) -Compress
+    $response = Invoke-ProductGql $ProductId $Port "query Authorization { Authorization(input: { login: `"su`", password: $passwordLiteral, productId: `"$ProductId`" }) { token } }" ''
     $suToken = $response.data.Authorization.token
     if (-not $suToken) { throw "Unable to log in to $ProductId to issue the server tokens" }
     return $suToken
@@ -391,7 +396,7 @@ function New-ServerToken([string]$ReceiverProductId, [int]$Port, [string]$SuToke
 
     $response = Invoke-ProductGql $ReceiverProductId $Port "mutation CreateServerToken { CreateServerToken(input: { clientProductId: `"$ClientProductId`", name: `"$ClientProductId for $ReceiverProductId`", scopes: [$scopeList] }) { token success } }" $SuToken
     if (-not $response.data.CreateServerToken.success) {
-        throw "Unable to issue the token of $ClientProductId for ${ReceiverProductId}: $($response | ConvertTo-Json -Depth 6 -Compress)"
+        throw "Unable to issue the token of $ClientProductId for ${ReceiverProductId}: $($response.errors | ConvertTo-Json -Depth 4 -Compress)"
     }
     return $response.data.CreateServerToken.token
 }
@@ -400,7 +405,7 @@ function New-ServerToken([string]$ReceiverProductId, [int]$Port, [string]$SuToke
 function Add-ServerTokenClient([string]$ReceiverProductId, [int]$Port, [string]$SuToken, [string]$ClientProductId) {
     $response = Invoke-ProductGql $ReceiverProductId $Port "mutation AddServerTokenClient { AddServerTokenClient(input: { clientProductId: `"$ClientProductId`", name: `"$ClientProductId`" }) { success } }" $SuToken
     if (-not $response.data.AddServerTokenClient.success) {
-        throw "Unable to make $ClientProductId a client of ${ReceiverProductId}: $($response | ConvertTo-Json -Depth 6 -Compress)"
+        throw "Unable to make $ClientProductId a client of ${ReceiverProductId}: $($response.errors | ConvertTo-Json -Depth 4 -Compress)"
     }
 }
 
@@ -414,7 +419,7 @@ function New-PumaServerTokens {
         $id = [guid]::NewGuid().ToString()
         $response = Invoke-ProductGql 'Puma' $PumaHttpPort "mutation ConnectedProductAdd { ConnectedProductAdd(input: { id: `"$id`", typeId: `"ConnectedProduct`", item: { id: `"$id`", productId: `"$productId`", name: `"$productId`" } }) { id } }" $suToken
         if (-not $response.data.ConnectedProductAdd.id) {
-            throw "Unable to add the product ${productId}: $($response | ConvertTo-Json -Depth 6 -Compress)"
+            throw "Unable to add the product ${productId}: $($response.errors | ConvertTo-Json -Depth 4 -Compress)"
         }
     }
 
