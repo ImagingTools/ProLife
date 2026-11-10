@@ -416,11 +416,7 @@ function New-PumaServerTokens {
     $suToken = Get-SuperuserToken 'Puma' $PumaHttpPort
 
     foreach ($productId in 'ProLife', 'Lisa') {
-        $id = [guid]::NewGuid().ToString()
-        $response = Invoke-ProductGql 'Puma' $PumaHttpPort "mutation ConnectedProductAdd { ConnectedProductAdd(input: { id: `"$id`", typeId: `"ConnectedProduct`", item: { id: `"$id`", productId: `"$productId`", name: `"$productId`" } }) { id } }" $suToken
-        if (-not $response.data.ConnectedProductAdd.id) {
-            throw "Unable to add the product ${productId}: $($response.errors | ConvertTo-Json -Depth 4 -Compress)"
-        }
+        Add-ServerTokenClient 'Puma' $PumaHttpPort $suToken $productId
     }
 
     return @{
