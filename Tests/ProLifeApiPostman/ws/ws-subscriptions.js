@@ -679,12 +679,153 @@ async function closeDocument(token, collectionId, documentId) {
 		` id: ${gqlString(documentId)} }) { status message } }`, token).catch(() => {});
 }
 
+async function verifyComputedTenantUser(order) {
+	const suffix = crypto.randomBytes(6).toString('hex');
+	const password = crypto.randomBytes(18).toString('base64url') + 'aA1!';
+	const pumaUrl = pumaHttpUrl.endsWith('/graphql') ? pumaHttpUrl : pumaHttpUrl.replace(/[/]+$/, '') + '/graphql';
+	const cleanup = [];
+	const problems = [];
+	const request = async (command, query, token, atPuma = true) => {
+		const response = await gql(query, token, atPuma ? pumaUrl : httpUrl, atPuma ? 'Puma' : productId);
+		assert(response && !response.errors, `${command}: ${JSON.stringify(response && response.errors)}`);
+		assert(response.data && response.data[command], `${command}: no result`);
+		return response.data[command];
+	};
+	const signIn = async (name, pass, atPuma) => request('Authorization',
+		`query Authorization { Authorization(input: { login: ${gqlString(name)}, password: ${gqlString(pass)}, productId: ${gqlString(atPuma ? 'Puma' : productId)} }) { token } }`,
+		null, atPuma);
+	const selectTenant = async (token, tenant, atPuma) => {
+		const selected = await request('SelectTenant',
+			`mutation SelectTenant { SelectTenant(input: { tenantId: ${gqlString(tenant)} }) { ok errorMessage userSession { accessToken } } }`,
+			token, atPuma);
+		assert(selected.ok && selected.userSession && selected.userSession.accessToken, `SelectTenant: ${selected.errorMessage}`);
+		return selected.userSession.accessToken;
+	};
+	const su = await signIn(suLogin, suPassword, true);
+	const createUser = async name => {
+		const id = crypto.randomUUID();
+		await request('UserAdd', `mutation UserAdd { UserAdd(input: { typeId: "User", productId: "${productId}", id: "${id}",
+			item: { id: "${id}", productId: "${productId}", name: "${name}_${suffix}", username: "${name}_${suffix}",
+			password: ${gqlString(password)}, email: "${name}_${suffix}@example.invalid", groups: [], roles: [], permissions: [], systemInfos: [] } }) { id } }`, su.token);
+		cleanup.push(['Users', id]);
+		return id;
+	};
+	const createRole = async (token, name, permissions, parents) => {
+		const id = crypto.randomUUID();
+		await request('RoleAdd', `mutation RoleAdd { RoleAdd(input: { typeId: "Role", productId: "${productId}", id: "${id}",
+			item: { id: "${id}", name: "${name}_${suffix}", description: "", roleId: "${name}_${suffix}", productId: "${productId}",
+			parentRoles: ${JSON.stringify(parents)}, permissions: [${permissions.map(p => `{id: ${gqlString(p)}, direct: true}`).join(',')}] } }) { id } }`, token);
+		cleanup.push(['Roles', id]);
+		return id;
+	};
+	const createGroup = async (token, name, roles, users) => {
+		const id = crypto.randomUUID();
+		const assignments = ids => ids.map(value => `{id: ${gqlString(value)}, direct: true}`).join(',');
+		await request('GroupAdd', `mutation GroupAdd { GroupAdd(input: { typeId: "Group", productId: "${productId}", id: "${id}",
+			item: { id: "${id}", productId: "${productId}", name: "${name}_${suffix}", description: "",
+			roles: [${assignments(roles)}], users: [${assignments(users)}], parentGroups: [] } }) { id } }`, token);
+		cleanup.push(['Groups', id]);
+		return id;
+	};
+	try {
+		const ownerId = await createUser('ws_owner');
+		const userId = await createUser('ws_member');
+		const tenants = {};
+		const admins = {};
+		for (const name of ['A', 'B']) {
+			const tenant = await request('CreateTenant', `mutation CreateTenant { CreateTenant(input: {
+				name: "Computed_${name}_${suffix}", ownerId: "${ownerId}" }) { tenantId errorMessage } }`, su.token);
+			assert(tenant.tenantId, `CreateTenant: ${tenant.errorMessage}`);
+			tenants[name] = tenant.tenantId;
+			cleanup.push(['Tenant', tenant.tenantId]);
+			const updated = await request('UpdateTenant', `mutation UpdateTenant { UpdateTenant(input: {
+				tenantId: "${tenant.tenantId}", name: "Computed_${name}_${suffix}",
+				tenantPermissions: ["/AccountManagement/View", "/OrderManagement/View"] }) { success errorMessage } }`, su.token);
+			assert(updated.success, `UpdateTenant: ${updated.errorMessage}`);
+			admins[name] = await selectTenant((await signIn(suLogin, suPassword, true)).token, tenant.tenantId, true);
+			const member = await request('AddMembership', `mutation AddMembership { AddMembership(input: {
+				userId: "${userId}", tenantId: "${tenant.tenantId}" }) { membershipId errorMessage } }`, admins[name]);
+			assert(member.membershipId, `AddMembership: ${member.errorMessage}`);
+		}
+		const foreignRole = await createRole(admins.B, 'foreign', ['/AccountManagement/View'], []);
+		const inheritedRole = await createRole(admins.A, 'inherited', [], [foreignRole]);
+		const visibleRole = await createRole(admins.A, 'visible', ['/OrderManagement/View'], []);
+		await createGroup(admins.A, 'visible_group', [inheritedRole, visibleRole], [userId]);
+
+		let productToken = (await signIn(`ws_member_${suffix}`, password, false)).token;
+		for (const name of order) {
+			productToken = await selectTenant(productToken, tenants[name], false);
+			// This command is forwarded to Puma, independently of the local HTTP/WS authorization snapshot.
+			const computed = await request('GetPermissions', `query GetPermissions { GetPermissions(input: {
+				accessToken: ${gqlString(productToken)} }) { permissions } }`, productToken, false);
+			for (const permission of ['/AccountManagement/View', '/OrderManagement/View', '/Administration/Roles/View']) {
+				const expected = name === 'A' && permission === '/OrderManagement/View';
+				assert(computed.permissions.includes(permission) === expected, `${name}: unexpected Puma grant ${permission}`);
+			}
+			const session = new SubscriptionSession(`computed-${suffix}-${name}`, wsUrl, productToken);
+			try {
+				await session.connect();
+				await session.init();
+				for (const collection of ['Accounts', 'Orders']) {
+					const allowed = name === 'A' && collection === 'Orders';
+					const response = await gql(`query ${collection}List { ${collection}List(input: {
+						viewParams: { offset: 0, count: 1 } }) { items { id } } }`, productToken);
+					if (allowed) {
+						assert(!response.errors && response.data && response.data[collection + 'List'], `${name}: HTTP ${collection} refused`);
+					} else {
+						const message = (response.errors || []).map(e => e.message).join(' ');
+						assert(/permission|authorized|Forbidden/i.test(message), `${name}: HTTP ${collection} refused for wrong reason: ${message}`);
+						assert(!response.data || !response.data[collection + 'List'], `${name}: HTTP ${collection} leaked data`);
+					}
+					const command = `On${collection}CollectionChanged`;
+					const query = `subscription ${command} { ${command}(input: {}) { notification { id } } }`;
+					if (allowed) {
+						const id = await session.subscribe(command, query);
+						await session.stop(id);
+					} else {
+						const refusal = await session.subscribeExpectingRefusal(command, query);
+						assertRefusalReason(refusal, {
+							absent: `${name}: WS ${collection} accepted without its permission`,
+							mustMatch: new RegExp(`^The subscription '${command}' is not allowed$`),
+							mustNotMatch: [/No servlet was found|could not be read|Unauthorized:/]
+						});
+					}
+				}
+				assert(session.violations.length === 0, session.violations.join('; '));
+			} finally {
+				session.close();
+			}
+		}
+	} catch (error) {
+		problems.push(error.message);
+	} finally {
+		for (const [collection, id] of cleanup.reverse()) {
+			try {
+				const command = collection === 'Tenant' ? 'RemoveTenant' : 'RemoveElements';
+				const query = collection === 'Tenant'
+					? `mutation RemoveTenant { RemoveTenant(input: { tenantId: "${id}" }) { success errorMessage } }`
+					: `mutation RemoveElements { RemoveElements(input: { collectionId: "${collection}", elementIds: ["${id}"] }) { success } }`;
+				const removed = await request(command, query, su.token);
+				assert(removed.success, `cleanup ${collection}: ${removed.errorMessage || 'refused'}`);
+			} catch (error) {
+				problems.push(error.message);
+			}
+		}
+	}
+	assert(problems.length === 0, problems.join('; '));
+}
+
 async function main() {
 	console.log(`HTTP : ${httpUrl}`);
 	console.log(`WS   : ${wsUrl}`);
 
 	const su = await login(suLogin, suPassword);
 	console.log(`Authenticated as '${suLogin}' (userId=${su.userId})\n`);
+
+	for (const order of [['A', 'B', 'A'], ['B', 'A', 'B']]) {
+		await test(`computed ordinary user matches Puma over HTTP/WS in ${order.join(' -> ')}`,
+			() => verifyComputedTenantUser(order));
+	}
 
 	const session = new SubscriptionSession('main', wsUrl, su.token);
 	await session.connect();
@@ -870,7 +1011,7 @@ async function main() {
 		const pumaSu = await gql(`query Authorization { Authorization(input: { login: ${gqlString(suLogin)}, password: ${gqlString(suPassword)}, productId: "Puma" }) { token } }`,
 			null, pumaGraphQl, 'Puma');
 		const issued = await gql(`mutation CreateServerToken { CreateServerToken(input: { clientProductId: ${gqlString(productId)},` +
-			' name: "ws notifications", scopes: ["/ProductServer/Notifications/Send"] }) { id token } }',
+			' name: "ws notifications", scopes: [] }) { id token } }',
 			pumaSu.data.Authorization.token, pumaGraphQl, 'Puma');
 		const serverToken = issued && issued.data && issued.data.CreateServerToken;
 		assert(serverToken && serverToken.token, `no server token for the notification: ${JSON.stringify(issued).slice(0, 300)}`);
