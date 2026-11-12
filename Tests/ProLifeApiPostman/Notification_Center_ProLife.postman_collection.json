@@ -153,7 +153,7 @@
 								"exec": [
 									"const json = pm.response.json();",
 									"const payload = json.data && json.data.CreateServerToken;",
-									"pm.test('issued with the permission to send', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload.success).to.eql(true); pm.expect(payload.scopes).to.include('/ProductServer/Notifications/Send'); });",
+									"pm.test('issued without permissions: sending to its own users needs none', function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.eql(undefined); pm.expect(payload.success).to.eql(true); pm.expect(payload.scopes).to.eql([]); });",
 									"pm.environment.set('ncp_prolife_server_token', payload.token);",
 									"pm.environment.set('ncp_prolife_server_token_id', payload.id);"
 								]
@@ -166,7 +166,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "mutation CreateServerToken { CreateServerToken(input: { clientProductId: \"ProLife\", name: \"ncp notifications of ProLife\", scopes: [\"/ProductServer/Notifications/Send\"] }) { id token success scopes } }",
+								"query": "mutation CreateServerToken { CreateServerToken(input: { clientProductId: \"ProLife\", name: \"ncp notifications of ProLife\", scopes: [] }) { id token success scopes } }",
 								"variables": ""
 							}
 						},
