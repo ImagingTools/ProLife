@@ -21980,7 +21980,7 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
-                  "pm.test('refused: /The product ProLife is not connected: its server sends no valid token/', function () { pm.expect(messages, JSON.stringify(json)).to.match(/The product 'ProLife' is not connected: its server sends no valid token/); });",
+                  "pm.test('refused: /ProLife is not connected to Puma: its server has no valid server token/', function () { pm.expect(messages, JSON.stringify(json)).to.match(/ProLife is not connected to Puma: its server has no valid server token/); });",
                   "pm.test('no data', function () { const data = json.data || {}; Object.keys(data).forEach(function (k) { pm.expect(data[k], k).to.eql(null); }); });"
                 ]
               }
@@ -23049,7 +23049,7 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "const messages = (json.errors || []).map(function (e) { return e.message || ''; }).join(' | ');",
-                  "pm.test('refused: /The product ProLife is not connected: its server sends no valid token/', function () { pm.expect(messages, JSON.stringify(json)).to.match(/The product 'ProLife' is not connected: its server sends no valid token/); });",
+                  "pm.test('refused: /ProLife is not connected to Lisa: its server has no valid server token/', function () { pm.expect(messages, JSON.stringify(json)).to.match(/ProLife is not connected to Lisa: its server has no valid server token/); });",
                   "pm.test('no data', function () { const data = json.data || {}; Object.keys(data).forEach(function (k) { pm.expect(data[k], k).to.eql(null); }); });"
                 ]
               }

@@ -144,7 +144,7 @@ st.push(item('ST: ProLife offers its roles the permissions Puma gives', 'ProLife
 st.push(item('ST: a user signs in to ProLife through its server', 'ProLife', signIn('ProLife'), {
 	test: accepted('Authorization', ["pm.test('signed in', function () { pm.expect(payload.token).to.not.be.empty; pm.expect(payload.userId).to.not.be.empty; });"])
 }));
-st.push(item('ST: Puma refuses the sign-in to ProLife that skips its server', 'Puma', signIn('ProLife'), { product: 'ProLife', status: 403, test: refused("/The product 'ProLife' is not connected: its server sends no valid token/") }));
+st.push(item('ST: Puma refuses the sign-in to ProLife that skips its server', 'Puma', signIn('ProLife'), { product: 'ProLife', status: 403, test: refused("/ProLife is not connected to Puma: its server has no valid server token/") }));
 
 // Lisa as a receiver of its own
 st.push(item('ST: Lisa offers ProLife its own permissions', 'Lisa', 'query GetServerTokenReceiver { GetServerTokenReceiver(input: { clientProductId: "ProLife" }) { productId requiredPermissions groups { entries { permissionId } } } }', {
@@ -233,7 +233,7 @@ st.push(item('ST: Lisa takes its token under the header of ProLife', 'Lisa', 'qu
 }));
 st.push(item('ST: Lisa refuses a token Puma issued', 'Lisa', 'query GetApplicationInfo { GetApplicationInfo(input: {}) { applicationId } }', { server: '{{stPumaProbe}}', product: null, status: 403, test: refused('/Invalid personal access token/') }));
 st.push(item('ST: Puma refuses a token Lisa issued', 'Puma', 'query GetApplicationInfo { GetApplicationInfo(input: {}) { applicationId } }', { server: '{{stLisaPlain}}', product: null, status: 403, test: refused('/Invalid personal access token/') }));
-st.push(item('ST: Lisa refuses ProLife without the token of its server', 'Lisa', 'query GetApplicationInfo { GetApplicationInfo(input: {}) { applicationId } }', { product: 'ProLife', status: 403, test: refused("/The product 'ProLife' is not connected: its server sends no valid token/") }));
+st.push(item('ST: Lisa refuses ProLife without the token of its server', 'Lisa', 'query GetApplicationInfo { GetApplicationInfo(input: {}) { applicationId } }', { product: 'ProLife', status: 403, test: refused("/ProLife is not connected to Lisa: its server has no valid server token/") }));
 // Revoke only scenario tokens, in reverse creation order; never change the working connections.
 for (const [server, key] of [['Puma', 'stPumaUsers'], ['Puma', 'stPumaNarrow'], ['Puma', 'stPumaProbe'], ['Lisa', 'stLisaFeatures'], ['Lisa', 'stLisaPlain']]){
 	st.push(item(`ST cleanup: ${server} revokes ${key}`, server, revoke(`{{${key}Id}}`), {
