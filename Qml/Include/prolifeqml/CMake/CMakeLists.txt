@@ -53,6 +53,9 @@ if(DEFINED WEB_COMPILE AND WEB_COMPILE)
 		set(appicon "../Icons/ProLifeIcon.svg")
 		set(dataroot "/ProLife/Views/")
 		set(startqml "${PROLIFEDIR}/Qml/Include/prolifeqml/ProLifeWeb.qml")
+		# overridden by JQML_VERSION and JQML_WEB_ALL_VERSIONS
+		set(jqmlversion "v5")
+		set(jqmlallversions ON)
 
 		jq_compile_web(
 			"${webdirs}"
