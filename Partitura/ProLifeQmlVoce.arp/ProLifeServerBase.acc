@@ -1449,6 +1449,14 @@
                     <Element Id="AccountCollectionChangeNotifier" PackageId="ImtServerGqlPck" ComponentId="ObjectCollectionChangeNotifier">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="ReadPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>/AccountManagement/View</Value>
+                                            <Value>/OrderManagement/Edit/Change/Customer</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
                                 <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
@@ -1474,6 +1482,13 @@
                     <Element Id="DeviceCollectionChangeNotifier" PackageId="ImtServerGqlPck" ComponentId="ObjectCollectionChangeNotifier">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="ReadPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>/SensorManagement/View</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
                                 <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="Devices"/>
                                 </AttributeInfo>
@@ -1502,6 +1517,13 @@
                     <Element Id="OrderCollectionChangeNotifier" PackageId="ImtServerGqlPck" ComponentId="ObjectCollectionChangeNotifier">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="ReadPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>/OrderManagement/View</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
                                 <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
@@ -1546,6 +1568,13 @@
                     <Element Id="SoftwareCollectionChangeNotifier" PackageId="ImtServerGqlPck" ComponentId="ObjectCollectionChangeNotifier">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="ReadPermissions" Type="Id[]" ExportId="">
+                                    <Data IsEnabled="true">
+                                        <Values>
+                                            <Value>/LicenseManagement/View</Value>
+                                        </Values>
+                                    </Data>
+                                </AttributeInfo>
                                 <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
                                     <Data IsEnabled="true">
                                         <Values>
