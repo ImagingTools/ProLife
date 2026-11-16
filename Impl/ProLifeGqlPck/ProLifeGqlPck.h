@@ -16,6 +16,8 @@
 #include <prolifegql/COrderChangeGeneratorComp.h>
 #include <prolifegql/CHardwareBindingChangeGeneratorComp.h>
 #include <prolifegql/CCustomerCollectionControllerComp.h>
+#include <prolifegql/CHardwareComponentCollectionControllerComp.h>
+#include <prolifegql/CHardwareConfigurationCollectionControllerComp.h>
 #include <prolifegql/CDeviceControllerComp.h>
 #include <prolifegql/CCustomerChangeGeneratorComp.h>
 #include <prolifegql/CDeviceMetaInfoDelegateComp.h>
@@ -45,6 +47,8 @@ typedef prolifegql::CLicenseChangeGeneratorComp LicenseChangeGenerator;
 typedef prolifegql::COrderChangeGeneratorComp OrderChangeGenerator;
 typedef prolifegql::CHardwareBindingChangeGeneratorComp HardwareBindingChangeGenerator;
 typedef prolifegql::CCustomerCollectionControllerComp CustomerCollectionController;
+typedef prolifegql::CHardwareComponentCollectionControllerComp HardwareComponentCollectionController;
+typedef prolifegql::CHardwareConfigurationCollectionControllerComp HardwareConfigurationCollectionController;
 typedef icomp::TModelCompWrap<
 			icomp::TMakeComponentWrap<
 						prolifedata::CCustomerInfo,

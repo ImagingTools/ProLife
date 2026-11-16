@@ -21,6 +21,16 @@
         <file alias="ProLife/HardwareProductEditor.qml">HardwareProductEditor.qml</file>
         <file alias="ProLife/SoftwareEditor.qml">SoftwareEditor.qml</file>
         <file alias="ProLife/SoftwareProductCollectionView.qml">SoftwareProductCollectionView.qml</file>
+        <file alias="ProLife/SoftwareCatalogCollectionView.qml">SoftwareCatalogCollectionView.qml</file>
+        <file alias="ProLife/HardwareModelCollectionView.qml">HardwareModelCollectionView.qml</file>
+        <file alias="ProLife/HardwareModelEditor.qml">HardwareModelEditor.qml</file>
+        <file alias="ProLife/LicenseTypeCollectionView.qml">LicenseTypeCollectionView.qml</file>
+        <file alias="ProLife/HardwareComponentCollectionView.qml">HardwareComponentCollectionView.qml</file>
+        <file alias="ProLife/HardwareComponentEditor.qml">HardwareComponentEditor.qml</file>
+        <file alias="ProLife/HardwareConfigurationCollectionView.qml">HardwareConfigurationCollectionView.qml</file>
+        <file alias="ProLife/HardwareConfigurationEditor.qml">HardwareConfigurationEditor.qml</file>
+        <file alias="ProLife/SectionHeaderView.qml">SectionHeaderView.qml</file>
+        <file alias="ProLife/SectionLink.qml">SectionLink.qml</file>
         <file alias="ProLife/SoftwareProductsCollectionViewCommandsDelegate.qml">SoftwareProductsCollectionViewCommandsDelegate.qml</file>
         <file alias="ProLife/LicenseTreeCanvas.qml">LicenseTreeCanvas.qml</file>
         <file alias="ProLife/LicenseTreeDialog.qml">LicenseTreeDialog.qml</file>

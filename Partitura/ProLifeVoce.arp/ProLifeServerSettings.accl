@@ -32,7 +32,6 @@
         </EmbededRegistry>
         <EmbededRegistry Id="ServerParams">
             <PositionMap>
-                <Element ComponentName="LisaConnectionInterface" X="225" Y="250" Note=""/>
                 <Element ComponentName="PumaConnectionInterface" X="575" Y="250" Note=""/>
                 <Element ComponentName="Server" X="575" Y="125" Note=""/>
                 <Element ComponentName="ServerConnectionInterface" X="975" Y="250" Note=""/>
@@ -43,7 +42,6 @@
         <EmbededRegistry Id="DatabaseParams">
             <PositionMap>
                 <Element ComponentName="Database" X="525" Y="125" Note=""/>
-                <Element ComponentName="LisaDatabaseAccessSettings" X="925" Y="325" Note=""/>
                 <Element ComponentName="ProLifeDatabaseAccessSettings" X="200" Y="325" Note=""/>
                 <Element ComponentName="PumaDatabaseAccessSettings" X="575" Y="325" Note=""/>
             </PositionMap>

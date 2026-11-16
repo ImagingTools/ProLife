@@ -2,31 +2,64 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5053" Description="ACF"/>
-            <Version Id="1" Number="2181" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+            <Version Id="0" Number="5423" Description="ACF"/>
+            <Version Id="1" Number="2252" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <Description>Acula's data repository containing all resources need for the execution of the production workflow</Description>
     <Keywords>Inspection Application Product Workflow</Keywords>
     <ElementsList>
-        <Element Id="Products" PackageId="ImtDatabasePck" ComponentId="SqlDatabaseCollection">
-            <Data IsEnabled="true" Flags="0">
+        <Element Id="IdentifiableProductInfo" PackageId="ImtLicensePck" ComponentId="IdentifiableProductInfo">
+            <Data IsEnabled="true" Flags="2">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="DatabaseAccessSettings">
+                    <AttributeInfo Id="FeatureInfoProvider" Type="Reference" ExportId="FeatureInfoProvider">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="PostgresDatabaseObjectCollection" PackageId="ImtDatabaseVoce" ComponentId="PostgresDatabaseObjectCollection">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="EnableVerbose">
-                        <Data IsEnabled="false"/>
+                    <AttributeInfo Id="DocumentFactories" Type="Factory[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>IdentifiableProductInfo</Value>
+                            </Values>
+                        </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectDelegate" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ProductDatabaseDelegate"/>
+                    <AttributeInfo Id="TableName" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Products"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TypeIds" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Product</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TypeNames" Type="Text[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>Product</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="UseDataMetaInfo" Type="Boolean" ExportId="">
+                        <Data IsEnabled="true" Value="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -34,14 +67,17 @@
     </ElementsList>
     <EmbeddedRegistriesList/>
     <ExportedInterfaces>
-        <Interface InterfaceId="imod::IModel" ComponentId="Products"/>
-        <Interface InterfaceId="imtbase::ICollectionInfo" ComponentId="Products"/>
-        <Interface InterfaceId="imtbase::IObjectCollection" ComponentId="Products"/>
-        <Interface InterfaceId="imtbase::IObjectCollectionInfo" ComponentId="Products"/>
-        <Interface InterfaceId="istd::IChangeable" ComponentId="Products"/>
-        <Interface InterfaceId="istd::IPolymorphic" ComponentId="Products"/>
+        <Interface InterfaceId="imod::IModel" ComponentId="PostgresDatabaseObjectCollection"/>
+        <Interface InterfaceId="imtbase::ICollectionInfo" ComponentId="PostgresDatabaseObjectCollection"/>
+        <Interface InterfaceId="imtbase::IObjectCollection" ComponentId="PostgresDatabaseObjectCollection"/>
+        <Interface InterfaceId="imtbase::IObjectCollectionInfo" ComponentId="PostgresDatabaseObjectCollection"/>
+        <Interface InterfaceId="imtbase::IRevisionController" ComponentId="PostgresDatabaseObjectCollection"/>
+        <Interface InterfaceId="imtdb::IDependentMetaInfoController" ComponentId="PostgresDatabaseObjectCollection"/>
+        <Interface InterfaceId="imtdb::ISqlDatabaseObjectDelegate" ComponentId="PostgresDatabaseObjectCollection"/>
+        <Interface InterfaceId="istd::IChangeable" ComponentId="PostgresDatabaseObjectCollection"/>
+        <Interface InterfaceId="istd::IPolymorphic" ComponentId="PostgresDatabaseObjectCollection"/>
     </ExportedInterfaces>
     <ExportedComponents>
-        <Component ExportedId="ProductsCollection" ComponentId="Products"/>
+        <Component ExportedId="ProductDatabaseDocumentDelegate" ComponentId="PostgresDatabaseObjectCollection/SqlDatabaseDocumentDelegate"/>
     </ExportedComponents>
 </Acf>

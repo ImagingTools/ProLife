@@ -48,7 +48,6 @@
                                 <Value>Server websocket port to be listened</Value>
                                 <Value>Server tcp port to be connected to Puma</Value>
                                 <Value>Server websocket port to be connected to Puma</Value>
-                                <Value>Server websocket port to be connected to Lisa</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -59,7 +58,6 @@
                                 <Value>ProLife main WebSocket</Value>
                                 <Value>Puma main HTTP</Value>
                                 <Value>Puma main WebSocket</Value>
-                                <Value>Lisa main HTTP</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -70,7 +68,6 @@
                                 <Value>ProLife</Value>
                                 <Value>Puma</Value>
                                 <Value>Puma</Value>
-                                <Value>Lisa</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -79,7 +76,6 @@
                             <Values>
                                 <Value>0</Value>
                                 <Value>0</Value>
-                                <Value>1</Value>
                                 <Value>1</Value>
                                 <Value>1</Value>
                             </Values>
@@ -92,7 +88,6 @@
                                 <Value>WebSocketServerPort</Value>
                                 <Value>PumaUrlParam</Value>
                                 <Value>PumaWebSocketParam</Value>
-                                <Value>LisaUrlParam</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -103,7 +98,6 @@
                                 <Value>ProLifeUrlWs</Value>
                                 <Value>PumaUrlTcp</Value>
                                 <Value>PumaUrlWs</Value>
-                                <Value>LisaUrlTcp</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -211,27 +205,6 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="LisaUrlParam" PackageId="ImtCorePck" ComponentId="UrlParam">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="7776"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="LisaWebSocketParam" PackageId="ImtCorePck" ComponentId="UrlParam">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="DefaultPort" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="8776"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="DefaultScheme" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="ws"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
         <Element Id="LoggingParams" PackageId="ImtCoreVoce" ComponentId="LoggingParams">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap/>
@@ -309,8 +282,6 @@
                     <AttributeInfo Id="Parameters" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>LisaUrlParam</Value>
-                                <Value>LisaWebSocketParam</Value>
                                 <Value>PumaUrlParam</Value>
                                 <Value>PumaWebSocketParam</Value>
                                 <Value>ServerPort</Value>
@@ -321,8 +292,6 @@
                     <AttributeInfo Id="ParametersId" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>LisaUrl</Value>
-                                <Value>LisaWebSocketUrl</Value>
                                 <Value>PumaUrl</Value>
                                 <Value>PumaWebSocketUrl</Value>
                                 <Value>ServerUrl</Value>

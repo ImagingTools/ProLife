@@ -31,24 +31,19 @@ ApplicationMain {
 		subscriptionManager: window.subscriptionManager;
 	}
 
-	WebSocketConnectionChecker {
-		id: lisaConnectionChecker;
-		gqlCommandId: "LisaWsConnection";
-		subscriptionManager: window.subscriptionManager;
-		onStatusChanged: {
-			if (status === 1){
-				if (PopupManager.messageIsOpened(gqlCommandId)){
-					PopupManager.closeMessage(gqlCommandId);
-				}
-			}
-			else if (status === 2){
-				// Only a real disconnect is worth a warning.  Statuses -1
-				// (Unknown) and 0 (Connecting) are the normal application
-				// start, where "lost connection" would be a false alarm.
-				if (!PopupManager.messageIsOpened(gqlCommandId)){
-					PopupManager.addWarningMessage(qsTr("Lost connection to Lisa server"), false, gqlCommandId);
-				}
-			}
+	Connections {
+		target: AuthorizationController;
+
+		function onLoggedIn(){
+			CachedFeatureCollection.updateModel();
+			CachedProductCollection.updateModel();
+			CachedLicenseCollection.updateModel();
+		}
+
+		function onLoggedOut(){
+			CachedFeatureCollection.clearModel();
+			CachedProductCollection.clearModel();
+			CachedLicenseCollection.clearModel();
 		}
 	}
 }

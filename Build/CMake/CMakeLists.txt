@@ -39,13 +39,6 @@ if(NOT DEFINED PUMADIR)
 	endif()
 endif()
 
-if(NOT DEFINED LISADIR)
-	set(LISADIR "$ENV{LISADIR}")
-	if("${LISADIR}" STREQUAL "")
-		message(FATAL_ERROR "LISADIR not set. Please set LISADIR environment variable or CMake variable.")
-	endif()
-endif()
-
 if(NOT DEFINED ACFDIR)
 	set(ACFDIR "$ENV{ACFDIR}")
 	if("${ACFDIR}" STREQUAL "")

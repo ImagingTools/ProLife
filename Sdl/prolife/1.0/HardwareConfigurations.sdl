@@ -1,0 +1,89 @@
+schema {
+	query: Query
+	mutation: Mutation
+	subscription: Subscription
+	namespace: prolife
+	version: 1.0
+}
+
+import {
+	"../../../../ImtCore/Sdl/imtbase/1.0/ImtCollection.sdl"
+}
+
+input HardwareConfigurationsListInput {
+	viewParams: CollectionViewParams
+}
+
+## Component taken by a configuration, as the editor shows it; filled by the server on reading.
+type HardwareConfigurationComponent {
+	id: ID!
+	name: String
+	partNumber: String
+}
+
+## Variant of a hardware model that can be ordered and built: which optional components it takes,
+## and which software licenses ship with it.
+type HardwareConfigurationData {
+	id: ID
+	configurationId: ID
+	name: String
+	description: String
+	productId: ID
+	componentIds: [ID]
+	## Read only: names of the componentIds, the server ignores it on writing.
+	components: [HardwareConfigurationComponent]
+	bundledLicenseIds: [ID]
+}
+
+type HardwareConfigurationItem {
+	id: ID!
+	typeId: ID!
+	name: String!
+	configurationId: ID
+	productId: ID
+	productName: String
+	description: String
+	added: String
+	timeStamp: String
+}
+
+type HardwareConfigurationsListPayload {
+	items: [HardwareConfigurationItem]
+	notification: NotificationItem
+}
+
+input HardwareConfigurationDataInput {
+	id: ID!
+	item: HardwareConfigurationData!
+}
+
+input HardwareConfigurationItemInput {
+	id: ID!
+}
+
+type Query {
+	HardwareConfigurationsList (input: HardwareConfigurationsListInput): HardwareConfigurationsListPayload!
+	GetHardwareConfigurationItem (input: HardwareConfigurationItemInput): HardwareConfigurationData!
+}
+
+type Mutation {
+	UpdateHardwareConfiguration (input: HardwareConfigurationDataInput): UpdatedNotificationPayload!
+	AddHardwareConfiguration (input: HardwareConfigurationDataInput): AddedNotificationPayload!
+}
+
+collectionSchema {
+	type HardwareConfiguration {
+		ref: HardwareConfigurationItem
+		operations {
+			list: HardwareConfigurationsList
+		}
+		subtype HardwareConfiguration {
+			ref: HardwareConfigurationData
+			operations {
+				get: GetHardwareConfigurationItem
+				update: UpdateHardwareConfiguration
+				insert: AddHardwareConfiguration
+			}
+		}
+	}
+}

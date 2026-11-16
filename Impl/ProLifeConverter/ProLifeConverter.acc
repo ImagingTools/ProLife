@@ -125,7 +125,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="LicenseSqlRepository" PackageId="LisaVoce" ComponentId="LicenseSqlRepository">
+        <Element Id="LicenseSqlRepository" PackageId="ProLifeVoce" ComponentId="LicenseSqlRepository">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
@@ -214,7 +214,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="ProductSqlRepository" PackageId="LisaVoce" ComponentId="ProductSqlRepository">
+        <Element Id="ProductSqlRepository" PackageId="ProLifeVoce" ComponentId="ProductSqlRepository">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">

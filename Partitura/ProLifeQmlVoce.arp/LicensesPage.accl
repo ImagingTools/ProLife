@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acf>
+    <AcfHeader>
+        <VersionInfos>
+            <Version Id="0" Number="5445" Description="ACF"/>
+            <Version Id="1" Number="2256" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
+        </VersionInfos>
+    </AcfHeader>
+    <PositionMap>
+        <Element ComponentName="CachedProductCollection" X="1400" Y="300" Note=""/>
+        <Element ComponentName="CollectionHeadersProvider" X="1050" Y="500" Note=""/>
+        <Element ComponentName="Demultiplexer" X="575" Y="75" Note=""/>
+        <Element ComponentName="IdentifiableLicenseInfo" X="400" Y="500" Note=""/>
+        <Element ComponentName="LicenseCollectionCommands" X="750" Y="250" Note=""/>
+        <Element ComponentName="LicenseCollectionController" X="1050" Y="300" Note=""/>
+        <Element ComponentName="LicenseCommands" X="475" Y="250" Note=""/>
+    </PositionMap>
+    <EmbeddedRegistries>
+        <EmbededRegistry Id="LicenseCollectionCommands">
+            <PositionMap>
+                <Element ComponentName="StandardCollectionCommandsController" X="575" Y="250" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+        <EmbededRegistry Id="LicenseCommands">
+            <PositionMap>
+                <Element ComponentName="StandardDocumentCommandsController" X="575" Y="275" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+    </EmbeddedRegistries>
+</Acf>

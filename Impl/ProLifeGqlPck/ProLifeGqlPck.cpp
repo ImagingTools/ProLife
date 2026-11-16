@@ -55,6 +55,16 @@ I_EXPORT_COMPONENT(
 		"Customer Collection Controller");
 
 I_EXPORT_COMPONENT(
+		HardwareComponentCollectionController,
+		"Hardware component collection controller",
+		"Hardware Component Catalog Collection Controller");
+
+I_EXPORT_COMPONENT(
+		HardwareConfigurationCollectionController,
+		"Hardware configuration collection controller",
+		"Hardware Configuration Variant Collection Controller");
+
+I_EXPORT_COMPONENT(
 		CustomerInfo,
 		"Customer info",
 		"Customer Info");

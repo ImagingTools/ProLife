@@ -12,8 +12,6 @@
         <Element ComponentName="BackupSettingsRepresentation" X="950" Y="350" Note=""/>
         <Element ComponentName="DatabaseAccessSettingsRepresentation" X="600" Y="475" Note=""/>
         <Element ComponentName="DatabaseSettingsRepresentation" X="600" Y="350" Note=""/>
-        <Element ComponentName="LisaUrlRepresentation" X="175" Y="500" Note=""/>
-        <Element ComponentName="LisaWsUrlRepresentation" X="175" Y="575" Note=""/>
         <Element ComponentName="PumaUrlRepresentation" X="600" Y="750" Note=""/>
         <Element ComponentName="PumaWSUrlRepresentation" X="575" Y="675" Note=""/>
         <Element ComponentName="SchedulerParams" X="975" Y="475" Note=""/>
