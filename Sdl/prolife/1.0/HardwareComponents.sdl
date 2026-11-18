@@ -1,0 +1,95 @@
+schema {
+	query: Query
+	mutation: Mutation
+	subscription: Subscription
+	namespace: prolife
+	version: 1.0
+}
+
+import {
+	"../../../../ImtCore/Sdl/imtbase/1.0/ImtCollection.sdl"
+}
+
+input HardwareComponentsListInput {
+	viewParams: CollectionViewParams
+}
+
+type HardwareComponentData {
+	id: ID
+	partNumber: ID
+	name: String
+	description: String
+	componentType: ID
+	revision: String
+	manufacturerId: ID
+	## Read only: the name of manufacturerId, the server ignores it on writing.
+	manufacturerName: String
+	mpn: String
+	supplierOffers: [HardwareSupplierOffer]
+	lifecycleStatus: ID
+	serialized: Bool
+}
+
+type HardwareSupplierOffer {
+	supplierId: ID
+	## Read only: the name of supplierId, the server ignores it on writing.
+	supplierName: String
+	sku: String
+}
+
+type HardwareComponentItem {
+	id: ID!
+	typeId: ID!
+	name: String!
+	partNumber: ID
+	description: String
+	componentType: ID
+	revision: String
+	manufacturerId: ID
+	manufacturerName: String
+	lifecycleStatus: ID
+	serialized: Bool
+	added: String
+	timeStamp: String
+}
+
+type HardwareComponentsListPayload {
+	items: [HardwareComponentItem]
+	notification: NotificationItem
+}
+
+input HardwareComponentDataInput {
+	id: ID!
+	item: HardwareComponentData!
+}
+
+input HardwareComponentItemInput {
+	id: ID!
+}
+
+type Query {
+	HardwareComponentsList (input: HardwareComponentsListInput): HardwareComponentsListPayload!
+	GetHardwareComponentItem (input: HardwareComponentItemInput): HardwareComponentData!
+}
+
+type Mutation {
+	UpdateHardwareComponent (input: HardwareComponentDataInput): UpdatedNotificationPayload!
+	AddHardwareComponent (input: HardwareComponentDataInput): AddedNotificationPayload!
+}
+
+collectionSchema {
+	type HardwareComponent {
+		ref: HardwareComponentItem
+		operations {
+			list: HardwareComponentsList
+		}
+		subtype HardwareComponent {
+			ref: HardwareComponentData
+			operations {
+				get: GetHardwareComponentItem
+				update: UpdateHardwareComponent
+				insert: AddHardwareComponent
+			}
+		}
+	}
+}

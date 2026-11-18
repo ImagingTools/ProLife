@@ -55,6 +55,16 @@ I_EXPORT_COMPONENT(
 		"Customer Collection Controller");
 
 I_EXPORT_COMPONENT(
+		HardwareComponentCollectionController,
+		"Hardware component collection controller",
+		"Hardware Component Catalog Collection Controller");
+
+I_EXPORT_COMPONENT(
+		HardwareConfigurationCollectionController,
+		"Hardware configuration collection controller",
+		"Hardware Configuration Variant Collection Controller");
+
+I_EXPORT_COMPONENT(
 		CustomerInfo,
 		"Customer info",
 		"Customer Info");
@@ -108,6 +118,46 @@ I_EXPORT_COMPONENT(
 		SoftwareController,
 		"Software controller",
 		"Software Controller");
+
+I_EXPORT_COMPONENT(
+		HardwareComponentCollectionDocumentService,
+		"Hardware component collection document service",
+		"Hardware Component Collection Document Service");
+
+I_EXPORT_COMPONENT(
+		HardwareConfigurationCollectionDocumentService,
+		"Hardware configuration collection document service",
+		"Hardware Configuration Collection Document Service");
+
+I_EXPORT_COMPONENT(
+		HardwareComponentDocumentValidator,
+		"Validator of hardware component documents",
+		"Hardware Component Document Validator");
+
+I_EXPORT_COMPONENT(
+		HardwareConfigurationDocumentValidator,
+		"Validator of hardware configuration documents",
+		"Hardware Configuration Document Validator");
+
+I_EXPORT_COMPONENT(
+		HardwareCatalogDocumentNameProvider,
+		"Name of hardware component and configuration documents",
+		"Hardware Catalog Document Name Provider");
+
+I_EXPORT_COMPONENT(
+		HardwareComponentReferenceCleaner,
+		"Removes a removed hardware component from the configurations",
+		"Hardware Component Reference Cleaner Configuration Cascade");
+
+I_EXPORT_COMPONENT(
+		CompanyReferenceCleaner,
+		"Removes a removed company from the components",
+		"Company Reference Cleaner Component Cascade");
+
+I_EXPORT_COMPONENT(
+		LicenseImportConverter,
+		"Sorts imported licenses: those of hardware models become hardware configurations",
+		"License Import Converter Hardware Configuration Migration");
 
 I_EXPORT_COMPONENT(
 		DeviceCollectionDocumentService,

@@ -20,7 +20,7 @@ public:
 
 	I_BEGIN_COMPONENT(CDeviceChangeGeneratorComp)
 		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Product collection", true, "ProductCollection");
-		I_ASSIGN(m_licenseCollectionCompPtr, "LicenseCollection", "License collection", true, "LicenseCollection");
+		I_ASSIGN(m_configurationCollectionCompPtr, "HardwareConfigurationCollection", "Hardware configuration collection", true, "HardwareConfigurationCollection");
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
 		I_ASSIGN(m_hardwareBindingCollectionCompPtr, "BindingCollection", "Binding collection", true, "BindingCollection");
 		I_ASSIGN(m_softwareInstanceCollectionCompPtr, "SoftwareInstanceCollection", "Software instance collection", true, "SoftwareInstanceCollection");
@@ -47,7 +47,7 @@ protected:
 	virtual QString GetKeyNameForOperation(const QByteArray& key, const QByteArray& value) const override;
 
 private:
-	QString GetLicenseName(const QByteArray& productUuid) const;
+	QString GetConfigurationArticle(const QByteArray& configurationId) const;
 	QString GetSoftwareName(const QByteArray& softwareId) const;
 	QString GetProductName(const QByteArray& productId) const;
 	QString GetOrderName(const QByteArray& orderId) const;
@@ -55,7 +55,7 @@ private:
 
 protected:
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
-	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr);
+	I_REF(imtbase::IObjectCollection, m_configurationCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_hardwareBindingCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_softwareInstanceCollectionCompPtr);

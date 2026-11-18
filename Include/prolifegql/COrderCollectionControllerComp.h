@@ -23,6 +23,7 @@ public:
 		I_ASSIGN(m_softwareInstanceCollectionCompPtr, "SoftwareInstanceCollection", "Software instance collection", true, "SoftwareInstanceCollection");
 		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Product collection", true, "ProductCollection");
 		I_ASSIGN(m_licenseDefinitionCollectionCompPtr, "LicenseDefinitionCollection", "License definition collection", true, "LicenseDefinitionCollection");
+		I_ASSIGN(m_configurationCollectionCompPtr, "HardwareConfigurationCollection", "Hardware configurations the ordered devices are built after", true, "HardwareConfigurationCollection");
 		I_ASSIGN(m_deviceOperationContextControllerCompPtr, "DeviceOperationContextController", "Device operation context controller", true, "DeviceOperationContextController");
 		I_ASSIGN(m_softwareOperationContextControllerCompPtr, "SoftwareOperationContextController", "Software operation context controller", true, "SoftwareOperationContextController");
 		I_ASSIGN(m_groupFilterParamJoinerCompPtr, "GroupFilterParamJoiner", "Group filter param joiner", true, "GroupFilterParamJoiner");
@@ -104,6 +105,7 @@ protected:
 	I_REF(imtbase::IObjectCollection, m_softwareInstanceCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_deviceCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_licenseDefinitionCollectionCompPtr);
+	I_REF(imtbase::IObjectCollection, m_configurationCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_accountCollectionCompPtr);
 	I_REF(imtbase::IOperationContextController, m_deviceOperationContextControllerCompPtr);
 	I_REF(imtbase::IOperationContextController, m_softwareOperationContextControllerCompPtr);

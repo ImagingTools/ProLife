@@ -111,7 +111,7 @@ allowed to do what: the server enforces that, and the per-user screenshots recor
 
 ## Running
 
-Requires the ProLife WASM app served at `http://localhost:17778` with Puma (auth) + Lisa up, and a
+Requires the ProLife WASM app served at `http://localhost:17778` with Puma (auth) up, and a
 **real, populated** ProLife/Puma DB - see [CI](#ci-run-citestsps1) below for exactly what that means and
 why. `Run-CiTests.ps1` sets all of this up from scratch; running against a different environment means
 reproducing the same restores yourself.
@@ -161,9 +161,7 @@ exports, re-copy them (or Generate-Backups.ps1's output, for puma.backup) if the
    real ~725-user Puma export plus the 8 `fixtures/users.js` roles/users baked in on top (see
    `Generate-Backups.ps1` below). This is what lets `global-setup.js` just log in instead of creating
    anything at run time.
-2. `LisaServerTest.exe` (database `lisa_test`, HTTP port `17776`) — restored from **`lisa.backup`
-   right here in this folder** (a plain copy of `ProLifeApiPostman`'s real export).
-3. `ProLifeServerTest.exe` (database `prolife_test`, HTTP port `17778`) — restored from
+2. `ProLifeServerTest.exe` (database `prolife_test`, HTTP port `17778`) — restored from
    **`prolife.backup` right here in this folder** (a plain copy of `ProLifeApiPostman`'s real export,
    with Devices/Orders/Accounts/SoftwareInstances data, incl. the exact catalog/type records
    `DeviceCollectionPage`/`SoftwareCollectionPage` tests filter/select against - an empty schema can
@@ -179,12 +177,12 @@ test` runs with `CI=true`, `PROLIFE_BASE_URL` pointed at the just-started `ProLi
 the ImtCore testkit writing `test-output/<phase>/{artifacts,junit.xml}`. The output root is cleared
 before phase 1. It invokes `npx playwright
 test` **twice**: a read-only phase at the config's `workers` (10), then an `@mutating` phase at
-`--workers=1`. The split exists because all three servers are one shared instance over one database -
+`--workers=1`. The split exists because both servers are one shared instance over one database -
 mutations must not run against a collection another worker is screenshotting, and early attempts at
 full parallelism produced real `"Authorization server connection error"` failures under load. The
 serial phase is therefore the expensive one, which is what `MUTATING_USER_KEYS` in
-`playwright.config.js` is there to bound. Teardown stops all three servers in reverse order. Puma/Lisa checkouts are located via the `PUMADIR`/`LISADIR` environment variables (falling back
-to `Puma`/`Lisa` siblings of the ProLife checkout) — pass `-PumaRepoRoot`/`-LisaRepoRoot` explicitly if
+`playwright.config.js` is there to bound. Teardown stops both servers in reverse order. The Puma checkout is located via the `PUMADIR` environment variable (falling back
+to a `Puma` sibling of the ProLife checkout) — pass `-PumaRepoRoot` explicitly if
 your agent lays checkouts out differently.
 
 ### Regenerating `puma.backup` (`Generate-Backups.ps1`)
@@ -194,15 +192,15 @@ powershell -ExecutionPolicy Bypass -File Generate-Backups.ps1
 ```
 
 Re-run this whenever `fixtures/users.js` changes (new fixture user, renamed permission set, different
-password, ...) to keep `puma.backup` in sync. It restores the plain `puma`/`lisa`/`prolife` backups from
-`Tests\ProLifeApiPostman`, boots all three servers, bootstraps `su`, runs `scripts/seed-fixture-users.js`
+password, ...) to keep `puma.backup` in sync. It restores the plain `puma`/`prolife` backups from
+`Tests\ProLifeApiPostman`, boots both servers, bootstraps `su`, runs `scripts/seed-fixture-users.js`
 (the exact same `fixtures/seed.js` logic `global-setup.js` used to call directly, before it was baked
 into the backup) against the live server, then `pg_dump`s `puma_test` back out to
 `Tests\ProLifeGui\puma.backup`. Only `puma_test` needs a ProLifeGui-specific derived backup:
 `prolife_test`'s `Roles`/`Users`/`UserGroups`/`UserSessions` are `postgres_fdw` foreign tables that read
 live from `puma_test` at query time, so the fixture users are visible from `prolife_test` automatically
-with nothing to re-dump on the ProLife side - `Run-CiTests.ps1` restores `prolife_test`/`lisa_test` from
-the plain, shared backups.
+with nothing to re-dump on the ProLife side - `Run-CiTests.ps1` restores `prolife_test` from
+the plain, shared backup.
 
 ## Hardware (Devices) — full worked coverage
 

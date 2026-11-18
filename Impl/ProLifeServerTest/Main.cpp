@@ -9,7 +9,7 @@
 
 // ProLife includes
 #include <GeneratedFiles/ProLifeServerTest/CProLifeServerTest.h>
-#include "ProLifeFeatures.h"
+#include "../ProLifeServer/ProLifeFeatures.h"
 
 
 static void InitializeProLifeServerTestResources()

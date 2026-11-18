@@ -25,6 +25,16 @@ I_EXPORT_COMPONENT(
 			"Hardware Product Binding Info");
 
 I_EXPORT_COMPONENT(
+			HardwareComponentInfo,
+			"Catalog card of a hardware component",
+			"Hardware Component Catalog Part Module Assembly");
+
+I_EXPORT_COMPONENT(
+			HardwareConfigurationInfo,
+			"Variant of a hardware model that can be ordered and built",
+			"Hardware Configuration Variant Model");
+
+I_EXPORT_COMPONENT(
 			OrderedIdentifiableSoftwareInstanceInfo,
 			"Ordered identifiable software instance info",
 			"Ordered Identifiable Software Instance Info");

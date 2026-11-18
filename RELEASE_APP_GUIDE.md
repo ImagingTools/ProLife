@@ -45,7 +45,6 @@ ProLife Release App - это GitHub App, интегрированный с GitHu
 - **Acf version**
 - **AcfSln version**
 - **ImtCore version**
-- **Lisa version**
 - **Puma version**
 - **Agentino version**
 
@@ -62,7 +61,6 @@ Base tag for changelog: v2.0.0
 Acf version: latest
 AcfSln version: latest
 ImtCore version: latest
-Lisa version: latest
 Puma version: latest
 Agentino version: latest
 Dry run: true  # Для тестирования
@@ -77,7 +75,6 @@ Base tag for changelog: v2.0.0
 Acf version: v2.3.0
 AcfSln version: v1.5.2
 ImtCore version: v3.1.0
-Lisa version: v1.8.0
 Puma version: v2.2.0
 Agentino version: v1.4.0
 Dry run: false  # Реальный релиз
@@ -86,14 +83,13 @@ Dry run: false  # Реальный релиз
 #### Пример 3: Частичное обновление
 
 ```yaml
-# Обновить только ImtCore и Lisa, остальное оставить как есть
+# Обновить только ImtCore, остальное оставить как есть
 Branch to release from: develop
 Target release tag: v2.1.0-rc1
 Base tag for changelog: v2.0.0
 Acf version: v2.3.0  # Оставить текущую версию
 AcfSln version: v1.5.2  # Оставить текущую версию
 ImtCore version: latest  # Обновить до последней
-Lisa version: latest  # Обновить до последней
 Puma version: v2.2.0  # Оставить текущую версию
 Agentino version: v1.4.0  # Оставить текущую версию
 Dry run: true

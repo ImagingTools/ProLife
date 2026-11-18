@@ -20,10 +20,6 @@ if not defined PUMADIR (
     echo ERROR: PUMADIR is not set
     exit /b 1
 )
-if not defined LISADIR (
-    echo ERROR: LISADIR is not set
-    exit /b 1
-)
 if not defined ACFDIR (
     echo ERROR: ACFDIR is not set
     exit /b 1
@@ -40,7 +36,6 @@ if not defined AGENTINODIR (
 echo Environment variables are set:
 echo   IMTCOREDIR=%IMTCOREDIR%
 echo   PUMADIR=%PUMADIR%
-echo   LISADIR=%LISADIR%
 echo   ACFDIR=%ACFDIR%
 echo   ACFSLNDIR=%ACFSLNDIR%
 echo   AGENTINODIR=%AGENTINODIR%
@@ -48,7 +43,7 @@ echo.
 
 rem ===== NOTE =====
 rem This script builds ProLife only.
-rem Dependencies (Acf, AcfSln, ImtCore, Puma, Lisa, Agentino) must be built separately.
+rem Dependencies (Acf, AcfSln, ImtCore, Puma, Agentino) must be built separately.
 rem Ensure they are available at the paths specified by environment variables.
 
 rem ===== PROLIFE =====

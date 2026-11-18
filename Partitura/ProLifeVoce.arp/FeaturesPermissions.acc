@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acf>
+    <AcfHeader>
+        <VersionInfos>
+            <Version Id="0" Number="5430" Description="ACF"/>
+            <Version Id="1" Number="2253" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
+        </VersionInfos>
+    </AcfHeader>
+    <Description></Description>
+    <Keywords></Keywords>
+    <ElementsList>
+        <Element Id="ObjectCollectionPermissions" PackageId="ImtAuthVoce" ComponentId="ObjectCollectionPermissions">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CreateSubCollectionPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/ProductManagement/View</Value>
+                                <Value>/FeatureManagement/View</Value>
+                                <Value>/LicenseDefinitionManagement/View</Value>
+                                <Value>/HardwareManagement/View</Value>
+                                <Value>/OrderManagement/View</Value>
+                                <Value>/SensorManagement/View</Value>
+                                <Value>/LicenseManagement/View</Value>
+                                <Value>/AccountManagement/View</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ExportObjectPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/ProductManagement/View</Value>
+                                <Value>/FeatureManagement/View</Value>
+                                <Value>/LicenseDefinitionManagement/View</Value>
+                                <Value>/HardwareManagement/View</Value>
+                                <Value>/OrderManagement/View</Value>
+                                <Value>/SensorManagement/View</Value>
+                                <Value>/LicenseManagement/View</Value>
+                                <Value>/AccountManagement/View</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="GetCollectionHeadersPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/ProductManagement/View</Value>
+                                <Value>/FeatureManagement/View</Value>
+                                <Value>/LicenseDefinitionManagement/View</Value>
+                                <Value>/HardwareManagement/View</Value>
+                                <Value>/OrderManagement/View</Value>
+                                <Value>/SensorManagement/View</Value>
+                                <Value>/LicenseManagement/View</Value>
+                                <Value>/AccountManagement/View</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="GetCommandsPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/ProductManagement/View</Value>
+                                <Value>/FeatureManagement/View</Value>
+                                <Value>/LicenseDefinitionManagement/View</Value>
+                                <Value>/HardwareManagement/View</Value>
+                                <Value>/OrderManagement/View</Value>
+                                <Value>/SensorManagement/View</Value>
+                                <Value>/LicenseManagement/View</Value>
+                                <Value>/AccountManagement/View</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="GetDataMetaInfoPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/ProductManagement/View</Value>
+                                <Value>/FeatureManagement/View</Value>
+                                <Value>/LicenseDefinitionManagement/View</Value>
+                                <Value>/HardwareManagement/View</Value>
+                                <Value>/OrderManagement/View</Value>
+                                <Value>/SensorManagement/View</Value>
+                                <Value>/LicenseManagement/View</Value>
+                                <Value>/AccountManagement/View</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="GetDocumentAccessPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/ProductManagement/View</Value>
+                                <Value>/FeatureManagement/View</Value>
+                                <Value>/LicenseDefinitionManagement/View</Value>
+                                <Value>/HardwareManagement/View</Value>
+                                <Value>/OrderManagement/View</Value>
+                                <Value>/SensorManagement/View</Value>
+                                <Value>/LicenseManagement/View</Value>
+                                <Value>/AccountManagement/View</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="GetDocumentSharesPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/FeatureManagement/Edit/Change</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="GetElementIdsPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/ProductManagement/View</Value>
+                                <Value>/FeatureManagement/View</Value>
+                                <Value>/LicenseDefinitionManagement/View</Value>
+                                <Value>/HardwareManagement/View</Value>
+                                <Value>/OrderManagement/View</Value>
+                                <Value>/SensorManagement/View</Value>
+                                <Value>/LicenseManagement/View</Value>
+                                <Value>/AccountManagement/View</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="GetElementMetaInfoPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/ProductManagement/View</Value>
+                                <Value>/FeatureManagement/View</Value>
+                                <Value>/LicenseDefinitionManagement/View</Value>
+                                <Value>/HardwareManagement/View</Value>
+                                <Value>/OrderManagement/View</Value>
+                                <Value>/SensorManagement/View</Value>
+                                <Value>/LicenseManagement/View</Value>
+                                <Value>/AccountManagement/View</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="GetObjectDataPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/ProductManagement/View</Value>
+                                <Value>/FeatureManagement/View</Value>
+                                <Value>/LicenseDefinitionManagement/View</Value>
+                                <Value>/HardwareManagement/View</Value>
+                                <Value>/OrderManagement/View</Value>
+                                <Value>/SensorManagement/View</Value>
+                                <Value>/LicenseManagement/View</Value>
+                                <Value>/AccountManagement/View</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="GetObjectTypeIdPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/ProductManagement/View</Value>
+                                <Value>/FeatureManagement/View</Value>
+                                <Value>/LicenseDefinitionManagement/View</Value>
+                                <Value>/HardwareManagement/View</Value>
+                                <Value>/OrderManagement/View</Value>
+                                <Value>/SensorManagement/View</Value>
+                                <Value>/LicenseManagement/View</Value>
+                                <Value>/AccountManagement/View</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="GetObjectVisualStatusPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/ProductManagement/View</Value>
+                                <Value>/FeatureManagement/View</Value>
+                                <Value>/LicenseDefinitionManagement/View</Value>
+                                <Value>/HardwareManagement/View</Value>
+                                <Value>/OrderManagement/View</Value>
+                                <Value>/SensorManagement/View</Value>
+                                <Value>/LicenseManagement/View</Value>
+                                <Value>/AccountManagement/View</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ImportObjectPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/FeatureManagement/Edit/Add</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="InsertNewObjectPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/FeatureManagement/Edit/Add</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RemoveElementSetPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/FeatureManagement/Edit/Remove</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RemoveElementsPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/FeatureManagement/Edit/Remove</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RestoreObjectSetPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/FeatureManagement/Edit/Remove</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RestoreObjectsPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/FeatureManagement/Edit/Remove</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="RevokeDocumentSharesPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/FeatureManagement/Edit/Change</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SetObjectDataPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/FeatureManagement/Edit/Change</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SetObjectDescriptionPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/FeatureManagement/Edit/Change</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SetObjectNamePermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/FeatureManagement/Edit/Change</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ShareDocumentsPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/FeatureManagement/Edit/Change</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="PermissionsJoiner" PackageId="ImtServerAppPck" ComponentId="CommandPermissionsProviderJoiner">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandPermissionsProvider" Type="Reference[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>FeaturesList</Value>
+                                <Value>GetFeatureItem</Value>
+                                <Value>AddFeature</Value>
+                                <Value>UpdateFeature</Value>
+                                <Value>ObjectCollectionPermissions</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="FeaturesList" PackageId="ImtServerAppPck" ComponentId="SingleCommandPermissionsProvider">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="FeaturesList"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/ProductManagement/View</Value>
+                                <Value>/FeatureManagement/View</Value>
+                                <Value>/LicenseDefinitionManagement/View</Value>
+                                <Value>/HardwareManagement/View</Value>
+                                <Value>/OrderManagement/View</Value>
+                                <Value>/SensorManagement/View</Value>
+                                <Value>/LicenseManagement/View</Value>
+                                <Value>/AccountManagement/View</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="GetFeatureItem" PackageId="ImtServerAppPck" ComponentId="SingleCommandPermissionsProvider">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="GetFeatureItem"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/ProductManagement/View</Value>
+                                <Value>/FeatureManagement/View</Value>
+                                <Value>/LicenseDefinitionManagement/View</Value>
+                                <Value>/HardwareManagement/View</Value>
+                                <Value>/OrderManagement/View</Value>
+                                <Value>/SensorManagement/View</Value>
+                                <Value>/LicenseManagement/View</Value>
+                                <Value>/AccountManagement/View</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="AddFeature" PackageId="ImtServerAppPck" ComponentId="SingleCommandPermissionsProvider">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="AddFeature"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/FeatureManagement/Edit/Add</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="UpdateFeature" PackageId="ImtServerAppPck" ComponentId="SingleCommandPermissionsProvider">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="UpdateFeature"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CommandPermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/FeatureManagement/Edit/Change</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+    </ElementsList>
+    <EmbeddedRegistriesList/>
+    <ExportedInterfaces>
+        <Interface InterfaceId="imtserverapp::ICommandPermissionsProvider" ComponentId="PermissionsJoiner"/>
+        <Interface InterfaceId="istd::IPolymorphic" ComponentId="PermissionsJoiner"/>
+    </ExportedInterfaces>
+    <ExportedComponents/>
+</Acf>

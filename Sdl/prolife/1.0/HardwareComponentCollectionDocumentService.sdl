@@ -1,0 +1,25 @@
+schema {
+	namespace: prolife
+	version: 1.0
+	query: Query
+	mutation: Mutation
+}
+
+import {
+	"HardwareComponents.sdl"
+	"../../../../ImtCore/Sdl/imtbase/1.0/CollectionDocumentService.sdl"
+	"../../../../ImtCore/Sdl/imtbase/1.0/UndoManager.sdl"
+}
+
+type UpdateHardwareComponentInput {
+	documentId: ID!
+	componentData: HardwareComponentData!
+}
+
+type Query {
+	GetHardwareComponentRepresentation(input: DocumentId): HardwareComponentData!
+}
+
+type Mutation {
+	UpdateHardwareComponentFromRepresentation(input: UpdateHardwareComponentInput): DocumentOperationStatus!
+}

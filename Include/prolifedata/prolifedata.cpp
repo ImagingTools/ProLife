@@ -691,6 +691,23 @@ sdl::V1_0::prolife::CLicenseTreeNode BuildLicenseTreeFromActions(
 }
 
 
+QString GetCompanyRolesText(const prolifedata::ICustomerInfo& companyInfo)
+{
+	QStringList roles;
+	if (companyInfo.IsCustomer()){
+		roles << QStringLiteral("Customer");
+	}
+	if (companyInfo.IsManufacturer()){
+		roles << QStringLiteral("Manufacturer");
+	}
+	if (companyInfo.IsSupplier()){
+		roles << QStringLiteral("Supplier");
+	}
+
+	return roles.join(QStringLiteral(", "));
+}
+
+
 } // namespace prolifedata
 
 

@@ -111,14 +111,6 @@ These are internal components developed and maintained by ImagingTools GmbH, dis
 - **Purpose:** Core imaging library and utilities
 - **Access:** Private repository (requires authentication)
 
-#### Lisa
-- **Type:** Internal Application Component
-- **License:** ImagingTools Proprietary
-- **Repository:** https://github.com/ImagingTools/Lisa (private)
-- **Location:** `3rdParty/Lisa/`
-- **Purpose:** Lisa application components
-- **Access:** Private repository (requires authentication)
-
 #### Puma
 - **Type:** Internal Application Component
 - **License:** ImagingTools Proprietary
@@ -155,7 +147,6 @@ These are internal components developed and maintained by ImagingTools GmbH, dis
 | Acf | ImagingTools Proprietary | ImagingTools GmbH |
 | AcfSln | ImagingTools Proprietary | ImagingTools GmbH |
 | ImtCore | ImagingTools Proprietary | ImagingTools GmbH |
-| Lisa | ImagingTools Proprietary | ImagingTools GmbH |
 | Puma | ImagingTools Proprietary | ImagingTools GmbH |
 | Agentino | ImagingTools Proprietary | ImagingTools GmbH |
 

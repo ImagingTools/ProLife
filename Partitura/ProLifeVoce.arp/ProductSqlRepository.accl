@@ -2,13 +2,14 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5053" Description="ACF"/>
-            <Version Id="1" Number="2181" Description="ACF-Solutions"/>
-            <Version Id="1023" Number="331522" Description="Qt Framework"/>
+            <Version Id="0" Number="5423" Description="ACF"/>
+            <Version Id="1" Number="2252" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="Products" X="625" Y="325" Note=""/>
+        <Element ComponentName="IdentifiableProductInfo" X="550" Y="400" Note=""/>
+        <Element ComponentName="PostgresDatabaseObjectCollection" X="550" Y="150" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

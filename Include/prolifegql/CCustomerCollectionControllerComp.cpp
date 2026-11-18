@@ -9,6 +9,7 @@
 
 // ProLife includes
 #include <prolifedata/CCustomerInfo.h>
+#include <prolifedata/prolifedata.h>
 #include <prolifedata/CGroupFilter.h>
 
 
@@ -17,6 +18,61 @@ namespace prolifegql
 
 
 // protected methods
+
+bool CCustomerCollectionControllerComp::IsVendorCollection() const
+{
+	return *m_companyRoleAttrPtr == QByteArrayLiteral("Vendor");
+}
+
+
+// reimplemented (imtgql::IGqlRequestHandler)
+
+bool CCustomerCollectionControllerComp::IsRequestSupported(const imtgql::CGqlRequest& gqlRequest) const
+{
+	if (!BaseClass::IsRequestSupported(gqlRequest)){
+		return false;
+	}
+
+	// The customers and the vendors share the commands of the schema (the generated base accepts them for any
+	// collection): a request naming its collection goes to that one, a request without it to the first one.
+	const imtgql::CGqlParamObject* inputParamPtr = gqlRequest.GetParamObject("input");
+	if (inputParamPtr == nullptr){
+		return true;
+	}
+
+	const QByteArray collectionId = inputParamPtr->GetParamArgumentValue("collectionId").toByteArray();
+
+	return collectionId.isEmpty() || collectionId == *m_collectionIdAttrPtr;
+}
+
+
+// reimplemented (imtservergql::CObjectCollectionControllerCompBase)
+
+void CCustomerCollectionControllerComp::AddFixedFilters(
+			const imtgql::CGqlRequest& /*gqlRequest*/,
+			imtbase::IComplexCollectionFilter::FilterExpression& fixedExpression) const
+{
+	if (!IsVendorCollection()){
+		fixedExpression.fieldFilters << imtbase::IComplexCollectionFilter::FieldFilter(QByteArrayLiteral("IsCustomer"), QVariant(true));
+
+		return;
+	}
+
+	imtbase::IComplexCollectionFilter::FilterExpression vendorExpression;
+	vendorExpression.logicalOperation = imtbase::IComplexCollectionFilter::LO_OR;
+	vendorExpression.fieldFilters << imtbase::IComplexCollectionFilter::FieldFilter(QByteArrayLiteral("IsManufacturer"), QVariant(true));
+	vendorExpression.fieldFilters << imtbase::IComplexCollectionFilter::FieldFilter(QByteArrayLiteral("IsSupplier"), QVariant(true));
+
+	fixedExpression.filterExpressions << vendorExpression;
+}
+
+
+QByteArray CCustomerCollectionControllerComp::GetObjectTypeIdFromRequest(const imtgql::CGqlRequest& /*gqlRequest*/) const
+{
+	// Every company is stored as one object type, whatever the page calls its documents
+	return m_objectTypeIdAttrPtr.GetCount() > 0 ? m_objectTypeIdAttrPtr[0] : QByteArray();
+}
+
 
 // reimplemented (sdl::V1_0::imtbase::CImtCollectionGqlHandlerCompBase)
 
@@ -148,8 +204,9 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isTypeIdRequested){
+		// The vendors page opens a company as its own document type; stored it is an account like any other
 		QByteArray collectionObjectId = m_objectCollectionCompPtr->GetObjectTypeId(objectId);
-		representationObject.typeId = (collectionObjectId);
+		representationObject.typeId = IsVendorCollection() ? *m_companyRoleAttrPtr : collectionObjectId;
 	}
 
 	if (requestInfo.items.isCustomerIdRequested){
@@ -166,6 +223,40 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 
 	if (requestInfo.items.isEmailRequested){
 		representationObject.email = (customerInfoPtr->GetEmail());
+	}
+
+	if (requestInfo.items.isCountryRequested){
+		QString country;
+		const imtaccount::IAddressProvider* addressProviderPtr = customerInfoPtr->GetAddresses();
+		if (addressProviderPtr != nullptr){
+			const imtbase::ICollectionInfo::Ids addressIds = addressProviderPtr->GetAddressList().GetElementIds();
+			const imtaccount::IAddress* addressPtr = addressIds.isEmpty() ? nullptr : addressProviderPtr->GetAddress(addressIds[0]);
+			if (addressPtr != nullptr){
+				country = addressPtr->GetCountry();
+			}
+		}
+
+		representationObject.country = country;
+	}
+
+	if (requestInfo.items.isWebsiteRequested){
+		representationObject.website = customerInfoPtr->GetWebsite();
+	}
+
+	if (requestInfo.items.isIsCustomerRequested){
+		representationObject.isCustomer = customerInfoPtr->IsCustomer();
+	}
+
+	if (requestInfo.items.isIsManufacturerRequested){
+		representationObject.isManufacturer = customerInfoPtr->IsManufacturer();
+	}
+
+	if (requestInfo.items.isIsSupplierRequested){
+		representationObject.isSupplier = customerInfoPtr->IsSupplier();
+	}
+
+	if (requestInfo.items.isRolesRequested){
+		representationObject.roles = prolifedata::GetCompanyRolesText(*customerInfoPtr);
 	}
 
 	if (requestInfo.items.isAddedRequested){
@@ -267,6 +358,11 @@ bool CCustomerCollectionControllerComp::CreateRepresentationFromObject(
 
 	QByteArray customerId = customerInfoPtr->GetCustomerId();
 	representationPayload.customerId = (customerId);
+
+	representationPayload.website = customerInfoPtr->GetWebsite();
+	representationPayload.isCustomer = customerInfoPtr->IsCustomer();
+	representationPayload.isManufacturer = customerInfoPtr->IsManufacturer();
+	representationPayload.isSupplier = customerInfoPtr->IsSupplier();
 
 	QByteArrayList groups = customerInfoPtr->GetGroups();
 	std::sort(groups.begin(), groups.end());
@@ -487,6 +583,29 @@ bool CCustomerCollectionControllerComp::FillObjectFromRepresentation(
 	}
 
 	customerInfoPtr->AddAddress(address);
+
+	if (accountDataRepresentation.website){
+		customerInfoPtr->SetWebsite(*accountDataRepresentation.website);
+	}
+	if (accountDataRepresentation.isCustomer){
+		customerInfoPtr->SetCustomer(*accountDataRepresentation.isCustomer);
+	}
+	if (accountDataRepresentation.isManufacturer){
+		customerInfoPtr->SetManufacturer(*accountDataRepresentation.isManufacturer);
+	}
+	if (accountDataRepresentation.isSupplier){
+		customerInfoPtr->SetSupplier(*accountDataRepresentation.isSupplier);
+	}
+
+	// A company saved from a page has the role of that page.
+	if (!IsVendorCollection()){
+		customerInfoPtr->SetCustomer(true);
+	}
+	else if (!customerInfoPtr->IsManufacturer() && !customerInfoPtr->IsSupplier()){
+		errorMessage = QStringLiteral("The company is neither a manufacturer nor a supplier");
+
+		return false;
+	}
 
 	return true;
 }

@@ -30,7 +30,6 @@
                             <Values>
                                 <Value>ProLife server connection interface</Value>
                                 <Value>Puma server connection interface</Value>
-                                <Value>Lisa server connection interface</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -39,7 +38,6 @@
                             <Values>
                                 <Value>ProLife server connection interface</Value>
                                 <Value>Puma server connection interface</Value>
-                                <Value>Lisa server connection interface</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -48,7 +46,6 @@
                             <Values>
                                 <Value>ProLife</Value>
                                 <Value>Puma</Value>
-                                <Value>Lisa</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -56,7 +53,6 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>0</Value>
-                                <Value>1</Value>
                                 <Value>1</Value>
                             </Values>
                         </Data>
@@ -72,7 +68,6 @@
                             <Values>
                                 <Value>ServerParams/ServerConnectionInterface</Value>
                                 <Value>ServerParams/PumaConnectionInterface</Value>
-                                <Value>ServerParams/LisaConnectionInterface</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -208,12 +203,6 @@
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="HttpPort" Type="Integer" ExportId="HttpPort">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="LisaHttpPort" Type="Integer" ExportId="LisaHttpPort">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="LisaWebSocketPort" Type="Integer" ExportId="LisaWebSocketPort">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="PumaHttpPort" Type="Integer" ExportId="PumaHttpPort">
@@ -376,7 +365,8 @@
                                         <Values>
                                             <Value>ProLifeDatabaseAccessSettings</Value>
                                             <Value>PumaDatabaseAccessSettings</Value>
-                                            <Value>LisaDatabaseAccessSettings</Value>
+                                            <Value>CatalogImportDatabaseAccessSettings</Value>
+                                            <Value>CatalogImport</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -385,7 +375,8 @@
                                         <Values>
                                             <Value></Value>
                                             <Value></Value>
-                                            <Value></Value>
+                                            <Value>Database of the former licensing server the catalog is imported from</Value>
+                                            <Value>Import the products, licenses, features and hardware configurations when the database is updated</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -394,7 +385,8 @@
                                         <Values>
                                             <Value>ProLifeDatabaseSettings</Value>
                                             <Value>PumaDatabaseSettings</Value>
-                                            <Value>LisaDatabaseSettings</Value>
+                                            <Value>CatalogImportDatabaseSettings</Value>
+                                            <Value>CatalogImport</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -403,7 +395,8 @@
                                         <Values>
                                             <Value>ProLife Database Settings</Value>
                                             <Value>Puma Database Settings</Value>
-                                            <Value>Lisa Database Settings</Value>
+                                            <Value>Catalog Import Database Settings</Value>
+                                            <Value>Catalog Import</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -413,7 +406,28 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="LisaDatabaseAccessSettings" PackageId="ImtDatabasePck" ComponentId="DatabaseAccessSettings">
+                    <Element Id="ProLifeDatabaseAccessSettings" PackageId="ImtDatabasePck" ComponentId="DatabaseAccessSettings">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DbName" Type="Id" ExportId="DbName">
+                                    <Data IsEnabled="true" Value="prolife"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Pasword" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="root"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="CatalogImport" PackageId="BasePck" ComponentId="EnableableParam">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="DefaultEnabled" Type="Boolean" ExportId="">
+                                    <Data IsEnabled="true" Value="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="CatalogImportDatabaseAccessSettings" PackageId="ImtDatabasePck" ComponentId="DatabaseAccessSettings">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="DbName" Type="Id" ExportId="">
@@ -430,18 +444,6 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="UserName" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="postgres"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="ProLifeDatabaseAccessSettings" PackageId="ImtDatabasePck" ComponentId="DatabaseAccessSettings">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DbName" Type="Id" ExportId="DbName">
-                                    <Data IsEnabled="true" Value="prolife"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="Pasword" Type="Id" ExportId="">
-                                    <Data IsEnabled="true" Value="root"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -478,30 +480,16 @@
                     <Interface InterfaceId="istd::TIHierarchical&lt;istd::IPolymorphic&gt;" ComponentId="Database"/>
                 </ExportedInterfaces>
                 <ExportedComponents>
-                    <Component ExportedId="LisaDatabaseAccessSettings" ComponentId="LisaDatabaseAccessSettings"/>
                     <Component ExportedId="ProLifeDatabaseAccessSettings" ComponentId="ProLifeDatabaseAccessSettings"/>
                     <Component ExportedId="PumaDatabaseAccessSettings" ComponentId="PumaDatabaseAccessSettings"/>
+                    <Component ExportedId="CatalogImport" ComponentId="CatalogImport"/>
+                    <Component ExportedId="CatalogImportDatabaseAccessSettings" ComponentId="CatalogImportDatabaseAccessSettings"/>
                 </ExportedComponents>
             </Data>
         </EmbeddedRegistry>
         <EmbeddedRegistry Id="ServerParams">
             <Data Description="" Keywords="">
                 <ElementsList>
-                    <Element Id="LisaConnectionInterface" PackageId="ImtComPck" ComponentId="ServerConnectionInterfaceParam">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DefaultHost" Type="String" ExportId="">
-                                    <Data IsEnabled="true" Value="localhost"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DefaultHttpPort" Type="Integer" ExportId="LisaHttpPort">
-                                    <Data IsEnabled="true" Value="7776"/>
-                                </AttributeInfo>
-                                <AttributeInfo Id="DefaultWebSocketPort" Type="Integer" ExportId="LisaWebSocketPort">
-                                    <Data IsEnabled="true" Value="8776"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
                     <Element Id="PumaConnectionInterface" PackageId="ImtComPck" ComponentId="ServerConnectionInterfaceParam">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
@@ -524,7 +512,6 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>ServerConnectionInterface</Value>
-                                            <Value>LisaConnectionInterface</Value>
                                             <Value>PumaConnectionInterface</Value>
                                         </Values>
                                     </Data>
@@ -534,7 +521,6 @@
                                         <Values>
                                             <Value></Value>
                                             <Value></Value>
-                                            <Value></Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -542,7 +528,6 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>ServerConnection</Value>
-                                            <Value>LisaConnection</Value>
                                             <Value>PumaConnection</Value>
                                         </Values>
                                     </Data>
@@ -551,7 +536,6 @@
                                     <Data IsEnabled="true">
                                         <Values>
                                             <Value>Server Connection</Value>
-                                            <Value>Lisa Connection</Value>
                                             <Value>Puma Connection</Value>
                                         </Values>
                                     </Data>
@@ -606,7 +590,6 @@
                     <Interface InterfaceId="istd::TIHierarchical&lt;istd::IPolymorphic&gt;" ComponentId="Server"/>
                 </ExportedInterfaces>
                 <ExportedComponents>
-                    <Component ExportedId="LisaConnectionInterface" ComponentId="LisaConnectionInterface"/>
                     <Component ExportedId="PumaConnectionInterface" ComponentId="PumaConnectionInterface"/>
                     <Component ExportedId="PumaUrl" ComponentId="ServerConnectionParams/PumaUrl"/>
                     <Component ExportedId="PumaWebSocketPort" ComponentId="ServerConnectionParams/PumaWebSocketPort"/>
@@ -631,11 +614,11 @@
         <Component ExportedId="BackupParams" ComponentId="BackupParams"/>
         <Component ExportedId="EnableSsl" ComponentId="FileBasedSslConfiguration/EnableSsl"/>
         <Component ExportedId="FileBasedSslConfiguration" ComponentId="FileBasedSslConfiguration"/>
-        <Component ExportedId="LisaConnectionInterface" ComponentId="ServerParams/LisaConnectionInterface"/>
-        <Component ExportedId="LisaDatabaseAccessSettings" ComponentId="DatabaseParams/LisaDatabaseAccessSettings"/>
         <Component ExportedId="ProLifeDatabaseAccessSettings" ComponentId="DatabaseParams/ProLifeDatabaseAccessSettings"/>
         <Component ExportedId="PumaConnectionInterface" ComponentId="ServerParams/PumaConnectionInterface"/>
         <Component ExportedId="PumaDatabaseAccessSettings" ComponentId="DatabaseParams/PumaDatabaseAccessSettings"/>
+        <Component ExportedId="CatalogImport" ComponentId="DatabaseParams/CatalogImport"/>
+        <Component ExportedId="CatalogImportDatabaseAccessSettings" ComponentId="DatabaseParams/CatalogImportDatabaseAccessSettings"/>
         <Component ExportedId="ServerConnectionInterface" ComponentId="ServerParams/ServerConnectionInterface"/>
         <Component ExportedId="SmtpPasswordParam" ComponentId="SmtpServerParams/SmtpPasswordParam"/>
         <Component ExportedId="SmtpPortParam" ComponentId="SmtpServerParams/SmtpPortParam"/>

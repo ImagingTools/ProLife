@@ -76,9 +76,6 @@
                     <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="LicenseManagement/LicenseSqlRepository"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="LisaGqlEngine" Type="Reference" ExportId="LisaGqlEngine">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -233,7 +230,7 @@
         <EmbeddedRegistry Id="LicenseManagement">
             <Data Description="" Keywords="">
                 <ElementsList>
-                    <Element Id="FeatureSqlRepository" PackageId="LisaVoce" ComponentId="FeatureSqlRepository">
+                    <Element Id="FeatureSqlRepository" PackageId="ProLifeVoce" ComponentId="FeatureSqlRepository">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
@@ -248,7 +245,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="LicenseSqlRepository" PackageId="LisaVoce" ComponentId="LicenseSqlRepository">
+                    <Element Id="LicenseSqlRepository" PackageId="ProLifeVoce" ComponentId="LicenseSqlRepository">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="DatabaseEngine">
@@ -263,7 +260,7 @@
                             </AttributeInfoMap>
                         </Data>
                     </Element>
-                    <Element Id="ProductRepository" PackageId="LisaVoce" ComponentId="ProductSqlRepository">
+                    <Element Id="ProductRepository" PackageId="ProLifeVoce" ComponentId="ProductSqlRepository">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
                                 <AttributeInfo Id="DatabaseAccessSettings" Type="Reference" ExportId="DatabaseAccessSettings">

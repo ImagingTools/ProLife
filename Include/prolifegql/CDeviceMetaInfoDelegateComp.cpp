@@ -57,10 +57,10 @@ bool CDeviceMetaInfoDelegateComp::FillRepresentation(QJsonObject& representation
 		QByteArray productId = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_PRODUCT_ID).toByteArray();
 		representation["ProductId"] = QString(productId);
 	
-		QByteArray licenseId = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_ID).toByteArray();
+		QByteArray licenseId = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_CONFIGURATION_ARTICLE).toByteArray();
 		representation["LicenseId"] = QString(licenseId);
 	
-		QString licenseName = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_NAME).toByteArray();
+		QString licenseName = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_CONFIGURATION_NAME).toByteArray();
 		representation["LicenseName"] = licenseName;
 	
 		bool inUse = metaInfo.GetMetaInfo(prolifedata::IDeviceInfo::MIT_IN_USE).toBool();
@@ -147,11 +147,11 @@ bool CDeviceMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaInfo
 		}
 	
 		if (representation.contains("LicenseName")){
-			metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_NAME, representation.value("LicenseName"));
+			metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_CONFIGURATION_NAME, representation.value("LicenseName"));
 		}
 	
 		if (representation.contains("LicenseId")){
-			metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_ID, representation.value("LicenseId"));
+			metaInfo.SetMetaInfo(prolifedata::IDeviceInfo::MIT_CONFIGURATION_ARTICLE, representation.value("LicenseId"));
 		}
 	
 		if (representation.contains("InUse")){

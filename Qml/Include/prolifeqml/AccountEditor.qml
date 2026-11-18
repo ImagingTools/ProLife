@@ -16,6 +16,14 @@ ViewBase {
 
 	property AccountData accountData: model
 
+	// On the vendor page the company is edited with the rights of the hardware management
+	property bool isVendorPage: false
+	property string permissionArea: isVendorPage ? "/HardwareManagement" : "/AccountManagement"
+
+	function canChange(field){
+		return PermissionsController.checkPermission(isVendorPage ? "/HardwareManagement/Edit/Change" : "/AccountManagement/Edit/Change/" + field);
+	}
+
 	function getHeaders(){
 		return {};
 	}
@@ -97,12 +105,17 @@ ViewBase {
 			// Short nav labels - the full wording stays as each page's own section
 			// header, the same split DeviceEditor uses ("Device" tab / "Device
 			// Information" header). Page ids stay untouched, they are the API.
-			multiPageView.addPage("CustomerInformation", qsTr("Customer"), customerPageComp, "Icons/Assignment")
+			if (!accountEditorContainer.isVendorPage){
+				multiPageView.addPage("CustomerInformation", qsTr("Customer"), customerPageComp, "Icons/Assignment")
+			}
 			multiPageView.addPage("AccountInformation", qsTr("Account"), accountPageComp, "Icons/Settings")
 			multiPageView.addPage("CompanyAddress", qsTr("Address"), addressPageComp, "Icons/Organization")
-			multiPageView.addPage("Groups", qsTr("Groups"), groupsPageComp, "Icons/MultipleUser")
-			if (PermissionsController.checkPermission("/AccountManagement/Revisions/View")){
-				multiPageView.addPage("History", qsTr("History"), historyPageComp, "Icons/History")
+			// The groups and the history belong to the customers page
+			if (!accountEditorContainer.isVendorPage){
+				multiPageView.addPage("Groups", qsTr("Groups"), groupsPageComp, "Icons/MultipleUser")
+				if (PermissionsController.checkPermission(accountEditorContainer.permissionArea + "/Revisions/View")){
+					multiPageView.addPage("History", qsTr("History"), historyPageComp, "Icons/History")
+				}
 			}
 			multiPageView.currentIndex = 0
 		}
@@ -136,7 +149,7 @@ ViewBase {
 			}
 
 			function applyReadOnly(readOnly){
-				customerIdInput.readOnly = readOnly || !PermissionsController.checkPermission("/AccountManagement/Edit/Change/CustomerId");
+				customerIdInput.readOnly = readOnly || !accountEditorContainer.canChange("CustomerId");
 			}
 
 			Component.onCompleted: {
@@ -218,6 +231,9 @@ ViewBase {
 				accountNameInput.text = accountEditorContainer.accountData.m_name;
 				accountDescriptionInput.text = accountEditorContainer.accountData.m_description;
 				emailInput.text = accountEditorContainer.accountData.m_email;
+				websiteInput.text = accountEditorContainer.accountData.m_website;
+				manufacturerSwitch.checked = accountEditorContainer.accountData.m_isManufacturer;
+				supplierSwitch.checked = accountEditorContainer.accountData.m_isSupplier;
 			}
 
 			function updateModel(){
@@ -228,12 +244,23 @@ ViewBase {
 				accountEditorContainer.accountData.m_name = accountNameInput.text;
 				accountEditorContainer.accountData.m_description = accountDescriptionInput.text;
 				accountEditorContainer.accountData.m_email = emailInput.text;
+				accountEditorContainer.accountData.m_website = websiteInput.text;
+
+				// The customer page keeps the roles: a company saved there is a customer
+				if (accountEditorContainer.isVendorPage){
+					accountEditorContainer.accountData.m_isManufacturer = manufacturerSwitch.checked;
+					accountEditorContainer.accountData.m_isSupplier = supplierSwitch.checked;
+				}
 			}
 
 			function applyReadOnly(readOnly){
-				accountNameInput.readOnly = readOnly || !PermissionsController.checkPermission("/AccountManagement/Edit/Change/Name");
-				accountDescriptionInput.readOnly = readOnly || !PermissionsController.checkPermission("/AccountManagement/Edit/Change/Description");
-				emailInput.readOnly = readOnly || !PermissionsController.checkPermission("/AccountManagement/Edit/Change/Email");
+				accountNameInput.readOnly = readOnly || !accountEditorContainer.canChange("Name");
+				accountDescriptionInput.readOnly = readOnly || !accountEditorContainer.canChange("Description");
+				emailInput.readOnly = readOnly || !accountEditorContainer.canChange("Email");
+				websiteInput.readOnly = readOnly || !accountEditorContainer.canChange("Name");
+
+				manufacturerSwitch.readOnly = readOnly || !accountEditorContainer.canChange("Name");
+				supplierSwitch.readOnly = readOnly || !accountEditorContainer.canChange("Name");
 			}
 
 			Component.onCompleted: {
@@ -335,9 +362,61 @@ ViewBase {
 
 						}
 
+						TextInputElementView {
+							id: websiteInput;
+							objectName: "WebsiteInput";
+
+							name: qsTr("Website");
+							placeHolderText: qsTr("Enter the website");
+
+							onEditingFinished: {
+								accountEditorContainer.doUpdateModel();
+							}
+						}
+
 						RegularExpressionValidator {
 							id: mailValid;
 							regularExpression: /^(\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*)?$/;
+						}
+					}
+
+					GroupHeaderView {
+						width: parent.width;
+						title: qsTr("Roles");
+						groupView: rolesGroup;
+						visible: accountEditorContainer.isVendorPage;
+					}
+
+					GroupElementView {
+						id: rolesGroup;
+						objectName: "RolesGroup";
+						width: parent.width;
+						visible: accountEditorContainer.isVendorPage;
+
+						SwitchElementView {
+							id: manufacturerSwitch;
+							objectName: "ManufacturerSwitch";
+							name: qsTr("Manufacturer");
+							description: qsTr("Makes hardware components: offered as the manufacturer of a component");
+
+							onCheckedChanged: {
+								if (accountEditorContainer.accountData && manufacturerSwitch.checked !== accountEditorContainer.accountData.m_isManufacturer){
+									accountEditorContainer.doUpdateModel();
+								}
+							}
+						}
+
+						SwitchElementView {
+							id: supplierSwitch;
+							objectName: "SupplierSwitch";
+							name: qsTr("Supplier");
+							description: qsTr("Sells hardware components: offered as a supplier of a component");
+
+							onCheckedChanged: {
+								if (accountEditorContainer.accountData && supplierSwitch.checked !== accountEditorContainer.accountData.m_isSupplier){
+									accountEditorContainer.doUpdateModel();
+								}
+							}
 						}
 					}
 				}
@@ -375,7 +454,7 @@ ViewBase {
 			}
 
 			function applyReadOnly(readOnly){
-				let canChange = PermissionsController.checkPermission("/AccountManagement/Edit/Change/CompanyAddress");
+				let canChange = accountEditorContainer.canChange("CompanyAddress");
 				countryInput.readOnly = readOnly || !canChange;
 				cityInput.readOnly = readOnly || !canChange;
 				postalCodeInput.readOnly = readOnly || !canChange;
@@ -537,7 +616,7 @@ ViewBase {
 
 			function applyReadOnly(readOnly){
 				if (groupsElement.table){
-					groupsElement.table.readOnly = readOnly || !PermissionsController.checkPermission("/AccountManagement/Edit/Change/Groups");
+					groupsElement.table.readOnly = readOnly || !accountEditorContainer.canChange("Groups");
 				}
 			}
 
@@ -668,7 +747,7 @@ ViewBase {
 
 			DocumentHistoryView {
 				id: historyView
-				revisionsPermissionPath: "/AccountManagement/Revisions"
+				revisionsPermissionPath: accountEditorContainer.permissionArea + "/Revisions"
 				anchors.left: centeredContainer.left
 				anchors.top: historyHeader.bottom
 				anchors.topMargin: Style.marginM
@@ -676,7 +755,7 @@ ViewBase {
 				anchors.bottom: parent.bottom
 				anchors.bottomMargin: Style.marginXL
 				documentId: accountEditorContainer.accountData ? accountEditorContainer.accountData.m_id : "";
-				collectionId: "Accounts";
+				collectionId: accountEditorContainer.isVendorPage ? "HardwareVendors" : "Accounts";
 
 				function getHeaders(){
 					return accountEditorContainer.getHeaders()

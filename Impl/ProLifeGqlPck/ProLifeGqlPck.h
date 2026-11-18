@@ -16,6 +16,16 @@
 #include <prolifegql/COrderChangeGeneratorComp.h>
 #include <prolifegql/CHardwareBindingChangeGeneratorComp.h>
 #include <prolifegql/CCustomerCollectionControllerComp.h>
+#include <prolifegql/CHardwareComponentCollectionControllerComp.h>
+#include <prolifegql/CHardwareConfigurationCollectionControllerComp.h>
+#include <prolifegql/CHardwareComponentCollectionDocumentServiceComp.h>
+#include <prolifegql/CHardwareConfigurationCollectionDocumentServiceComp.h>
+#include <prolifegql/CHardwareComponentDocumentValidatorComp.h>
+#include <prolifegql/CHardwareConfigurationDocumentValidatorComp.h>
+#include <prolifegql/CHardwareCatalogDocumentNameProviderComp.h>
+#include <prolifegql/CHardwareComponentReferenceCleanerComp.h>
+#include <prolifegql/CCompanyReferenceCleanerComp.h>
+#include <prolifegql/CLicenseImportConverterComp.h>
 #include <prolifegql/CDeviceControllerComp.h>
 #include <prolifegql/CCustomerChangeGeneratorComp.h>
 #include <prolifegql/CDeviceMetaInfoDelegateComp.h>
@@ -45,6 +55,16 @@ typedef prolifegql::CLicenseChangeGeneratorComp LicenseChangeGenerator;
 typedef prolifegql::COrderChangeGeneratorComp OrderChangeGenerator;
 typedef prolifegql::CHardwareBindingChangeGeneratorComp HardwareBindingChangeGenerator;
 typedef prolifegql::CCustomerCollectionControllerComp CustomerCollectionController;
+typedef prolifegql::CHardwareComponentCollectionControllerComp HardwareComponentCollectionController;
+typedef prolifegql::CHardwareConfigurationCollectionControllerComp HardwareConfigurationCollectionController;
+typedef prolifegql::CHardwareComponentCollectionDocumentServiceComp HardwareComponentCollectionDocumentService;
+typedef prolifegql::CHardwareConfigurationCollectionDocumentServiceComp HardwareConfigurationCollectionDocumentService;
+typedef prolifegql::CHardwareComponentDocumentValidatorComp HardwareComponentDocumentValidator;
+typedef prolifegql::CHardwareConfigurationDocumentValidatorComp HardwareConfigurationDocumentValidator;
+typedef prolifegql::CHardwareCatalogDocumentNameProviderComp HardwareCatalogDocumentNameProvider;
+typedef prolifegql::CHardwareComponentReferenceCleanerComp HardwareComponentReferenceCleaner;
+typedef prolifegql::CCompanyReferenceCleanerComp CompanyReferenceCleaner;
+typedef prolifegql::CLicenseImportConverterComp LicenseImportConverter;
 typedef icomp::TModelCompWrap<
 			icomp::TMakeComponentWrap<
 						prolifedata::CCustomerInfo,

@@ -207,8 +207,8 @@ RemoteCollectionView {
 	Component {
 		id: licensesDelegateFilterComp
 
-		ProductLicenseFilterDelegate {
-			objectName: "LicensesFilter"
+		HardwareConfigurationFilterDelegate {
+			objectName: "ConfigurationsFilter"
 			defaultFieldFilter.m_fieldId: DeviceItemTypeMetaInfo.s_licenseUuid
 		}
 	}

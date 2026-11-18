@@ -56,6 +56,21 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="CompanyReferenceCleaner" PackageId="ProLifeGqlPck" ComponentId="CompanyReferenceCleaner">
+            <Data IsEnabled="true" Flags="1">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DependentCollection" Type="Reference" ExportId="HardwareComponentCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SourceCollection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Repository"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="CompanyInfo" PackageId="ProLifeGqlPck" ComponentId="CustomerInfo">
             <Data IsEnabled="true" Flags="2">
                 <AttributeInfoMap/>

@@ -93,8 +93,8 @@ sdl::V1_0::prolife::CDeviceData CDeviceCollectionDocumentServiceComp::OnGetDevic
 	idoc::MetaInfoPtr metaInfoPtr;
 	if (m_deviceMetaInfoCreatorCompPtr.IsValid() && m_deviceMetaInfoCreatorCompPtr->CreateMetaInfo(deviceInfoPtr, QByteArrayLiteral("Device"), metaInfoPtr) && metaInfoPtr.IsValid()){
 		response.productName = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PRODUCT_NAME).toString();
-		response.configurationName = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_NAME).toString();
-		response.configurationArticle = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_ID).toString();
+		response.configurationName = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CONFIGURATION_NAME).toString();
+		response.configurationArticle = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CONFIGURATION_ARTICLE).toString();
 		response.orderName = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DELIVERY_ID).toString();
 	}
 

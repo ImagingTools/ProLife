@@ -59,16 +59,6 @@ cmake --build .
 if errorlevel 1 exit /b 1
 popd
 
-rem ===== LISA =====
-rem pushd "%BUILD_DIR%/3rdParty/Lisa/Build/CMake"
-rem if not exist build-release mkdir build-release
-rem cd build-release
-rem cmake -GNinja -DCMAKE_BUILD_TYPE=Release -DBUILDDIR="%BUILD_DIR%/3rdParty" ..
-rem if errorlevel 1 exit /b 1
-rem cmake --build .
-rem if errorlevel 1 exit /b 1
-rem popd
-
 rem ===== PROLIFE =====
 pushd "%BUILD_DIR%/Build/CMake"
 if not exist build-release mkdir build-release

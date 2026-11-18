@@ -2,13 +2,12 @@
 <#
 .SYNOPSIS
     CI entry point for the ProLife Api Postman suite: starts the
-    PumaServerPgTest.exe / LisaServerTest.exe dependencies (ProLifeServerTest
-    talks to both over HTTP - see ProLifeServerTest.acc's PumaHttpPort/
-    LisaHttpPort), restores puma_test/lisa_test/prolife_test from real
-    pg_dump backups (a populated dev-environment export, not an empty
-    schema - see -ProLifeBackupPath below for why), starts
-    ProLifeServerTest.exe, runs newman against it, and tears all three
-    servers back down in reverse order. Intended to be invoked as a single
+    PumaServerPgTest.exe dependency (ProLifeServerTest talks to it over
+    HTTP - see ProLifeServerTest.acc's PumaHttpPort), restores
+    puma_test/prolife_test from real pg_dump backups (a populated
+    dev-environment export, not an empty schema - see -ProLifeBackupPath
+    below for why), starts ProLifeServerTest.exe, runs newman against it,
+    and tears both servers back down in reverse order. Intended to be invoked as a single
     TeamCity build step (PowerShell runner). Mirrors
     Puma\Tests\TenantApiPostman\Run-CiTests.ps1.
 
@@ -22,19 +21,13 @@
 .PARAMETER PumaRepoRoot
     Root of the Puma checkout. Defaults to the PUMADIR environment variable;
     if unset, falls back to a directory named "Puma" next to RepoRoot
-    (Lisa/Puma/ProLife are checked out as siblings, e.g. under Git\).
-
-.PARAMETER LisaRepoRoot
-    Root of the Lisa checkout. Defaults to the LISADIR environment variable;
-    if unset, falls back to a directory named "Lisa" next to RepoRoot, same
-    sibling-checkout convention as -PumaRepoRoot.
+    (Puma/ProLife are checked out as siblings, e.g. under Git\).
 
 .PARAMETER BuildConfig
     Name of the Bin\<BuildConfig> folder to look for ProLifeServerTest.exe
     in (e.g. "Release_Qt6_VC17_x64"). Ignored if -ServerExePath is passed
-    explicitly. Also used to locate PumaServerPgTest.exe / LisaServerTest.exe
-    under -PumaRepoRoot / -LisaRepoRoot unless -PumaServerExePath /
-    -LisaServerExePath are passed explicitly.
+    explicitly. Also used to locate PumaServerPgTest.exe under
+    -PumaRepoRoot unless -PumaServerExePath is passed explicitly.
 
 .PARAMETER ServerExePath
     Full path to ProLifeServerTest.exe. Overrides -BuildConfig when set.
@@ -43,9 +36,6 @@
 
 .PARAMETER PumaServerExePath
     Full path to PumaServerPgTest.exe. Overrides -BuildConfig when set.
-
-.PARAMETER LisaServerExePath
-    Full path to LisaServerTest.exe. Overrides -BuildConfig when set.
 
 .PARAMETER HttpPort
     Port the ProLife test server listens on (must match
@@ -56,27 +46,21 @@
     HttpPort attribute, currently 17788 - same value ProLifeServerTest.acc's
     PumaHttpPort points at).
 
-.PARAMETER LisaHttpPort
-    Port the Lisa test server listens on (must match LisaServerTest.acc's
-    DefaultHttpPort attribute, currently 17776 - same value
-    ProLifeServerTest.acc's LisaHttpPort points at).
-
 .PARAMETER DbName / DbHost / DbPort / DbUser / DbPassword
     Postgres connection used to drop/recreate the test database before
     each run (must match ProLifeServerSettings.acc's
     ProLifeDatabaseAccessSettings / DatabaseEngine defaults).
 
-.PARAMETER PumaDbName / LisaDbName
-    Puma/Lisa test database names (must match PumaServerPgTest.acc's DbName
-    "puma_test" / LisaServerTest.acc's DbName "lisa_test"). Both are
-    restored from a backup before every run (see -PumaBackupPath /
-    -LisaBackupPath) rather than left for the server to create/migrate from
+.PARAMETER PumaDbName
+    Puma test database name (must match PumaServerPgTest.acc's DbName
+    "puma_test"). Restored from a backup before every run (see
+    -PumaBackupPath) rather than left for the server to create/migrate from
     scratch.
 
-.PARAMETER PumaBackupPath / LisaBackupPath / ProLifeBackupPath
+.PARAMETER PumaBackupPath / ProLifeBackupPath
     Paths to the pg_dump custom-format backups used to (re)create the
-    puma_test / lisa_test / prolife_test databases before each run. Default
-    to puma.backup / lisa.backup / prolife.backup next to this script -
+    puma_test / prolife_test databases before each run. Default
+    to puma.backup / prolife.backup next to this script -
     copies of the same-named files under Tests\backend\backups\, kept local
     to this suite so it doesn't depend on the legacy Docker fixture layout.
     These are real, populated dev-environment exports (not empty schemas):
@@ -145,30 +129,24 @@ param(
     [string]$ScriptDir = (Join-Path $RepoRoot "Tests\ProLifeApiPostman"),
     [string]$BuildConfig = "Release_Qt6_VC17_x64",
 
-    # Lisa/Puma/ProLife are checked out as siblings (e.g. D:\...\Git\Lisa,
-    # D:\...\Git\Puma, D:\...\Git\ProLife) - same convention PUMADIR/
-    # PROLIFEDIR already encode, extended here with LISADIR.
+    # Puma/ProLife are checked out as siblings (e.g. D:\...\Git\Puma,
+    # D:\...\Git\ProLife) - same convention PUMADIR/PROLIFEDIR already encode.
     [string]$PumaRepoRoot = $(if ($env:PUMADIR) { $env:PUMADIR } else { Join-Path (Split-Path -Parent $RepoRoot) "Puma" }),
-    [string]$LisaRepoRoot = $(if ($env:LISADIR) { $env:LISADIR } else { Join-Path (Split-Path -Parent $RepoRoot) "Lisa" }),
 
     [string]$ServerExePath = "",
     [string]$PumaServerExePath = "",
-    [string]$LisaServerExePath = "",
 
     [int]$HttpPort = 17778,
     [int]$PumaHttpPort = 17788,
-    [int]$LisaHttpPort = 17776,
 
     [string]$DbName = "prolife_test",
     [string]$PumaDbName = "puma_test",
-    [string]$LisaDbName = "lisa_test",
     [string]$DbHost = "localhost",
     [int]$DbPort = 5432,
     [string]$DbUser = "postgres",
     [string]$DbPassword = "root",
 
     [string]$PumaBackupPath = (Join-Path $ScriptDir "puma.backup"),
-    [string]$LisaBackupPath = (Join-Path $ScriptDir "lisa.backup"),
     [string]$ProLifeBackupPath = (Join-Path $ScriptDir "prolife.backup"),
 
     [string]$PsqlPath = "",
@@ -187,7 +165,6 @@ param(
 $ErrorActionPreference = "Stop"
 $serverProcess = $null
 $pumaProcess = $null
-$lisaProcess = $null
 $exitCode = 1
 
 . (Join-Path $ScriptDir "ServerLogCheck.ps1")
@@ -197,9 +174,6 @@ if ([string]::IsNullOrWhiteSpace($ServerExePath)) {
 }
 if ([string]::IsNullOrWhiteSpace($PumaServerExePath)) {
     $PumaServerExePath = Join-Path $PumaRepoRoot "Bin\$BuildConfig\PumaServerPgTest.exe"
-}
-if ([string]::IsNullOrWhiteSpace($LisaServerExePath)) {
-    $LisaServerExePath = Join-Path $LisaRepoRoot "Bin\$BuildConfig\LisaServerTest.exe"
 }
 
 function Write-Step($message) {
@@ -233,7 +207,7 @@ function Stop-ServerProcess([string]$processName) {
 
 function Reset-Database([string]$name) {
     # Only drops the database if present. Callers that need seeded data
-    # (Lisa) restore a backup into it afterwards; callers that don't
+    # restore a backup into it afterwards; callers that don't
     # (Puma, ProLife) rely on their server exe creating it (and running
     # migrations) on startup when it doesn't already exist.
     Write-Step "Resetting database '$name'"
@@ -255,7 +229,7 @@ function Reset-Database([string]$name) {
     }
     finally {
     # The credentials of the servers do not outlive the run, whatever failed
-    Remove-Item Env:\IMT_PUMA_SERVER_CREDENTIAL, Env:\IMT_LISA_SERVER_CREDENTIAL -ErrorAction SilentlyContinue
+    Remove-Item Env:\IMT_PUMA_SERVER_CREDENTIAL -ErrorAction SilentlyContinue
 
         $ErrorActionPreference = $previousEap
         Remove-Item Env:\PGPASSWORD -ErrorAction SilentlyContinue
@@ -263,7 +237,7 @@ function Reset-Database([string]$name) {
 }
 
 function Restore-DatabaseFromBackup([string]$name, [string]$backupPath) {
-    # PumaServerPgTest.exe/LisaServerTest.exe/ProLifeServerTest.exe would all
+    # PumaServerPgTest.exe/ProLifeServerTest.exe would both
     # happily create-and-migrate an EMPTY database from scratch on startup,
     # but an empty prolife_test can never exercise DeviceAdd/
     # SoftwareProductAdd - those need catalog/type records
@@ -307,10 +281,7 @@ function Repair-ProLifeForeignServers {
     # prolife.backup's Roles/Users/UserGroups/UserSessions tables are FOREIGN
     # TABLES (postgres_fdw) backed by a single foreign server, "PumaServer"
     # (confirmed against the restored prolife_test and the pg_restore
-    # --verbose log - there's a dormant "setup_foreign_table_lisaserver()"
-    # helper function but it's never invoked, so no "LisaServer" foreign
-    # server actually exists in this dump; Lisa integration goes over HTTP
-    # instead). "PumaServer"'s srvoptions carried dbname='puma' (the real,
+    # --verbose log). "PumaServer"'s srvoptions carried dbname='puma' (the real,
     # non-test database this dev export was taken from), NOT puma_test.
     # Left uncorrected, any query ProLifeServerTest issues against these
     # foreign tables would transparently hit whatever real "puma" database
@@ -377,7 +348,7 @@ function Invoke-ProductGql([string]$ProductId, [int]$Port, [string]$Query, [stri
     return Invoke-RestMethod -Uri "http://localhost:$Port/$ProductId/graphql" -Method Post -Headers $headers -ContentType 'application/json; charset=utf-8' -Body $body
 }
 
-# A receiver issues its tokens to its superuser (Lisa forwards the sign-in to Puma)
+# A receiver issues its tokens to its superuser
 function Get-SuperuserToken([string]$ProductId, [int]$Port) {
     $environmentFile = Join-Path $ScriptDir 'ProLifeApi-Dev.postman_environment.json'
     $suPassword = (Get-Content $environmentFile -Raw | ConvertFrom-Json).values | Where-Object { $_.key -eq 'suPassword' } | Select-Object -ExpandProperty value
@@ -415,12 +386,9 @@ function New-PumaServerTokens {
     Write-Step "Issuing the tokens of the product servers for Puma"
     $suToken = Get-SuperuserToken 'Puma' $PumaHttpPort
 
-    foreach ($productId in 'ProLife', 'Lisa') {
-        Add-ServerTokenClient 'Puma' $PumaHttpPort $suToken $productId
-    }
+    Add-ServerTokenClient 'Puma' $PumaHttpPort $suToken 'ProLife'
 
     return @{
-        LisaForPuma    = New-ServerToken 'Puma' $PumaHttpPort $suToken 'Lisa'
         ProLifeForPuma = New-ServerToken 'Puma' $PumaHttpPort $suToken 'ProLife'
     }
 }
@@ -437,20 +405,6 @@ function Start-PumaTestServer {
     Write-Host "Started PID $($script:pumaProcess.Id)"
     Wait-ForPort "PumaServerPgTest.exe" $script:pumaProcess $PumaHttpPort $script:pumaStdout $script:pumaStderr
     Write-Host "Puma test server is accepting connections on port $PumaHttpPort"
-}
-
-function Start-LisaTestServer {
-    Write-Step "Starting LisaServerTest.exe"
-    if (-not (Test-Path $LisaServerExePath)) {
-        throw "Server executable not found: $LisaServerExePath"
-    }
-    $workDir = Split-Path -Parent $LisaServerExePath
-    $script:lisaStdout = Join-Path $env:TEMP "lisa_stdout_$PID.log"
-    $script:lisaStderr = Join-Path $env:TEMP "lisa_stderr_$PID.log"
-    $script:lisaProcess = Start-Process -FilePath $LisaServerExePath -WorkingDirectory $workDir -PassThru -WindowStyle Hidden -RedirectStandardOutput $script:lisaStdout -RedirectStandardError $script:lisaStderr
-    Write-Host "Started PID $($script:lisaProcess.Id)"
-    Wait-ForPort "LisaServerTest.exe" $script:lisaProcess $LisaHttpPort $script:lisaStdout $script:lisaStderr
-    Write-Host "Lisa test server is accepting connections on port $LisaHttpPort"
 }
 
 function Start-TestServer {
@@ -522,7 +476,6 @@ function Invoke-NewmanSuite(
         "-e", $EnvironmentPath,
         "--env-var", "baseUrl=$baseUrl",
         "--env-var", "pumaUrl=http://localhost:$PumaHttpPort/Puma",
-        "--env-var", "lisaUrl=http://localhost:$LisaHttpPort/Lisa",
         "--reporters", "cli,junit,json",
         "--reporter-junit-export", $JUnitReport,
         "--reporter-json-export", $JsonReport
@@ -558,49 +511,36 @@ $repoRootSource = if ($PSBoundParameters.ContainsKey('RepoRoot')) { 'explicit -R
 Write-Step "Resolved paths"
 Write-Host "RepoRoot:          $RepoRoot  (source: $repoRootSource)"
 Write-Host "PumaRepoRoot:      $PumaRepoRoot"
-Write-Host "LisaRepoRoot:      $LisaRepoRoot"
 Write-Host "ScriptDir:         $ScriptDir"
 Write-Host "ServerExePath:     $ServerExePath"
 Write-Host "PumaServerExePath: $PumaServerExePath"
-Write-Host "LisaServerExePath: $LisaServerExePath"
 Write-Host "PumaBackupPath:    $PumaBackupPath"
-Write-Host "LisaBackupPath:    $LisaBackupPath"
 Write-Host "ProLifeBackupPath: $ProLifeBackupPath"
 Write-Host "CollectionPath:    $CollectionPath"
 Write-Host "EnvironmentPath:   $EnvironmentPath"
 
 try {
     # Stop stale processes from a previous, possibly-crashed run before
-    # touching any database - ProLifeServerTest talks to Puma/Lisa over
-    # HTTP, so a stale Puma/Lisa left bound to the port would make the new
-    # instance fail to start rather than the new one being used.
+    # touching any database - ProLifeServerTest talks to Puma over HTTP, so
+    # a stale Puma left bound to the port would make the new instance fail
+    # to start rather than the new one being used.
     Stop-ServerProcess "ProLifeServerTest"
-    Stop-ServerProcess "LisaServerTest"
     Stop-ServerProcess "PumaServerPgTest"
 
     Restore-DatabaseFromBackup $PumaDbName $PumaBackupPath
     Start-PumaTestServer
     $pumaTokens = New-PumaServerTokens
 
-    Restore-DatabaseFromBackup $LisaDbName $LisaBackupPath
-    $env:IMT_PUMA_SERVER_CREDENTIAL = $pumaTokens.LisaForPuma
-    Start-LisaTestServer
-    Write-Step "Issuing the token of ProLife for Lisa"
-    $lisaSuToken = Get-SuperuserToken 'Lisa' $LisaHttpPort
-    Add-ServerTokenClient 'Lisa' $LisaHttpPort $lisaSuToken 'ProLife'
-    $proLifeForLisa = New-ServerToken 'Lisa' $LisaHttpPort $lisaSuToken 'ProLife'
 
     Restore-DatabaseFromBackup $DbName $ProLifeBackupPath
     Repair-ProLifeForeignServers
-    # Every receiver issues the tokens for itself
     $env:IMT_PUMA_SERVER_CREDENTIAL = $pumaTokens.ProLifeForPuma
-    $env:IMT_LISA_SERVER_CREDENTIAL = $proLifeForLisa
     Start-TestServer
-    Remove-Item Env:\IMT_PUMA_SERVER_CREDENTIAL, Env:\IMT_LISA_SERVER_CREDENTIAL
+    Remove-Item Env:\IMT_PUMA_SERVER_CREDENTIAL
 
     $exitCode = Invoke-NewmanSuite
 
-    # Runs against the same three live servers, so it exercises the real
+    # Runs against the same two live servers, so it exercises the real
     # ProLife -> Puma subscription chain rather than either server alone.
     $wsExitCode = Invoke-WsSuite
     if ($exitCode -eq 0) { $exitCode = $wsExitCode }
@@ -610,16 +550,12 @@ try {
     if ($exitCode -eq 0) { $exitCode = $centerExitCode }
 }
 finally {
-    # Tear down in reverse start order: ProLife depends on Lisa/Puma being
-    # up, not the other way round, so it's safe (and cleanest) to stop it
+    # Tear down in reverse start order: ProLife depends on Puma being up,
+    # not the other way round, so it's safe (and cleanest) to stop it
     # first.
     if ($serverProcess -and -not $serverProcess.HasExited) {
         Write-Step "Stopping ProLifeServerTest.exe (PID $($serverProcess.Id))"
         Stop-Process -Id $serverProcess.Id -Force -ErrorAction SilentlyContinue
-    }
-    if ($lisaProcess -and -not $lisaProcess.HasExited) {
-        Write-Step "Stopping LisaServerTest.exe (PID $($lisaProcess.Id))"
-        Stop-Process -Id $lisaProcess.Id -Force -ErrorAction SilentlyContinue
     }
     if ($pumaProcess -and -not $pumaProcess.HasExited) {
         Write-Step "Stopping PumaServerPgTest.exe (PID $($pumaProcess.Id))"
@@ -627,7 +563,7 @@ finally {
     }
 }
 
-if (-not (Test-ServerLogs @($serverStdout, $serverStderr, $pumaStdout, $pumaStderr, $lisaStdout, $lisaStderr)) -and $exitCode -eq 0) { $exitCode = 1 }
+if (-not (Test-ServerLogs @($serverStdout, $serverStderr, $pumaStdout, $pumaStderr)) -and $exitCode -eq 0) { $exitCode = 1 }
 
 if ($exitCode -eq 0) {
     Write-Host "`nAll tests passed." -ForegroundColor Green

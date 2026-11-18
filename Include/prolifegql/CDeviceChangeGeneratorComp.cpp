@@ -9,12 +9,12 @@
 #include <iqt/iqt.h>
 #include <imtbase/COperationDescription.h>
 #include <imtlic/IProductInfo.h>
-#include <imtlic/ILicenseDefinition.h>
 
 // ProLife includes
 #include <prolifedata/CDeviceInfo.h>
 #include <prolifedata/TOrderedWrap.h>
 #include <prolifedata/IOrderInfo.h>
+#include <prolifedata/IHardwareConfigurationInfo.h>
 
 
 namespace prolifegql
@@ -159,7 +159,7 @@ QString CDeviceChangeGeneratorComp::GetKeyNameForOperation(const QByteArray& key
 		return GetProductName(value);
 	}
 	else if (key == "ConfigurationType"){
-		return GetLicenseName(value);
+		return GetConfigurationArticle(value);
 	}
 	else if (key == "OrderId"){
 		return GetOrderName(value);
@@ -170,23 +170,23 @@ QString CDeviceChangeGeneratorComp::GetKeyNameForOperation(const QByteArray& key
 }
 
 
-QString CDeviceChangeGeneratorComp::GetLicenseName(const QByteArray& productUuid) const
+QString CDeviceChangeGeneratorComp::GetConfigurationArticle(const QByteArray& configurationId) const
 {
-	if (!IsUuid(productUuid)){
-		return productUuid;
+	if (!IsUuid(configurationId)){
+		return configurationId;
 	}
 
-	if (m_licenseCollectionCompPtr.IsValid()){
+	if (m_configurationCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr dataPtr;
-		if (m_licenseCollectionCompPtr->GetObjectData(productUuid, dataPtr)){
-			const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<const imtlic::ILicenseDefinition*>(dataPtr.GetPtr());
-			if (licenseInfoPtr != nullptr){
-				return licenseInfoPtr->GetLicenseId();
+		if (m_configurationCollectionCompPtr->GetObjectData(configurationId, dataPtr)){
+			const prolifedata::IHardwareConfigurationInfo* configurationInfoPtr = dynamic_cast<const prolifedata::IHardwareConfigurationInfo*>(dataPtr.GetPtr());
+			if (configurationInfoPtr != nullptr){
+				return QString::fromUtf8(configurationInfoPtr->GetConfigurationId());
 			}
 		}
 	}
 
-	return productUuid;
+	return configurationId;
 }
 
 

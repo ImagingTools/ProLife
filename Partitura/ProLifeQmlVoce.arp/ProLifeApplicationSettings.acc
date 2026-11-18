@@ -27,7 +27,7 @@
                         <Data IsEnabled="true" Value="UserSettingsController/TableViewParamRepresentationController"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ExternalLoginEnabled" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="true"/>
+                        <Data IsEnabled="true" Value="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TenantsEnabled" Type="Boolean" ExportId="">
                         <Data IsEnabled="true" Value="false"/>
@@ -261,7 +261,6 @@
         <Component ExportedId="BackupSettings" ComponentId="ServerSettingsController/BackupSettings"/>
         <Component ExportedId="CacheClearingIntervalParam" ComponentId="ServerSettingsController/CacheClearingIntervalParam"/>
         <Component ExportedId="DatabaseAccessSettings" ComponentId="ServerSettingsController/DatabaseAccessSettings"/>
-        <Component ExportedId="LisaUrlConnection" ComponentId="ServerSettingsController/LisaUrlConnection"/>
         <Component ExportedId="Preferences" ComponentId="ServerSettingsController/Preferences"/>
         <Component ExportedId="PumaUrlConnection" ComponentId="ServerSettingsController/PumaUrlConnection"/>
         <Component ExportedId="ServerPort" ComponentId="ServerSettingsController/ServerPort"/>

@@ -2,8 +2,8 @@
 <#
 .SYNOPSIS
     One-off (re)generator for Tests\ProLifeGui\puma.backup: restores the real,
-    populated legacy backups (Tests\ProLifeApiPostman\{puma,lisa,prolife}.backup)
-    into puma_test/lisa_test/prolife_test, boots all three test servers, bakes
+    populated legacy backups (Tests\ProLifeApiPostman\{puma,prolife}.backup)
+    into puma_test/prolife_test, boots both test servers, bakes
     in the 8 ProLifeGui fixture roles/users (fixtures/users.js, via
     scripts/seed-fixture-users.js) on top of the real ~725 existing Puma
     users, then dumps puma_test back out to Tests\ProLifeGui\puma.backup.
@@ -13,9 +13,8 @@
     that read live from puma_test at query time - the seeded fixture users
     show up there automatically once puma_test has them, with no local
     prolife_test data to re-dump. Run-CiTests.ps1 therefore restores
-    prolife_test/lisa_test from the plain, shared
-    Tests\ProLifeApiPostman\{prolife,lisa}.backup and only puma_test from
-    this script's output.
+    prolife_test from the plain, shared Tests\ProLifeApiPostman\prolife.backup
+    and only puma_test from this script's output.
 
     Re-run this whenever fixtures/users.js changes (new fixture user, renamed
     permission set, etc.) to keep puma.backup in sync - seed-fixture-users.js
@@ -27,13 +26,13 @@
     Root of the ProLife checkout. Defaults to the PROLIFEDIR environment
     variable; if unset, falls back to two levels above this script.
 
-.PARAMETER PumaRepoRoot / LisaRepoRoot
-    Roots of the Puma/Lisa checkouts. Same sibling-checkout convention as
-    Run-CiTests.ps1 (PUMADIR/LISADIR env vars, falling back to siblings of
+.PARAMETER PumaRepoRoot
+    Root of the Puma checkout. Same sibling-checkout convention as
+    Run-CiTests.ps1 (PUMADIR env var, falling back to a sibling of
     RepoRoot).
 
 .PARAMETER BuildConfig
-    Name of the Bin\<BuildConfig> folder to look for the three *Test.exe
+    Name of the Bin\<BuildConfig> folder to look for the two *Test.exe
     servers in.
 
 .EXAMPLE
@@ -51,26 +50,21 @@ param(
     [string]$BuildConfig = "Debug_Qt6_VC17_x64",
 
     [string]$PumaRepoRoot = $(if ($env:PUMADIR) { $env:PUMADIR } else { Join-Path (Split-Path -Parent $RepoRoot) "Puma" }),
-    [string]$LisaRepoRoot = $(if ($env:LISADIR) { $env:LISADIR } else { Join-Path (Split-Path -Parent $RepoRoot) "Lisa" }),
 
     [string]$ServerExePath = (Join-Path $RepoRoot "Bin\$BuildConfig\ProLifeServerTest.exe"),
     [string]$PumaServerExePath = (Join-Path $PumaRepoRoot "Bin\$BuildConfig\PumaServerPgTest.exe"),
-    [string]$LisaServerExePath = (Join-Path $LisaRepoRoot "Bin\$BuildConfig\LisaServerTest.exe"),
 
     [int]$HttpPort = 17778,
     [int]$PumaHttpPort = 17788,
-    [int]$LisaHttpPort = 17776,
 
     [string]$DbName = "prolife_test",
     [string]$PumaDbName = "puma_test",
-    [string]$LisaDbName = "lisa_test",
     [string]$DbHost = "localhost",
     [int]$DbPort = 5432,
     [string]$DbUser = "postgres",
     [string]$DbPassword = "root",
 
     [string]$PumaBackupPath = (Join-Path $SharedBackupDir "puma.backup"),
-    [string]$LisaBackupPath = (Join-Path $SharedBackupDir "lisa.backup"),
     [string]$ProLifeBackupPath = (Join-Path $SharedBackupDir "prolife.backup"),
     [string]$OutputPumaBackupPath = (Join-Path $ScriptDir "puma.backup"),
 
@@ -82,7 +76,6 @@ param(
 $ErrorActionPreference = "Stop"
 $serverProcess = $null
 $pumaProcess = $null
-$lisaProcess = $null
 
 function Write-Step($message) {
     Write-Host "`n=== $message ===" -ForegroundColor Cyan
@@ -146,9 +139,7 @@ function Repair-ProLifeForeignServers {
     # whose srvoptions carry the REAL dbname='puma' from the dev export -
     # must be repointed at puma_test before ProLife (or anything reading
     # through it) touches those tables, or reads/writes silently hit the
-    # developer's real local "puma" database instead. (There's a dormant
-    # "setup_foreign_table_lisaserver()" helper function in the dump, but
-    # it's never invoked - no "LisaServer" foreign server actually exists.)
+    # developer's real local "puma" database instead.
     Write-Step "Repointing prolife_test's FDW server at puma_test"
     $psql = Resolve-PsqlPath
     # Passing a double-quoted SQL identifier (needed for the mixed-case
@@ -192,7 +183,6 @@ function Wait-ForPort([string]$serverLabel, [System.Diagnostics.Process]$process
 
 try {
     Stop-ServerProcess "ProLifeServerTest"
-    Stop-ServerProcess "LisaServerTest"
     Stop-ServerProcess "PumaServerPgTest"
 
     Restore-DatabaseFromBackup $PumaDbName $PumaBackupPath
@@ -200,12 +190,6 @@ try {
     $pumaProcess = Start-Process -FilePath $PumaServerExePath -WorkingDirectory (Split-Path -Parent $PumaServerExePath) -PassThru -WindowStyle Hidden
     Wait-ForPort "PumaServerPgTest.exe" $pumaProcess $PumaHttpPort
     Write-Host "Puma up on $PumaHttpPort"
-
-    Restore-DatabaseFromBackup $LisaDbName $LisaBackupPath
-    Write-Step "Starting LisaServerTest.exe"
-    $lisaProcess = Start-Process -FilePath $LisaServerExePath -WorkingDirectory (Split-Path -Parent $LisaServerExePath) -PassThru -WindowStyle Hidden
-    Wait-ForPort "LisaServerTest.exe" $lisaProcess $LisaHttpPort
-    Write-Host "Lisa up on $LisaHttpPort"
 
     Restore-DatabaseFromBackup $DbName $ProLifeBackupPath
     Repair-ProLifeForeignServers
@@ -231,7 +215,6 @@ try {
 }
 finally {
     if ($serverProcess -and -not $serverProcess.HasExited) { Stop-Process -Id $serverProcess.Id -Force -ErrorAction SilentlyContinue }
-    if ($lisaProcess -and -not $lisaProcess.HasExited) { Stop-Process -Id $lisaProcess.Id -Force -ErrorAction SilentlyContinue }
     if ($pumaProcess -and -not $pumaProcess.HasExited) { Stop-Process -Id $pumaProcess.Id -Force -ErrorAction SilentlyContinue }
 }
 

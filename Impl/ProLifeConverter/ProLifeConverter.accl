@@ -15,8 +15,6 @@
         <Element ComponentName="DatabaseEngine" X="650" Y="625" Note=""/>
         <Element ComponentName="DeviceSqlRepository" X="425" Y="775" Note=""/>
         <Element ComponentName="LicenseSqlRepository" X="1075" Y="525" Note=""/>
-        <Element ComponentName="LisaDatabaseEngine" X="1073" Y="775" Note=""/>
-        <Element ComponentName="LisaGQLEngine" X="1075" Y="250" Note=""/>
         <Element ComponentName="LocalSettings" X="625" Y="250" Note=""/>
         <Element ComponentName="OrderSqlRepository" X="100" Y="575" Note=""/>
         <Element ComponentName="ProductSqlRepository" X="1075" Y="650" Note=""/>

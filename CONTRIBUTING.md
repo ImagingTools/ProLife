@@ -42,7 +42,6 @@ Thank you for your interest in contributing to ProLife! This document provides g
    # Set environment variables for dependencies
    export IMTCOREDIR=/path/to/ImtCore
    export PUMADIR=/path/to/Puma
-   export LISADIR=/path/to/Lisa
    export ACFDIR=/path/to/Acf
    export ACFSLNDIR=/path/to/AcfSln
    export AGENTINODIR=/path/to/Agentino
@@ -117,7 +116,7 @@ git rebase develop
 
 ### Working on Dependencies
 
-When you need to modify a dependency (Acf, ImtCore, Lisa, Puma, Agentino, AcfSln), work directly in the dependency's repository:
+When you need to modify a dependency (Acf, ImtCore, Puma, Agentino, AcfSln), work directly in the dependency's repository:
 
 #### 1. Navigate to the Dependency Directory
 

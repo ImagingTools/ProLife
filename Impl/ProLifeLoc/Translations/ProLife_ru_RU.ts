@@ -1750,6 +1750,38 @@
         <source>ProLifeServerConfigurator</source>
         <translation>ProLifeServerConfigurator</translation>
     </message>
+    <message>
+        <source>Sales</source>
+        <translation>Продажи</translation>
+    </message>
+    <message>
+        <source>Equipment</source>
+        <translation>Оборудование</translation>
+    </message>
+    <message>
+        <source>Software Licensing</source>
+        <translation>Программное обеспечение</translation>
+    </message>
+    <message>
+        <source>Devices</source>
+        <translation>Устройства</translation>
+    </message>
+    <message>
+        <source>Issued Licenses</source>
+        <translation>Выданные лицензии</translation>
+    </message>
+    <message>
+        <source>Software Products</source>
+        <translation>Программные продукты</translation>
+    </message>
+    <message>
+        <source>License Types</source>
+        <translation>Типы лицензий</translation>
+    </message>
+    <message>
+        <source>Hardware Models</source>
+        <translation>Модели оборудования</translation>
+    </message>
 </context>
 <context>
     <name>CustomerFilterDelegate</name>

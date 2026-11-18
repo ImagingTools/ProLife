@@ -2,7 +2,7 @@
 <#
 .SYNOPSIS
     Dot-sourced by the CI runners of the API suites: fails a run whose servers
-    logged a database error (ProLife and the Puma and Lisa servers it uses).
+    logged a database error (ProLife and the Puma server it uses).
 
 .DESCRIPTION
     Every answer of the API can be right while the server loses data behind

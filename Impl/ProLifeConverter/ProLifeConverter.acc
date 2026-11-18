@@ -104,11 +104,8 @@
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="DatabaseEngine"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="GqlRequest" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LisaGQLEngine"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LicenseSqlRepository"/>
+                    <AttributeInfo Id="HardwareConfigurationCollection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="HardwareConfigurationSqlRepository"/>
                     </AttributeInfo>
                     <AttributeInfo Id="OrderCollection" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="OrderSqlRepository"/>
@@ -125,58 +122,20 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="LicenseSqlRepository" PackageId="LisaVoce" ComponentId="LicenseSqlRepository">
+        <Element Id="HardwareConfigurationSqlRepository" PackageId="ProLifeVoce" ComponentId="HardwareConfigurationSqlRepository">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LisaDatabaseEngine"/>
+                        <Data IsEnabled="true" Value="DatabaseEngine"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="LisaDatabaseEngine" PackageId="ImtCoreVoce" ComponentId="DatabaseEngine">
+        <Element Id="LicenseSqlRepository" PackageId="ProLifeVoce" ComponentId="LicenseSqlRepository">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="DbName" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="quiss_lisa"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Password" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="root"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PgHostName" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="localhost"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="PgPort" Type="Integer" ExportId="">
-                        <Data IsEnabled="true" Value="5432"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="LisaGQLEngine" PackageId="ImtGraphQlVoce" ComponentId="GraphQLClientEngine">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CommandIds" Type="Id[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>LicenseFeatures</Value>
-                                <Value>ProductItem</Value>
-                                <Value>ProductList</Value>
-                                <Value>Licenses</Value>
-                                <Value>CommandsData</Value>
-                                <Value>ProductsInfo</Value>
-                                <Value>ProductsList</Value>
-                                <Value>ProductsMetaInfo</Value>
-                                <Value>ProductsObjectView</Value>
-                                <Value>LicensesItems</Value>
-                                <Value>LicensesList</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
-                    <AttributeInfo Id="ServerPrefix" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="/Lisa"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Url" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="http://localhost:7776"/>
+                    <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="DatabaseEngine"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -214,11 +173,11 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="ProductSqlRepository" PackageId="LisaVoce" ComponentId="ProductSqlRepository">
+        <Element Id="ProductSqlRepository" PackageId="ProLifeVoce" ComponentId="ProductSqlRepository">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DatabaseEngine" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LisaDatabaseEngine"/>
+                        <Data IsEnabled="true" Value="DatabaseEngine"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>

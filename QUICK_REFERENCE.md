@@ -116,7 +116,6 @@ git stash
 # Ensure environment variables are set
 export IMTCOREDIR=/path/to/ImtCore
 export PUMADIR=/path/to/Puma
-export LISADIR=/path/to/Lisa
 export ACFDIR=/path/to/Acf
 export ACFSLNDIR=/path/to/AcfSln
 export AGENTINODIR=/path/to/Agentino

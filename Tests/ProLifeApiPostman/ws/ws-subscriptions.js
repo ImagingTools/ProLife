@@ -8,7 +8,7 @@
 //
 // What this covers that the Puma suite cannot: a ProLife client subscribes to
 // the ProLife server, which serves some collections itself and forwards the rest
-// to Puma or Lisa. Both halves of that routing decision are exercised here - the
+// to Puma. Both halves of that routing decision are exercised here - the
 // Puma suite only sees requests that already arrived.
 //
 // Protocol (see ImtCore CWebSocketServletComp / Qml/imtguigql/SubscriptionManager.qml):
@@ -580,11 +580,10 @@ function writeJUnit(filePath) {
 // empty input, "notification { id }" selection - taken from a live trace of a
 // ProLife client start. Anything the client subscribes to has to be accepted by
 // the server it connects to, whether that server answers itself or forwards to
-// Puma or Lisa.
+// Puma.
 const clientSubscriptions = [
 	// Connection probes (ConnectionStatusSubscriberController on each engine).
 	'PumaWsConnection',
-	'LisaWsConnection',
 	// Tenant/authorisation notifications, forwarded to Puma.
 	'OnMembershipNotification',
 	'OnTenantsCollectionChanged',
@@ -599,10 +598,10 @@ const clientSubscriptions = [
 	'OnNotificationEvent',
 	// Desk, forwarded.
 	'OnTicketsCollectionChanged',
-	// Licensing, forwarded to Lisa.
+	// ProLife's own collections, the catalog among them.
+	'OnFeaturesCollectionChanged',
 	'OnProductsCollectionChanged',
 	'OnLicensesCollectionChanged',
-	// ProLife's own collections.
 	'OnOrdersCollectionChanged',
 	'OnAccountsCollectionChanged',
 	'OnDevicesCollectionChanged',
@@ -610,9 +609,9 @@ const clientSubscriptions = [
 	'OnUserActionsCollectionChanged'
 ];
 
-// The two probes answer immediately with the state of the upstream link, so they
-// are the only entries above that also assert on a delivered payload.
-const connectionProbes = ['PumaWsConnection', 'LisaWsConnection'];
+// The probe answers immediately with the state of the upstream link, so it is the
+// only entry above that also asserts on a delivered payload.
+const connectionProbes = ['PumaWsConnection'];
 
 // Served by Puma and forwarded by the ProLife server's document-service bridge.
 const remoteCollections = ['Users', 'Groups', 'Roles', 'Tenants', 'TenantRelationships', 'CrossOrgGrants'];

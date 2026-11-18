@@ -38,7 +38,7 @@
                         <Data IsEnabled="true" Value="true"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ExternalLoginEnabled" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="true"/>
+                        <Data IsEnabled="true" Value="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="FileAccessCommandId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="ProLife/files/*"/>
@@ -55,10 +55,17 @@
                     <AttributeInfo Id="Pages" Type="Reference[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>Pages/DevicesPage</Value>
-                                <Value>Pages/SoftwareProductsPage</Value>
-                                <Value>Pages/OrdersPage</Value>
                                 <Value>Pages/AccountsPage</Value>
+                                <Value>Pages/OrdersPage</Value>
+                                <Value>Pages/DevicesPage</Value>
+                                <Value>Pages/HardwareModelsPage</Value>
+                                <Value>Pages/HardwareConfigurationsPage</Value>
+                                <Value>Pages/HardwareComponentsPage</Value>
+                                <Value>Pages/HardwareVendorsPage</Value>
+                                <Value>Pages/SoftwareProductsPage</Value>
+                                <Value>Pages/ProductsPage</Value>
+                                <Value>Pages/FeaturesPage</Value>
+                                <Value>Pages/LicensesPage</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -72,6 +79,11 @@
                                 <Value>Pages/SoftwareProductsController</Value>
                                 <Value>Pages/OrdersController</Value>
                                 <Value>Pages/AccountsController</Value>
+                                <Value>Pages/ProductsController</Value>
+                                <Value>Pages/FeaturesController</Value>
+                                <Value>Pages/LicensesController</Value>
+                                <Value>Pages/HardwareComponentsController</Value>
+                                <Value>Pages/HardwareConfigurationsController</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -88,6 +100,8 @@
                                 <Value>SoftwareFilterableSelectController</Value>
                                 <Value>OrdersFilterableSelectController</Value>
                                 <Value>CustomersFilterableSelectController</Value>
+                                <Value>ProductsFilterableSelectController</Value>
+                                <Value>LicensesFilterableSelectController</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -322,6 +336,27 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="LicensesFilterableSelectController" PackageId="ImtServerGqlPck" ComponentId="FilterableSelectController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Licenses"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="LicenseCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="OrdersFilterableSelectController" PackageId="ImtServerGqlPck" ComponentId="FilterableSelectController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -372,6 +407,15 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="GroupCollection" Type="Reference" ExportId="GroupCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="HardwareComponentCollection" Type="Reference" ExportId="HardwareComponentCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CompanyCollection" Type="Reference" ExportId="AccountRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="HardwareConfigurationCollection" Type="Reference" ExportId="HardwareConfigurationCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
@@ -430,6 +474,27 @@
                     </AttributeInfo>
                     <AttributeInfo Id="Name" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Product"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="ProductsFilterableSelectController" PackageId="ImtServerGqlPck" ComponentId="FilterableSelectController">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Products"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="ProductCollection">
+                        <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>

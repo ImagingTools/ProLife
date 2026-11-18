@@ -100,8 +100,8 @@ int CSelectableItemInfoProviderComp::GetMetaInfoType(const QByteArray& metaInfoI
 		{ "DeviceMacAddress", prolifedata::IDeviceInfo::MIT_DEVICE_MAC_ADDRESS },
 		{ "DeviceProject", prolifedata::IDeviceInfo::MIT_DEVICE_PROJECT },
 		{ "DeviceCustomerName", prolifedata::IDeviceInfo::MIT_CUSTOMER_NAME },
-		{ "DeviceLicenseId", prolifedata::IDeviceInfo::MIT_LICENSE_ID },
-		{ "DeviceLicenseName", prolifedata::IDeviceInfo::MIT_LICENSE_NAME },
+		{ "DeviceLicenseId", prolifedata::IDeviceInfo::MIT_CONFIGURATION_ARTICLE },
+		{ "DeviceLicenseName", prolifedata::IDeviceInfo::MIT_CONFIGURATION_NAME },
 		{ "DeviceOrderId", prolifedata::IDeviceInfo::MIT_ORDER_ID }
 	};
 
