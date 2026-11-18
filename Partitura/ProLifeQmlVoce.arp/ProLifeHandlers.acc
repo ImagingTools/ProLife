@@ -25,15 +25,6 @@
                     <AttributeInfo Id="AuthenticationManager" Type="Reference" ExportId="AuthenticationManager">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="PageGroups" Type="Reference[]" ExportId="">
-                        <Data IsEnabled="true">
-                            <Values>
-                                <Value>SalesGroup</Value>
-                                <Value>HardwareGroup</Value>
-                                <Value>SoftwareGroup</Value>
-                            </Values>
-                        </Data>
-                    </AttributeInfo>
                     <AttributeInfo Id="ServiceDependencies" Type="Reference[]" ExportId="ServiceDependencies">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -307,21 +298,6 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="HardwareGroup" PackageId="ImtCoreVoce" ComponentId="Command">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Hardware"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Name" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Equipment"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
         <Element Id="HardwareItemInfoProvider" PackageId="ProLifeGqlPck" ComponentId="SelectableItemInfoProvider">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -529,21 +505,6 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="SalesGroup" PackageId="ImtCoreVoce" ComponentId="Command">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Sales"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Name" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Sales"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
         <Element Id="SelectableItemParamsRepresentation" PackageId="ImtServerAppPck" ComponentId="ParamSetRepresentationController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -625,21 +586,6 @@
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
                         <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
-                        <Data IsEnabled="false"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="SoftwareGroup" PackageId="ImtCoreVoce" ComponentId="Command">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Software"/>
-                    </AttributeInfo>
-                    <AttributeInfo Id="Name" Type="Text" ExportId="">
-                        <Data IsEnabled="true" Value="Software Licensing"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
                         <Data IsEnabled="false"/>

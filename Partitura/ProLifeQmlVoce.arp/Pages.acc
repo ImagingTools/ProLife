@@ -19,8 +19,8 @@
                     <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="qrc:/qml/ProLife/AccountCollectionView.qml"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="GroupId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Sales"/>
+                    <AttributeInfo Id="Group" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="SalesGroup"/>
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Icons/Customer"/>
@@ -59,8 +59,8 @@
                     <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="qrc:/qml/ProLife/DeviceCollectionView.qml"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="GroupId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Hardware"/>
+                    <AttributeInfo Id="Group" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="HardwareGroup"/>
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Icons/Sensor"/>
@@ -150,8 +150,8 @@
                     <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="qrc:/qml/imtlicgui/FeatureCollectionView.qml"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="GroupId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Software"/>
+                    <AttributeInfo Id="Group" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="SoftwareGroup"/>
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Icons/FeaturePackage"/>
@@ -187,8 +187,8 @@
                     <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="qrc:/qml/ProLife/HardwareComponentCollectionView.qml"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="GroupId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Hardware"/>
+                    <AttributeInfo Id="Group" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="HardwareGroup"/>
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Icons/FeaturePackage"/>
@@ -224,8 +224,8 @@
                     <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="qrc:/qml/ProLife/HardwareConfigurationCollectionView.qml"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="GroupId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Hardware"/>
+                    <AttributeInfo Id="Group" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="HardwareGroup"/>
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Icons/Settings"/>
@@ -252,6 +252,21 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="HardwareGroup" PackageId="ImtCoreVoce" ComponentId="Command">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Hardware"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Name" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="Equipment"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="HardwareVendorsPage" PackageId="ImtCollectionVoce" ComponentId="MultiDocCollectionPage">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -261,8 +276,8 @@
                     <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="qrc:/qml/ProLife/VendorCollectionView.qml"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="GroupId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Hardware"/>
+                    <AttributeInfo Id="Group" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="HardwareGroup"/>
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Icons/Organization"/>
@@ -301,8 +316,8 @@
                     <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="qrc:/qml/ProLife/HardwareModelCollectionView.qml"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="GroupId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Hardware"/>
+                    <AttributeInfo Id="Group" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="HardwareGroup"/>
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Icons/Product"/>
@@ -338,8 +353,8 @@
                     <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="qrc:/qml/ProLife/LicenseTypeCollectionView.qml"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="GroupId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Software"/>
+                    <AttributeInfo Id="Group" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="SoftwareGroup"/>
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Icons/Key"/>
@@ -375,8 +390,8 @@
                     <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="qrc:/qml/ProLife/OrderCollectionView.qml"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="GroupId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Sales"/>
+                    <AttributeInfo Id="Group" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="SalesGroup"/>
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Icons/Deployment"/>
@@ -513,8 +528,8 @@
                     <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="qrc:/qml/ProLife/SoftwareCatalogCollectionView.qml"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="GroupId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Software"/>
+                    <AttributeInfo Id="Group" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="SoftwareGroup"/>
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Icons/Product"/>
@@ -541,6 +556,36 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
+        <Element Id="SalesGroup" PackageId="ImtCoreVoce" ComponentId="Command">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Sales"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Name" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="Sales"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="SoftwareGroup" PackageId="ImtCoreVoce" ComponentId="Command">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="CommandId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Software"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Name" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="Software Licensing"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="SoftwareProductsPage" PackageId="ImtCollectionVoce" ComponentId="MultiDocCollectionPage">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -550,8 +595,8 @@
                     <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="qrc:/qml/ProLife/SoftwareProductCollectionView.qml"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="GroupId" Type="Id" ExportId="">
-                        <Data IsEnabled="true" Value="Software"/>
+                    <AttributeInfo Id="Group" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="SoftwareGroup"/>
                     </AttributeInfo>
                     <AttributeInfo Id="IconPath" Type="Text" ExportId="">
                         <Data IsEnabled="true" Value="Icons/Key"/>
