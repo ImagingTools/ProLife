@@ -142,6 +142,7 @@ $pumaProcess = $null
 $exitCode = 1
 
 . (Join-Path $RepoRoot "Tests\ProLifeApiPostman\ServerLogCheck.ps1")
+. (Join-Path $RepoRoot "Tests\ProLifeApiPostman\ServerTokens.ps1")
 
 if ([string]::IsNullOrWhiteSpace($ServerExePath)) {
     $ServerExePath = Join-Path $RepoRoot "Bin\$BuildConfig\ProLifeServerTest.exe"
@@ -390,13 +391,19 @@ try {
 
     Restore-DatabaseFromBackup $PumaDbName $PumaBackupPath
     Start-PumaTestServer
+    $pumaTokens = New-PumaServerTokens $PumaHttpPort
 
     Reset-Database $DbName
+    $env:IMT_PUMA_SERVER_CREDENTIAL = $pumaTokens.ProLifeForPuma
     Start-TestServer
+    Remove-Item Env:\IMT_PUMA_SERVER_CREDENTIAL
 
     $exitCode = Invoke-NewmanSuite
 }
 finally {
+    # The credential of the server does not outlive the run, whatever failed
+    Remove-Item Env:\IMT_PUMA_SERVER_CREDENTIAL -ErrorAction SilentlyContinue
+
     # Tear down in reverse start order: ProLife depends on Puma being up,
     # not the other way round, so it's safe (and cleanest) to stop it first.
     if ($serverProcess -and -not $serverProcess.HasExited) {

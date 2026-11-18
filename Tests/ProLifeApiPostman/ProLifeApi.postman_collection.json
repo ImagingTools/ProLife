@@ -173,6 +173,180 @@
       ]
     },
     {
+      "name": "00A Catalog",
+      "description": "The catalog lives in ProLife: the hardware model, its configuration, the software product and its license every other folder refers to.",
+      "item": [
+        {
+          "name": "ProductAdd (software product)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('softwareCatalogProductId', pm.environment.get('randomUuid'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('ProductAdd (software product) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});",
+                  "pm.test('ProductAdd (software product) returns the id it was given', function () {",
+                  "  const payload = json.data && json.data[Object.keys(json.data)[0]];",
+                  "  pm.expect(payload && payload.id, JSON.stringify(json)).to.eql(pm.environment.get('softwareCatalogProductId'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation ProductAdd { ProductAdd(input: { id: \"{{softwareCatalogProductId}}\", item: { id: \"{{softwareCatalogProductId}}\", productId: \"API_SW_{{randomInt}}\", name: \"ProLifeApi Software\", productName: \"ProLifeApi Software\", categoryId: \"Software\", features: \"\" } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          }
+        },
+        {
+          "name": "LicenseAdd (license of the software product)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('licenseDefinitionId', pm.environment.get('randomUuid'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('LicenseAdd (license of the software product) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});",
+                  "pm.test('LicenseAdd (license of the software product) returns the id it was given', function () {",
+                  "  const payload = json.data && json.data[Object.keys(json.data)[0]];",
+                  "  pm.expect(payload && payload.id, JSON.stringify(json)).to.eql(pm.environment.get('licenseDefinitionId'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation LicenseAdd { LicenseAdd(input: { id: \"{{licenseDefinitionId}}\", item: { id: \"{{licenseDefinitionId}}\", licenseId: \"API_LIC_{{randomInt}}\", licenseName: \"ProLifeApi License\", productId: \"{{softwareCatalogProductId}}\", features: \"\", parentLicenses: \"\" } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          }
+        },
+        {
+          "name": "ProductAdd (hardware model)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('deviceTypeId', pm.environment.get('randomUuid'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('ProductAdd (hardware model) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});",
+                  "pm.test('ProductAdd (hardware model) returns the id it was given', function () {",
+                  "  const payload = json.data && json.data[Object.keys(json.data)[0]];",
+                  "  pm.expect(payload && payload.id, JSON.stringify(json)).to.eql(pm.environment.get('deviceTypeId'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation ProductAdd { ProductAdd(input: { id: \"{{deviceTypeId}}\", item: { id: \"{{deviceTypeId}}\", productId: \"API_HW_{{randomInt}}\", name: \"ProLifeApi Hardware\", productName: \"ProLifeApi Hardware\", categoryId: \"Hardware\", features: \"\" } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          }
+        },
+        {
+          "name": "AddHardwareConfiguration (configuration of the hardware model)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('deviceConfigurationId', pm.environment.get('randomUuid'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('AddHardwareConfiguration (configuration of the hardware model) has no GraphQL errors', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});",
+                  "pm.test('AddHardwareConfiguration (configuration of the hardware model) returns the id it was given', function () {",
+                  "  const payload = json.data && json.data[Object.keys(json.data)[0]];",
+                  "  pm.expect(payload && payload.id, JSON.stringify(json)).to.eql(pm.environment.get('deviceConfigurationId'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation AddHardwareConfiguration { AddHardwareConfiguration(input: { id: \"{{deviceConfigurationId}}\", item: { id: \"{{deviceConfigurationId}}\", configurationId: \"API_CFG_{{randomInt}}\", name: \"ProLifeApi Configuration\", description: \"\", productId: \"{{deviceTypeId}}\", componentIds: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql"
+          }
+        }
+      ]
+    },
+    {
       "name": "01 Accounts",
       "item": [
         {
