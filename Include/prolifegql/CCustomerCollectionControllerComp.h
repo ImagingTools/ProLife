@@ -13,6 +13,10 @@ namespace prolifegql
 {
 
 
+/**
+	GraphQL access to the companies of one page: the customers or the vendors (manufacturers and suppliers).
+	All companies are stored together; CompanyRole tells which of them this collection shows.
+*/
 class CCustomerCollectionControllerComp: public sdl::V1_0::prolife::CAccountCollectionControllerCompBase
 {
 public:
@@ -22,9 +26,19 @@ public:
 		I_ASSIGN(m_accountInfoFactCompPtr, "AccountFactory", "Factory used for creation of the new account instance", true, "AccountFactory");
 		I_ASSIGN(m_groupFilterParamJoinerCompPtr, "GroupFilterParamJoiner", "Group filter param joiner", true, "GroupFilterParamJoiner");
 		I_ASSIGN(m_softwareCollectionCompPtr, "SoftwareCollection", "Software collection", false, "SoftwareCollection");
+		I_ASSIGN(m_companyRoleAttrPtr, "CompanyRole", "Companies of the collection: 'Customer' (customers) or 'Vendor' (manufacturers and suppliers)", true, "Customer");
 	I_END_COMPONENT;
 
 protected:
+	bool IsVendorCollection() const;
+
+	// reimplemented (imtgql::IGqlRequestHandler)
+	virtual bool IsRequestSupported(const imtgql::CGqlRequest& gqlRequest) const override;
+
+	// reimplemented (imtservergql::CObjectCollectionControllerCompBase)
+	virtual void AddFixedFilters(const imtgql::CGqlRequest& gqlRequest, imtbase::IComplexCollectionFilter::FilterExpression& fixedExpression) const override;
+	virtual QByteArray GetObjectTypeIdFromRequest(const imtgql::CGqlRequest& gqlRequest) const override;
+
 	// reimplemented (sdl::V1_0::imtbase::CImtCollectionGqlHandlerCompBase)
 	virtual sdl::V1_0::imtbase::CVisualStatus OnGetObjectVisualStatus(
 				const sdl::V1_0::imtbase::CGetObjectVisualStatusGqlRequest& getObjectVisualStatusRequest,
@@ -77,6 +91,7 @@ private:
 	I_FACT(imtaccount::ICompanyInfo, m_accountInfoFactCompPtr);
 	I_REF(prolifedata::IGroupFilterParamJoiner, m_groupFilterParamJoinerCompPtr);
 	I_REF(imtbase::IObjectCollection, m_softwareCollectionCompPtr);
+	I_ATTR(QByteArray, m_companyRoleAttrPtr);
 };
 
 

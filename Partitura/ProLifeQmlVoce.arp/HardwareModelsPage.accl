@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acf>
+    <AcfHeader>
+        <VersionInfos>
+            <Version Id="0" Number="6500" Description="ACF"/>
+            <Version Id="1" Number="2438" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
+        </VersionInfos>
+    </AcfHeader>
+    <PositionMap>
+        <Element ComponentName="CollectionHeadersProvider" X="775" Y="425" Note=""/>
+        <Element ComponentName="CompactXmlFileSerializer" X="475" Y="425" Note=""/>
+        <Element ComponentName="Demultiplexer" X="600" Y="75" Note=""/>
+        <Element ComponentName="IdentifiableProductInfo" X="850" Y="575" Note=""/>
+        <Element ComponentName="ProductInfoFileGenerator" X="1050" Y="425" Note=""/>
+        <Element ComponentName="HardwareModelsCommands" X="150" Y="250" Note=""/>
+        <Element ComponentName="HardwareModelsController" X="875" Y="250" Note=""/>
+        <Element ComponentName="CheckPermissionOr" X="100" Y="700" Note=""/>
+        <Element ComponentName="CommandPermissions" X="350" Y="700" Note=""/>
+    </PositionMap>
+    <EmbeddedRegistries>
+        <EmbededRegistry Id="HardwareModelsCommands">
+            <PositionMap>
+                <Element ComponentName="CommandsController" X="550" Y="125" Note=""/>
+                <Element ComponentName="StandardCollectionCommands" X="575" Y="300" Note=""/>
+            </PositionMap>
+            <EmbeddedRegistries/>
+        </EmbededRegistry>
+    </EmbeddedRegistries>
+</Acf>

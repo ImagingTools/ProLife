@@ -8,8 +8,8 @@ Built by analogy with `Puma\Tests\TenantApiPostman` (collection structure, CI ru
 
 - `ProLifeApi.postman_collection.json` - main collection (Postman v2.1)
 - `ProLifeApi-Dev.postman_environment.json` - environment template, defaults to `http://localhost:7778/ProLife` (a normally-running dev `ProLifeServer`)
-- `Run-CiTests.ps1` - CI entry point: starts `PumaServerPgTest.exe` and `LisaServerTest.exe` (restoring `puma_test`/`lisa_test` from real backups first), restores `prolife_test` the same way, starts `ProLifeServerTest.exe` on port 17778, runs newman, tears all three servers down in reverse order (mirrors `Puma\Tests\TenantApiPostman\Run-CiTests.ps1`)
-- `prolife.backup` / `puma.backup` / `lisa.backup` - pg_dump custom-format backups (copies of `Tests\backend\backups\*.backup`, a real populated dev-environment export) restored into `prolife_test`/`puma_test`/`lisa_test` before every CI run. Not just Lisa needs this: `deviceTypeId`/`softwareCatalogProductId`/`licenseDefinitionId` (see Environment Variables below) reference catalog/type records that **no GraphQL mutation in this codebase can create** - an empty `prolife_test` can never make `DeviceAdd`/`SoftwareProductAdd` succeed. Restoring the real export also brings a working `su` account and hundreds of real Puma users/roles along for free, which is harmless here since this suite's own assertions fetch objects it just created by id rather than relying on exact list counts/positions.
+- `Run-CiTests.ps1` - CI entry point: starts `PumaServerPgTest.exe` (restoring `puma_test` from a real backup first), restores `prolife_test` the same way, starts `ProLifeServerTest.exe` on port 17778, runs newman, tears both servers down in reverse order (mirrors `Puma\Tests\TenantApiPostman\Run-CiTests.ps1`)
+- `prolife.backup` / `puma.backup` / `lisa.backup` - pg_dump custom-format backups (copies of `Tests\backend\backups\*.backup`, a real populated dev-environment export) restored into `prolife_test`/`puma_test`/`lisa_test` before every CI run. Not just the catalog needs this: `deviceTypeId`/`softwareCatalogProductId`/`licenseDefinitionId` (see Environment Variables below) reference catalog/type records that **no GraphQL mutation in this codebase can create** - an empty `prolife_test` can never make `DeviceAdd`/`SoftwareProductAdd` succeed. Restoring the real export also brings a working `su` account and hundreds of real Puma users/roles along for free, which is harmless here since this suite's own assertions fetch objects it just created by id rather than relying on exact list counts/positions.
 - `package.json` - pins the `newman` devDependency
 
 ## Import (manual/Postman GUI use)
@@ -74,7 +74,7 @@ Permission codes are the exact `FeatureId` strings declared in `Impl\ProLifeServ
 
 The actor holds `/SensorManagement/ViewSensors` and `/OrderManagement/ViewOrders` of ProLife and nothing else. Every check holds whatever direction the requirements in `ProLifeFeatures.h` are written in, so the folder does not have to change when they are.
 
-- **The product of the server decides.** `DevicesList` is allowed although the request names `productid: Lisa`, and without any `productid` header; `SoftwareProductsList` stays refused under `productid: Lisa`. `CAuthenticationManagerComp` takes the product from its own `FeatureContainer` and falls back to the header only where a server has no product (Puma).
+- **The product of the server decides.** `DevicesList` is allowed although the request names another product (`productid: OtherProduct`), and without any `productid` header; `SoftwareProductsList` stays refused under `productid: OtherProduct`. `CAuthenticationManagerComp` takes the product from its own `FeatureContainer` and falls back to the header only where a server has no product (Puma).
 - **PAT scopes match by the permission rule.** A token scoped by the bare id `ViewOrders` opens `OrdersList` for the role permission stored as `/OrderManagement/ViewOrders`, and keeps `DevicesList` closed.
 - **`GetPermissions` tells the client what the server allows.** `DeviceAdd` is refused exactly when the list lacks `AddSensor`, and `AccountsList` exactly when it lacks both `ViewAccounts` and `ChangeCustomer` - whatever the requirements of the role permissions include. The product server adds those to the list it forwards from Puma (`CRemoteAuthorizationControllerComp`).
 
@@ -123,19 +123,18 @@ powershell -ExecutionPolicy Bypass -File Run-CiTests.ps1
 
 Starts a dedicated, isolated `ProLifeServerTest.exe` (see `Impl\ProLifeServerTest`, database `prolife_test`, HTTP port `17778`, WebSocket port `18778` - all `+10000` from ProLife's own production defaults, same convention Puma uses for `PumaServerPgTest`) so this suite never touches a real `prolife` database or collides with a running production `ProLifeServer`.
 
-`ProLifeServerTest` itself talks to Puma and Lisa over HTTP (`ProLifeServerTest.acc`'s `PumaHttpPort`/`LisaHttpPort`), so the script brings those up first, in order:
+`ProLifeServerTest` itself talks to Puma over HTTP (`ProLifeServerTest.acc`'s `PumaHttpPort`), so the script brings it up first, in order:
 
 1. `PumaServerPgTest.exe` (database `puma_test`, HTTP port `17788`) - restored from `puma.backup`.
-2. `LisaServerTest.exe` (database `lisa_test`, HTTP port `17776`) - restored from `lisa.backup`.
-3. `ProLifeServerTest.exe` (database `prolife_test`, HTTP port `17778`) - restored from `prolife.backup`, then its `PumaServer` FDW foreign-server definition is repointed at `puma_test` (see below) before the server starts.
+2. `ProLifeServerTest.exe` (database `prolife_test`, HTTP port `17778`) - restored from `prolife.backup`, then its `PumaServer` FDW foreign-server definition is repointed at `puma_test` (see below) before the server starts.
 
-Teardown stops all three in reverse order. Puma/Lisa checkouts are located via the `PUMADIR`/`LISADIR` environment variables (falling back to `Puma`/`Lisa` siblings of the ProLife checkout) - pass `-PumaRepoRoot`/`-LisaRepoRoot` explicitly if your agent lays checkouts out differently.
+Teardown stops both servers in reverse order. The Puma checkout is located via the `PUMADIR` environment variable (falling back to a `Puma` sibling of the ProLife checkout) - pass `-PumaRepoRoot` explicitly if your agent lays checkouts out differently.
 
-After teardown the run also fails if any server log (`%TEMP%\{prolife,puma,lisa}_{stdout,stderr}_<PID>.log`) has a database error - `ServerLogCheck.ps1`, shared with the DeskTicket and PatToken runners. A server can answer every request correctly while it loses data behind them; the log is the only place that shows it.
+After teardown the run also fails if any server log (`%TEMP%\{prolife,puma}_{stdout,stderr}_<PID>.log`) has a database error - `ServerLogCheck.ps1`, shared with the DeskTicket and PatToken runners. A server can answer every request correctly while it loses data behind them; the log is the only place that shows it.
 
 ### The `PumaServer` FDW foreign server
 
-`prolife_test`'s `Roles`/`Users`/`UserGroups`/`UserSessions` tables are `postgres_fdw` **foreign tables**, all backed by a single foreign server literally named `PumaServer`. As restored from the dev export, that foreign server's `dbname` option is `puma` (the real, non-test database) - on a dev machine that also has a real local `puma` checkout, leaving this uncorrected means any query touching those tables would silently read (and, if the mapping allows, write) the developer's real data instead of `puma_test`. `Run-CiTests.ps1`'s `Repair-ProLifeForeignServers` runs `ALTER SERVER "PumaServer" OPTIONS (SET dbname 'puma_test')` immediately after every `prolife_test` restore to fix this. (There's also a dormant `setup_foreign_table_lisaserver()` helper function in the dump, but it's never invoked - no `LisaServer` foreign server actually exists, so nothing needs repointing for Lisa.)
+`prolife_test`'s `Roles`/`Users`/`UserGroups`/`UserSessions` tables are `postgres_fdw` **foreign tables**, all backed by a single foreign server literally named `PumaServer`. As restored from the dev export, that foreign server's `dbname` option is `puma` (the real, non-test database) - on a dev machine that also has a real local `puma` checkout, leaving this uncorrected means any query touching those tables would silently read (and, if the mapping allows, write) the developer's real data instead of `puma_test`. `Run-CiTests.ps1`'s `Repair-ProLifeForeignServers` runs `ALTER SERVER "PumaServer" OPTIONS (SET dbname 'puma_test')` immediately after every `prolife_test` restore to fix this.
 
 ## Notification center (`Notification_Center_ProLife.postman_collection.json`)
 
@@ -189,17 +188,17 @@ with silence, so the absence of a refusal is the only acceptance signal on the w
 ### What it covers that the Puma suite cannot
 
 A ProLife client subscribes to the ProLife server, which serves some collections
-itself (`Devices`, `Orders`) and forwards the rest to Puma (`Users`, `Groups`,
-`Roles`, `Tenants`, `TenantRelationships`, `CrossOrgGrants`), to Desk (`Tickets`)
-or to Lisa. Both halves of that routing decision are exercised here; the Puma
+itself (`Devices`, `Orders`, the catalog) and forwards the rest to Puma (`Users`,
+`Groups`, `Roles`, `Tenants`, `TenantRelationships`, `CrossOrgGrants`) or to Desk
+(`Tickets`). Both halves of that routing decision are exercised here; the Puma
 suite only ever sees requests that already arrived. A forwarder that passed the
 command on **without** its input arguments, or that decided on the command alone
 and claimed the local collections too, would look healthy from a single server.
 
 Every subscription the QML client registers at startup is registered here in the
 exact shape the client sends it, so a command list or a forwarding rule that
-drifts away from the client is caught. The two connection probes
-(`PumaWsConnection`, `LisaWsConnection`) additionally have to report the upstream
+drifts away from the client is caught. The connection probe
+(`PumaWsConnection`) additionally has to report the upstream
 link as `Connected` — every forwarded case depends on that link, so a run against
 a dead upstream fails instead of passing vacuously.
 

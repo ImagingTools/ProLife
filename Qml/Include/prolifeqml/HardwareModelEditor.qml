@@ -10,6 +10,7 @@ import imtcolgui 1.0
 import imtbaseImtCollectionSdl 1.0
 import imtlicProductsSdl 1.0
 import prolifeHardwareConfigurationsSdl 1.0
+import prolifeHardwareConfigurationCollectionDocumentServiceSdl 1.0
 
 /**
  * HardwareModelEditor - a hardware model (a product of the "Hardware" category).
@@ -17,8 +18,8 @@ import prolifeHardwareConfigurationsSdl 1.0
  * A model has no software features: what can be ordered and built is described by its
  * configurations (articles), and a configuration lists the components it takes.
  *
- * Pages: Model (name, ID, description) and Configurations (the articles of the model, picked
- * from the configuration catalog that is searched on the server).
+ * Pages: Model (name, ID, description) and Configurations (the articles of the model; a
+ * configuration chooses its model itself, here they are listed and new ones are created).
  */
 ViewBase {
 	id: modelEditorContainer;
@@ -29,14 +30,23 @@ ViewBase {
 	property ProductData productData: model
 
 	// ID of the model in the product collection; empty while a new model is not saved yet.
-	property string modelId: productData ? productData.m_id : ""
+	property string modelId: productData && productData.m_id !== "" ? productData.m_id : savedModelId
+
+	// ID the model got on its first save: the representation read before the save has none.
+	property string savedModelId: ""
 
 	onModelIdChanged: {
 		modelEditorContainer.reloadConfigurations()
 	}
 
-	// Configurations still to be moved: [{id, productId}], sent one by one.
-	property var pendingAssignments: []
+	// Called by the document when it is saved.
+	function documentSaved(){
+		let documentManager = MainDocumentService.getDocumentService("HardwareModels")
+		if (documentManager){
+			modelEditorContainer.savedModelId = documentManager.getDocumentObjectId(documentManager.getDocumentIdByView(modelEditorContainer))
+		}
+	}
+
 
 	CollectionDataProvider {
 		id: configurationsProvider;
@@ -77,6 +87,11 @@ ViewBase {
 	}
 
 	// Rows [{id, title}] of the configurations the server reports for this model.
+	// The model ID is the name without white space; it is never typed in.
+	function modelIdFromName(name){
+		return name ? name.replace(/\s+/g, '') : ""
+	}
+
 	function assignedConfigurations(){
 		let items = []
 		let model = configurationsProvider.collectionModel
@@ -86,118 +101,6 @@ ViewBase {
 		}
 
 		return items
-	}
-
-	/**
-		Moves the configurations to this model or takes them out of it, so that exactly
-		the given IDs belong to the model. The change is saved at once, it is not part of
-		the model document.
-	*/
-	function assignConfigurations(configurationIds){
-		let current = modelEditorContainer.assignedConfigurations()
-		let currentIds = []
-		let pending = modelEditorContainer.pendingAssignments.slice()
-		for (let i = 0; i < current.length; i++){
-			currentIds.push(current[i].id)
-			if (configurationIds.indexOf(current[i].id) < 0){
-				pending.push({id: current[i].id, productId: ""})
-			}
-		}
-
-		for (let k = 0; k < configurationIds.length; k++){
-			if (currentIds.indexOf(configurationIds[k]) < 0){
-				pending.push({id: configurationIds[k], productId: modelEditorContainer.modelId})
-			}
-		}
-
-		let wasIdle = modelEditorContainer.pendingAssignments.length === 0
-		modelEditorContainer.pendingAssignments = pending
-		if (wasIdle){
-			modelEditorContainer.sendNextAssignment()
-		}
-	}
-
-	function sendNextAssignment(){
-		if (modelEditorContainer.pendingAssignments.length === 0){
-			modelEditorContainer.reloadConfigurations()
-			return
-		}
-
-		let input = configurationItemInputComp.createObject(modelEditorContainer)
-		input.m_id = modelEditorContainer.pendingAssignments[0].id
-
-		getConfigurationRequest.send(input)
-		input.destroy()
-	}
-
-	function finishAssignment(succeeded){
-		let pending = modelEditorContainer.pendingAssignments.slice()
-		pending.shift()
-		if (!succeeded){
-			// The rest is dropped, the list shows what the server has.
-			pending = []
-		}
-		modelEditorContainer.pendingAssignments = pending
-		modelEditorContainer.sendNextAssignment()
-	}
-
-	Component {
-		id: configurationItemInputComp
-
-		HardwareConfigurationItemInput {}
-	}
-
-	Component {
-		id: configurationDataInputComp
-
-		HardwareConfigurationDataInput {}
-	}
-
-	// The update request carries the whole configuration, so it is read first and sent back
-	// with the other model.
-	GqlSdlRequestSender {
-		id: getConfigurationRequest
-
-		requestType: 0
-		gqlCommandId: ProlifeHardwareConfigurationsSdlCommandIds.s_getHardwareConfigurationItem
-
-		sdlObjectComp: Component {
-			HardwareConfigurationData {}
-		}
-
-		onFinished: {
-			if (status < 0 || modelEditorContainer.pendingAssignments.length === 0){
-				modelEditorContainer.finishAssignment(false)
-				return
-			}
-
-			let assignment = modelEditorContainer.pendingAssignments[0]
-			let configuration = getConfigurationRequest.sdlObject
-			configuration.m_productId = assignment.productId
-
-			let input = configurationDataInputComp.createObject(modelEditorContainer)
-			input.m_id = assignment.id
-			input.m_item = configuration
-
-			updateConfigurationRequest.send(input)
-			input.destroy()
-		}
-	}
-
-	GqlSdlRequestSender {
-		id: updateConfigurationRequest
-
-		requestType: 1
-		gqlCommandId: ProlifeHardwareConfigurationsSdlCommandIds.s_updateHardwareConfiguration
-		permissionPath: "/HardwareManagement/Edit/Change"
-
-		sdlObjectComp: Component {
-			UpdatedNotificationPayload {}
-		}
-
-		onFinished: {
-			modelEditorContainer.finishAssignment(status > 0)
-		}
 	}
 
 	function updateGui(){
@@ -231,40 +134,35 @@ ViewBase {
 		MainDocumentService.openDocument("HardwareConfigurations", configurationId, "HardwareConfiguration")
 	}
 
+	// The new configuration opens in its editor with this model set; it gets its article there and is saved only when complete.
 	function addConfiguration(){
-		let input = addConfigurationInputComp.createObject(modelEditorContainer)
-		input.m_id = ""
-		input.m_item.m_productId = modelEditorContainer.modelId
-		input.m_item.m_name = qsTr("New configuration of %1").arg(modelEditorContainer.productData.m_productName)
-
-		addConfigurationRequest.send(input)
+		let modelId = modelEditorContainer.modelId
+		MainDocumentService.insertNewDocument("HardwareConfigurations", "HardwareConfiguration", function(documentId){
+			modelEditorContainer.setConfigurationModel(documentId, modelId)
+		})
 	}
 
-	Component {
-		id: addConfigurationInputComp
+	// Only the model is sent: the server changes the fields the request carries.
+	function setConfigurationModel(documentId, modelId){
+		setModelData.m_productId = modelId
+		setModelInput.m_documentId = documentId
+		setModelInput.m_configurationData = setModelData
+		setModelRequest.send(setModelInput)
+	}
 
-		HardwareConfigurationDataInput {
-			m_item: HardwareConfigurationData {}
-		}
+	HardwareConfigurationData {
+		id: setModelData
+	}
+
+	UpdateHardwareConfigurationInput {
+		id: setModelInput
 	}
 
 	GqlSdlRequestSender {
-		id: addConfigurationRequest
+		id: setModelRequest
 
 		requestType: 1
-		gqlCommandId: ProlifeHardwareConfigurationsSdlCommandIds.s_addHardwareConfiguration
-		permissionPath: "/HardwareManagement/Edit/Add"
-
-		sdlObjectComp: Component {
-			AddedNotificationPayload {
-				onFinished: {
-					if (m_id !== ""){
-						configurationsProvider.updateModel()
-						modelEditorContainer.openConfiguration(m_id)
-					}
-				}
-			}
-		}
+		gqlCommandId: ProlifeHardwareConfigurationCollectionDocumentServiceSdlCommandIds.s_updateHardwareConfigurationFromRepresentation
 	}
 
 	MultiPageView {
@@ -310,17 +208,12 @@ ViewBase {
 				modelEditorContainer.productData.m_name = nameInput.text
 				modelEditorContainer.productData.m_description = descriptionInput.text
 
-				let modelIdText = modelIdInput.text
-				if (modelIdText === ""){
-					modelIdText = nameInput.text.replace(/\s+/g, '')
-				}
-				modelEditorContainer.productData.m_productId = modelIdText
+				modelEditorContainer.productData.m_productId = modelEditorContainer.modelIdFromName(nameInput.text)
 			}
 
 			function applyReadOnly(readOnly){
 				let canChange = PermissionsController.checkPermission("/ProductManagement/Edit/Change") || PermissionsController.checkPermission("/ProductManagement/Edit/Add")
 				nameInput.readOnly = readOnly || !canChange
-				modelIdInput.readOnly = readOnly || !canChange
 				descriptionInput.readOnly = readOnly || !canChange
 			}
 
@@ -352,6 +245,15 @@ ViewBase {
 						objectName: "ModelNameInput";
 						name: qsTr("Name");
 						placeHolderText: qsTr("Enter the model name");
+						isRequired: true;
+						showErrorWhenInvalid: true;
+						deferErrorUntilEdited: true;
+						errorText: qsTr("Please enter the model name");
+						textInputValidator: modelNameValidator;
+
+						onTextEdited: {
+							modelIdInput.text = modelEditorContainer.modelIdFromName(nameInput.text);
+						}
 
 						onEditingFinished: {
 							modelEditorContainer.doUpdateModel();
@@ -362,12 +264,13 @@ ViewBase {
 						id: modelIdInput;
 						objectName: "ModelIdInput";
 						name: qsTr("Model ID");
-						description: qsTr("Taken from the name when left empty");
-						placeHolderText: qsTr("Enter the model ID");
+						description: qsTr("Generated from the model name");
+						readOnly: true;
+					}
 
-						onEditingFinished: {
-							modelEditorContainer.doUpdateModel();
-						}
+					RegularExpressionValidator {
+						id: modelNameValidator;
+						regularExpression: /^(?!\s*$).+/;
 					}
 
 					TextInputElementView {
@@ -406,16 +309,6 @@ ViewBase {
 				configurationsTable.rows = rows
 			}
 
-			function tableIds(){
-				let ids = []
-				let items = configurationsTable.directItems()
-				for (let i = 0; i < items.length; i++){
-					ids.push(items[i].id)
-				}
-
-				return ids
-			}
-
 			Component.onCompleted: {
 				configurationsPage.updateGui()
 			}
@@ -431,28 +324,6 @@ ViewBase {
 				SectionHeaderView {
 					width: parent.width
 					title: qsTr("Configurations") + " (" + configurationsTable.itemsCount + ")"
-						+ (modelEditorContainer.pendingAssignments.length > 0 ? "   " + qsTr("Updating...") : "")
-
-					SectionLink {
-						objectName: "RemoveConfigurationLink"
-						visible: configurationsPage.canEdit
-						active: configurationsTable.selectedCount > 0
-						text: qsTr("Remove") + " (" + configurationsTable.selectedCount + ")"
-						onClicked: {
-							configurationsTable.removeSelected()
-						}
-					}
-
-					SectionLink {
-						id: addConfigurationLink
-						objectName: "AddConfigurationLink"
-						visible: configurationsPage.canEdit
-						text: "+ " + qsTr("Add Configuration")
-						onClicked: {
-							configurationSelector.items = configurationsTable.directItems()
-							configurationSelector.openSelector(addConfigurationLink)
-						}
-					}
 
 					SectionLink {
 						objectName: "NewConfigurationLink"
@@ -473,31 +344,6 @@ ViewBase {
 					color: Style.inactiveTextColor
 					wrapMode: Text.WordWrap
 				}
-
-				// Picker only: all configurations, requested page by page and searched on the server.
-				// Picking one of another model moves it to this model.
-				CollectionItemSelectElementView {
-					id: configurationSelector
-					width: parent.width
-					commandId: ProlifeHardwareConfigurationsSdlCommandIds.s_hardwareConfigurationsList
-					fields: ["id", "name", "configurationId"]
-					titleField: "name"
-					textFilterFieldIds: ["name", "configurationId"]
-					sortByField: "name"
-					label: qsTr("Configurations")
-					addButtonText: qsTr("Add Configuration")
-					filterPlaceholder: qsTr("Search by name or article")
-					visible: false
-
-					onSelectionChanged: {
-						let ids = []
-						for (let i = 0; i < configurationSelector.items.length; i++){
-							ids.push(String(configurationSelector.items[i].id))
-						}
-
-						modelEditorContainer.assignConfigurations(ids)
-					}
-				}
 			}
 
 			AssignmentsTable {
@@ -508,18 +354,12 @@ ViewBase {
 				anchors.bottomMargin: Style.marginXL
 				x: configurationsHeader.x
 				width: configurationsHeader.width
-				editable: configurationsPage.canEdit
+				editable: false
 				showSourceColumn: false
 				navigationPath: "HardwareConfigurations/HardwareConfiguration/"
 				nameTitle: qsTr("Configuration")
 				emptyText: qsTr("The model has no configurations.")
 				filterPlaceholder: qsTr("Filter configurations...")
-				removeTitle: qsTr("Remove from the model?")
-				removeMessage: qsTr("The selected configurations stay in the catalog without a hardware model.")
-
-				onRemoved: {
-					modelEditorContainer.assignConfigurations(configurationsPage.tableIds())
-				}
 			}
 		}
 	}

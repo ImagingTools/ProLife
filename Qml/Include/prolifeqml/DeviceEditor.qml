@@ -13,7 +13,7 @@ import prolifeqml 1.0
 import prolifeSensorsSdl 1.0
 import prolifeOrdersSdl 1.0
 import imtlicProductsSdl 1.0
-import imtlicLicensesSdl 1.0
+import prolifeHardwareConfigurationsSdl 1.0
 import imtbaseComplexCollectionFilterSdl 1.0
 
 /**
@@ -676,12 +676,12 @@ DocumentViewBase {
 							id: configurationSelect
 							objectName: "HardwareConfigurationCombo"
 							name: qsTr("Hardware Configuration")
-							commandId: ImtlicLicensesSdlCommandIds.s_licensesList
-							fields: [LicenseItemTypeMetaInfo.s_id, LicenseItemTypeMetaInfo.s_licenseName, LicenseItemTypeMetaInfo.s_licenseId]
-							titleField: LicenseItemTypeMetaInfo.s_licenseName
-							descriptionField: LicenseItemTypeMetaInfo.s_licenseId
-							textFilterFieldIds: [LicenseItemTypeMetaInfo.s_licenseName, LicenseItemTypeMetaInfo.s_licenseId]
-							sortByField: LicenseItemTypeMetaInfo.s_licenseName
+							commandId: ProlifeHardwareConfigurationsSdlCommandIds.s_hardwareConfigurationsList
+							fields: [HardwareConfigurationItemTypeMetaInfo.s_id, HardwareConfigurationItemTypeMetaInfo.s_name, HardwareConfigurationItemTypeMetaInfo.s_configurationId]
+							titleField: HardwareConfigurationItemTypeMetaInfo.s_name
+							descriptionField: HardwareConfigurationItemTypeMetaInfo.s_configurationId
+							textFilterFieldIds: [HardwareConfigurationItemTypeMetaInfo.s_name, HardwareConfigurationItemTypeMetaInfo.s_configurationId]
+							sortByField: HardwareConfigurationItemTypeMetaInfo.s_name
 							groupFilters: [productConfigurationsGroup]
 							placeHolderText: productSelect.selectedId !== "" ? qsTr("Select a configuration") : qsTr("Select a device type first")
 							filterPlaceholder: qsTr("Search by configuration name or article")
@@ -689,7 +689,7 @@ DocumentViewBase {
 							errorText: qsTr("Please select a configuration")
 
 							onItemSelected: {
-								articleText.text = configurationSelect.itemValue(item, LicenseItemTypeMetaInfo.s_licenseId)
+								articleText.text = configurationSelect.itemValue(item, HardwareConfigurationItemTypeMetaInfo.s_configurationId)
 								deviceEditorContainer.doUpdateModel()
 							}
 						}

@@ -21,18 +21,18 @@ type HardwareConfigurationComponent {
 	partNumber: String
 }
 
-## Variant of a hardware model that can be ordered and built: which optional components it takes,
-## and which software licenses ship with it.
+## Variant of a hardware model that can be ordered and built: which components it takes.
 type HardwareConfigurationData {
 	id: ID
 	configurationId: ID
 	name: String
 	description: String
 	productId: ID
+	## Read only: name of the productId, the server ignores it on writing.
+	productName: String
 	componentIds: [ID]
 	## Read only: names of the componentIds, the server ignores it on writing.
 	components: [HardwareConfigurationComponent]
-	bundledLicenseIds: [ID]
 }
 
 type HardwareConfigurationItem {

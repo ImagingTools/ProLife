@@ -35,7 +35,6 @@ cd ProLife
 
 ProLife requires several external dependencies that must be cloned and built separately:
 - **ImtCore**: Imaging Tools Core library (private)
-- **Lisa**: Lisa application components (private)
 - **Puma**: Puma application components (private)
 - **Acf**: Advanced Computing Framework
 - **AcfSln**: ACF Solution configurations
@@ -51,7 +50,6 @@ Before building ProLife, set environment variables to point to your dependency r
 ```bash
 export IMTCOREDIR=/path/to/ImtCore
 export PUMADIR=/path/to/Puma
-export LISADIR=/path/to/Lisa
 export ACFDIR=/path/to/Acf
 export ACFSLNDIR=/path/to/AcfSln
 export AGENTINODIR=/path/to/Agentino
@@ -62,7 +60,6 @@ export PROLIFEDIR=$(pwd)
 ```cmd
 set IMTCOREDIR=C:\path\to\ImtCore
 set PUMADIR=C:\path\to\Puma
-set LISADIR=C:\path\to\Lisa
 set ACFDIR=C:\path\to\Acf
 set ACFSLNDIR=C:\path\to\AcfSln
 set AGENTINODIR=C:\path\to\Agentino
@@ -73,7 +70,6 @@ set PROLIFEDIR=%CD%
 ```powershell
 $env:IMTCOREDIR = "C:\path\to\ImtCore"
 $env:PUMADIR = "C:\path\to\Puma"
-$env:LISADIR = "C:\path\to\Lisa"
 $env:ACFDIR = "C:\path\to\Acf"
 $env:ACFSLNDIR = "C:\path\to\AcfSln"
 $env:AGENTINODIR = "C:\path\to\Agentino"
@@ -129,7 +125,6 @@ cmake --build . --config Release -j8
 - `BUILDDIR`: Custom build output directory
 - `IMTCOREDIR`: Path to ImtCore (required - must be set via environment variable or CMake argument)
 - `PUMADIR`: Path to Puma (required - must be set via environment variable or CMake argument)
-- `LISADIR`: Path to Lisa (required - must be set via environment variable or CMake argument)
 - `ACFDIR`: Path to Acf (required - must be set via environment variable or CMake argument)
 - `ACFSLNDIR`: Path to AcfSln (required - must be set via environment variable or CMake argument)
 - `AGENTINODIR`: Path to Agentino (required - must be set via environment variable or CMake argument)
@@ -143,7 +138,6 @@ You can specify dependency paths via environment variables (recommended) or dire
 ```bash
 export IMTCOREDIR=/path/to/ImtCore
 export PUMADIR=/path/to/Puma
-export LISADIR=/path/to/Lisa
 export ACFDIR=/path/to/Acf
 export ACFSLNDIR=/path/to/AcfSln
 export AGENTINODIR=/path/to/Agentino
@@ -156,7 +150,6 @@ cmake ..
 cmake \
   -DIMTCOREDIR=/path/to/ImtCore \
   -DPUMADIR=/path/to/Puma \
-  -DLISADIR=/path/to/Lisa \
   -DACFDIR=/path/to/Acf \
   -DACFSLNDIR=/path/to/AcfSln \
   -DAGENTINODIR=/path/to/Agentino \
@@ -367,7 +360,6 @@ set CMAKE_PREFIX_PATH=C:\Qt\6.x.x\msvc2019_64
 ```bash
 export IMTCOREDIR=/path/to/ImtCore
 export PUMADIR=/path/to/Puma
-export LISADIR=/path/to/Lisa
 export ACFDIR=/path/to/Acf
 export ACFSLNDIR=/path/to/AcfSln
 export AGENTINODIR=/path/to/Agentino

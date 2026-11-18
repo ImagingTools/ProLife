@@ -35,10 +35,6 @@ if [ -z "$PUMADIR" ]; then
     echo "WARNING: PUMADIR is not set"
 fi
 
-if [ -z "$LISADIR" ]; then
-    echo "WARNING: LISADIR is not set"
-fi
-
 if [ -z "$ACFDIR" ]; then
     echo "WARNING: ACFDIR is not set"
 fi
@@ -57,7 +53,6 @@ echo ""
 echo "Environment variables configured:"
 echo "  IMTCOREDIR=${IMTCOREDIR:-NOT SET}"
 echo "  PUMADIR=${PUMADIR:-NOT SET}"
-echo "  LISADIR=${LISADIR:-NOT SET}"
 echo "  ACFDIR=${ACFDIR:-NOT SET}"
 echo "  ACFSLNDIR=${ACFSLNDIR:-NOT SET}"
 echo "  AGENTINODIR=${AGENTINODIR:-NOT SET}"
@@ -71,7 +66,6 @@ echo ""
 echo "IMPORTANT: Before building, ensure all dependency directories are set:"
 echo "  export IMTCOREDIR=/path/to/ImtCore"
 echo "  export PUMADIR=/path/to/Puma"
-echo "  export LISADIR=/path/to/Lisa"
 echo "  export ACFDIR=/path/to/Acf"
 echo "  export ACFSLNDIR=/path/to/AcfSln"
 echo "  export AGENTINODIR=/path/to/Agentino"

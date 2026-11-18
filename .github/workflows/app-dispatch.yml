@@ -31,10 +31,6 @@ on:
         description: 'ImtCore version (tag, branch, or "latest")'
         required: false
         default: 'latest'
-      lisa_version:
-        description: 'Lisa version (tag, branch, or "latest")'
-        required: false
-        default: 'latest'
       puma_version:
         description: 'Puma version (tag, branch, or "latest")'
         required: false
@@ -126,7 +122,6 @@ jobs:
             -f acf_version="${{ inputs.acf_version }}" \
             -f acfsln_version="${{ inputs.acfsln_version }}" \
             -f imtcore_version="${{ inputs.imtcore_version }}" \
-            -f lisa_version="${{ inputs.lisa_version }}" \
             -f puma_version="${{ inputs.puma_version }}" \
             -f agentino_version="${{ inputs.agentino_version }}" \
             -f dry_run="${{ inputs.dry_run }}"
@@ -154,7 +149,6 @@ jobs:
           echo "- **Acf:** ${{ inputs.acf_version }}" >> $GITHUB_STEP_SUMMARY
           echo "- **AcfSln:** ${{ inputs.acfsln_version }}" >> $GITHUB_STEP_SUMMARY
           echo "- **ImtCore:** ${{ inputs.imtcore_version }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Lisa:** ${{ inputs.lisa_version }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Puma:** ${{ inputs.puma_version }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Agentino:** ${{ inputs.agentino_version }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY

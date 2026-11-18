@@ -6,7 +6,6 @@
 
 // ImtCore includes
 #include <imtlic/IProductInfo.h>
-#include <imtlic/ILicenseDefinition.h>
 
 // ProLife includes
 #include <prolifedata/CDeviceInfo.h>
@@ -14,6 +13,7 @@
 #include <prolifedata/IOrderInfo.h>
 #include <prolifedata/ICustomerInfo.h>
 #include <prolifedata/IHardwareProductBinding.h>
+#include <prolifedata/IHardwareConfigurationInfo.h>
 
 
 namespace prolifedata
@@ -41,7 +41,7 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 	
 		QByteArray orderId = deviceInfoPtr->GetOrderId();
 		QByteArray productId = deviceInfoPtr->GetDeviceType();
-		QByteArray licenseId = deviceInfoPtr->GetConfigurationType();
+		QByteArray configurationId = deviceInfoPtr->GetConfigurationType();
 	
 		metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DEVICE_MAC_ADDRESS, deviceInfoPtr->GetMacAddress());
 		metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_DEVICE_SERIAL_NUMBER, deviceInfoPtr->GetSerialNumber());
@@ -97,18 +97,15 @@ bool CDeviceMetaInfoCreatorComp::CreateMetaInfo(
 			}
 		}
 	
-		metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_CONFIGURATION_TYPE, licenseId);
+		metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_CONFIGURATION_TYPE, configurationId);
 	
-		if (m_licenseCollectionCompPtr.IsValid()){
-			imtbase::IObjectCollection::DataPtr licenseDataPtr;
-			if (m_licenseCollectionCompPtr->GetObjectData(licenseId, licenseDataPtr)){
-				const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<const imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
-				if (licenseInfoPtr != nullptr){
-					QByteArray id = licenseInfoPtr->GetLicenseId();
-					metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_LICENSE_ID, id);
-	
-					QString licenseName = licenseInfoPtr->GetLicenseName();
-					metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_LICENSE_NAME, licenseName);
+		if (m_configurationCollectionCompPtr.IsValid()){
+			imtbase::IObjectCollection::DataPtr configurationDataPtr;
+			if (m_configurationCollectionCompPtr->GetObjectData(configurationId, configurationDataPtr)){
+				const IHardwareConfigurationInfo* configurationInfoPtr = dynamic_cast<const IHardwareConfigurationInfo*>(configurationDataPtr.GetPtr());
+				if (configurationInfoPtr != nullptr){
+					metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_CONFIGURATION_ARTICLE, configurationInfoPtr->GetConfigurationId());
+					metaInfoPtr->SetMetaInfo(IDeviceInfo::MIT_CONFIGURATION_NAME, configurationInfoPtr->GetName());
 				}
 			}
 		}

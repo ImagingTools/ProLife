@@ -117,7 +117,6 @@ git checkout -b release/v2.1.0
 git submodule update --init --recursive
 cd 3rdParty/Acf && git fetch --tags && git checkout v2.0.0 && cd ../..
 cd 3rdParty/ImtCore && git fetch --tags && git checkout v1.5.0 && cd ../..
-cd 3rdParty/Lisa && git fetch --tags && git checkout v1.3.0 && cd ../..
 cd 3rdParty/Puma && git fetch --tags && git checkout v1.4.0 && cd ../..
 cd 3rdParty/AcfSln && git fetch --tags && git checkout v2.1.0 && cd ../..
 cd 3rdParty/Agentino && git fetch --tags && git checkout v1.2.0 && cd ../..

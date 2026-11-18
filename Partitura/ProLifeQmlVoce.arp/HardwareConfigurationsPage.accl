@@ -8,12 +8,15 @@
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
+        <Element ComponentName="CachedProductCollection" X="100" Y="800" Note=""/>
         <Element ComponentName="CollectionHeadersProvider" X="750" Y="350" Note=""/>
         <Element ComponentName="Demultiplexer" X="625" Y="50" Note=""/>
         <Element ComponentName="HardwareConfigurationCollectionCommands" X="300" Y="600" Note=""/>
         <Element ComponentName="HardwareConfigurationCollectionController" X="625" Y="225" Note=""/>
         <Element ComponentName="HardwareConfigurationEditorCommands" X="900" Y="600" Note=""/>
         <Element ComponentName="HardwareConfigurationInfo" X="150" Y="225" Note=""/>
+        <Element ComponentName="CheckPermissionOr" X="100" Y="700" Note=""/>
+        <Element ComponentName="CommandPermissions" X="350" Y="700" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
         <EmbededRegistry Id="Permissions">

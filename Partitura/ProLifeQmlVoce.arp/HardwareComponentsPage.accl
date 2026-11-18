@@ -14,6 +14,8 @@
         <Element ComponentName="HardwareComponentCollectionController" X="625" Y="225" Note=""/>
         <Element ComponentName="HardwareComponentEditorCommands" X="900" Y="600" Note=""/>
         <Element ComponentName="HardwareComponentInfo" X="150" Y="225" Note=""/>
+        <Element ComponentName="CheckPermissionOr" X="100" Y="700" Note=""/>
+        <Element ComponentName="CommandPermissions" X="350" Y="700" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
         <EmbededRegistry Id="Permissions">

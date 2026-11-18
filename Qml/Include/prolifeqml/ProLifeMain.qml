@@ -34,12 +34,7 @@ ApplicationMain {
 	Connections {
 		target: AuthorizationController;
 
-		function onLoggedIn(){
-			CachedFeatureCollection.updateModel();
-			CachedProductCollection.updateModel();
-			CachedLicenseCollection.updateModel();
-		}
-
+		// The editors fill the catalog caches; the next user must not see them
 		function onLoggedOut(){
 			CachedFeatureCollection.clearModel();
 			CachedProductCollection.clearModel();

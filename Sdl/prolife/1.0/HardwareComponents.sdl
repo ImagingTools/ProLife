@@ -14,22 +14,6 @@ input HardwareComponentsListInput {
 	viewParams: CollectionViewParams
 }
 
-## Technical parameter of a component, e.g. "Supply voltage = 24 V".
-type HardwareParameter {
-	key: ID
-	name: String
-	value: String
-	unit: String
-}
-
-## Line of a bill of materials: which component, how many, and whether it can be left out or swapped.
-type BomEntry {
-	componentId: ID
-	quantity: Integer
-	optional: Bool
-	alternativeGroup: String
-}
-
 type HardwareComponentData {
 	id: ID
 	partNumber: ID
@@ -37,15 +21,20 @@ type HardwareComponentData {
 	description: String
 	componentType: ID
 	revision: String
-	manufacturer: String
-	supplier: String
+	manufacturerId: ID
+	## Read only: the name of manufacturerId, the server ignores it on writing.
+	manufacturerName: String
 	mpn: String
+	supplierOffers: [HardwareSupplierOffer]
 	lifecycleStatus: ID
 	serialized: Bool
-	requirements: [ID]
-	incompatibilities: [ID]
-	parameters: [HardwareParameter]
-	bom: [BomEntry]
+}
+
+type HardwareSupplierOffer {
+	supplierId: ID
+	## Read only: the name of supplierId, the server ignores it on writing.
+	supplierName: String
+	sku: String
 }
 
 type HardwareComponentItem {
@@ -56,7 +45,8 @@ type HardwareComponentItem {
 	description: String
 	componentType: ID
 	revision: String
-	manufacturer: String
+	manufacturerId: ID
+	manufacturerName: String
 	lifecycleStatus: ID
 	serialized: Bool
 	added: String

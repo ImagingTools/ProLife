@@ -37,6 +37,18 @@ list(APPEND webdirs ${buildwebdir}/src/prolifeWorkspaceSdl)
 list(APPEND webdirs ${AUX_INCLUDE_DIR}/prolifesdl/SDL/1.0/QML/prolifeDeviceCollectionDocumentServiceSdl)
 list(APPEND webdirs ${buildwebdir}/src/prolifeDeviceCollectionDocumentServiceSdl)
 
+list(APPEND webdirs ${AUX_INCLUDE_DIR}/prolifesdl/SDL/1.0/QML/prolifeHardwareComponentsSdl)
+list(APPEND webdirs ${buildwebdir}/src/prolifeHardwareComponentsSdl)
+
+list(APPEND webdirs ${AUX_INCLUDE_DIR}/prolifesdl/SDL/1.0/QML/prolifeHardwareConfigurationsSdl)
+list(APPEND webdirs ${buildwebdir}/src/prolifeHardwareConfigurationsSdl)
+
+list(APPEND webdirs ${AUX_INCLUDE_DIR}/prolifesdl/SDL/1.0/QML/prolifeHardwareComponentCollectionDocumentServiceSdl)
+list(APPEND webdirs ${buildwebdir}/src/prolifeHardwareComponentCollectionDocumentServiceSdl)
+
+list(APPEND webdirs ${AUX_INCLUDE_DIR}/prolifesdl/SDL/1.0/QML/prolifeHardwareConfigurationCollectionDocumentServiceSdl)
+list(APPEND webdirs ${buildwebdir}/src/prolifeHardwareConfigurationCollectionDocumentServiceSdl)
+
 list(APPEND webdirs ${PROJECT_SOURCE_DIR}/../../../../Impl/ProLifeLoc/Translations)
 list(APPEND webdirs ${buildwebdir}/Resources/Translations)
 

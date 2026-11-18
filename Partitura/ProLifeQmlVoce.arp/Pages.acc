@@ -178,10 +178,10 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="HardwareComponentsPage" PackageId="ImtCollectionVoce" ComponentId="MultiDocCollectionPage">
+        <Element Id="HardwareComponentsPage" PackageId="ImtGraphQlVoce" ComponentId="MultiDocumentGqlCollectionPage">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
+                    <AttributeInfo Id="PageId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="HardwareComponents"/>
                     </AttributeInfo>
                     <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
@@ -215,10 +215,10 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="HardwareConfigurationsPage" PackageId="ImtCollectionVoce" ComponentId="MultiDocCollectionPage">
+        <Element Id="HardwareConfigurationsPage" PackageId="ImtGraphQlVoce" ComponentId="MultiDocumentGqlCollectionPage">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
+                    <AttributeInfo Id="PageId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="HardwareConfigurations"/>
                     </AttributeInfo>
                     <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
@@ -252,10 +252,50 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="HardwareModelsPage" PackageId="ImtCollectionVoce" ComponentId="MultiDocCollectionPage">
+        <Element Id="HardwareVendorsPage" PackageId="ImtCollectionVoce" ComponentId="MultiDocCollectionPage">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
                     <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="HardwareVendors"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="qrc:/qml/ProLife/VendorCollectionView.qml"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="GroupId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="Hardware"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="IconPath" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="Icons/Organization"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Name" Type="Text" ExportId="">
+                        <Data IsEnabled="true" Value="Vendors"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PageId" Type="Id" ExportId="">
+                        <Data IsEnabled="true" Value="HardwareVendors"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PagePermissions" Type="Id[]" ExportId="">
+                        <Data IsEnabled="true">
+                            <Values>
+                                <Value>/HardwareManagement/ViewPage</Value>
+                            </Values>
+                        </Data>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="HardwareModelsPage" PackageId="ImtGraphQlVoce" ComponentId="MultiDocumentGqlCollectionPage">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="PageId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="HardwareModels"/>
                     </AttributeInfo>
                     <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
@@ -464,10 +504,10 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="ProductsPage" PackageId="ImtCollectionVoce" ComponentId="MultiDocCollectionPage">
+        <Element Id="ProductsPage" PackageId="ImtGraphQlVoce" ComponentId="MultiDocumentGqlCollectionPage">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
+                    <AttributeInfo Id="PageId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Products"/>
                     </AttributeInfo>
                     <AttributeInfo Id="CollectionViewQmlPath" Type="Text" ExportId="">
@@ -588,10 +628,12 @@
                                             <Value>DevicesPage</Value>
                                             <Value>WorkspacePage</Value>
                                             <Value>ProductsPage</Value>
+                                            <Value>HardwareModelsPage</Value>
                                             <Value>FeaturesPage</Value>
                                             <Value>LicensesPage</Value>
                                             <Value>HardwareComponentsPage</Value>
                                             <Value>HardwareConfigurationsPage</Value>
+                                            <Value>HardwareVendorsPage</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -604,6 +646,9 @@
                     <Element Id="DevicesPage" PackageId="ProLifeQmlVoce" ComponentId="DevicesPage">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="HardwareConfigurationCollection" Type="Reference" ExportId="HardwareConfigurationCollection">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="AccountRepository" Type="Reference" ExportId="AccountRepository">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -709,6 +754,9 @@
                     <Element Id="HardwareComponentsPage" PackageId="ProLifeQmlVoce" ComponentId="HardwareComponentsPage">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="AccountRepository" Type="Reference" ExportId="AccountRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="HardwareComponentCollection" Type="Reference" ExportId="HardwareComponentCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -790,6 +838,9 @@
                     <Element Id="OrdersPage" PackageId="ProLifeQmlVoce" ComponentId="OrdersPage">
                         <Data IsEnabled="true" Flags="0">
                             <AttributeInfoMap>
+                                <AttributeInfo Id="HardwareConfigurationCollection" Type="Reference" ExportId="HardwareConfigurationCollection">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
                                 <AttributeInfo Id="AccountCollection" Type="Reference" ExportId="AccountRepository">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
@@ -827,6 +878,60 @@
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="UserActionManager" Type="Reference" ExportId="UserActionManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="HardwareVendorsPage" PackageId="ProLifeQmlVoce" ComponentId="VendorsPage">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="AccountRepository" Type="Reference" ExportId="AccountRepository">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="GroupCollection" Type="Reference" ExportId="GroupCollection">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="UserActionManager" Type="Reference" ExportId="UserActionManager">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="VersionInfo" Type="Reference" ExportId="VersionInfo">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                            </AttributeInfoMap>
+                        </Data>
+                    </Element>
+                    <Element Id="HardwareModelsPage" PackageId="ProLifeQmlVoce" ComponentId="HardwareModelsPage">
+                        <Data IsEnabled="true" Flags="0">
+                            <AttributeInfoMap>
+                                <AttributeInfo Id="FeatureCollection" Type="Reference" ExportId="FeatureCollection">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseCollection">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                                    <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ProductRepository" Type="Reference" ExportId="ProductCollection">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TranslationManager" Type="Reference" ExportId="TranslationManager">
@@ -959,6 +1064,7 @@
                     <Component ExportedId="HardwareComponentsPage" ComponentId="HardwareComponentsPage"/>
                     <Component ExportedId="FeaturesPage" ComponentId="FeaturesPage"/>
                     <Component ExportedId="LicensesPage" ComponentId="LicensesPage"/>
+                    <Component ExportedId="HardwareModelsPage" ComponentId="HardwareModelsPage"/>
                     <Component ExportedId="ProductsPage" ComponentId="ProductsPage"/>
                     <Component ExportedId="AccountsPage" ComponentId="AccountsPage"/>
                     <Component ExportedId="CustomerChangeGenerator" ComponentId="AccountsPage/CustomerChangeGenerator"/>
@@ -988,6 +1094,7 @@
         <Component ExportedId="HardwareConfigurationsPage" ComponentId="HardwareConfigurationsPage"/>
         <Component ExportedId="HardwareComponentsController" ComponentId="PageData/HardwareComponentsPage"/>
         <Component ExportedId="HardwareComponentsPage" ComponentId="HardwareComponentsPage"/>
+        <Component ExportedId="HardwareVendorsPage" ComponentId="HardwareVendorsPage"/>
         <Component ExportedId="FeaturesController" ComponentId="PageData/FeaturesPage"/>
         <Component ExportedId="FeaturesPage" ComponentId="FeaturesPage"/>
         <Component ExportedId="LicensesController" ComponentId="PageData/LicensesPage"/>

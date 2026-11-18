@@ -97,22 +97,6 @@ void CHardwareConfigurationInfo::SetComponentIds(const QByteArrayList& component
 }
 
 
-QByteArrayList CHardwareConfigurationInfo::GetBundledLicenseIds() const
-{
-	return m_bundledLicenseIds;
-}
-
-
-void CHardwareConfigurationInfo::SetBundledLicenseIds(const QByteArrayList& bundledLicenseIds)
-{
-	if (m_bundledLicenseIds != bundledLicenseIds){
-		istd::CChangeNotifier changeNotifier(this);
-
-		m_bundledLicenseIds = bundledLicenseIds;
-	}
-}
-
-
 // reimplemented (iser::IObject)
 
 QByteArray CHardwareConfigurationInfo::GetFactoryId() const
@@ -151,8 +135,6 @@ bool CHardwareConfigurationInfo::Serialize(iser::IArchive& archive)
 
 	retVal = retVal && iser::CPrimitiveTypesSerializer::SerializeContainer<QByteArrayList>(archive, m_componentIds, "ComponentIds", "Id");
 
-	retVal = retVal && iser::CPrimitiveTypesSerializer::SerializeContainer<QByteArrayList>(archive, m_bundledLicenseIds, "BundledLicenseIds", "Id");
-
 	return retVal;
 }
 
@@ -178,7 +160,6 @@ bool CHardwareConfigurationInfo::CopyFrom(const IChangeable& object, Compatibili
 		m_description = sourcePtr->m_description;
 		m_productId = sourcePtr->m_productId;
 		m_componentIds = sourcePtr->m_componentIds;
-		m_bundledLicenseIds = sourcePtr->m_bundledLicenseIds;
 
 		return true;
 	}
@@ -207,7 +188,6 @@ bool CHardwareConfigurationInfo::ResetData(CompatibilityMode /*mode*/)
 	m_description.clear();
 	m_productId.clear();
 	m_componentIds.clear();
-	m_bundledLicenseIds.clear();
 
 	return true;
 }

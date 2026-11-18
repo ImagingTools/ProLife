@@ -11,6 +11,7 @@
 #include <prolifedata/IDeviceInfo.h>
 #include <prolifedata/IOrderInfo.h>
 #include <prolifedata/IOrderCustomerRole.h>
+#include <prolifedata/ICustomerInfo.h>
 
 // Generated includes
 #include <GeneratedFiles/prolifesdl/SDL/1.0/CPP/Licenses_fwd.h>
@@ -34,6 +35,11 @@ bool CheckDeviceSerialNumberExists(const QByteArray& deviceUuid, const QByteArra
 bool CheckSoftwareSerialNumberExists(const QByteArray& deviceUuid, const QByteArray& serialNumber, const imtbase::IObjectCollection& collection);
 
 QByteArray GetIdFromCustomerRoleType(prolifedata::IOrderCustomerRole::RoleType roleType);
+
+/**
+	The roles of the company as text for a list, e.g. "Customer, Supplier".
+*/
+QString GetCompanyRolesText(const prolifedata::ICustomerInfo& companyInfo);
 prolifedata::IOrderCustomerRole::RoleType GetCustomerRoleTypeFromId(const QByteArray& roleTypeId);
 
 // Build hierarchical license tree from UserActions

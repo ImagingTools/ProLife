@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acf>
+    <AcfHeader>
+        <VersionInfos>
+            <Version Id="0" Number="5430" Description="ACF"/>
+            <Version Id="1" Number="2253" Description="ACF-Solutions"/>
+            <Version Id="1023" Number="395264" Description="Qt Framework"/>
+        </VersionInfos>
+    </AcfHeader>
+    <PositionMap>
+        <Element ComponentName="ObjectCollectionPermissions" X="350" Y="425" Note=""/>
+        <Element ComponentName="PermissionsJoiner" X="550" Y="125" Note=""/>
+        <Element ComponentName="HardwareComponentsList" X="150" Y="275" Note=""/>
+        <Element ComponentName="GetHardwareComponentItem" X="450" Y="275" Note=""/>
+        <Element ComponentName="AddHardwareComponent" X="750" Y="275" Note=""/>
+        <Element ComponentName="UpdateHardwareComponent" X="1050" Y="275" Note=""/>
+        <Element ComponentName="GetOpenedDocumentList" X="150" Y="375" Note=""/>
+        <Element ComponentName="GetDocumentName" X="450" Y="375" Note=""/>
+        <Element ComponentName="GetUndoInfo" X="750" Y="375" Note=""/>
+        <Element ComponentName="OpenDocument" X="1050" Y="375" Note=""/>
+        <Element ComponentName="CloseDocument" X="150" Y="475" Note=""/>
+        <Element ComponentName="CreateNewDocument" X="450" Y="475" Note=""/>
+        <Element ComponentName="SetDocumentName" X="750" Y="475" Note=""/>
+        <Element ComponentName="SaveDocument" X="1050" Y="475" Note=""/>
+        <Element ComponentName="DoUndo" X="150" Y="575" Note=""/>
+        <Element ComponentName="DoRedo" X="450" Y="575" Note=""/>
+        <Element ComponentName="ResetUndo" X="750" Y="575" Note=""/>
+        <Element ComponentName="GetHardwareComponentRepresentation" X="1050" Y="575" Note=""/>
+        <Element ComponentName="UpdateHardwareComponentFromRepresentation" X="150" Y="675" Note=""/>
+    </PositionMap>
+    <EmbeddedRegistries/>
+</Acf>

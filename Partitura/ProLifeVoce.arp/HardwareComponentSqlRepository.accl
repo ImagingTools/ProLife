@@ -10,6 +10,7 @@
     <PositionMap>
         <Element ComponentName="HardwareComponentInfo" X="600" Y="475" Note=""/>
         <Element ComponentName="PostgresDatabaseObjectCollection" X="600" Y="200" Note=""/>
+        <Element ComponentName="HardwareComponentReferenceCleaner" X="250" Y="200" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

@@ -31,10 +31,6 @@ on:
         description: 'ImtCore version (tag, branch, or "latest")'
         required: false
         default: 'latest'
-      lisa_version:
-        description: 'Lisa version (tag, branch, or "latest")'
-        required: false
-        default: 'latest'
       puma_version:
         description: 'Puma version (tag, branch, or "latest")'
         required: false
@@ -118,7 +114,6 @@ jobs:
           update_submodule "3rdParty/Acf" "${{ inputs.acf_version }}"
           update_submodule "3rdParty/AcfSln" "${{ inputs.acfsln_version }}"
           update_submodule "3rdParty/ImtCore" "${{ inputs.imtcore_version }}"
-          update_submodule "3rdParty/Lisa" "${{ inputs.lisa_version }}"
           update_submodule "3rdParty/Puma" "${{ inputs.puma_version }}"
           update_submodule "3rdParty/Agentino" "${{ inputs.agentino_version }}"
           
@@ -193,7 +188,6 @@ jobs:
               -m "- Acf: ${{ inputs.acf_version }}" \
               -m "- AcfSln: ${{ inputs.acfsln_version }}" \
               -m "- ImtCore: ${{ inputs.imtcore_version }}" \
-              -m "- Lisa: ${{ inputs.lisa_version }}" \
               -m "- Puma: ${{ inputs.puma_version }}" \
               -m "- Agentino: ${{ inputs.agentino_version }}"
             echo "has_changes=true" >> $GITHUB_OUTPUT
@@ -266,7 +260,6 @@ jobs:
           echo "- **Acf:** ${{ inputs.acf_version }}" >> $GITHUB_STEP_SUMMARY
           echo "- **AcfSln:** ${{ inputs.acfsln_version }}" >> $GITHUB_STEP_SUMMARY
           echo "- **ImtCore:** ${{ inputs.imtcore_version }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Lisa:** ${{ inputs.lisa_version }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Puma:** ${{ inputs.puma_version }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Agentino:** ${{ inputs.agentino_version }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -360,22 +353,6 @@ jobs:
           cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
           cmake --build . --config Release
           Write-Host "✅ ImtCore built successfully"
-        shell: pwsh
-
-      - name: Build Lisa
-        if: hashFiles('3rdParty/Lisa/Build/CMake/CMakeLists.txt') != ''
-        run: |
-          cd 3rdParty/Lisa
-          # Generate version files
-          if (Test-Path "Build/Git/UpdateVersion.bat") {
-            Write-Host "Generating version files for Lisa..."
-            cmd /c "Build\Git\UpdateVersion.bat"
-          }
-          mkdir build -Force
-          cd build
-          cmake ../Build/CMake -G Ninja -DCMAKE_BUILD_TYPE=Release
-          cmake --build . --config Release
-          Write-Host "✅ Lisa built successfully"
         shell: pwsh
 
       - name: Build Puma

@@ -47,7 +47,7 @@
                         <Data IsEnabled="true" Value="true"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ExternalLoginEnabled" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="true"/>
+                        <Data IsEnabled="true" Value="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="FileAccessCommandId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="ProLife/files/*"/>
@@ -70,6 +70,7 @@
                                 <Value>Pages/HardwareModelsPage</Value>
                                 <Value>Pages/HardwareConfigurationsPage</Value>
                                 <Value>Pages/HardwareComponentsPage</Value>
+                                <Value>Pages/HardwareVendorsPage</Value>
                                 <Value>Pages/SoftwareProductsPage</Value>
                                 <Value>Pages/ProductsPage</Value>
                                 <Value>Pages/FeaturesPage</Value>
@@ -433,6 +434,9 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="HardwareComponentCollection" Type="Reference" ExportId="HardwareComponentCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="CompanyCollection" Type="Reference" ExportId="AccountRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="HardwareConfigurationCollection" Type="Reference" ExportId="HardwareConfigurationCollection">

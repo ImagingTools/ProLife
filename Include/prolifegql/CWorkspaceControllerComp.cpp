@@ -433,7 +433,7 @@ sdl::V1_0::prolife::CPieChartData CWorkspaceControllerComp::OnGetHardwareConfigu
 			idoc::MetaInfoPtr dataMetaInfoPtr = iteratorPtr->GetDataMetaInfo();
 			if (dataMetaInfoPtr.IsValid()){
 				QString licenseUuid = dataMetaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CONFIGURATION_TYPE).toString();
-				QString licenseName = dataMetaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_NAME).toString();
+				QString licenseName = dataMetaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CONFIGURATION_NAME).toString();
 				map[qMakePair(licenseUuid.toUtf8(), licenseName)]++;
 			}
 		}

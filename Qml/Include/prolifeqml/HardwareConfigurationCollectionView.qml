@@ -7,7 +7,9 @@ import imtcolgui 1.0
 import imtcontrols 1.0
 import imtguigql 1.0
 import imtdocgui 1.0
+import imtbaseCollectionDocumentServiceSdl 1.0
 import prolifeHardwareConfigurationsSdl 1.0
+import prolifeHardwareConfigurationCollectionDocumentServiceSdl 1.0
 
 RemoteCollectionView {
 	id: container;
@@ -18,26 +20,39 @@ RemoteCollectionView {
 		"HardwareConfigurationsList": "/HardwareManagement/View"
 	})
 
-	commandsDelegateComp: Component {DocumentCollectionViewDelegate {
+	commandsDelegateComp: Component {DocCollectionViewDelegate {
 			collectionView: container;
 
-			documentTypeIds: ["HardwareConfiguration"]
-			documentViewTypeIds: ["HardwareConfigurationEditor"]
-			documentViewsComp: [configurationEditorComp]
-			documentDataControllersComp: [dataControllerComp]
-			documentValidatorsComp: [configurationValidatorComp]
+			Component.onCompleted: {
+				registerDocumentType("HardwareConfiguration", qsTr("Hardware Configuration"))
+				addDocumentView("HardwareConfiguration", "HardwareConfigurationEditor", configurationEditorComp, dataControllerComp)
+			}
 		}
 	}
 
+	documentCollectionFilter: null
+
 	Component.onCompleted: {
 		table.setSortingInfo(HardwareConfigurationItemTypeMetaInfo.s_name, "ASC");
+		registerFieldFilterDelegate("ProductId", hardwareModelsDelegateFilterComp)
+	}
+
+	Component {
+		id: hardwareModelsDelegateFilterComp
+
+		ProductFilterDelegate {
+			objectName: "HardwareModelsFilter"
+			name: qsTr("Hardware Models")
+			categoryId: "Hardware"
+			filterPlaceholder: qsTr("Search by model name")
+			defaultFieldFilter.m_fieldId: "ProductId"
+		}
 	}
 
 	Component {
 		id: configurationEditorComp
 
 		HardwareConfigurationEditor {
-			id: configurationEditor;
 			commandsControllerComp: Component {GqlBasedCommandsController {
 					typeId: "HardwareConfiguration";
 				}
@@ -46,53 +61,73 @@ RemoteCollectionView {
 	}
 
 	Component {
-		id: configurationValidatorComp;
+		id: dataControllerComp
 
-		DocumentValidator {
-			property HardwareConfigurationData configurationData: documentModel
+		DocumentRepresentationController {
+			id: dataController
 
-			function isValid(data){
-				if (!configurationData){
-					return false;
-				}
+			representationModel: HardwareConfigurationData {}
 
-				if (configurationData.m_configurationId === ""){
-					data.message = qsTr("Article cannot be empty");
-					return false;
-				}
+			function updateRepresentationFromDocument(){
+				startUpdateRepresentation(documentId, representationModel)
 
-				if (configurationData.m_name === ""){
-					data.message = qsTr("Configuration name cannot be empty");
-					return false;
-				}
-
-				return true;
+				documentIdInput.m_id = documentId
+				documentIdInput.m_collectionId = container.collectionId
+				getRepresentationRequest.send(documentIdInput)
 			}
-		}
-	}
 
-	Component {
-		id: dataControllerComp;
+			function updateDocumentFromRepresentation(){
+				startUpdateDocument(documentId)
 
-		GqlRequestDocumentDataController {
-			id: requestDocumentDataController
+				updateInput.m_documentId = documentId
+				updateInput.m_configurationData = representationModel
 
-			property HardwareConfigurationData configurationData: documentModel;
+				return updateRequest.send(updateInput)
+			}
 
-			gqlGetCommandId: ProlifeHardwareConfigurationsSdlCommandIds.s_getHardwareConfigurationItem;
-			gqlUpdateCommandId: ProlifeHardwareConfigurationsSdlCommandIds.s_updateHardwareConfiguration;
-			gqlAddCommandId: ProlifeHardwareConfigurationsSdlCommandIds.s_addHardwareConfiguration;
+			property DocumentId documentIdInput: DocumentId {}
+			property GqlSdlRequestSender getRepresentationRequest: GqlSdlRequestSender {
+				gqlCommandId: ProlifeHardwareConfigurationCollectionDocumentServiceSdlCommandIds.s_getHardwareConfigurationRepresentation
+				permissionPath: "/HardwareManagement/View"
+				sdlObjectComp: Component {
+					HardwareConfigurationData {
+						onFinished: {
+							dataController.representationModel.copyFrom(this)
+							dataController.representationUpdated(dataController.documentId, dataController.representationModel)
+						}
+					}
+				}
 
-			getPermissionPath: "/HardwareManagement/View";
-			addPermissionPath: "/HardwareManagement/Edit/Add";
-			updatePermissionPath: "/HardwareManagement/Edit/Change";
+				function onError(message, type){
+					dataController.updateRepresentationFailed(dataController.documentId, message)
+				}
+			}
 
-			typeId: "HardwareConfiguration";
-			documentName: configurationData ? configurationData.m_name : "";
-			documentDescription: configurationData ? configurationData.m_description : "";
+			property UpdateHardwareConfigurationInput updateInput: UpdateHardwareConfigurationInput {}
+			property GqlSdlRequestSender updateRequest: GqlSdlRequestSender {
+				gqlCommandId: ProlifeHardwareConfigurationCollectionDocumentServiceSdlCommandIds.s_updateHardwareConfigurationFromRepresentation
+				requestType: 1
+				sdlObjectComp: Component {
+					DocumentOperationStatus {
+						onFinished: {
+							if (m_status === "Success"){
+								dataController.documentUpdated(dataController.documentId)
+							}
+							else{
+								if (m_message){
+									PopupManager.addErrorMessage(m_message)
+								}
+								dataController.updateDocumentFailed(dataController.documentId, "")
+								dataController.updateRepresentationFromDocument()
+							}
+						}
+					}
+				}
 
-			documentModelComp: Component {
-				HardwareConfigurationData {}
+				function onError(message, type){
+					dataController.updateDocumentFailed(dataController.documentId, message)
+					dataController.updateRepresentationFromDocument()
+				}
 			}
 		}
 	}

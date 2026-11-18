@@ -9,6 +9,8 @@ import imtcolgui 1.0
 import imtlicgui 1.0
 import prolifeHardwareConfigurationsSdl 1.0
 import prolifeHardwareComponentsSdl 1.0
+import imtlicProductsSdl 1.0
+import imtbaseComplexCollectionFilterSdl 1.0
 
 /**
  * HardwareConfigurationEditor - variant of a hardware model that can be ordered and built.
@@ -24,11 +26,8 @@ ViewBase {
 
 	property HardwareConfigurationData configurationData: model
 
-	// Hardware models only: the configuration belongs to one of them.
-	property TreeItemModel hardwareModels: CachedProductCollection.hardwareProductsModel
-
 	// "part number - name" of the components, from the document and from the picker.
-	property var componentTitles: ({})
+	property var componentTitles: null
 
 	onConfigurationDataChanged: {
 		configurationEditorContainer.loadComponentTitles()
@@ -38,45 +37,29 @@ ViewBase {
 		configurationEditorContainer.loadComponentTitles()
 	}
 
-	function findModelIndex(productId){
-		if (!configurationEditorContainer.hardwareModels){
-			return -1
-		}
-
-		for (let i = 0; i < configurationEditorContainer.hardwareModels.getItemsCount(); i++){
-			if (configurationEditorContainer.hardwareModels.getData("id", i) === productId){
-				return i
-			}
-		}
-
-		return -1
-	}
-
-	function modelId(index){
-		if (!configurationEditorContainer.hardwareModels || index < 0 || index >= configurationEditorContainer.hardwareModels.getItemsCount()){
-			return ""
-		}
-
-		return configurationEditorContainer.hardwareModels.getData("id", index)
-	}
-
-	function setComponentTitle(componentId, partNumber, name){
+	// Adds the titles of the components [{id, partNumber, name}] in one pass.
+	function addComponentTitles(components){
 		let titles = {}
-		for (let key in configurationEditorContainer.componentTitles){
-			titles[key] = configurationEditorContainer.componentTitles[key]
+		let current = configurationEditorContainer.componentTitles
+		for (let key in current){
+			titles[key] = current[key]
 		}
 
-		let title = name ? String(name) : String(componentId)
-		if (partNumber && String(partNumber) !== ""){
-			title = String(partNumber) + " \u2014 " + title
+		for (let i = 0; i < components.length; i++){
+			let componentId = String(components[i].id)
+			let title = components[i].name ? String(components[i].name) : componentId
+			if (components[i].partNumber && String(components[i].partNumber) !== ""){
+				title = String(components[i].partNumber) + " \u2014 " + title
+			}
+			titles[componentId] = title
 		}
-		titles[String(componentId)] = title
 
 		configurationEditorContainer.componentTitles = titles
 	}
 
 	function componentTitle(componentId){
-		let title = configurationEditorContainer.componentTitles[String(componentId)]
+		let titles = configurationEditorContainer.componentTitles
+		let title = titles ? titles[String(componentId)] : null
 
 		return title ? title : String(componentId)
 	}
@@ -84,10 +67,13 @@ ViewBase {
 	// The server sends the names of the components along with their IDs.
 	function loadComponentTitles(){
 		let components = configurationEditorContainer.configurationData ? configurationEditorContainer.configurationData.m_components : null
+		let entries = []
 		for (let i = 0; components && i < components.count; i++){
 			let component = components.get(i).item
-			configurationEditorContainer.setComponentTitle(component.m_id, component.m_partNumber, component.m_name)
+			entries.push({id: component.m_id, partNumber: component.m_partNumber, name: component.m_name})
 		}
+
+		configurationEditorContainer.addComponentTitles(entries)
 	}
 
 	function updateGui(){
@@ -154,7 +140,8 @@ ViewBase {
 				articleInput.text = configurationEditorContainer.configurationData.m_configurationId
 				nameInput.text = configurationEditorContainer.configurationData.m_name
 				descriptionInput.text = configurationEditorContainer.configurationData.m_description
-				modelCB.currentIndex = configurationEditorContainer.findModelIndex(configurationEditorContainer.configurationData.m_productId)
+				modelSelect.selectedId = configurationEditorContainer.configurationData.m_productId
+				modelSelect.selectedText = configurationEditorContainer.configurationData.m_productName
 			}
 
 			function updateModel(){
@@ -165,7 +152,8 @@ ViewBase {
 				configurationEditorContainer.configurationData.m_configurationId = articleInput.text
 				configurationEditorContainer.configurationData.m_name = nameInput.text
 				configurationEditorContainer.configurationData.m_description = descriptionInput.text
-				configurationEditorContainer.configurationData.m_productId = configurationEditorContainer.modelId(modelCB.currentIndex)
+				configurationEditorContainer.configurationData.m_productId = modelSelect.selectedId
+				configurationEditorContainer.configurationData.m_productName = modelSelect.selectedText
 			}
 
 			function applyReadOnly(readOnly){
@@ -173,7 +161,7 @@ ViewBase {
 				articleInput.readOnly = readOnly || !canChange
 				nameInput.readOnly = readOnly || !canChange
 				descriptionInput.readOnly = readOnly || !canChange
-				modelCB.changeable = !readOnly && canChange
+				modelSelect.changeable = !readOnly && canChange
 			}
 
 			Component.onCompleted: {
@@ -194,6 +182,29 @@ ViewBase {
 					groupView: configurationGroup;
 				}
 
+				FieldFilter {
+					id: hardwareCategoryFilter
+					m_fieldId: "CategoryId"
+					m_filterValue: "Hardware"
+					m_filterValueType: "String"
+					m_filterOperations: ["Equal"]
+				}
+
+				GroupFilter {
+					id: hardwareCategoryGroup
+					m_logicalOperation: "And"
+
+					Component.onCompleted: {
+						hardwareCategoryGroup.emplaceFieldFilters()
+						hardwareCategoryGroup.m_fieldFilters.addElement(hardwareCategoryFilter)
+					}
+				}
+
+				RegularExpressionValidator {
+					id: notEmptyValidator;
+					regularExpression: /^(?!\s*$).+/;
+				}
+
 				GroupElementView {
 					id: configurationGroup;
 					objectName: "ConfigurationGroup";
@@ -204,6 +215,11 @@ ViewBase {
 						objectName: "ArticleInput";
 						name: qsTr("Article");
 						placeHolderText: qsTr("Enter the article");
+						isRequired: true;
+						showErrorWhenInvalid: true;
+						deferErrorUntilEdited: true;
+						errorText: qsTr("Please enter the article");
+						textInputValidator: notEmptyValidator;
 
 						onEditingFinished: {
 							configurationEditorContainer.doUpdateModel();
@@ -215,23 +231,34 @@ ViewBase {
 						objectName: "ConfigurationNameInput";
 						name: qsTr("Name");
 						placeHolderText: qsTr("Enter the configuration name");
+						isRequired: true;
+						showErrorWhenInvalid: true;
+						deferErrorUntilEdited: true;
+						errorText: qsTr("Please enter the configuration name");
+						textInputValidator: notEmptyValidator;
 
 						onEditingFinished: {
 							configurationEditorContainer.doUpdateModel();
 						}
 					}
 
-					ComboBoxElementView {
-						id: modelCB;
-						objectName: "HardwareModelCombo";
-						name: qsTr("Hardware Model");
-						model: configurationEditorContainer.hardwareModels;
-						nameId: "productName";
+					CollectionSelectElementView {
+						id: modelSelect
+						objectName: "HardwareModelCombo"
+						name: qsTr("Hardware Model")
+						commandId: ImtlicProductsSdlCommandIds.s_productsList
+						fields: [ProductItemTypeMetaInfo.s_id, ProductItemTypeMetaInfo.s_productName]
+						titleField: ProductItemTypeMetaInfo.s_productName
+						textFilterFieldIds: [ProductItemTypeMetaInfo.s_productName]
+						sortByField: ProductItemTypeMetaInfo.s_productName
+						groupFilters: [hardwareCategoryGroup]
+						placeHolderText: qsTr("Select a hardware model")
+						filterPlaceholder: qsTr("Search by model name")
+						isSelectionRequired: true
+						errorText: qsTr("Please select a hardware model")
 
-						onCurrentIndexChanged: {
-							if (configurationEditorContainer.configurationData && configurationEditorContainer.modelId(modelCB.currentIndex) !== configurationEditorContainer.configurationData.m_productId){
-								configurationEditorContainer.doUpdateModel();
-							}
+						onItemSelected: {
+							configurationEditorContainer.doUpdateModel()
 						}
 					}
 
@@ -337,10 +364,12 @@ ViewBase {
 
 					onSelectionChanged: {
 						let selectedItems = componentSelector.dataProvider.getSelectedItems()
+						let entries = []
 						for (let i = 0; i < selectedItems.length; i++){
 							let values = selectedItems[i].values ? selectedItems[i].values : {}
-							configurationEditorContainer.setComponentTitle(selectedItems[i].id, values["partNumber"], values["name"])
+							entries.push({id: selectedItems[i].id, partNumber: values["partNumber"], name: values["name"]})
 						}
+						configurationEditorContainer.addComponentTitles(entries)
 
 						let items = []
 						for (let k = 0; k < componentSelector.items.length; k++){

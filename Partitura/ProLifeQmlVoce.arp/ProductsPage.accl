@@ -16,6 +16,8 @@
         <Element ComponentName="ProductInfoFileGenerator" X="1050" Y="425" Note=""/>
         <Element ComponentName="ProductsCommands" X="150" Y="250" Note=""/>
         <Element ComponentName="ProductsController" X="875" Y="250" Note=""/>
+        <Element ComponentName="CheckPermissionOr" X="100" Y="700" Note=""/>
+        <Element ComponentName="CommandPermissions" X="350" Y="700" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
         <EmbededRegistry Id="ProductsCommands">

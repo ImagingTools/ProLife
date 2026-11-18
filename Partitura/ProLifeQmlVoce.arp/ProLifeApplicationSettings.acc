@@ -27,7 +27,7 @@
                         <Data IsEnabled="true" Value="UserSettingsController/TableViewParamRepresentationController"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ExternalLoginEnabled" Type="Boolean" ExportId="">
-                        <Data IsEnabled="true" Value="true"/>
+                        <Data IsEnabled="true" Value="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TenantsEnabled" Type="Boolean" ExportId="">
                         <Data IsEnabled="true" Value="false"/>

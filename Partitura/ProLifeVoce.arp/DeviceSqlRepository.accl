@@ -16,7 +16,7 @@
         <Element ComponentName="Devices" X="600" Y="450" Note=""/>
         <Element ComponentName="IotDeviceInfo" X="950" Y="325" Note=""/>
         <Element ComponentName="JsonSerializer" X="225" Y="200" Note=""/>
-        <Element ComponentName="LicenseNameMetaInfoController" X="1000" Y="575" Note=""/>
+        <Element ComponentName="ConfigurationNameMetaInfoController" X="1000" Y="575" Note=""/>
         <Element ComponentName="ObjectCollection" X="250" Y="450" Note=""/>
         <Element ComponentName="OrderIdMetaInfoController" X="225" Y="575" Note=""/>
         <Element ComponentName="PostgresXPathExtractor" X="406" Y="359" Note=""/>

@@ -19,24 +19,6 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="CachedLicenseRepository" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="LicenseSqlRepository"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
-        <Element Id="CachedProductRepository" PackageId="ImtCorePck" ComponentId="CachedObjectCollection">
-            <Data IsEnabled="true" Flags="0">
-                <AttributeInfoMap>
-                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ProductRepository"/>
-                    </AttributeInfo>
-                </AttributeInfoMap>
-            </Data>
-        </Element>
         <Element Id="FeatureSqlRepository" PackageId="ProLifeVoce" ComponentId="FeatureSqlRepository">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
@@ -107,9 +89,6 @@
     <EmbeddedRegistriesList/>
     <ExportedInterfaces/>
     <ExportedComponents>
-        <Component ExportedId="CachedFeatureRepository" ComponentId="CachedFeatureRepository"/>
-        <Component ExportedId="CachedLicenseRepository" ComponentId="CachedLicenseRepository"/>
-        <Component ExportedId="CachedProductRepository" ComponentId="CachedProductRepository"/>
         <Component ExportedId="FeatureDatabaseDelegate" ComponentId="FeatureSqlRepository/FeatureDatabaseDocumentDelegate"/>
         <Component ExportedId="FeatureSqlRepository" ComponentId="FeatureSqlRepository"/>
         <Component ExportedId="LicenseDatabaseDelegate" ComponentId="LicenseSqlRepository/LicenseDatabaseDocumentDelegate"/>

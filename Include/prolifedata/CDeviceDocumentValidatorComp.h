@@ -21,6 +21,7 @@ public:
 	I_BEGIN_COMPONENT(CDeviceDocumentValidatorComp);
 		I_REGISTER_INTERFACE(imtdoc::IDocumentValidator);
 		I_ASSIGN(m_objectCollectionCompPtr, "ObjectCollection", "Device object collection for uniqueness validation", true, "ObjectCollection");
+		I_ASSIGN(m_configurationCollectionCompPtr, "HardwareConfigurationCollection", "Hardware configurations: the configuration of a device has to belong to its model", true, "HardwareConfigurationCollection");
 	I_END_COMPONENT;
 
 	// reimplemented (imtdoc::IDocumentValidator)
@@ -32,6 +33,7 @@ public:
 
 private:
 	I_REF(imtbase::IObjectCollection, m_objectCollectionCompPtr);
+	I_REF(imtbase::IObjectCollection, m_configurationCollectionCompPtr);
 };
 
 

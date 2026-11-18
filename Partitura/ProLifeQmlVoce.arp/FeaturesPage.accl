@@ -14,6 +14,8 @@
         <Element ComponentName="FeatureCollectionController" X="625" Y="225" Note=""/>
         <Element ComponentName="FeatureEditorCommands" X="900" Y="600" Note=""/>
         <Element ComponentName="IdentifiableFeatureInfo" X="150" Y="225" Note=""/>
+        <Element ComponentName="CheckPermissionOr" X="100" Y="700" Note=""/>
+        <Element ComponentName="CommandPermissions" X="350" Y="700" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
         <EmbededRegistry Id="Permissions">

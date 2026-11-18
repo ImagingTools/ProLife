@@ -31,10 +31,6 @@ if "%PUMADIR%"=="" (
     echo WARNING: PUMADIR is not set
 )
 
-if "%LISADIR%"=="" (
-    echo WARNING: LISADIR is not set
-)
-
 if "%ACFDIR%"=="" (
     echo WARNING: ACFDIR is not set
 )
@@ -54,7 +50,6 @@ echo.
 echo Environment variables configured:
 if defined IMTCOREDIR (echo   IMTCOREDIR=%IMTCOREDIR%) else (echo   IMTCOREDIR=NOT SET)
 if defined PUMADIR (echo   PUMADIR=%PUMADIR%) else (echo   PUMADIR=NOT SET)
-if defined LISADIR (echo   LISADIR=%LISADIR%) else (echo   LISADIR=NOT SET)
 if defined ACFDIR (echo   ACFDIR=%ACFDIR%) else (echo   ACFDIR=NOT SET)
 if defined ACFSLNDIR (echo   ACFSLNDIR=%ACFSLNDIR%) else (echo   ACFSLNDIR=NOT SET)
 if defined AGENTINODIR (echo   AGENTINODIR=%AGENTINODIR%) else (echo   AGENTINODIR=NOT SET)
@@ -68,7 +63,6 @@ echo.
 echo IMPORTANT: Before building, ensure all dependency directories are set:
 echo   set IMTCOREDIR=C:\path\to\ImtCore
 echo   set PUMADIR=C:\path\to\Puma
-echo   set LISADIR=C:\path\to\Lisa
 echo   set ACFDIR=C:\path\to\Acf
 echo   set ACFSLNDIR=C:\path\to\AcfSln
 echo   set AGENTINODIR=C:\path\to\Agentino

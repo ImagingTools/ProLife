@@ -43,6 +43,10 @@ bool CCustomerMetaInfoCreatorComp::CreateMetaInfo(
 	metaInfoPtr->SetMetaInfo(ICustomerInfo::MIT_CONTACT_DESCRIPTION, customerInfoPtr->GetDescription());
 	metaInfoPtr->SetMetaInfo(ICustomerInfo::MIT_EMAIL, customerInfoPtr->GetEmail());
 	metaInfoPtr->SetMetaInfo(ICustomerInfo::MIT_GROUPS, groupIds.join(';'));
+	metaInfoPtr->SetMetaInfo(ICustomerInfo::MIT_WEBSITE, customerInfoPtr->GetWebsite());
+	metaInfoPtr->SetMetaInfo(ICustomerInfo::MIT_IS_CUSTOMER, customerInfoPtr->IsCustomer());
+	metaInfoPtr->SetMetaInfo(ICustomerInfo::MIT_IS_MANUFACTURER, customerInfoPtr->IsManufacturer());
+	metaInfoPtr->SetMetaInfo(ICustomerInfo::MIT_IS_SUPPLIER, customerInfoPtr->IsSupplier());
 
 	return true;
 }

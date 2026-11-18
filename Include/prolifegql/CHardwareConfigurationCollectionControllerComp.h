@@ -20,23 +20,15 @@ public:
 
 	I_BEGIN_COMPONENT(CHardwareConfigurationCollectionControllerComp);
 		I_ASSIGN(m_configurationInfoFactCompPtr, "HardwareConfigurationFactory", "Factory of new hardware configurations", true, "HardwareConfigurationFactory");
-		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Products, to show the name of the hardware model", false, "ProductCollection");
-		I_ASSIGN(m_componentCollectionCompPtr, "HardwareComponentCollection", "Components, to show the names of the components of a configuration", false, "HardwareComponentCollection");
+		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Products: the hardware model of a configuration is checked against it and shown by name", true, "ProductCollection");
+		I_ASSIGN(m_componentCollectionCompPtr, "HardwareComponentCollection", "Components: the components of a configuration are checked against it and shown by name", true, "HardwareComponentCollection");
 	I_END_COMPONENT;
 
 protected:
-	static void FillConfigurationFromRepresentation(
-				const sdl::V1_0::prolife::CHardwareConfigurationData& representation,
-				prolifedata::IHardwareConfigurationInfo& configurationInfo);
-	static void FillRepresentationFromConfiguration(
-				const prolifedata::IHardwareConfigurationInfo& configurationInfo,
-				sdl::V1_0::prolife::CHardwareConfigurationData& representation);
-
 	/**
-		Names and part numbers of the components of a configuration, in the order of the IDs.
-		A component missing in the collection is listed with its ID as the name.
+		A configuration refers to an existing hardware model and to existing components only.
 	*/
-	imtsdl::TElementList<sdl::V1_0::prolife::CHardwareConfigurationComponent> CreateComponentsRepresentation(const QByteArrayList& componentIds) const;
+	bool CheckConfiguration(const prolifedata::IHardwareConfigurationInfo& configurationInfo, QString& errorMessage) const;
 
 	// reimplemented (imtservergql::CObjectCollectionControllerCompBase)
 	virtual QByteArray GetObjectTypeIdFromRequest(const imtgql::CGqlRequest& gqlRequest) const override;

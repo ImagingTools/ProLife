@@ -20,40 +20,24 @@ class IHardwareComponentInfo: virtual public iser::IObject
 {
 public:
 	/**
-		Technical parameter of the component, e.g. "Supply voltage = 24 V".
+		A supplier the component is bought from and the article number of the component there.
 	*/
-	struct Parameter
+	struct SupplierOffer
 	{
-		QByteArray key;
-		QString name;
-		QString value;
-		QString unit;
+		QByteArray supplierId;
+		QString sku;
 
-		bool operator==(const Parameter& other) const
+		bool operator==(const SupplierOffer& other) const
 		{
-			return key == other.key && name == other.name && value == other.value && unit == other.unit;
+			return supplierId == other.supplierId && sku == other.sku;
+		}
+
+		bool operator!=(const SupplierOffer& other) const
+		{
+			return !(*this == other);
 		}
 	};
-
-	typedef QList<Parameter> Parameters;
-
-	/**
-		Line of a bill of materials. Lines sharing an alternative group exclude each other.
-	*/
-	struct BomEntry
-	{
-		QByteArray componentId;
-		int quantity = 1;
-		bool optional = false;
-		QString alternativeGroup;
-
-		bool operator==(const BomEntry& other) const
-		{
-			return componentId == other.componentId && quantity == other.quantity && optional == other.optional && alternativeGroup == other.alternativeGroup;
-		}
-	};
-
-	typedef QList<BomEntry> Bom;
+	typedef QList<SupplierOffer> SupplierOffers;
 
 	virtual QByteArray GetPartNumber() const = 0;
 	virtual void SetPartNumber(const QByteArray& partNumber) = 0;
@@ -69,16 +53,24 @@ public:
 	virtual void SetComponentType(const QByteArray& componentType) = 0;
 	virtual QString GetRevision() const = 0;
 	virtual void SetRevision(const QString& revision) = 0;
-	virtual QString GetManufacturer() const = 0;
-	virtual void SetManufacturer(const QString& manufacturer) = 0;
-	virtual QString GetSupplier() const = 0;
-	virtual void SetSupplier(const QString& supplier) = 0;
+
+	/**
+		ID of the manufacturer in the collection of manufacturers.
+	*/
+	virtual QByteArray GetManufacturerId() const = 0;
+	virtual void SetManufacturerId(const QByteArray& manufacturerId) = 0;
 
 	/**
 		Manufacturer part number.
 	*/
 	virtual QString GetMpn() const = 0;
 	virtual void SetMpn(const QString& mpn) = 0;
+
+	/**
+		Suppliers the component is bought from, by ID in the collection of suppliers.
+	*/
+	virtual SupplierOffers GetSupplierOffers() const = 0;
+	virtual void SetSupplierOffers(const SupplierOffers& supplierOffers) = 0;
 
 	/**
 		One of "Active", "NRND" (not recommended for new designs), "EOL" (end of life).
@@ -91,23 +83,6 @@ public:
 	*/
 	virtual bool IsSerialized() const = 0;
 	virtual void SetSerialized(bool serialized) = 0;
-
-	/**
-		IDs of the components that must be present together with this one.
-	*/
-	virtual QByteArrayList GetRequirements() const = 0;
-	virtual void SetRequirements(const QByteArrayList& componentIds) = 0;
-
-	/**
-		IDs of the components that cannot be present together with this one.
-	*/
-	virtual QByteArrayList GetIncompatibilities() const = 0;
-	virtual void SetIncompatibilities(const QByteArrayList& componentIds) = 0;
-
-	virtual Parameters GetParameters() const = 0;
-	virtual void SetParameters(const Parameters& parameters) = 0;
-	virtual Bom GetBom() const = 0;
-	virtual void SetBom(const Bom& bom) = 0;
 };
 
 

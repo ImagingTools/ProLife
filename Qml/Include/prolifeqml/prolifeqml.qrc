@@ -27,6 +27,7 @@
         <file alias="ProLife/LicenseTypeCollectionView.qml">LicenseTypeCollectionView.qml</file>
         <file alias="ProLife/HardwareComponentCollectionView.qml">HardwareComponentCollectionView.qml</file>
         <file alias="ProLife/HardwareComponentEditor.qml">HardwareComponentEditor.qml</file>
+        <file alias="ProLife/VendorCollectionView.qml">VendorCollectionView.qml</file>
         <file alias="ProLife/HardwareConfigurationCollectionView.qml">HardwareConfigurationCollectionView.qml</file>
         <file alias="ProLife/HardwareConfigurationEditor.qml">HardwareConfigurationEditor.qml</file>
         <file alias="ProLife/SectionHeaderView.qml">SectionHeaderView.qml</file>
@@ -45,8 +46,10 @@
         <file alias="ProLife/AccountCollectionView.qml">AccountCollectionView.qml</file>
         <file alias="ProLife/LicenseFilterDelegate.qml">LicenseFilterDelegate.qml</file>
         <file alias="ProLife/CustomerFilterDelegate.qml">CustomerFilterDelegate.qml</file>
+        <file alias="ProLife/ManufacturerFilterDelegate.qml">ManufacturerFilterDelegate.qml</file>
         <file alias="ProLife/ProductFilterDelegate.qml">ProductFilterDelegate.qml</file>
         <file alias="ProLife/ProductLicenseFilterDelegate.qml">ProductLicenseFilterDelegate.qml</file>
+        <file alias="ProLife/HardwareConfigurationFilterDelegate.qml">HardwareConfigurationFilterDelegate.qml</file>
  	<file alias="ProLife/WorkspacePage.qml">WorkspacePage.qml</file>
 	<file alias="ProLife/GqlPiechartView.qml">GqlPiechartView.qml</file>
 	<file alias="ProLife/GqlLinechartView.qml">GqlLinechartView.qml</file>

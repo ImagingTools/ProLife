@@ -189,18 +189,6 @@
       "summary": "Core imaging library"
     },
     {
-      "SPDXID": "SPDXRef-Package-Lisa",
-      "name": "Lisa",
-      "versionInfo": "1.0.0",
-      "downloadLocation": "https://github.com/ImagingTools/Lisa",
-      "filesAnalyzed": false,
-      "supplier": "Organization: ImagingTools GmbH",
-      "licenseConcluded": "LicenseRef-ImagingTools-Proprietary",
-      "licenseDeclared": "LicenseRef-ImagingTools-Proprietary",
-      "copyrightText": "Copyright (C) ImagingTools GmbH",
-      "summary": "Lisa application components"
-    },
-    {
       "SPDXID": "SPDXRef-Package-Puma",
       "name": "Puma",
       "versionInfo": "1.0.0",
@@ -270,11 +258,6 @@
       "spdxElementId": "SPDXRef-Package-ProLife",
       "relationshipType": "DEPENDS_ON",
       "relatedSpdxElement": "SPDXRef-Package-ImtCore"
-    },
-    {
-      "spdxElementId": "SPDXRef-Package-ProLife",
-      "relationshipType": "DEPENDS_ON",
-      "relatedSpdxElement": "SPDXRef-Package-Lisa"
     },
     {
       "spdxElementId": "SPDXRef-Package-ProLife",

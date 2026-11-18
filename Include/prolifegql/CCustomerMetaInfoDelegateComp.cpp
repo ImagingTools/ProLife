@@ -28,6 +28,12 @@ bool CCustomerMetaInfoDelegateComp::FillRepresentation(QJsonObject& representati
 	
 	QByteArray groupIds = metaInfo.GetMetaInfo(prolifedata::ICustomerInfo::MIT_GROUPS).toByteArray();
 	representation["Groups"] = QString(groupIds);
+
+	// The roles are filtered on: the customers page and the vendors page show different companies
+	representation["Website"] = metaInfo.GetMetaInfo(prolifedata::ICustomerInfo::MIT_WEBSITE).toString();
+	representation["IsCustomer"] = metaInfo.GetMetaInfo(prolifedata::ICustomerInfo::MIT_IS_CUSTOMER).toBool();
+	representation["IsManufacturer"] = metaInfo.GetMetaInfo(prolifedata::ICustomerInfo::MIT_IS_MANUFACTURER).toBool();
+	representation["IsSupplier"] = metaInfo.GetMetaInfo(prolifedata::ICustomerInfo::MIT_IS_SUPPLIER).toBool();
 	
 	return true;
 }
@@ -53,6 +59,22 @@ bool CCustomerMetaInfoDelegateComp::FillMetaInfo(idoc::IDocumentMetaInfo& metaIn
 	
 	if (representation.contains("Groups")){
 		metaInfo.SetMetaInfo(prolifedata::ICustomerInfo::MIT_GROUPS, representation.value("Groups"));
+	}
+
+	if (representation.contains("Website")){
+		metaInfo.SetMetaInfo(prolifedata::ICustomerInfo::MIT_WEBSITE, representation.value("Website").toString());
+	}
+
+	if (representation.contains("IsCustomer")){
+		metaInfo.SetMetaInfo(prolifedata::ICustomerInfo::MIT_IS_CUSTOMER, representation.value("IsCustomer").toBool());
+	}
+
+	if (representation.contains("IsManufacturer")){
+		metaInfo.SetMetaInfo(prolifedata::ICustomerInfo::MIT_IS_MANUFACTURER, representation.value("IsManufacturer").toBool());
+	}
+
+	if (representation.contains("IsSupplier")){
+		metaInfo.SetMetaInfo(prolifedata::ICustomerInfo::MIT_IS_SUPPLIER, representation.value("IsSupplier").toBool());
 	}
 
 	return true;

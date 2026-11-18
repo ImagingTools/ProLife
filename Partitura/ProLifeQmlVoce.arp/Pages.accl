@@ -15,6 +15,7 @@
         <Element ComponentName="PageData" X="925" Y="350" Note=""/>
         <Element ComponentName="PagesDemultiplexer" X="925" Y="200" Note=""/>
         <Element ComponentName="SoftwareProductsPage" X="200" Y="300" Note=""/>
+        <Element ComponentName="HardwareVendorsPage" X="1400" Y="900" Note=""/>
     </PositionMap>
     <EmbeddedRegistries>
         <EmbededRegistry Id="PageData">
@@ -24,6 +25,7 @@
                 <Element ComponentName="DevicesPage" X="150" Y="225" Note=""/>
                 <Element ComponentName="OrdersPage" X="750" Y="225" Note=""/>
                 <Element ComponentName="SoftwareProductsPage" X="450" Y="225" Note=""/>
+                <Element ComponentName="HardwareModelsPage" X="650" Y="225" Note=""/>
                 <Element ComponentName="WorkspacePage" X="600" Y="400" Note=""/>
             </PositionMap>
             <EmbeddedRegistries/>

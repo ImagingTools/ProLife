@@ -2,25 +2,42 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5332" Description="ACF"/>
-            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5430" Description="ACF"/>
+            <Version Id="1" Number="2253" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="CommandPermissionsProviderJoiner" X="600" Y="300" Note=""/>
-        <Element ComponentName="LicenseFeatures" X="650" Y="200" Note=""/>
-        <Element ComponentName="ProductAdd" X="375" Y="200" Note=""/>
-        <Element ComponentName="ProductItem" X="225" Y="275" Note=""/>
-        <Element ComponentName="ProductList" X="1025" Y="300" Note=""/>
-        <Element ComponentName="ProductUpdate" X="925" Y="200" Note=""/>
-        <Element ComponentName="ProductsInfo" X="250" Y="375" Note=""/>
-        <Element ComponentName="ProductsList" X="350" Y="450" Note=""/>
-        <Element ComponentName="ProductsMetaInfo" X="925" Y="450" Note=""/>
-        <Element ComponentName="ProductsObjectView" X="525" Y="600" Note=""/>
-        <Element ComponentName="ProductsRemove" X="425" Y="525" Note=""/>
-        <Element ComponentName="ProductsRename" X="875" Y="525" Note=""/>
-        <Element ComponentName="ProductsSetDescription" X="800" Y="600" Note=""/>
+        <Element ComponentName="ObjectCollectionPermissions" X="350" Y="425" Note=""/>
+        <Element ComponentName="PermissionsJoiner" X="550" Y="125" Note=""/>
+        <Element ComponentName="ProductsList" X="150" Y="275" Note=""/>
+        <Element ComponentName="ProductList" X="450" Y="275" Note=""/>
+        <Element ComponentName="ProductItem" X="750" Y="275" Note=""/>
+        <Element ComponentName="ProductsInfo" X="1050" Y="275" Note=""/>
+        <Element ComponentName="ProductsMetaInfo" X="150" Y="375" Note=""/>
+        <Element ComponentName="ProductsObjectView" X="450" Y="375" Note=""/>
+        <Element ComponentName="LicenseFeatures" X="750" Y="375" Note=""/>
+        <Element ComponentName="Licenses" X="1050" Y="375" Note=""/>
+        <Element ComponentName="ProductsExport" X="150" Y="475" Note=""/>
+        <Element ComponentName="ProductAdd" X="450" Y="475" Note=""/>
+        <Element ComponentName="ProductsImport" X="750" Y="475" Note=""/>
+        <Element ComponentName="ProductUpdate" X="1050" Y="475" Note=""/>
+        <Element ComponentName="ProductsRename" X="150" Y="575" Note=""/>
+        <Element ComponentName="ProductsSetDescription" X="450" Y="575" Note=""/>
+        <Element ComponentName="ProductsRemove" X="750" Y="575" Note=""/>
+        <Element ComponentName="GetOpenedDocumentList" X="1050" Y="575" Note=""/>
+        <Element ComponentName="GetDocumentName" X="150" Y="675" Note=""/>
+        <Element ComponentName="GetUndoInfo" X="450" Y="675" Note=""/>
+        <Element ComponentName="OpenDocument" X="750" Y="675" Note=""/>
+        <Element ComponentName="CloseDocument" X="1050" Y="675" Note=""/>
+        <Element ComponentName="CreateNewDocument" X="150" Y="775" Note=""/>
+        <Element ComponentName="SetDocumentName" X="450" Y="775" Note=""/>
+        <Element ComponentName="SaveDocument" X="750" Y="775" Note=""/>
+        <Element ComponentName="DoUndo" X="1050" Y="775" Note=""/>
+        <Element ComponentName="DoRedo" X="150" Y="875" Note=""/>
+        <Element ComponentName="ResetUndo" X="450" Y="875" Note=""/>
+        <Element ComponentName="GetProductRepresentation" X="750" Y="875" Note=""/>
+        <Element ComponentName="UpdateProductFromRepresentation" X="1050" Y="875" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

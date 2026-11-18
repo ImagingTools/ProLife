@@ -7,7 +7,6 @@
             <Version Id="10" Number="926" Description="IACF"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
             <Version Id="1977" Number="15460" Description="ImtCore"/>
-            <Version Id="1983" Number="15425" Description="Lisa"/>
         </VersionInfos>
     </AcfHeader>
     <Uuid>0d91fc85-ccea-45fc-9e6c-f053caf8cdbc</Uuid>

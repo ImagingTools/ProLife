@@ -13,9 +13,8 @@ ProLife is a complex software product that integrates multiple dependent reposit
 1. **Acf** - Advanced Computing Framework
 2. **AcfSln** - ACF Solution files and configurations
 3. **ImtCore** - Imaging Tools Core library
-4. **Lisa** - Lisa application components
-5. **Puma** - Puma application components
-6. **Agentino** - Agentino application components
+4. **Puma** - Puma application components
+5. **Agentino** - Agentino application components
 
 ## Versioning Strategy
 
@@ -81,7 +80,7 @@ Each ProLife release pins specific versions (commits or tags) of all dependency 
 
 ### 1. Dependency Repository Changes
 
-When changes are needed in a dependency repository (Acf, ImtCore, Lisa, Puma, Agentino, AcfSln):
+When changes are needed in a dependency repository (Acf, ImtCore, Puma, Agentino, AcfSln):
 
 ```
 ┌─────────────────────────────────────────────────────────────┐

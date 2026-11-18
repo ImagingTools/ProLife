@@ -21,7 +21,7 @@ public:
 	I_BEGIN_COMPONENT(CDeviceMetaInfoCreatorComp);
 		I_ASSIGN(m_orderCollectionCompPtr, "OrderCollection", "Order collection", true, "OrderCollection");
 		I_ASSIGN(m_accountCollectionCompPtr, "AccountCollection", "Account collection", true, "AccountCollection");
-		I_ASSIGN(m_licenseCollectionCompPtr, "LicenseCollection", "Remote License collection", true, "LicenseCollection");
+		I_ASSIGN(m_configurationCollectionCompPtr, "HardwareConfigurationCollection", "Hardware configurations, the device is built after one of them", true, "HardwareConfigurationCollection");
 		I_ASSIGN(m_productCollectionCompPtr, "ProductCollection", "Remote product collection", true, "ProductCollection");
 		I_ASSIGN(m_deviceBindingCollectionCompPtr, "DeviceBindingCollection", "Device binding collection", true, "DeviceBindingCollection");
 	I_END_COMPONENT;
@@ -43,7 +43,7 @@ private:
 private:
 	I_REF(imtbase::IObjectCollection, m_orderCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_accountCollectionCompPtr);
-	I_REF(imtbase::IObjectCollection, m_licenseCollectionCompPtr);
+	I_REF(imtbase::IObjectCollection, m_configurationCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_productCollectionCompPtr);
 	I_REF(imtbase::IObjectCollection, m_deviceBindingCollectionCompPtr);
 };

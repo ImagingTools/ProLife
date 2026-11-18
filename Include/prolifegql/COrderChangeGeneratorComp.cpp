@@ -224,21 +224,21 @@ QString COrderChangeGeneratorComp::GetProductName(const QByteArray& productId) c
 		return productId;
 	}
 
-	QByteArray lisaProductId;
+	QByteArray catalogProductId;
 	QByteArray productName;
 
 	imtbase::IObjectCollection::DataPtr productDataPtr;
 	if (m_softwareCollectionCompPtr.IsValid() && m_softwareCollectionCompPtr->GetObjectData(productId, productDataPtr)){
 		const imtlic::IProductInstanceInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(productDataPtr.GetPtr());
 		if (productInfoPtr != nullptr){
-			lisaProductId = productInfoPtr->GetProductId();
+			catalogProductId = productInfoPtr->GetProductId();
 			productName = productInfoPtr->GetSerialNumber();
 		}
 	}
 	else if (m_deviceCollectionCompPtr.IsValid() && m_deviceCollectionCompPtr->GetObjectData(productId, productDataPtr)){
 		const prolifedata::IDeviceInfo* deviceInfoPtr = dynamic_cast<const prolifedata::IDeviceInfo*>(productDataPtr.GetPtr());
 		if (deviceInfoPtr != nullptr){
-			lisaProductId = deviceInfoPtr->GetDeviceType();
+			catalogProductId = deviceInfoPtr->GetDeviceType();
 			productName = deviceInfoPtr->GetMacAddress();
 		}
 	}
@@ -247,24 +247,24 @@ QString COrderChangeGeneratorComp::GetProductName(const QByteArray& productId) c
 		return productId;
 	}
 
-	QString lisaProductName;
+	QString catalogProductName;
 
 	if (m_productCollectionCompPtr.IsValid()){
 		imtbase::IObjectCollection::DataPtr dataPtr;
-		if (m_productCollectionCompPtr->GetObjectData(lisaProductId, dataPtr)){
+		if (m_productCollectionCompPtr->GetObjectData(catalogProductId, dataPtr)){
 			const imtlic::IProductInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInfo*>(dataPtr.GetPtr());
 			if (productInfoPtr != nullptr){
-				lisaProductName = productInfoPtr->GetName().toUtf8();
+				catalogProductName = productInfoPtr->GetName().toUtf8();
 			}
 		}
 	}
 
 	// Without the product catalogue entry the serial number resp. MAC-address still identifies the product.
-	if (lisaProductName.isEmpty()){
+	if (catalogProductName.isEmpty()){
 		return !productName.isEmpty() ? QString::fromUtf8(productName) : QString::fromUtf8(productId);
 	}
 
-	QString retVal = lisaProductName;
+	QString retVal = catalogProductName;
 	if (!productName.isEmpty()){
 		retVal =  retVal + " (" + productName + ")";
 	}

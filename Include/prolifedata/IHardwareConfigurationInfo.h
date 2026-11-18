@@ -45,11 +45,6 @@ public:
 	*/
 	virtual QByteArrayList GetComponentIds() const = 0;
 	virtual void SetComponentIds(const QByteArrayList& componentIds) = 0;
-	/**
-		IDs of the software licenses shipped with the configuration
-	*/
-	virtual QByteArrayList GetBundledLicenseIds() const = 0;
-	virtual void SetBundledLicenseIds(const QByteArrayList& bundledLicenseIds) = 0;
 };
 
 

@@ -16,7 +16,6 @@
   - Acf
   - AcfSln
   - ImtCore
-  - Lisa
   - Puma
   - Agentino
 
@@ -44,7 +43,6 @@
 cd 3rdParty/Acf && git checkout v2.0.0 && cd ../..
 cd 3rdParty/AcfSln && git checkout v1.5.0 && cd ../..
 cd 3rdParty/ImtCore && git checkout v2.1.0 && cd ../..
-cd 3rdParty/Lisa && git checkout v1.3.0 && cd ../..
 cd 3rdParty/Puma && git checkout v1.8.0 && cd ../..
 cd 3rdParty/Agentino && git checkout v1.2.0 && cd ../..
 ./prepare-release.sh --pin-submodules
@@ -77,7 +75,6 @@ cmake --build . --config Release
 ```yaml
 acf_version: latest  # Автоматически найдет v2.3.5 (если это последняя)
 imtcore_version: v3.1.0  # Конкретная версия
-lisa_version: main  # Конкретная ветка
 ```
 
 ### 4. Безопасность
@@ -137,7 +134,6 @@ lisa_version: main  # Конкретная ветка
    Acf version: latest
    AcfSln version: latest
    ImtCore version: latest
-   Lisa version: latest
    Puma version: latest
    Agentino version: latest
    
@@ -156,7 +152,6 @@ gh workflow run app-dispatch.yml \
   -f acf_version=latest \
   -f acfsln_version=latest \
   -f imtcore_version=latest \
-  -f lisa_version=latest \
   -f puma_version=latest \
   -f agentino_version=latest \
   -f dry_run=true
@@ -207,7 +202,6 @@ target_tag: v2.1.0
 acf_version: latest       # → v2.3.5 (автоматически)
 acfsln_version: latest    # → v1.5.2 (автоматически)
 imtcore_version: latest   # → v3.1.0 (автоматически)
-lisa_version: latest      # → v1.8.0 (автоматически)
 puma_version: latest      # → v2.2.0 (автоматически)
 agentino_version: latest  # → v1.4.0 (автоматически)
 dry_run: true
@@ -220,7 +214,6 @@ target_tag: v2.1.1
 acf_version: v2.3.5       # Оставить текущую
 acfsln_version: v1.5.2    # Оставить текущую
 imtcore_version: latest   # Обновить
-lisa_version: latest      # Обновить
 puma_version: v2.2.0      # Оставить текущую
 agentino_version: v1.4.0  # Оставить текущую
 dry_run: false
@@ -233,7 +226,6 @@ target_tag: v2.2.0-rc1
 acf_version: develop      # Development ветка
 acfsln_version: main
 imtcore_version: feature/new-api
-lisa_version: latest
 puma_version: latest
 agentino_version: latest
 dry_run: true

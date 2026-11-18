@@ -21,6 +21,13 @@ type AccountItem {
 	name: String!
 	description: String
 	email: String
+	country: String
+	website: String
+	isCustomer: Bool
+	isManufacturer: Bool
+	isSupplier: Bool
+	## The roles as text for the list, e.g. "Customer, Supplier".
+	roles: String
 	added: String
 	timeStamp: String
 }
@@ -42,6 +49,10 @@ type AccountData {
 	postalCode: String
 	street: String
 	groups: String
+	website: String
+	isCustomer: Bool
+	isManufacturer: Bool
+	isSupplier: Bool
 }
 
 input AccountDataInput {

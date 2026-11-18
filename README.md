@@ -18,7 +18,6 @@ ProLife is built on top of several foundational repositories that must be cloned
 - **Acf**: Advanced Computing Framework
 - **AcfSln**: ACF Solution configurations
 - **ImtCore**: Imaging Tools Core library (private)
-- **Lisa**: Lisa application components (private)
 - **Puma**: Puma application components (private)
 - **Agentino**: Agentino application components (private)
 
@@ -44,7 +43,6 @@ cd ProLife
 # You must have these repositories cloned and available separately
 export IMTCOREDIR=/path/to/ImtCore
 export PUMADIR=/path/to/Puma
-export LISADIR=/path/to/Lisa
 export ACFDIR=/path/to/Acf
 export ACFSLNDIR=/path/to/AcfSln
 export AGENTINODIR=/path/to/Agentino
@@ -134,12 +132,11 @@ For detailed build instructions, see [BUILDING.md](BUILDING.md).
 
 ## Dependency Management
 
-ProLife dependencies (Acf, AcfSln, ImtCore, Lisa, Puma, Agentino) must be cloned and built separately. Set the following environment variables to point to these repositories:
+ProLife dependencies (Acf, AcfSln, ImtCore, Puma, Agentino) must be cloned and built separately. Set the following environment variables to point to these repositories:
 
 ```bash
 export IMTCOREDIR=/path/to/ImtCore
 export PUMADIR=/path/to/Puma
-export LISADIR=/path/to/Lisa
 export ACFDIR=/path/to/Acf
 export ACFSLNDIR=/path/to/AcfSln
 export AGENTINODIR=/path/to/Agentino
@@ -149,7 +146,6 @@ On Windows:
 ```cmd
 set IMTCOREDIR=C:\path\to\ImtCore
 set PUMADIR=C:\path\to\Puma
-set LISADIR=C:\path\to\Lisa
 set ACFDIR=C:\path\to\Acf
 set ACFSLNDIR=C:\path\to\AcfSln
 set AGENTINODIR=C:\path\to\Agentino
@@ -315,7 +311,7 @@ ProLife is built on the following open-source and proprietary components:
 
 - Qt Framework
 - CMake
-- And various other libraries (see dependency repositories: Acf, AcfSln, ImtCore, Lisa, Puma, Agentino)
+- And various other libraries (see dependency repositories: Acf, AcfSln, ImtCore, Puma, Agentino)
 
 ---
 

@@ -24,6 +24,10 @@ static void InitializeProLifeClientResources()
 	Q_INIT_RESOURCE(prolifeOrdersSdl);
 	Q_INIT_RESOURCE(prolifeWorkspaceSdl);
 	Q_INIT_RESOURCE(prolifeDeviceCollectionDocumentServiceSdl);
+	Q_INIT_RESOURCE(prolifeHardwareComponentsSdl);
+	Q_INIT_RESOURCE(prolifeHardwareConfigurationsSdl);
+	Q_INIT_RESOURCE(prolifeHardwareComponentCollectionDocumentServiceSdl);
+	Q_INIT_RESOURCE(prolifeHardwareConfigurationCollectionDocumentServiceSdl);
 
 	ImtCoreInitLocalizationResources();
 	ImtCoreInitBaseResources();

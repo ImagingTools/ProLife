@@ -13,7 +13,7 @@
 // Filters (FilterPanel -> "<filterId>", options are text-keyed, each has a ClearButton; the panel has
 // ClearAllFilters and a built-in CreationDateFilter + SearchTextInput):
 //   SensorStatusFilter, UsageFilter, LicenseFilter, LicenseCreationDateFilter,
-//   CustomersFilter, ProductsFilter, LicensesFilter
+//   CustomersFilter, ProductsFilter, ConfigurationsFilter
 //
 // Commands are permission-gated server-side (New<-AddSensor, Remove<-RemoveSensor,
 // Bind<-BindSensor, CreateLicenseFile<-CreateLicenseFile, TransferLicenses<-TransferLicenses, ...),
@@ -36,7 +36,7 @@ const FILTERS = {
   licenseCreationDate: 'LicenseCreationDateFilter',
   customers: 'CustomersFilter',
   products: 'ProductsFilter',
-  licenses: 'LicensesFilter',
+  configurations: 'ConfigurationsFilter',
   creationDate: 'CreationDateFilter',
 };
 

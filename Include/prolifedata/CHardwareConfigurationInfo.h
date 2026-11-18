@@ -23,8 +23,6 @@ public:
 	virtual void SetProductId(const QByteArray& productId) override;
 	virtual QByteArrayList GetComponentIds() const override;
 	virtual void SetComponentIds(const QByteArrayList& componentIds) override;
-	virtual QByteArrayList GetBundledLicenseIds() const override;
-	virtual void SetBundledLicenseIds(const QByteArrayList& bundledLicenseIds) override;
 
 	// reimplemented (iser::IObject)
 	virtual QByteArray GetFactoryId() const override;
@@ -46,7 +44,6 @@ private:
 	QString m_description;
 	QByteArray m_productId;
 	QByteArrayList m_componentIds;
-	QByteArrayList m_bundledLicenseIds;
 };
 
 

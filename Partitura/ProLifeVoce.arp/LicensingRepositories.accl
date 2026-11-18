@@ -9,8 +9,6 @@
     </AcfHeader>
     <PositionMap>
         <Element ComponentName="CachedFeatureRepository" X="275" Y="200" Note=""/>
-        <Element ComponentName="CachedLicenseRepository" X="900" Y="200" Note=""/>
-        <Element ComponentName="CachedProductRepository" X="575" Y="200" Note=""/>
         <Element ComponentName="FeatureSqlRepository" X="275" Y="350" Note=""/>
         <Element ComponentName="LicenseSqlRepository" X="875" Y="350" Note=""/>
         <Element ComponentName="ProductFeatureInfoProvider" X="575" Y="500" Note=""/>

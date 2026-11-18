@@ -17,7 +17,6 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>productName</Value>
-                                <Value>categoryId</Value>
                                 <Value>description</Value>
                             </Values>
                         </Data>
@@ -26,7 +25,6 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>productName</Value>
-                                <Value>categoryId</Value>
                                 <Value>description</Value>
                                 <Value>added</Value>
                                 <Value>timeStamp</Value>
@@ -37,7 +35,6 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>Product Name</Value>
-                                <Value>Category</Value>
                                 <Value>Description</Value>
                                 <Value>Added</Value>
                                 <Value>Last Modified</Value>
@@ -48,7 +45,6 @@
                         <Data IsEnabled="true">
                             <Values>
                                 <Value>productName</Value>
-                                <Value>categoryId</Value>
                                 <Value>description</Value>
                                 <Value>added</Value>
                                 <Value>timeStamp</Value>
@@ -145,6 +141,12 @@
         <Element Id="ProductsController" PackageId="ImtLicenseGqlPck" ComponentId="ProductCollectionController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="CommandPermissions"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="CheckPermissionOr"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="Products"/>
                     </AttributeInfo>
@@ -277,6 +279,16 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
+            </Data>
+        </Element>
+        <Element Id="CheckPermissionOr" PackageId="ImtAuthPck" ComponentId="CheckPermissionOr">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="CommandPermissions" PackageId="ProLifeVoce" ComponentId="ProductPermissions">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
             </Data>
         </Element>
     </ElementsList>

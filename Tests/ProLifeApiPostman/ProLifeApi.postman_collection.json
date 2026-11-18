@@ -2968,8 +2968,8 @@
                   "pm.test('GetApplicationInfo reports tenants enabled for ProLife', function () {",
                   "  pm.expect(json.data.GetApplicationInfo.tenantsEnabled).to.eql(true);",
                   "});",
-                  "pm.test('GetApplicationInfo reports external sign-in enabled for ProLife (ExternalLoginEnabled in ProLifeHandlers.acc)', function () {",
-                  "  pm.expect(json.data.GetApplicationInfo.externalLoginEnabled).to.eql(true);",
+                  "pm.test('GetApplicationInfo reports external sign-in disabled by default for ProLife (ExternalLoginEnabled in ProLifeHandlers.acc)', function () {",
+                  "  pm.expect(json.data.GetApplicationInfo.externalLoginEnabled).to.eql(false);",
                   "});",
                   "// An ISO date in UTC that is not in the future: the executable was built before it runs",
                   "function expectBuildTime(value, what) {",
@@ -2990,16 +2990,6 @@
                   "  pm.expect(authServer.applicationName, 'AuthServer.applicationName').to.eql('Puma');",
                   "  pm.expect(authServer.version, 'AuthServer.version').to.match(/^\\d+\\.\\d+\\.\\d+/);",
                   "  expectBuildTime(authServer.buildTime, 'AuthServer.buildTime');",
-                  "});",
-                  "pm.test('GetApplicationInfo reports Lisa as a connected dependency with its version and build time', function () {",
-                  "  const dependencies = json.data.GetApplicationInfo.dependencies;",
-                  "  pm.expect(dependencies, JSON.stringify(json.data.GetApplicationInfo)).to.be.an('array');",
-                  "  const lisa = dependencies.find(dependency => dependency.serviceId === 'Lisa');",
-                  "  pm.expect(lisa, JSON.stringify(dependencies)).to.be.an('object');",
-                  "  pm.expect(lisa.status, 'Lisa.status').to.eql('CONNECTED');",
-                  "  pm.expect(lisa.applicationName, 'Lisa.applicationName').to.eql('Lisa');",
-                  "  pm.expect(lisa.version, 'Lisa.version').to.match(/^\\d+\\.\\d+\\.\\d+/);",
-                  "  expectBuildTime(lisa.buildTime, 'Lisa.buildTime');",
                   "});"
                 ]
               }
@@ -6013,7 +6003,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.environment.set('token', pm.environment.get('pmdUserToken'));",
-                  "pm.request.headers.upsert({ key: 'productid', value: 'Lisa' });"
+                  "pm.request.headers.upsert({ key: 'productid', value: 'OtherProduct' });"
                 ]
               }
             },
@@ -6026,7 +6016,7 @@
                   "const messages = (json.errors || []).map(function (e) { return e.message || ''; });",
                   "const refused = messages.some(function (m) { return m.indexOf('Invalid permissions') >= 0; });",
                   "",
-                  "pm.test('The permissions of ProLife apply although the client names Lisa', function () {",
+                  "pm.test('The permissions of ProLife apply although the client names another product', function () {",
                   "  pm.expect(refused, 'unexpected refusal: ' + messages.join(' | ')).to.eql(false);",
                   "  pm.expect(json.data && json.data.DevicesList && Array.isArray(json.data.DevicesList.items), JSON.stringify(json)).to.eql(true);",
                   "});"
@@ -6146,7 +6136,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.environment.set('token', pm.environment.get('pmdUserToken'));",
-                  "pm.request.headers.upsert({ key: 'productid', value: 'Lisa' });"
+                  "pm.request.headers.upsert({ key: 'productid', value: 'OtherProduct' });"
                 ]
               }
             },

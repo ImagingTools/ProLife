@@ -22,6 +22,7 @@
 #include <prolifedata/CDeviceInfo.h>
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
 #include <prolifedata/IHardwareProductBinding.h>
+#include <prolifedata/IHardwareConfigurationInfo.h>
 #include <prolifedata/IOrdered.h>
 #include <prolifedata/CGroupFilter.h>
 #include <prolifedata/COrderCustomerRole.h>
@@ -586,12 +587,12 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 					sdl::V1_0::prolife::COrderedProduct hardwareProduct;
 
 					QByteArray productUuid = deviceInfoPtr->GetDeviceType();
-					QByteArray licenseDefinitionUuid = deviceInfoPtr->GetConfigurationType();
+					QByteArray configurationId = deviceInfoPtr->GetConfigurationType();
 
 					hardwareProduct.id = (productId);
 					hardwareProduct.productUuid = (productUuid);
 					hardwareProduct.categoryId = (QByteArray("Hardware"));
-					hardwareProduct.licenseUuid = (licenseDefinitionUuid);
+					hardwareProduct.licenseUuid = (configurationId);
 					hardwareProduct.isNew = std::move(false);
 
 					imtbase::IObjectCollection::DataPtr dataPtr;
@@ -602,12 +603,12 @@ bool COrderCollectionControllerComp::CreateRepresentationFromObject(
 						}
 					}
 
-					imtbase::IObjectCollection::DataPtr licenseDataPtr;
-					if (m_licenseDefinitionCollectionCompPtr->GetObjectData(licenseDefinitionUuid, licenseDataPtr)){
-						const imtlic::ILicenseDefinition* licenseInfoPtr = dynamic_cast<imtlic::ILicenseDefinition*>(licenseDataPtr.GetPtr());
-						if (licenseInfoPtr != nullptr){
-							hardwareProduct.licenseName = (licenseInfoPtr->GetLicenseName());
-							hardwareProduct.licenseId = (licenseInfoPtr->GetLicenseId());
+					imtbase::IObjectCollection::DataPtr configurationDataPtr;
+					if (m_configurationCollectionCompPtr->GetObjectData(configurationId, configurationDataPtr)){
+						const prolifedata::IHardwareConfigurationInfo* configurationInfoPtr = dynamic_cast<const prolifedata::IHardwareConfigurationInfo*>(configurationDataPtr.GetPtr());
+						if (configurationInfoPtr != nullptr){
+							hardwareProduct.licenseName = configurationInfoPtr->GetName();
+							hardwareProduct.licenseId = configurationInfoPtr->GetConfigurationId();
 						}
 					}
 

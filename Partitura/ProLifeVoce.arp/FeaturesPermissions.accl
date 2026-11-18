@@ -2,26 +2,18 @@
 <Acf>
     <AcfHeader>
         <VersionInfos>
-            <Version Id="0" Number="5332" Description="ACF"/>
-            <Version Id="1" Number="2230" Description="ACF-Solutions"/>
+            <Version Id="0" Number="5430" Description="ACF"/>
+            <Version Id="1" Number="2253" Description="ACF-Solutions"/>
             <Version Id="1023" Number="395264" Description="Qt Framework"/>
         </VersionInfos>
     </AcfHeader>
     <PositionMap>
-        <Element ComponentName="CommandPermissionsProviderJoiner" X="600" Y="175" Note=""/>
-        <Element ComponentName="CommandsData" X="725" Y="475" Note=""/>
-        <Element ComponentName="FeaturesDependencies" X="150" Y="350" Note=""/>
-        <Element ComponentName="FeaturesTree" X="1025" Y="475" Note=""/>
-        <Element ComponentName="PackageAdd" X="150" Y="600" Note=""/>
-        <Element ComponentName="PackageItem" X="725" Y="600" Note=""/>
-        <Element ComponentName="PackageUpdate" X="425" Y="600" Note=""/>
-        <Element ComponentName="PackagesInfo" X="1025" Y="725" Note=""/>
-        <Element ComponentName="PackagesList" X="725" Y="725" Note=""/>
-        <Element ComponentName="PackagesMetaInfo" X="425" Y="725" Note=""/>
-        <Element ComponentName="PackagesObjectView" X="150" Y="725" Note=""/>
-        <Element ComponentName="PackagesRemove" X="1025" Y="600" Note=""/>
-        <Element ComponentName="PackagesRename" X="150" Y="475" Note=""/>
-        <Element ComponentName="PackagesSetDescription" X="425" Y="475" Note=""/>
+        <Element ComponentName="ObjectCollectionPermissions" X="350" Y="425" Note=""/>
+        <Element ComponentName="PermissionsJoiner" X="550" Y="125" Note=""/>
+        <Element ComponentName="FeaturesList" X="150" Y="275" Note=""/>
+        <Element ComponentName="GetFeatureItem" X="450" Y="275" Note=""/>
+        <Element ComponentName="AddFeature" X="750" Y="275" Note=""/>
+        <Element ComponentName="UpdateFeature" X="1050" Y="275" Note=""/>
     </PositionMap>
     <EmbeddedRegistries/>
 </Acf>

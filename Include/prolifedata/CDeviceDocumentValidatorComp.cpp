@@ -10,6 +10,7 @@
 // ProLife includes
 #include <prolifedata/prolifedata.h>
 #include <prolifedata/CDeviceInfo.h>
+#include <prolifedata/IHardwareConfigurationInfo.h>
 
 
 namespace prolifedata
@@ -61,6 +62,27 @@ bool CDeviceDocumentValidatorComp::ValidateDocumentData(
 	QByteArray deviceType = deviceInfoPtr->GetDeviceType();
 	if (deviceType.isEmpty()){
 		errorMessage = QString("Device type cannot be empty");
+		return false;
+	}
+
+	if (!m_configurationCollectionCompPtr.IsValid()){
+		errorMessage = QString("Unable to check the configuration of the device");
+		return false;
+	}
+
+	imtbase::IObjectCollection::DataPtr configurationDataPtr;
+	const IHardwareConfigurationInfo* configurationInfoPtr = nullptr;
+	if (m_configurationCollectionCompPtr->GetObjectData(configurationType, configurationDataPtr)){
+		configurationInfoPtr = dynamic_cast<const IHardwareConfigurationInfo*>(configurationDataPtr.GetPtr());
+	}
+
+	if (configurationInfoPtr == nullptr){
+		errorMessage = QString("The configuration '%1' cannot be read").arg(QString::fromUtf8(configurationType));
+		return false;
+	}
+
+	if (configurationInfoPtr->GetProductId() != deviceType){
+		errorMessage = QString("The configuration '%1' does not belong to the device type").arg(configurationInfoPtr->GetName());
 		return false;
 	}
 

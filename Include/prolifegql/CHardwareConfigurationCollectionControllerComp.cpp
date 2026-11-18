@@ -9,6 +9,8 @@
 
 // ProLife includes
 #include <prolifedata/IHardwareComponentInfo.h>
+#include <prolifegql/HardwareCatalog.h>
+#include <prolifegql/HardwareRepresentation.h>
 
 
 namespace prolifegql
@@ -17,67 +19,25 @@ namespace prolifegql
 
 // protected methods
 
-void CHardwareConfigurationCollectionControllerComp::FillConfigurationFromRepresentation(
-			const sdl::V1_0::prolife::CHardwareConfigurationData& representation,
-			prolifedata::IHardwareConfigurationInfo& configurationInfo)
-{
-	if (representation.configurationId){
-		configurationInfo.SetConfigurationId(*representation.configurationId);
-	}
-	if (representation.name){
-		configurationInfo.SetName(*representation.name);
-	}
-	if (representation.description){
-		configurationInfo.SetDescription(*representation.description);
-	}
-	if (representation.productId){
-		configurationInfo.SetProductId(*representation.productId);
-	}
-	if (representation.componentIds){
-		configurationInfo.SetComponentIds(representation.componentIds->ToList());
-	}
-	if (representation.bundledLicenseIds){
-		configurationInfo.SetBundledLicenseIds(representation.bundledLicenseIds->ToList());
-	}
-}
-
-
-void CHardwareConfigurationCollectionControllerComp::FillRepresentationFromConfiguration(
+bool CHardwareConfigurationCollectionControllerComp::CheckConfiguration(
 			const prolifedata::IHardwareConfigurationInfo& configurationInfo,
-			sdl::V1_0::prolife::CHardwareConfigurationData& representation)
+			QString& errorMessage) const
 {
-	representation.configurationId = configurationInfo.GetConfigurationId();
-	representation.name = configurationInfo.GetName();
-	representation.description = configurationInfo.GetDescription();
-	representation.productId = configurationInfo.GetProductId();
-	representation.componentIds.Emplace().FromList(configurationInfo.GetComponentIds());
-	representation.bundledLicenseIds.Emplace().FromList(configurationInfo.GetBundledLicenseIds());
-}
+	if (!m_productCollectionCompPtr.IsValid() || !m_componentCollectionCompPtr.IsValid()){
+		errorMessage = QStringLiteral("Unable to check the hardware configuration. Error: Product or component collection is not set");
 
-
-imtsdl::TElementList<sdl::V1_0::prolife::CHardwareConfigurationComponent> CHardwareConfigurationCollectionControllerComp::CreateComponentsRepresentation(
-			const QByteArrayList& componentIds) const
-{
-	imtsdl::TElementList<sdl::V1_0::prolife::CHardwareConfigurationComponent> components;
-	for (const QByteArray& componentId : componentIds){
-		sdl::V1_0::prolife::CHardwareConfigurationComponent componentRepresentation;
-		componentRepresentation.id = componentId;
-		componentRepresentation.name = QString::fromUtf8(componentId);
-		componentRepresentation.partNumber = QString();
-
-		imtbase::IObjectCollection::DataPtr componentDataPtr;
-		if (m_componentCollectionCompPtr.IsValid() && m_componentCollectionCompPtr->GetObjectData(componentId, componentDataPtr)){
-			const prolifedata::IHardwareComponentInfo* componentInfoPtr = dynamic_cast<const prolifedata::IHardwareComponentInfo*>(componentDataPtr.GetPtr());
-			if (componentInfoPtr != nullptr){
-				componentRepresentation.name = componentInfoPtr->GetName();
-				componentRepresentation.partNumber = QString::fromUtf8(componentInfoPtr->GetPartNumber());
-			}
-		}
-
-		components << componentRepresentation;
+		return false;
 	}
 
-	return components;
+	if (!CheckHardwareConfigurationFields(configurationInfo, errorMessage)){
+		return false;
+	}
+
+	if (!CheckHardwareModel(*m_productCollectionCompPtr, configurationInfo.GetProductId(), errorMessage)){
+		return false;
+	}
+
+	return CheckHardwareComponents(*m_componentCollectionCompPtr, configurationInfo.GetComponentIds(), errorMessage);
 }
 
 
@@ -155,17 +115,8 @@ bool CHardwareConfigurationCollectionControllerComp::CreateRepresentationFromObj
 		representationObject.productId = configurationInfoPtr->GetProductId();
 	}
 
-	if (requestInfo.items.isProductNameRequested && m_productCollectionCompPtr.IsValid()){
-		QString productName;
-		imtbase::IObjectCollection::DataPtr productDataPtr;
-		if (m_productCollectionCompPtr->GetObjectData(configurationInfoPtr->GetProductId(), productDataPtr)){
-			const imtlic::IProductInfo* productInfoPtr = dynamic_cast<const imtlic::IProductInfo*>(productDataPtr.GetPtr());
-			if (productInfoPtr != nullptr){
-				productName = productInfoPtr->GetName();
-			}
-		}
-
-		representationObject.productName = productName;
+	if (requestInfo.items.isProductNameRequested){
+		representationObject.productName = GetProductName(m_productCollectionCompPtr.GetPtr(), configurationInfoPtr->GetProductId());
 	}
 
 	if (requestInfo.items.isDescriptionRequested){
@@ -215,6 +166,12 @@ istd::IChangeableUniquePtr CHardwareConfigurationCollectionControllerComp::Creat
 
 	FillConfigurationFromRepresentation(representation, *configurationInstancePtr);
 
+	if (!CheckConfiguration(*configurationInstancePtr, errorMessage)){
+		SendErrorMessage(0, errorMessage, "CHardwareConfigurationCollectionControllerComp");
+
+		return nullptr;
+	}
+
 	return configurationInstancePtr;
 }
 
@@ -239,7 +196,8 @@ bool CHardwareConfigurationCollectionControllerComp::CreateRepresentationFromObj
 	}
 
 	FillRepresentationFromConfiguration(*configurationInfoPtr, representationPayload);
-	representationPayload.components = CreateComponentsRepresentation(configurationInfoPtr->GetComponentIds());
+	representationPayload.productName = GetProductName(m_productCollectionCompPtr.GetPtr(), configurationInfoPtr->GetProductId());
+	representationPayload.components = CreateComponentsRepresentation(m_componentCollectionCompPtr.GetPtr(), configurationInfoPtr->GetComponentIds());
 
 	return true;
 }
@@ -270,6 +228,12 @@ bool CHardwareConfigurationCollectionControllerComp::UpdateObjectFromRepresentat
 	configurationInfoPtr->ResetData();
 
 	FillConfigurationFromRepresentation(*arguments.input->item, *configurationInfoPtr);
+
+	if (!CheckConfiguration(*configurationInfoPtr, errorMessage)){
+		SendErrorMessage(0, errorMessage, "CHardwareConfigurationCollectionControllerComp");
+
+		return false;
+	}
 
 	return true;
 }

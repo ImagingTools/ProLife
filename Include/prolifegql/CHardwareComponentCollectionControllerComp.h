@@ -20,15 +20,14 @@ public:
 
 	I_BEGIN_COMPONENT(CHardwareComponentCollectionControllerComp);
 		I_ASSIGN(m_componentInfoFactCompPtr, "HardwareComponentFactory", "Factory of new hardware components", true, "HardwareComponentFactory");
+		I_ASSIGN(m_companyCollectionCompPtr, "CompanyCollection", "Companies: the manufacturer and the suppliers of a component are checked against it and shown by name", true, "CompanyCollection");
 	I_END_COMPONENT;
 
 protected:
-	static void FillComponentFromRepresentation(
-				const sdl::V1_0::prolife::CHardwareComponentData& representation,
-				prolifedata::IHardwareComponentInfo& componentInfo);
-	static void FillRepresentationFromComponent(
-				const prolifedata::IHardwareComponentInfo& componentInfo,
-				sdl::V1_0::prolife::CHardwareComponentData& representation);
+	/**
+		A component has a part number and a name, and refers to existing vendors only.
+	*/
+	bool CheckComponent(const prolifedata::IHardwareComponentInfo& componentInfo, QString& errorMessage) const;
 
 	// reimplemented (imtservergql::CObjectCollectionControllerCompBase)
 	virtual QByteArray GetObjectTypeIdFromRequest(const imtgql::CGqlRequest& gqlRequest) const override;
@@ -57,6 +56,7 @@ protected:
 
 private:
 	I_FACT(prolifedata::IHardwareComponentInfo, m_componentInfoFactCompPtr);
+	I_REF(imtbase::IObjectCollection, m_companyCollectionCompPtr);
 };
 
 

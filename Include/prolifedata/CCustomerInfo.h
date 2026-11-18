@@ -21,6 +21,14 @@ public:
 
 	// reimplemented (ICustomerInfo)
 	virtual QByteArray GetCustomerId() const override;
+	virtual QString GetWebsite() const override;
+	virtual void SetWebsite(const QString& website) override;
+	virtual bool IsCustomer() const override;
+	virtual void SetCustomer(bool isCustomer) override;
+	virtual bool IsManufacturer() const override;
+	virtual void SetManufacturer(bool isManufacturer) override;
+	virtual bool IsSupplier() const override;
+	virtual void SetSupplier(bool isSupplier) override;
 
 	// reimplemented (iser::ISerializable)
 	virtual bool Serialize(iser::IArchive& archive) override;
@@ -33,6 +41,10 @@ public:
 
 private:
 	QByteArray m_customerId;
+	QString m_website;
+	bool m_isCustomer = false;
+	bool m_isManufacturer = false;
+	bool m_isSupplier = false;
 };
 
 

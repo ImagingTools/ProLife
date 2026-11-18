@@ -109,7 +109,7 @@
                     <AttributeInfo Id="DeviceBindingCollection" Type="Reference" ExportId="DeviceBindingCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
-                    <AttributeInfo Id="LicenseCollection" Type="Reference" ExportId="LicenseRepository">
+                    <AttributeInfo Id="HardwareConfigurationCollection" Type="Reference" ExportId="HardwareConfigurationCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
@@ -188,7 +188,7 @@
                 </AttributeInfoMap>
             </Data>
         </Element>
-        <Element Id="LicenseNameMetaInfoController" PackageId="ImtDatabasePck" ComponentId="DependentTableMetaInfoController">
+        <Element Id="ConfigurationNameMetaInfoController" PackageId="ImtDatabasePck" ComponentId="DependentTableMetaInfoController">
             <Data IsEnabled="true" Flags="1">
                 <AttributeInfoMap>
                     <AttributeInfo Id="DependentMetaInfoController" Type="Reference" ExportId="">
@@ -197,13 +197,13 @@
                     <AttributeInfo Id="DependentMetaInfoNames" Type="String[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
-                                <Value>LicenseName</Value>
-                                <Value>LicenseId</Value>
+                                <Value>Name</Value>
+                                <Value>ConfigurationId</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
                     <AttributeInfo Id="DependentTableName" Type="String" ExportId="">
-                        <Data IsEnabled="true" Value="Licenses"/>
+                        <Data IsEnabled="true" Value="HardwareConfigurations"/>
                     </AttributeInfo>
                     <AttributeInfo Id="EnableVerbose" Type="Boolean" ExportId="">
                         <Data IsEnabled="true" Value="false"/>
@@ -222,7 +222,7 @@
                             </Values>
                         </Data>
                     </AttributeInfo>
-                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="LicenseCollection">
+                    <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="HardwareConfigurationCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="TracingConfiguration" Type="Reference" ExportId="TracingConfiguration">

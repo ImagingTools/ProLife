@@ -15,6 +15,21 @@
                 <AttributeInfoMap/>
             </Data>
         </Element>
+        <Element Id="HardwareComponentReferenceCleaner" PackageId="ProLifeGqlPck" ComponentId="HardwareComponentReferenceCleaner">
+            <Data IsEnabled="true" Flags="1">
+                <AttributeInfoMap>
+                    <AttributeInfo Id="DependentCollection" Type="Reference" ExportId="HardwareConfigurationCollection">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="SourceCollection" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="PostgresDatabaseObjectCollection"/>
+                    </AttributeInfo>
+                </AttributeInfoMap>
+            </Data>
+        </Element>
         <Element Id="PostgresDatabaseObjectCollection" PackageId="ImtDatabaseVoce" ComponentId="PostgresDatabaseObjectCollection">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>

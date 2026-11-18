@@ -2,14 +2,13 @@
 <#
 .SYNOPSIS
     CI entry point for the ProLifeGui Playwright suite: starts the
-    PumaServerPgTest.exe / LisaServerTest.exe dependencies (ProLifeServerTest
-    talks to both over HTTP - see ProLifeServerTest.acc's PumaHttpPort/
-    LisaHttpPort), restores puma_test/lisa_test/prolife_test from real
-    pg_dump backups (see -PumaBackupPath/-LisaBackupPath/-ProLifeBackupPath
-    below for why an empty schema isn't enough), starts ProLifeServerTest.exe
-    (which also serves the ProLife WASM app this suite drives via
-    Playwright), runs the Playwright suite against it, and tears all three
-    servers back down in reverse order. Intended to be invoked as a single
+    PumaServerPgTest.exe dependency (ProLifeServerTest talks to it over
+    HTTP - see ProLifeServerTest.acc's PumaHttpPort), restores
+    puma_test/prolife_test from real pg_dump backups (see
+    -PumaBackupPath/-ProLifeBackupPath below for why an empty schema isn't
+    enough), starts ProLifeServerTest.exe (which also serves the ProLife
+    WASM app this suite drives via Playwright), runs the Playwright suite
+    against it, and tears both servers back down in reverse order. Intended to be invoked as a single
     TeamCity build step (PowerShell runner). Mirrors
     Tests\ProLifeApiPostman\Run-CiTests.ps1 (same dependency startup/
     teardown; swaps newman for Playwright) - run this as its own sequential
@@ -24,46 +23,39 @@
 .PARAMETER PumaRepoRoot
     Root of the Puma checkout. Defaults to the PUMADIR environment variable;
     if unset, falls back to a directory named "Puma" next to RepoRoot
-    (Lisa/Puma/ProLife are checked out as siblings, e.g. under Git\).
-
-.PARAMETER LisaRepoRoot
-    Root of the Lisa checkout. Defaults to the LISADIR environment variable;
-    if unset, falls back to a directory named "Lisa" next to RepoRoot, same
-    sibling-checkout convention as -PumaRepoRoot.
+    (Puma/ProLife are checked out as siblings, e.g. under Git\).
 
 .PARAMETER BuildConfig
     Name of the Bin\<BuildConfig> folder to look for ProLifeServerTest.exe
     in (e.g. "Release_Qt6_VC17_x64"). Ignored if -ServerExePath is passed
-    explicitly. Also used to locate PumaServerPgTest.exe / LisaServerTest.exe
-    under -PumaRepoRoot / -LisaRepoRoot unless -PumaServerExePath /
-    -LisaServerExePath are passed explicitly.
+    explicitly. Also used to locate PumaServerPgTest.exe under
+    -PumaRepoRoot unless -PumaServerExePath is passed explicitly.
 
-.PARAMETER ServerExePath / PumaServerExePath / LisaServerExePath
-    Full paths to ProLifeServerTest.exe / PumaServerPgTest.exe /
-    LisaServerTest.exe. Each overrides -BuildConfig when set.
+.PARAMETER ServerExePath / PumaServerExePath
+    Full paths to ProLifeServerTest.exe / PumaServerPgTest.exe. Each
+    overrides -BuildConfig when set.
 
-.PARAMETER HttpPort / PumaHttpPort / LisaHttpPort
-    Ports the ProLife/Puma/Lisa test servers listen on (must match
-    ProLifeServerTest.acc's HttpPort, PumaServerPgTest.acc's HttpPort and
-    LisaServerTest.acc's DefaultHttpPort - currently 17778/17788/17776).
+.PARAMETER HttpPort / PumaHttpPort
+    Ports the ProLife/Puma test servers listen on (must match
+    ProLifeServerTest.acc's HttpPort and PumaServerPgTest.acc's HttpPort -
+    currently 17778/17788).
     $HttpPort also becomes the PROLIFE_BASE_URL Playwright's
     playwright.config.js / global-setup.js drive the app at.
 
-.PARAMETER DbName / PumaDbName / LisaDbName / DbHost / DbPort / DbUser / DbPassword
-    Postgres connection and database names for prolife_test/puma_test/
-    lisa_test (must match ProLifeServerSettings.acc / PumaServerPgTest.acc /
-    LisaServerTest.acc's DatabaseAccessSettings defaults). All three are
-    restored from a backup before every run (see -ProLifeBackupPath/
-    -PumaBackupPath/-LisaBackupPath) rather than left for the server to
-    create/migrate from scratch.
+.PARAMETER DbName / PumaDbName / DbHost / DbPort / DbUser / DbPassword
+    Postgres connection and database names for prolife_test/puma_test
+    (must match ProLifeServerSettings.acc / PumaServerPgTest.acc's
+    DatabaseAccessSettings defaults). Both are restored from a backup
+    before every run (see -ProLifeBackupPath/-PumaBackupPath) rather than
+    left for the server to create/migrate from scratch.
 
-.PARAMETER ProLifeBackupPath / PumaBackupPath / LisaBackupPath
+.PARAMETER ProLifeBackupPath / PumaBackupPath
     Paths to the pg_dump custom-format backups used to (re)create
-    prolife_test / puma_test / lisa_test before each run. All three default
-    to a file living next to this script, in Tests\ProLifeGui itself
-    (prolife.backup / puma.backup / lisa.backup) - self-contained, so this
-    suite doesn't depend on Tests\ProLifeApiPostman's copies at runtime.
-    -ProLifeBackupPath and -LisaBackupPath are plain copies of the
+    prolife_test / puma_test before each run. Both default to a file
+    living next to this script, in Tests\ProLifeGui itself
+    (prolife.backup / puma.backup) - self-contained, so this suite doesn't
+    depend on Tests\ProLifeApiPostman's copies at runtime.
+    -ProLifeBackupPath is a plain copy of the
     real-dev-export backups also used by Tests\ProLifeApiPostman\Run-CiTests.ps1
     (copy them again from there - or from a fresh export - if they go stale;
     nothing here regenerates them) - a real, populated database is required
@@ -113,7 +105,7 @@
     "tests/devices.collection.multiuser.test.js") or a project filter
     (-PlaywrightArgs "--project=hardwareManager"). Empty by default, which
     runs the full suite across every ACTIVE project (see -AllUsers). The
-    environment (Puma/Lisa/ProLife servers, databases) is always brought up
+    environment (Puma/ProLife servers, databases) is always brought up
     in full regardless of this filter.
 
 .PARAMETER AllUsers
@@ -175,23 +167,18 @@ param(
     [string]$ScriptDir = (Join-Path $RepoRoot "Tests\ProLifeGui"),
     [string]$BuildConfig = "Release_Qt6_VC17_x64",
 
-    # Lisa/Puma/ProLife are checked out as siblings (e.g. D:\...\Git\Lisa,
-    # D:\...\Git\Puma, D:\...\Git\ProLife) - same convention PUMADIR/
-    # PROLIFEDIR already encode, extended here with LISADIR.
+    # Puma/ProLife are checked out as siblings (e.g. D:\...\Git\Puma,
+    # D:\...\Git\ProLife) - same convention PUMADIR/PROLIFEDIR already encode.
     [string]$PumaRepoRoot = $(if ($env:PUMADIR) { $env:PUMADIR } else { Join-Path (Split-Path -Parent $RepoRoot) "Puma" }),
-    [string]$LisaRepoRoot = $(if ($env:LISADIR) { $env:LISADIR } else { Join-Path (Split-Path -Parent $RepoRoot) "Lisa" }),
 
     [string]$ServerExePath = "",
     [string]$PumaServerExePath = "",
-    [string]$LisaServerExePath = "",
 
     [int]$HttpPort = 17778,
     [int]$PumaHttpPort = 17788,
-    [int]$LisaHttpPort = 17776,
 
     [string]$DbName = "prolife_test",
     [string]$PumaDbName = "puma_test",
-    [string]$LisaDbName = "lisa_test",
     [string]$DbHost = "localhost",
     [int]$DbPort = 5432,
     [string]$DbUser = "postgres",
@@ -199,7 +186,6 @@ param(
 
     [string]$ProLifeBackupPath = (Join-Path $ScriptDir "prolife.backup"),
     [string]$PumaBackupPath = (Join-Path $ScriptDir "puma.backup"),
-    [string]$LisaBackupPath = (Join-Path $ScriptDir "lisa.backup"),
 
     # Safety net only - Tests\ProLifeGui\puma.backup already has a working
     # "su" account baked in (see -PumaBackupPath above). Login is always
@@ -225,7 +211,6 @@ param(
 $ErrorActionPreference = "Stop"
 $serverProcess = $null
 $pumaProcess = $null
-$lisaProcess = $null
 $exitCode = 1
 
 if ([string]::IsNullOrWhiteSpace($ServerExePath)) {
@@ -233,9 +218,6 @@ if ([string]::IsNullOrWhiteSpace($ServerExePath)) {
 }
 if ([string]::IsNullOrWhiteSpace($PumaServerExePath)) {
     $PumaServerExePath = Join-Path $PumaRepoRoot "Bin\$BuildConfig\PumaServerPgTest.exe"
-}
-if ([string]::IsNullOrWhiteSpace($LisaServerExePath)) {
-    $LisaServerExePath = Join-Path $LisaRepoRoot "Bin\$BuildConfig\LisaServerTest.exe"
 }
 
 function Write-Step($message) {
@@ -269,9 +251,9 @@ function Stop-ServerProcess([string]$processName) {
 
 function Reset-Database([string]$name) {
     # Only drops the database if present - the caller (Restore-DatabaseFromBackup, below) always
-    # recreates it and restores a real backup afterwards. ALL THREE databases this suite touches
-    # (puma_test, lisa_test, prolife_test) go through that same full drop+recreate+restore path
-    # identically - see the three Restore-DatabaseFromBackup calls near the bottom of this script.
+    # recreates it and restores a real backup afterwards. BOTH databases this suite touches
+    # (puma_test, prolife_test) go through that same full drop+recreate+restore path
+    # identically - see the Restore-DatabaseFromBackup calls near the bottom of this script.
     # None of them is left to a bare server-exe migration on an empty schema.
     Write-Step "Resetting database '$name'"
     $psql = Resolve-PsqlPath
@@ -297,7 +279,7 @@ function Reset-Database([string]$name) {
 }
 
 function Restore-DatabaseFromBackup([string]$name, [string]$backupPath) {
-    # PumaServerPgTest.exe/LisaServerTest.exe/ProLifeServerTest.exe would all
+    # PumaServerPgTest.exe/ProLifeServerTest.exe would both
     # happily create-and-migrate an EMPTY database from scratch on startup,
     # but the collection-page tests (DeviceCollectionPage, SoftwareCollectionPage,
     # etc.) need real rows to select/filter/sort, and ProLife's own DeviceAdd/
@@ -400,18 +382,6 @@ function Start-PumaTestServer {
     Write-Host "Started PID $($script:pumaProcess.Id)"
     Wait-ForPort "PumaServerPgTest.exe" $script:pumaProcess $PumaHttpPort
     Write-Host "Puma test server is accepting connections on port $PumaHttpPort"
-}
-
-function Start-LisaTestServer {
-    Write-Step "Starting LisaServerTest.exe"
-    if (-not (Test-Path $LisaServerExePath)) {
-        throw "Server executable not found: $LisaServerExePath"
-    }
-    $workDir = Split-Path -Parent $LisaServerExePath
-    $script:lisaProcess = Start-Process -FilePath $LisaServerExePath -WorkingDirectory $workDir -PassThru -WindowStyle Hidden
-    Write-Host "Started PID $($script:lisaProcess.Id)"
-    Wait-ForPort "LisaServerTest.exe" $script:lisaProcess $LisaHttpPort
-    Write-Host "Lisa test server is accepting connections on port $LisaHttpPort"
 }
 
 function Start-TestServer {
@@ -597,30 +567,23 @@ $repoRootSource = if ($PSBoundParameters.ContainsKey('RepoRoot')) { 'explicit -R
 Write-Step "Resolved paths"
 Write-Host "RepoRoot:          $RepoRoot  (source: $repoRootSource)"
 Write-Host "PumaRepoRoot:      $PumaRepoRoot"
-Write-Host "LisaRepoRoot:      $LisaRepoRoot"
 Write-Host "ScriptDir:         $ScriptDir"
 Write-Host "ServerExePath:     $ServerExePath"
 Write-Host "PumaServerExePath: $PumaServerExePath"
-Write-Host "LisaServerExePath: $LisaServerExePath"
 Write-Host "PumaBackupPath:    $PumaBackupPath"
-Write-Host "LisaBackupPath:    $LisaBackupPath"
 Write-Host "ProLifeBackupPath: $ProLifeBackupPath"
 Write-Host "OutputRoot:        $OutputRoot"
 
 try {
     # Stop stale processes from a previous, possibly-crashed run before
-    # touching any database - ProLifeServerTest talks to Puma/Lisa over
-    # HTTP, so a stale Puma/Lisa left bound to the port would make the new
-    # instance fail to start rather than the new one being used.
+    # touching any database - ProLifeServerTest talks to Puma over HTTP, so
+    # a stale Puma left bound to the port would make the new instance fail
+    # to start rather than the new one being used.
     Stop-ServerProcess "ProLifeServerTest"
-    Stop-ServerProcess "LisaServerTest"
     Stop-ServerProcess "PumaServerPgTest"
 
     Restore-DatabaseFromBackup $PumaDbName $PumaBackupPath
     Start-PumaTestServer
-
-    Restore-DatabaseFromBackup $LisaDbName $LisaBackupPath
-    Start-LisaTestServer
 
     Restore-DatabaseFromBackup $DbName $ProLifeBackupPath
     Repair-ProLifeForeignServers
@@ -630,16 +593,12 @@ try {
     $exitCode = Invoke-PlaywrightSuite
 }
 finally {
-    # Tear down in reverse start order: ProLife depends on Lisa/Puma being
-    # up, not the other way round, so it's safe (and cleanest) to stop it
+    # Tear down in reverse start order: ProLife depends on Puma being up,
+    # not the other way round, so it's safe (and cleanest) to stop it
     # first.
     if ($serverProcess -and -not $serverProcess.HasExited) {
         Write-Step "Stopping ProLifeServerTest.exe (PID $($serverProcess.Id))"
         Stop-Process -Id $serverProcess.Id -Force -ErrorAction SilentlyContinue
-    }
-    if ($lisaProcess -and -not $lisaProcess.HasExited) {
-        Write-Step "Stopping LisaServerTest.exe (PID $($lisaProcess.Id))"
-        Stop-Process -Id $lisaProcess.Id -Force -ErrorAction SilentlyContinue
     }
     if ($pumaProcess -and -not $pumaProcess.HasExited) {
         Write-Step "Stopping PumaServerPgTest.exe (PID $($pumaProcess.Id))"

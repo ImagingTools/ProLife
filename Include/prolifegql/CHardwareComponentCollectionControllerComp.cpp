@@ -4,6 +4,10 @@
 // Qt includes
 #include <QtCore/QUuid>
 
+// ProLife includes
+#include <prolifegql/HardwareCatalog.h>
+#include <prolifegql/HardwareRepresentation.h>
+
 
 namespace prolifegql
 {
@@ -11,135 +15,15 @@ namespace prolifegql
 
 // protected methods
 
-void CHardwareComponentCollectionControllerComp::FillComponentFromRepresentation(
-			const sdl::V1_0::prolife::CHardwareComponentData& representation,
-			prolifedata::IHardwareComponentInfo& componentInfo)
-{
-	if (representation.partNumber){
-		componentInfo.SetPartNumber(*representation.partNumber);
-	}
-	if (representation.name){
-		componentInfo.SetName(*representation.name);
-	}
-	if (representation.description){
-		componentInfo.SetDescription(*representation.description);
-	}
-	if (representation.componentType){
-		componentInfo.SetComponentType(*representation.componentType);
-	}
-	if (representation.revision){
-		componentInfo.SetRevision(*representation.revision);
-	}
-	if (representation.manufacturer){
-		componentInfo.SetManufacturer(*representation.manufacturer);
-	}
-	if (representation.supplier){
-		componentInfo.SetSupplier(*representation.supplier);
-	}
-	if (representation.mpn){
-		componentInfo.SetMpn(*representation.mpn);
-	}
-	if (representation.lifecycleStatus){
-		componentInfo.SetLifecycleStatus(*representation.lifecycleStatus);
-	}
-	if (representation.serialized){
-		componentInfo.SetSerialized(*representation.serialized);
-	}
-	if (representation.requirements){
-		componentInfo.SetRequirements(representation.requirements->ToList());
-	}
-	if (representation.incompatibilities){
-		componentInfo.SetIncompatibilities(representation.incompatibilities->ToList());
-	}
-
-	if (representation.parameters){
-		prolifedata::IHardwareComponentInfo::Parameters parameters;
-		for (const sdl::V1_0::prolife::CHardwareParameter& parameterRepresentation : representation.parameters->ToList()){
-			prolifedata::IHardwareComponentInfo::Parameter parameter;
-			if (parameterRepresentation.key){
-				parameter.key = *parameterRepresentation.key;
-			}
-			if (parameterRepresentation.name){
-				parameter.name = *parameterRepresentation.name;
-			}
-			if (parameterRepresentation.value){
-				parameter.value = *parameterRepresentation.value;
-			}
-			if (parameterRepresentation.unit){
-				parameter.unit = *parameterRepresentation.unit;
-			}
-
-			parameters.append(parameter);
-		}
-
-		componentInfo.SetParameters(parameters);
-	}
-
-	if (representation.bom){
-		prolifedata::IHardwareComponentInfo::Bom bom;
-		for (const sdl::V1_0::prolife::CBomEntry& entryRepresentation : representation.bom->ToList()){
-			prolifedata::IHardwareComponentInfo::BomEntry entry;
-			if (entryRepresentation.componentId){
-				entry.componentId = *entryRepresentation.componentId;
-			}
-			if (entryRepresentation.quantity){
-				entry.quantity = *entryRepresentation.quantity;
-			}
-			if (entryRepresentation.optional){
-				entry.optional = *entryRepresentation.optional;
-			}
-			if (entryRepresentation.alternativeGroup){
-				entry.alternativeGroup = *entryRepresentation.alternativeGroup;
-			}
-
-			bom.append(entry);
-		}
-
-		componentInfo.SetBom(bom);
-	}
-}
-
-
-void CHardwareComponentCollectionControllerComp::FillRepresentationFromComponent(
+bool CHardwareComponentCollectionControllerComp::CheckComponent(
 			const prolifedata::IHardwareComponentInfo& componentInfo,
-			sdl::V1_0::prolife::CHardwareComponentData& representation)
+			QString& errorMessage) const
 {
-	representation.partNumber = componentInfo.GetPartNumber();
-	representation.name = componentInfo.GetName();
-	representation.description = componentInfo.GetDescription();
-	representation.componentType = componentInfo.GetComponentType();
-	representation.revision = componentInfo.GetRevision();
-	representation.manufacturer = componentInfo.GetManufacturer();
-	representation.supplier = componentInfo.GetSupplier();
-	representation.mpn = componentInfo.GetMpn();
-	representation.lifecycleStatus = componentInfo.GetLifecycleStatus();
-	representation.serialized = componentInfo.IsSerialized();
-	representation.requirements.Emplace().FromList(componentInfo.GetRequirements());
-	representation.incompatibilities.Emplace().FromList(componentInfo.GetIncompatibilities());
-
-	imtsdl::TElementList<sdl::V1_0::prolife::CHardwareParameter> parameters;
-	for (const prolifedata::IHardwareComponentInfo::Parameter& parameter : componentInfo.GetParameters()){
-		sdl::V1_0::prolife::CHardwareParameter parameterRepresentation;
-		parameterRepresentation.key = parameter.key;
-		parameterRepresentation.name = parameter.name;
-		parameterRepresentation.value = parameter.value;
-		parameterRepresentation.unit = parameter.unit;
-
-		parameters << parameterRepresentation;
+	if (!CheckHardwareComponentFields(componentInfo, errorMessage)){
+		return false;
 	}
-	representation.parameters = parameters;
 
-	imtsdl::TElementList<sdl::V1_0::prolife::CBomEntry> bom;
-	for (const prolifedata::IHardwareComponentInfo::BomEntry& entry : componentInfo.GetBom()){
-		sdl::V1_0::prolife::CBomEntry entryRepresentation;
-		entryRepresentation.componentId = entry.componentId;
-		entryRepresentation.quantity = entry.quantity;
-		entryRepresentation.optional = entry.optional;
-		entryRepresentation.alternativeGroup = entry.alternativeGroup;
-
-		bom << entryRepresentation;
-	}
-	representation.bom = bom;
+	return CheckHardwareComponentVendors(componentInfo, *m_companyCollectionCompPtr, errorMessage);
 }
 
 
@@ -225,8 +109,12 @@ bool CHardwareComponentCollectionControllerComp::CreateRepresentationFromObject(
 		representationObject.revision = componentInfoPtr->GetRevision();
 	}
 
-	if (requestInfo.items.isManufacturerRequested){
-		representationObject.manufacturer = componentInfoPtr->GetManufacturer();
+	if (requestInfo.items.isManufacturerIdRequested){
+		representationObject.manufacturerId = componentInfoPtr->GetManufacturerId();
+	}
+
+	if (requestInfo.items.isManufacturerNameRequested){
+		representationObject.manufacturerName = GetCompanyName(m_companyCollectionCompPtr.GetPtr(), componentInfoPtr->GetManufacturerId());
 	}
 
 	if (requestInfo.items.isLifecycleStatusRequested){
@@ -280,6 +168,12 @@ istd::IChangeableUniquePtr CHardwareComponentCollectionControllerComp::CreateObj
 
 	FillComponentFromRepresentation(representation, *componentInstancePtr);
 
+	if (!CheckComponent(*componentInstancePtr, errorMessage)){
+		SendErrorMessage(0, errorMessage, "CHardwareComponentCollectionControllerComp");
+
+		return nullptr;
+	}
+
 	return componentInstancePtr;
 }
 
@@ -303,7 +197,7 @@ bool CHardwareComponentCollectionControllerComp::CreateRepresentationFromObject(
 		representationPayload.id = *arguments.input->id;
 	}
 
-	FillRepresentationFromComponent(*componentInfoPtr, representationPayload);
+	FillRepresentationFromComponent(*componentInfoPtr, m_companyCollectionCompPtr.GetPtr(), representationPayload);
 
 	return true;
 }
@@ -334,6 +228,12 @@ bool CHardwareComponentCollectionControllerComp::UpdateObjectFromRepresentationR
 	componentInfoPtr->ResetData();
 
 	FillComponentFromRepresentation(*arguments.input->item, *componentInfoPtr);
+
+	if (!CheckComponent(*componentInfoPtr, errorMessage)){
+		SendErrorMessage(0, errorMessage, "CHardwareComponentCollectionControllerComp");
+
+		return false;
+	}
 
 	return true;
 }

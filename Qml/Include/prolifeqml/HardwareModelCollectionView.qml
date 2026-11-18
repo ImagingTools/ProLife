@@ -19,21 +19,6 @@ ProductCollectionView {
 		}
 	}
 
-	// The page has its own ID ("HardwareModels") and hands it over as the collection ID;
-	// the data still lives in the product collection.
-	onCollectionIdChanged: {
-		if (hardwareModelCollectionView.collectionId !== "Products"){
-			hardwareModelCollectionView.collectionId = "Products"
-		}
-	}
-
-	// Documents opened here belong to this page, not to the software products page.
-	onCommandsDelegateChanged: {
-		if (hardwareModelCollectionView.commandsDelegate){
-			hardwareModelCollectionView.commandsDelegate.documentManagerId = "HardwareModels"
-		}
-	}
-
 	function getHeaders(){
 		let headers = {}
 		headers["productCategory"] = "Hardware"

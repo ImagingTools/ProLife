@@ -307,11 +307,11 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	}
 
 	if (requestInfo.items.isLicenseIdRequested){
-		representationObject.licenseId = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_ID).toString().toUtf8();
+		representationObject.licenseId = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CONFIGURATION_ARTICLE).toString().toUtf8();
 	}
 
 	if (requestInfo.items.isLicenseNameRequested){
-		representationObject.licenseName = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_NAME).toString().toUtf8();
+		representationObject.licenseName = metaInfo->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CONFIGURATION_NAME).toString().toUtf8();
 	}
 
 	if (requestInfo.items.isDeliveryIdLinkRequested){
@@ -493,8 +493,8 @@ bool CDeviceCollectionControllerComp::CreateRepresentationFromObject(
 	idoc::MetaInfoPtr metaInfoPtr = m_objectCollectionCompPtr->GetDataMetaInfo(id);
 	if (metaInfoPtr.IsValid()){
 		representationPayload.productName = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_PRODUCT_NAME).toString();
-		representationPayload.configurationName = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_NAME).toString();
-		representationPayload.configurationArticle = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_LICENSE_ID).toString();
+		representationPayload.configurationName = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CONFIGURATION_NAME).toString();
+		representationPayload.configurationArticle = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_CONFIGURATION_ARTICLE).toString();
 		representationPayload.orderName = metaInfoPtr->GetMetaInfo(prolifedata::IDeviceInfo::MIT_DELIVERY_ID).toString();
 	}
 

@@ -18,7 +18,6 @@
                             <Values>
                                 <Value>name</Value>
                                 <Value>partNumber</Value>
-                                <Value>manufacturer</Value>
                             </Values>
                         </Data>
                     </AttributeInfo>
@@ -28,7 +27,7 @@
                                 <Value>name</Value>
                                 <Value>partNumber</Value>
                                 <Value>componentType</Value>
-                                <Value>manufacturer</Value>
+                                <Value>manufacturerName</Value>
                                 <Value>revision</Value>
                                 <Value>lifecycleStatus</Value>
                                 <Value>timeStamp</Value>
@@ -54,7 +53,6 @@
                                 <Value>name</Value>
                                 <Value>partNumber</Value>
                                 <Value>componentType</Value>
-                                <Value>manufacturer</Value>
                                 <Value>revision</Value>
                                 <Value>lifecycleStatus</Value>
                                 <Value>timeStamp</Value>
@@ -100,6 +98,12 @@
         <Element Id="HardwareComponentCollectionController" PackageId="ProLifeGqlPck" ComponentId="HardwareComponentCollectionController">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
+                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="CommandPermissions"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="CheckPermissionOr"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="CollectionId" Type="Id" ExportId="">
                         <Data IsEnabled="true" Value="HardwareComponents"/>
                     </AttributeInfo>
@@ -118,6 +122,9 @@
                     <AttributeInfo Id="ObjectCollection" Type="Reference" ExportId="HardwareComponentCollection">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
+                    <AttributeInfo Id="CompanyCollection" Type="Reference" ExportId="AccountRepository">
+                        <Data IsEnabled="false"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="ObjectTypeIds" Type="Id[]" ExportId="">
                         <Data IsEnabled="true">
                             <Values>
@@ -131,7 +138,6 @@
                                 <Value>name</Value>
                                 <Value>partNumber</Value>
                                 <Value>componentType</Value>
-                                <Value>manufacturer</Value>
                                 <Value>revision</Value>
                                 <Value>lifecycleStatus</Value>
                                 <Value>timeStamp</Value>
@@ -144,7 +150,6 @@
                                 <Value>Name</Value>
                                 <Value>PartNumber</Value>
                                 <Value>ComponentType</Value>
-                                <Value>Manufacturer</Value>
                                 <Value>Revision</Value>
                                 <Value>LifecycleStatus</Value>
                                 <Value>TimeStamp</Value>
@@ -177,6 +182,16 @@
         </Element>
         <Element Id="HardwareComponentInfo" PackageId="ProLifeDataPck" ComponentId="HardwareComponentInfo">
             <Data IsEnabled="true" Flags="2">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="CheckPermissionOr" PackageId="ImtAuthPck" ComponentId="CheckPermissionOr">
+            <Data IsEnabled="true" Flags="0">
+                <AttributeInfoMap/>
+            </Data>
+        </Element>
+        <Element Id="CommandPermissions" PackageId="ProLifeVoce" ComponentId="HardwareComponentPermissions">
+            <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap/>
             </Data>
         </Element>
