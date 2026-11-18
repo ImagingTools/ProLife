@@ -2349,7 +2349,7 @@
           ]
         },
         {
-          "name": "CreateToken - Scenario C (over-broad: scopes include a permission the user lacks)",
+          "name": "CreateToken - Scenario C (the superuser through the server of a product creates no token for another user)",
           "request": {
             "method": "POST",
             "header": [],
@@ -2390,99 +2390,13 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "pm.test('Response has correct structure for CreateToken', function () {",
-                  "  pm.expect(json).to.be.an('object');",
-                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
-                  "  pm.expect(json.data).to.have.property('CreateToken').that.is.an('object');",
-                  "  pm.expect(json.data.CreateToken).to.have.property('success');",
+                  "pm.test(\"Scenario C is refused: through a product the superuser manages only its own tokens\", function () {",
+                  "  pm.expect(json, 'Unexpected response: ' + JSON.stringify(json)).to.have.property('errors').that.is.an('array').and.not.empty;",
+                  "  pm.expect(json.errors[0].message).to.eql(\"Not authorized to create a personal access token for this user\");",
                   "});",
-                  "const payload = json.data.CreateToken;",
-                  "pm.test('Scenario C token created despite over-broad scope', function () { pm.expect(payload.success, 'Unexpected response: ' + JSON.stringify(json)).to.eql(true); });",
-                  "const __extracted_intersectionOverBroadTokenId = payload.id;",
-                  "pm.test('Scenario C CreateToken returns id', function () {",
-                  "  pm.expect(__extracted_intersectionOverBroadTokenId, 'Unexpected response: ' + JSON.stringify(json)).to.be.a('string').and.not.empty;",
-                  "});",
-                  "if (typeof __extracted_intersectionOverBroadTokenId === 'string' && __extracted_intersectionOverBroadTokenId) {",
-                  "  pm.environment.set('intersectionOverBroadTokenId', __extracted_intersectionOverBroadTokenId);",
-                  "} else {",
-                  "  console.log('Scenario C CreateToken returns id - FAILED, full response was:', JSON.stringify(json));",
-                  "}",
-                  "const __extracted_intersectionOverBroadRawToken = payload.token;",
-                  "pm.test('Scenario C CreateToken returns token', function () {",
-                  "  pm.expect(__extracted_intersectionOverBroadRawToken, 'Unexpected response: ' + JSON.stringify(json)).to.be.a('string').and.not.empty;",
-                  "});",
-                  "if (typeof __extracted_intersectionOverBroadRawToken === 'string' && __extracted_intersectionOverBroadRawToken) {",
-                  "  pm.environment.set('intersectionOverBroadRawToken', __extracted_intersectionOverBroadRawToken);",
-                  "} else {",
-                  "  console.log('Scenario C CreateToken returns token - FAILED, full response was:', JSON.stringify(json));",
-                  "}"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Probe Scenario C - AddOrder excluded despite being in scope (headline intersection proof)",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": "{{baseUrl}}/graphql",
-            "description": "This is the headline assertion proving the auth layer computes an INTERSECTION (user permissions AND token scopes), not a union - an over-broad scope grants nothing beyond what the user actually has.",
-            "auth": {
-              "type": "apikey",
-              "apikey": [
-                {
-                  "key": "key",
-                  "value": "x-authentication-token",
-                  "type": "string"
-                },
-                {
-                  "key": "value",
-                  "value": "{{intersectionOverBroadRawToken}}",
-                  "type": "string"
-                },
-                {
-                  "key": "in",
-                  "value": "header",
-                  "type": "string"
-                }
-              ]
-            },
-            "body": {
-              "mode": "graphql",
-              "graphql": {
-                "query": "query GetUserPermissions { GetUserPermissions(input: { productId: \"{{productId}}\" }) { groups { groupId groupName entries { permissionId displayName description } } errorMessage } }",
-                "variables": ""
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "function flattenPermissionIds(payload) {",
-                  "  pm.expect(payload).to.be.an('object', 'GetUserPermissions payload missing');",
-                  "  const groups = payload.groups;",
-                  "  const ids = [];",
-                  "  groups.forEach(function (g) {",
-                  "    (g.entries || []).forEach(function (e) { ids.push(e.permissionId); });",
-                  "  });",
-                  "  return ids;",
-                  "}",
-                  "const json = pm.response.json();",
-                  "pm.test('Response has correct structure for GetUserPermissions', function () {",
-                  "  pm.expect(json).to.be.an('object');",
-                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
-                  "  pm.expect(json.data).to.have.property('GetUserPermissions').that.is.an('object');",
-                  "});",
-                  "const ids = flattenPermissionIds(json.data.GetUserPermissions);",
-                  "pm.test('Scenario C: effective set is exactly ViewSensors+ViewOrders', function () {",
-                  "  pm.expect(ids.sort()).to.eql(['/OrderManagement/View','/SensorManagement/View']);",
-                  "});",
-                  "pm.test('Scenario C: AddOrder is NOT granted despite nominal scope', function () {",
-                  "  pm.expect(ids).to.not.include('/OrderManagement/Edit/Add');",
+                  "pm.test('No token is handed out', function () {",
+                  "  const payload = (json.data || {}).CreateToken;",
+                  "  pm.expect(payload === undefined || payload === null || payload.success === false, 'Unexpected response: ' + JSON.stringify(json)).to.eql(true);",
                   "});"
                 ]
               }
@@ -2490,32 +2404,12 @@
           ]
         },
         {
-          "name": "CreateToken - Scenario D (fully disjoint: scope the user does not have at all)",
+          "name": "CreateToken - Scenario D (fully disjoint: a scope the user does not hold is refused)",
           "request": {
             "method": "POST",
             "header": [],
             "url": "{{baseUrl}}/graphql",
             "description": "Minted by SU for the same reason as Scenario C - a non-admin may not grant itself a scope it does not hold.",
-            "auth": {
-              "type": "apikey",
-              "apikey": [
-                {
-                  "key": "key",
-                  "value": "x-authentication-token",
-                  "type": "string"
-                },
-                {
-                  "key": "value",
-                  "value": "{{suToken}}",
-                  "type": "string"
-                },
-                {
-                  "key": "in",
-                  "value": "header",
-                  "type": "string"
-                }
-              ]
-            },
             "body": {
               "mode": "graphql",
               "graphql": {
@@ -2531,96 +2425,13 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "pm.test('Response has correct structure for CreateToken', function () {",
-                  "  pm.expect(json).to.be.an('object');",
-                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
-                  "  pm.expect(json.data).to.have.property('CreateToken').that.is.an('object');",
-                  "  pm.expect(json.data.CreateToken).to.have.property('success');",
+                  "pm.test(\"Scenario D is refused: the token would carry a permission its creator does not hold\", function () {",
+                  "  pm.expect(json, 'Unexpected response: ' + JSON.stringify(json)).to.have.property('errors').that.is.an('array').and.not.empty;",
+                  "  pm.expect(json.errors[0].message).to.eql(\"Not authorized to grant one or more of the requested permission scopes\");",
                   "});",
-                  "const payload = json.data.CreateToken;",
-                  "pm.test('Scenario D token created', function () { pm.expect(payload.success, 'Unexpected response: ' + JSON.stringify(json)).to.eql(true); });",
-                  "const __extracted_intersectionDisjointTokenId = payload.id;",
-                  "pm.test('Scenario D CreateToken returns id', function () {",
-                  "  pm.expect(__extracted_intersectionDisjointTokenId, 'Unexpected response: ' + JSON.stringify(json)).to.be.a('string').and.not.empty;",
-                  "});",
-                  "if (typeof __extracted_intersectionDisjointTokenId === 'string' && __extracted_intersectionDisjointTokenId) {",
-                  "  pm.environment.set('intersectionDisjointTokenId', __extracted_intersectionDisjointTokenId);",
-                  "} else {",
-                  "  console.log('Scenario D CreateToken returns id - FAILED, full response was:', JSON.stringify(json));",
-                  "}",
-                  "const __extracted_intersectionDisjointRawToken = payload.token;",
-                  "pm.test('Scenario D CreateToken returns token', function () {",
-                  "  pm.expect(__extracted_intersectionDisjointRawToken, 'Unexpected response: ' + JSON.stringify(json)).to.be.a('string').and.not.empty;",
-                  "});",
-                  "if (typeof __extracted_intersectionDisjointRawToken === 'string' && __extracted_intersectionDisjointRawToken) {",
-                  "  pm.environment.set('intersectionDisjointRawToken', __extracted_intersectionDisjointRawToken);",
-                  "} else {",
-                  "  console.log('Scenario D CreateToken returns token - FAILED, full response was:', JSON.stringify(json));",
-                  "}"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Probe Scenario D - effective permission set is empty (fail closed)",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": "{{baseUrl}}/graphql",
-            "description": "",
-            "auth": {
-              "type": "apikey",
-              "apikey": [
-                {
-                  "key": "key",
-                  "value": "x-authentication-token",
-                  "type": "string"
-                },
-                {
-                  "key": "value",
-                  "value": "{{intersectionDisjointRawToken}}",
-                  "type": "string"
-                },
-                {
-                  "key": "in",
-                  "value": "header",
-                  "type": "string"
-                }
-              ]
-            },
-            "body": {
-              "mode": "graphql",
-              "graphql": {
-                "query": "query GetUserPermissions { GetUserPermissions(input: { productId: \"{{productId}}\" }) { groups { groupId groupName entries { permissionId displayName description } } errorMessage } }",
-                "variables": ""
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "function flattenPermissionIds(payload) {",
-                  "  pm.expect(payload).to.be.an('object', 'GetUserPermissions payload missing');",
-                  "  const groups = payload.groups;",
-                  "  const ids = [];",
-                  "  groups.forEach(function (g) {",
-                  "    (g.entries || []).forEach(function (e) { ids.push(e.permissionId); });",
-                  "  });",
-                  "  return ids;",
-                  "}",
-                  "const json = pm.response.json();",
-                  "pm.test('Response has correct structure for GetUserPermissions', function () {",
-                  "  pm.expect(json).to.be.an('object');",
-                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
-                  "  pm.expect(json.data).to.have.property('GetUserPermissions').that.is.an('object');",
-                  "});",
-                  "const ids = flattenPermissionIds(json.data.GetUserPermissions);",
-                  "pm.test('Scenario D: effective permission set is empty', function () {",
-                  "  pm.expect(ids).to.have.length(0);",
+                  "pm.test('No token is handed out', function () {",
+                  "  const payload = (json.data || {}).CreateToken;",
+                  "  pm.expect(payload === undefined || payload === null || payload.success === false, 'Unexpected response: ' + JSON.stringify(json)).to.eql(true);",
                   "});"
                 ]
               }
@@ -2722,7 +2533,7 @@
           ]
         },
         {
-          "name": "Probe Scenario E - IsAdmin() bypasses scope restriction entirely",
+          "name": "Probe Scenario E - the token of the superuser holds its scopes only",
           "request": {
             "method": "POST",
             "header": [],
@@ -2762,28 +2573,15 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "function flattenPermissionIds(payload) {",
-                  "  pm.expect(payload).to.be.an('object', 'GetUserPermissions payload missing');",
-                  "  const groups = payload.groups;",
-                  "  const ids = [];",
-                  "  groups.forEach(function (g) {",
-                  "    (g.entries || []).forEach(function (e) { ids.push(e.permissionId); });",
-                  "  });",
-                  "  return ids;",
-                  "}",
                   "const json = pm.response.json();",
                   "pm.test('Response has correct structure for GetUserPermissions', function () {",
-                  "  pm.expect(json).to.be.an('object');",
-                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
+                  "  pm.expect(json, 'Unexpected response: ' + JSON.stringify(json)).to.have.property('data').that.is.an('object');",
                   "  pm.expect(json.data).to.have.property('GetUserPermissions').that.is.an('object');",
                   "});",
-                  "const ids = flattenPermissionIds(json.data.GetUserPermissions);",
-                  "pm.test('Scenario E: effective set is NOT limited to ViewSensors (admin bypass)', function () {",
-                  "  pm.expect(ids.length).to.be.greaterThan(1);",
-                  "});",
-                  "pm.test('Scenario E: contains permissions clearly outside the nominal scope', function () {",
-                  "  pm.expect(ids).to.include('/OrderManagement/Edit/Add');",
-                  "  pm.expect(ids).to.include('/AccountManagement/View');",
+                  "const ids = [];",
+                  "((json.data.GetUserPermissions || {}).groups || []).forEach(function (g) { (g.entries || []).forEach(function (e) { ids.push(e.permissionId); }); });",
+                  "pm.test('Scenario E: the effective set is the scope of the token', function () {",
+                  "  pm.expect(ids).to.eql(['/SensorManagement/View']);",
                   "});"
                 ]
               }
@@ -3092,32 +2890,12 @@
       "name": "08 Comma-in-Scope Storage Edge Case",
       "item": [
         {
-          "name": "CreateToken - scope value containing a literal comma",
+          "name": "CreateToken - a scope value containing a literal comma is refused",
           "request": {
             "method": "POST",
             "header": [],
             "url": "{{baseUrl}}/graphql",
             "description": "Scopes are stored as a single comma-joined SQL text column with no escaping - a scope value itself containing a comma will corrupt round-tripping (see the next request). Minted by SU: \"/SensorManagement/View,Extra\" is not a real permission, so a non-admin caller would be rejected by AreRequestedScopesAllowed() before the storage layer is ever reached.",
-            "auth": {
-              "type": "apikey",
-              "apikey": [
-                {
-                  "key": "key",
-                  "value": "x-authentication-token",
-                  "type": "string"
-                },
-                {
-                  "key": "value",
-                  "value": "{{suToken}}",
-                  "type": "string"
-                },
-                {
-                  "key": "in",
-                  "value": "header",
-                  "type": "string"
-                }
-              ]
-            },
             "body": {
               "mode": "graphql",
               "graphql": {
@@ -3133,71 +2911,13 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "pm.test('Response has correct structure for CreateToken', function () {",
-                  "  pm.expect(json).to.be.an('object');",
-                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
-                  "  pm.expect(json.data).to.have.property('CreateToken').that.is.an('object');",
-                  "  pm.expect(json.data.CreateToken).to.have.property('success');",
+                  "pm.test(\"A comma scope is no permission of the user and is refused\", function () {",
+                  "  pm.expect(json, 'Unexpected response: ' + JSON.stringify(json)).to.have.property('errors').that.is.an('array').and.not.empty;",
+                  "  pm.expect(json.errors[0].message).to.eql(\"Not authorized to grant one or more of the requested permission scopes\");",
                   "});",
-                  "const payload = json.data.CreateToken;",
-                  "pm.test('CreateToken with comma-containing scope succeeds (no validation)', function () {",
-                  "  pm.expect(payload.success, 'Unexpected response: ' + JSON.stringify(json)).to.eql(true);",
-                  "});",
-                  "const __extracted_commaScopeTokenId = payload.id;",
-                  "pm.test('Comma-scope CreateToken returns id', function () {",
-                  "  pm.expect(__extracted_commaScopeTokenId, 'Unexpected response: ' + JSON.stringify(json)).to.be.a('string').and.not.empty;",
-                  "});",
-                  "if (typeof __extracted_commaScopeTokenId === 'string' && __extracted_commaScopeTokenId) {",
-                  "  pm.environment.set('commaScopeTokenId', __extracted_commaScopeTokenId);",
-                  "} else {",
-                  "  console.log('Comma-scope CreateToken returns id - FAILED, full response was:', JSON.stringify(json));",
-                  "}",
-                  "const __extracted_commaScopeRawToken = payload.token;",
-                  "pm.test('Comma-scope CreateToken returns token', function () {",
-                  "  pm.expect(__extracted_commaScopeRawToken, 'Unexpected response: ' + JSON.stringify(json)).to.be.a('string').and.not.empty;",
-                  "});",
-                  "if (typeof __extracted_commaScopeRawToken === 'string' && __extracted_commaScopeRawToken) {",
-                  "  pm.environment.set('commaScopeRawToken', __extracted_commaScopeRawToken);",
-                  "} else {",
-                  "  console.log('Comma-scope CreateToken returns token - FAILED, full response was:', JSON.stringify(json));",
-                  "}"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "GetToken - comma in scope splits into an extra, corrupted entry",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": "{{baseUrl}}/graphql",
-            "description": "Precise, source-confirmed assertion: [\"/SensorManagement/View,Extra\",\"/OrderManagement/View\"] (2 entries) round-trips as 3 entries [\"/SensorManagement/View\",\"Extra\",\"/OrderManagement/View\"] because storage does comma-join on write and split(',') on read with no escaping.",
-            "body": {
-              "mode": "graphql",
-              "graphql": {
-                "query": "query GetToken { GetToken(input: { id: \"{{commaScopeTokenId}}\" }) { id scopes } }",
-                "variables": ""
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "const json = pm.response.json();",
-                  "pm.test('Response has correct structure for GetToken', function () {",
-                  "  pm.expect(json).to.be.an('object');",
-                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
-                  "  pm.expect(json.data).to.have.property('GetToken').that.is.an('object');",
-                  "  pm.expect(json.data.GetToken).to.have.property('scopes').that.is.an('array');",
-                  "});",
-                  "const scopes = json.data.GetToken.scopes;",
-                  "pm.test('Scopes round-trip as 3 entries, not 2 (comma-split corruption)', function () {",
-                  "  pm.expect(scopes, 'Unexpected response: ' + JSON.stringify(json)).to.have.length(3);",
-                  "  pm.expect(scopes.sort()).to.eql(['/OrderManagement/View','/SensorManagement/View','Extra']);",
+                  "pm.test('No token is handed out', function () {",
+                  "  const payload = (json.data || {}).CreateToken;",
+                  "  pm.expect(payload === undefined || payload === null || payload.success === false, 'Unexpected response: ' + JSON.stringify(json)).to.eql(true);",
                   "});"
                 ]
               }
@@ -3263,32 +2983,12 @@
           ]
         },
         {
-          "name": "CreateToken - product Beta (a different productId, same user)",
+          "name": "CreateToken - product Beta (another product through the server of ProLife) is refused",
           "request": {
             "method": "POST",
             "header": [],
             "url": "{{baseUrl}}/graphql",
             "description": "Same Token Owner, a different productId ({{secondaryProductId}}). Because all products' PATs share one central Puma store keyed by productId, this must coexist with the Alpha token rather than replacing it. Minted by SU: scope validation resolves the caller's permissions per requested productId (CUserBaseInfo::GetPermissions is a per-product map lookup), and the Token Owner has no roles configured for {{secondaryProductId}}.",
-            "auth": {
-              "type": "apikey",
-              "apikey": [
-                {
-                  "key": "key",
-                  "value": "x-authentication-token",
-                  "type": "string"
-                },
-                {
-                  "key": "value",
-                  "value": "{{suToken}}",
-                  "type": "string"
-                },
-                {
-                  "key": "in",
-                  "value": "header",
-                  "type": "string"
-                }
-              ]
-            },
             "body": {
               "mode": "graphql",
               "graphql": {
@@ -3304,39 +3004,21 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "pm.test('Response has correct structure for CreateToken', function () {",
-                  "  pm.expect(json).to.be.an('object');",
-                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
-                  "  pm.expect(json.data).to.have.property('CreateToken').that.is.an('object');",
-                  "  pm.expect(json.data.CreateToken).to.have.property('success');",
+                  "pm.test(\"A token issued through ProLife for another product is refused\", function () {",
+                  "  pm.expect(json, 'Unexpected response: ' + JSON.stringify(json)).to.have.property('errors').that.is.an('array').and.not.empty;",
+                  "  pm.expect(json.errors[0].message).to.eql(\"A token issued through the server of 'ProLife' is a token of that product\");",
                   "});",
-                  "const payload = json.data.CreateToken;",
-                  "pm.test('Product Beta token created', function () { pm.expect(payload.success, 'Unexpected response: ' + JSON.stringify(json)).to.eql(true); });",
-                  "const __extracted_productBetaTokenId = payload.id;",
-                  "pm.test('Product Beta CreateToken returns id', function () {",
-                  "  pm.expect(__extracted_productBetaTokenId, 'Unexpected response: ' + JSON.stringify(json)).to.be.a('string').and.not.empty;",
-                  "});",
-                  "if (typeof __extracted_productBetaTokenId === 'string' && __extracted_productBetaTokenId) {",
-                  "  pm.environment.set('productBetaTokenId', __extracted_productBetaTokenId);",
-                  "} else {",
-                  "  console.log('Product Beta CreateToken returns id - FAILED, full response was:', JSON.stringify(json));",
-                  "}",
-                  "const __extracted_productBetaRawToken = payload.token;",
-                  "pm.test('Product Beta CreateToken returns token', function () {",
-                  "  pm.expect(__extracted_productBetaRawToken, 'Unexpected response: ' + JSON.stringify(json)).to.be.a('string').and.not.empty;",
-                  "});",
-                  "if (typeof __extracted_productBetaRawToken === 'string' && __extracted_productBetaRawToken) {",
-                  "  pm.environment.set('productBetaRawToken', __extracted_productBetaRawToken);",
-                  "} else {",
-                  "  console.log('Product Beta CreateToken returns token - FAILED, full response was:', JSON.stringify(json));",
-                  "}"
+                  "pm.test('No token is handed out', function () {",
+                  "  const payload = (json.data || {}).CreateToken;",
+                  "  pm.expect(payload === undefined || payload === null || payload.success === false, 'Unexpected response: ' + JSON.stringify(json)).to.eql(true);",
+                  "});"
                 ]
               }
             }
           ]
         },
         {
-          "name": "CreateToken - no productId (product-agnostic token)",
+          "name": "CreateToken - no productId (the token is of the product it was issued through)",
           "request": {
             "method": "POST",
             "header": [],
@@ -3419,42 +3101,7 @@
           ]
         },
         {
-          "name": "GetToken - product Beta carries a different productId",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": "{{baseUrl}}/graphql",
-            "description": "",
-            "body": {
-              "mode": "graphql",
-              "graphql": {
-                "query": "query GetToken { GetToken(input: { id: \"{{productBetaTokenId}}\" }) { id userId productId name scopes } }",
-                "variables": ""
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "const json = pm.response.json();",
-                  "pm.test('Response has correct structure for GetToken', function () {",
-                  "  pm.expect(json).to.be.an('object');",
-                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
-                  "  pm.expect(json.data).to.have.property('GetToken').that.is.an('object');",
-                  "});",
-                  "const t = json.data.GetToken;",
-                  "pm.test('Beta token productId is the secondary product', function () { pm.expect(t.productId).to.eql(pm.environment.get('secondaryProductId')); });",
-                  "pm.test('Beta token productId differs from the primary product', function () { pm.expect(t.productId).to.not.eql(pm.environment.get('productId')); });"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "GetToken - no-product token has an empty/absent productId",
+          "name": "GetToken - a token issued without productId is of ProLife",
           "request": {
             "method": "POST",
             "header": [],
@@ -3476,13 +3123,11 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "pm.test('Response has correct structure for GetToken', function () {",
-                  "  pm.expect(json).to.be.an('object');",
-                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
+                  "  pm.expect(json, 'Unexpected response: ' + JSON.stringify(json)).to.have.property('data').that.is.an('object');",
                   "  pm.expect(json.data).to.have.property('GetToken').that.is.an('object');",
                   "});",
-                  "const t = json.data.GetToken;",
-                  "pm.test('No-product token has a falsy productId', function () {",
-                  "  pm.expect(!t.productId, 'productId should be empty/absent but was: ' + JSON.stringify(t.productId)).to.eql(true);",
+                  "pm.test('The token without productId got the product it was issued through', function () {",
+                  "  pm.expect(json.data.GetToken.productId).to.eql(pm.environment.get('productId'));",
                   "});"
                 ]
               }
@@ -3490,7 +3135,7 @@
           ]
         },
         {
-          "name": "GetTokenList - tokens for different products coexist under one user",
+          "name": "GetTokenList - the tokens of the user are all of ProLife",
           "request": {
             "method": "POST",
             "header": [],
@@ -3512,63 +3157,21 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "pm.test('Response has correct structure for GetTokenList', function () {",
-                  "  pm.expect(json).to.be.an('object');",
-                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
-                  "  pm.expect(json.data).to.have.property('GetTokenList').that.is.an('object');",
+                  "  pm.expect(json, 'Unexpected response: ' + JSON.stringify(json)).to.have.property('data').that.is.an('object');",
                   "  pm.expect(json.data.GetTokenList).to.have.property('tokens').that.is.an('array');",
                   "});",
-                  "const tokens = json.data.GetTokenList.tokens;",
                   "const byId = {};",
-                  "tokens.forEach(function (t) { byId[t.id] = t; });",
+                  "json.data.GetTokenList.tokens.forEach(function (t) { byId[t.id] = t; });",
                   "const alphaId = pm.environment.get('productAlphaTokenId');",
-                  "const betaId = pm.environment.get('productBetaTokenId');",
                   "const noneId = pm.environment.get('noProductTokenId');",
-                  "pm.test('List contains the Alpha product token', function () { pm.expect(byId, 'Alpha token missing from list').to.have.property(alphaId); });",
-                  "pm.test('List contains the Beta product token', function () { pm.expect(byId, 'Beta token missing from list').to.have.property(betaId); });",
-                  "pm.test('List contains the no-product token', function () { pm.expect(byId, 'no-product token missing from list').to.have.property(noneId); });",
-                  "pm.test('Alpha token in list retains the primary productId', function () { pm.expect(byId[alphaId].productId).to.eql(pm.environment.get('productId')); });",
-                  "pm.test('Beta token in list retains the secondary productId', function () { pm.expect(byId[betaId].productId).to.eql(pm.environment.get('secondaryProductId')); });",
-                  "pm.test('Tokens with different productIds coexist under one user (GetTokenList is not product-filtered)', function () {",
-                  "  pm.expect(byId[alphaId].productId).to.not.eql(byId[betaId].productId);",
+                  "pm.test('List contains the Alpha token and the token issued without productId', function () {",
+                  "  pm.expect(byId, 'Alpha token missing from list').to.have.property(alphaId);",
+                  "  pm.expect(byId, 'token without productId missing from list').to.have.property(noneId);",
                   "});",
-                  "pm.test('No-product token in list has a falsy productId', function () {",
-                  "  pm.expect(!byId[noneId].productId, 'productId should be empty/absent but was: ' + JSON.stringify(byId[noneId].productId)).to.eql(true);",
+                  "pm.test('Both are tokens of ProLife', function () {",
+                  "  pm.expect(byId[alphaId].productId).to.eql(pm.environment.get('productId'));",
+                  "  pm.expect(byId[noneId].productId).to.eql(pm.environment.get('productId'));",
                   "});"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "ValidateToken - a product-scoped token validates regardless of product",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": "{{baseUrl}}/graphql",
-            "description": "ValidateToken takes only the raw token (ValidateTokenInput has no productId) - a token authenticates by its hash, independent of which product it was tagged with. Confirms the Beta-product token resolves back to the same Token Owner.",
-            "body": {
-              "mode": "graphql",
-              "graphql": {
-                "query": "query ValidateToken { ValidateToken(input: { token: \"{{productBetaRawToken}}\" }) { valid userId scopes message } }",
-                "variables": ""
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "const json = pm.response.json();",
-                  "pm.test('Response has correct structure for ValidateToken', function () {",
-                  "  pm.expect(json).to.be.an('object');",
-                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
-                  "  pm.expect(json.data).to.have.property('ValidateToken').that.is.an('object');",
-                  "});",
-                  "const v = json.data.ValidateToken;",
-                  "pm.test('Beta product token is valid', function () { pm.expect(v.valid).to.eql(true); });",
-                  "pm.test('Beta product token resolves to Token Owner', function () { pm.expect(v.userId).to.eql(pm.environment.get('tokenOwnerUserId')); });"
                 ]
               }
             }
@@ -3597,34 +3200,6 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "pm.test('Product Alpha token cleanup succeeds', function () { pm.expect(json.data.DeleteToken.success).to.eql(true); });"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "DeleteToken - cleanup product Beta token",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": "{{baseUrl}}/graphql",
-            "description": "",
-            "body": {
-              "mode": "graphql",
-              "graphql": {
-                "query": "mutation DeleteToken { DeleteToken(input: { id: \"{{productBetaTokenId}}\" }) { success message } }",
-                "variables": ""
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "const json = pm.response.json();",
-                  "pm.test('Product Beta token cleanup succeeds', function () { pm.expect(json.data.DeleteToken.success).to.eql(true); });"
                 ]
               }
             }
@@ -4165,32 +3740,12 @@
           ]
         },
         {
-          "name": "CreateToken - lifecycle token B (tagged DeskTicket)",
+          "name": "CreateToken - lifecycle token B (another product through the server of ProLife) is refused",
           "request": {
             "method": "POST",
             "header": [],
             "url": "{{baseUrl}}/graphql",
             "description": "Same user as token A, different productId tag ({{secondaryProductId}}). Minted by SU: the Token Owner holds no permissions under {{secondaryProductId}}, so scope validation would reject a self-minted token there.",
-            "auth": {
-              "type": "apikey",
-              "apikey": [
-                {
-                  "key": "key",
-                  "value": "x-authentication-token",
-                  "type": "string"
-                },
-                {
-                  "key": "value",
-                  "value": "{{suToken}}",
-                  "type": "string"
-                },
-                {
-                  "key": "in",
-                  "value": "header",
-                  "type": "string"
-                }
-              ]
-            },
             "body": {
               "mode": "graphql",
               "graphql": {
@@ -4206,27 +3761,14 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "pm.test('Response has correct structure for CreateToken', function () {",
-                  "  pm.expect(json).to.be.an('object');",
-                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
-                  "  pm.expect(json.data).to.have.property('CreateToken').that.is.an('object');",
-                  "  pm.expect(json.data.CreateToken).to.have.property('success');",
+                  "pm.test(\"A token issued through ProLife for another product is refused\", function () {",
+                  "  pm.expect(json, 'Unexpected response: ' + JSON.stringify(json)).to.have.property('errors').that.is.an('array').and.not.empty;",
+                  "  pm.expect(json.errors[0].message).to.eql(\"A token issued through the server of 'ProLife' is a token of that product\");",
                   "});",
-                  "const payload = json.data.CreateToken;",
-                  "pm.test('Lifecycle token B created', function () { pm.expect(payload.success, 'Unexpected response: ' + JSON.stringify(json)).to.eql(true); });",
-                  "const __extracted_crossProductLifecycleBTokenId = payload.id;",
-                  "pm.test('Lifecycle token B CreateToken returns id', function () {",
-                  "  pm.expect(__extracted_crossProductLifecycleBTokenId, 'Unexpected response: ' + JSON.stringify(json)).to.be.a('string').and.not.empty;",
-                  "});",
-                  "if (typeof __extracted_crossProductLifecycleBTokenId === 'string' && __extracted_crossProductLifecycleBTokenId) {",
-                  "  pm.environment.set('crossProductLifecycleBTokenId', __extracted_crossProductLifecycleBTokenId);",
-                  "} else {",
-                  "  console.log('Lifecycle token B CreateToken returns id - FAILED, full response was:', JSON.stringify(json));",
-                  "}",
-                  "const __extracted_crossProductLifecycleBRawToken = payload.token;",
-                  "if (typeof __extracted_crossProductLifecycleBRawToken === 'string' && __extracted_crossProductLifecycleBRawToken) {",
-                  "  pm.environment.set('crossProductLifecycleBRawToken', __extracted_crossProductLifecycleBRawToken);",
-                  "}"
+                  "pm.test('No token is handed out', function () {",
+                  "  const payload = (json.data || {}).CreateToken;",
+                  "  pm.expect(payload === undefined || payload === null || payload.success === false, 'Unexpected response: ' + JSON.stringify(json)).to.eql(true);",
+                  "});"
                 ]
               }
             }
@@ -4291,36 +3833,6 @@
           ]
         },
         {
-          "name": "GetToken - lifecycle token B (DeskTicket) unaffected by A's revoke",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": "{{baseUrl}}/graphql",
-            "description": "",
-            "body": {
-              "mode": "graphql",
-              "graphql": {
-                "query": "query GetToken { GetToken(input: { id: \"{{crossProductLifecycleBTokenId}}\" }) { id productId revoked } }",
-                "variables": ""
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "const json = pm.response.json();",
-                  "const t = json.data.GetToken;",
-                  "pm.test('Token B productId is still DeskTicket', function () { pm.expect(t.productId).to.eql(pm.environment.get('secondaryProductId')); });",
-                  "pm.test(\"Token B is NOT revoked - revoking token A did not cross the product boundary\", function () { pm.expect(t.revoked).to.eql(false); });"
-                ]
-              }
-            }
-          ]
-        },
-        {
           "name": "ValidateToken - lifecycle token A is now invalid (revoked)",
           "request": {
             "method": "POST",
@@ -4343,36 +3855,6 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "pm.test('Token A no longer validates', function () { pm.expect(json.data.ValidateToken.valid).to.eql(false); });"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "ValidateToken - lifecycle token B (DeskTicket) still valid, unaffected by A's revoke",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": "{{baseUrl}}/graphql",
-            "description": "",
-            "body": {
-              "mode": "graphql",
-              "graphql": {
-                "query": "query ValidateToken { ValidateToken(input: { token: \"{{crossProductLifecycleBRawToken}}\" }) { valid userId message } }",
-                "variables": ""
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "const json = pm.response.json();",
-                  "const v = json.data.ValidateToken;",
-                  "pm.test('Token B still validates', function () { pm.expect(v.valid).to.eql(true); });",
-                  "pm.test('Token B still resolves to Token Owner', function () { pm.expect(v.userId).to.eql(pm.environment.get('tokenOwnerUserId')); });"
                 ]
               }
             }
@@ -4434,69 +3916,6 @@
                   "pm.test('Token A not-found message includes its id', function () {",
                   "  pm.expect(json.errors[0].message).to.eql(`Token with id '${pm.environment.get('crossProductLifecycleATokenId')}' not found`);",
                   "});"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "GetToken - lifecycle token B (DeskTicket) still found after A's delete",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": "{{baseUrl}}/graphql",
-            "description": "",
-            "body": {
-              "mode": "graphql",
-              "graphql": {
-                "query": "query GetToken { GetToken(input: { id: \"{{crossProductLifecycleBTokenId}}\" }) { id productId revoked } }",
-                "variables": ""
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "const json = pm.response.json();",
-                  "pm.test('Response has correct structure for GetToken', function () {",
-                  "  pm.expect(json).to.be.an('object');",
-                  "  pm.expect(json).to.have.property('data').that.is.an('object');",
-                  "  pm.expect(json.data).to.have.property('GetToken').that.is.an('object');",
-                  "});",
-                  "const t = json.data.GetToken;",
-                  "pm.test(\"Token B still exists - deleting token A did not cross the product boundary\", function () { pm.expect(t.id).to.eql(pm.environment.get('crossProductLifecycleBTokenId')); });",
-                  "pm.test('Token B still not revoked', function () { pm.expect(t.revoked).to.eql(false); });"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "DeleteToken - cleanup lifecycle token B",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": "{{baseUrl}}/graphql",
-            "description": "Self-contained cleanup of the tokens minted in this folder.",
-            "body": {
-              "mode": "graphql",
-              "graphql": {
-                "query": "mutation DeleteToken { DeleteToken(input: { id: \"{{crossProductLifecycleBTokenId}}\" }) { success message } }",
-                "variables": ""
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "const json = pm.response.json();",
-                  "pm.test('Lifecycle token B cleanup succeeds', function () { pm.expect(json.data.DeleteToken.success).to.eql(true); });"
                 ]
               }
             }
@@ -4843,6 +4262,26 @@
                 "query": "mutation DeleteToken { DeleteToken(input: { id: \"{{validationWhitespaceTokenId}}\" }) { success message } }",
                 "variables": ""
               }
+            },
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{tokenOwnerToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
             }
           },
           "event": [
@@ -4875,6 +4314,26 @@
                 "query": "mutation DeleteToken { DeleteToken(input: { id: \"{{validationPastExpiryTokenId}}\" }) { success message } }",
                 "variables": ""
               }
+            },
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{tokenOwnerToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
             }
           },
           "event": [
@@ -4907,6 +4366,26 @@
                 "query": "mutation DeleteToken { DeleteToken(input: { id: \"{{validationMalformedExpiryTokenId}}\" }) { success message } }",
                 "variables": ""
               }
+            },
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{tokenOwnerToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
             }
           },
           "event": [
@@ -4939,6 +4418,26 @@
                 "query": "mutation DeleteToken { DeleteToken(input: { id: \"{{intersectionNarrowTokenId}}\" }) { success message } }",
                 "variables": ""
               }
+            },
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{tokenOwnerToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
             }
           },
           "event": [
@@ -4950,70 +4449,6 @@
                   "const json = pm.response.json();",
                   "const payload = json.data && json.data.DeleteToken;",
                   "pm.test('Cleanup deletes intersectionNarrowTokenId', function () {",
-                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
-                  "  pm.expect(payload && payload.success, 'DeleteToken payload: ' + JSON.stringify(json.data)).to.eql(true);",
-                  "});"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Cleanup: DeleteToken (intersectionOverBroadTokenId)",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": "{{baseUrl}}/graphql",
-            "description": "Best-effort - failures here (e.g. a folder that was skipped, or a token already deleted by its own folder) are expected and ignored.",
-            "body": {
-              "mode": "graphql",
-              "graphql": {
-                "query": "mutation DeleteToken { DeleteToken(input: { id: \"{{intersectionOverBroadTokenId}}\" }) { success message } }",
-                "variables": ""
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "const json = pm.response.json();",
-                  "const payload = json.data && json.data.DeleteToken;",
-                  "pm.test('Cleanup deletes intersectionOverBroadTokenId', function () {",
-                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
-                  "  pm.expect(payload && payload.success, 'DeleteToken payload: ' + JSON.stringify(json.data)).to.eql(true);",
-                  "});"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Cleanup: DeleteToken (intersectionDisjointTokenId)",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": "{{baseUrl}}/graphql",
-            "description": "Best-effort - failures here (e.g. a folder that was skipped, or a token already deleted by its own folder) are expected and ignored.",
-            "body": {
-              "mode": "graphql",
-              "graphql": {
-                "query": "mutation DeleteToken { DeleteToken(input: { id: \"{{intersectionDisjointTokenId}}\" }) { success message } }",
-                "variables": ""
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "const json = pm.response.json();",
-                  "const payload = json.data && json.data.DeleteToken;",
-                  "pm.test('Cleanup deletes intersectionDisjointTokenId', function () {",
                   "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
                   "  pm.expect(payload && payload.success, 'DeleteToken payload: ' + JSON.stringify(json.data)).to.eql(true);",
                   "});"
@@ -5055,38 +4490,6 @@
           ]
         },
         {
-          "name": "Cleanup: DeleteToken (commaScopeTokenId)",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": "{{baseUrl}}/graphql",
-            "description": "Best-effort - failures here (e.g. a folder that was skipped, or a token already deleted by its own folder) are expected and ignored.",
-            "body": {
-              "mode": "graphql",
-              "graphql": {
-                "query": "mutation DeleteToken { DeleteToken(input: { id: \"{{commaScopeTokenId}}\" }) { success message } }",
-                "variables": ""
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "const json = pm.response.json();",
-                  "const payload = json.data && json.data.DeleteToken;",
-                  "pm.test('Cleanup deletes commaScopeTokenId', function () {",
-                  "  pm.expect(json.errors || [], 'unexpected GraphQL error: ' + JSON.stringify(json.errors)).to.have.length(0);",
-                  "  pm.expect(payload && payload.success, 'DeleteToken payload: ' + JSON.stringify(json.data)).to.eql(true);",
-                  "});"
-                ]
-              }
-            }
-          ]
-        },
-        {
           "name": "Cleanup: DeleteToken (cacheStalenessTokenId)",
           "request": {
             "method": "POST",
@@ -5099,6 +4502,26 @@
                 "query": "mutation DeleteToken { DeleteToken(input: { id: \"{{cacheStalenessTokenId}}\" }) { success message } }",
                 "variables": ""
               }
+            },
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{tokenOwnerToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
             }
           },
           "event": [
@@ -5138,6 +4561,26 @@
                 "query": "mutation DeleteToken { DeleteToken(input: { id: \"{{intersectionFullMatchTokenId}}\" }) { success message } }",
                 "variables": ""
               }
+            },
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{tokenOwnerToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
             }
           },
           "event": [
