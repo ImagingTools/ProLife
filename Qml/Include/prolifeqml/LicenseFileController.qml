@@ -75,7 +75,7 @@ Item {
                 fileName= controller.fileName;
             }
 
-            remoteFileController.GetFile(id, fileName);
+            remoteFileController.getFile(id, fileName);
         }
     }
 
