@@ -452,8 +452,8 @@
         <Element Id="Migrations" PackageId="" ComponentId="Migrations">
             <Data IsEnabled="true" Flags="0">
                 <AttributeInfoMap>
-                    <AttributeInfo Id="CatalogImport" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="ProLifeServerSettings/CatalogImport"/>
+                    <AttributeInfo Id="CatalogImportDatabase" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="CatalogImportDatabaseEngine"/>
                     </AttributeInfo>
                     <AttributeInfo Id="CatalogImportFeatures" Type="Reference" ExportId="">
                         <Data IsEnabled="true" Value="CatalogImportRepositories/FeatureSqlRepository"/>
@@ -2344,7 +2344,7 @@
                                 <AttributeInfo Id="SourceCollection" Type="Reference" ExportId="CatalogImportFeatures">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="SourceEnabler" Type="Reference" ExportId="CatalogImport">
+                                <AttributeInfo Id="SourceDatabase" Type="Reference" ExportId="CatalogImportDatabase">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TargetDelegate" Type="Reference" ExportId="FeatureDatabaseDelegate">
@@ -2374,7 +2374,7 @@
                                 <AttributeInfo Id="SourceCollection" Type="Reference" ExportId="CatalogImportProducts">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="SourceEnabler" Type="Reference" ExportId="CatalogImport">
+                                <AttributeInfo Id="SourceDatabase" Type="Reference" ExportId="CatalogImportDatabase">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TargetDelegate" Type="Reference" ExportId="ProductDatabaseDelegate">
@@ -2407,7 +2407,7 @@
                                 <AttributeInfo Id="SourceCollection" Type="Reference" ExportId="CatalogImportLicenses">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="SourceEnabler" Type="Reference" ExportId="CatalogImport">
+                                <AttributeInfo Id="SourceDatabase" Type="Reference" ExportId="CatalogImportDatabase">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TargetDelegate" Type="Reference" ExportId="LicenseDatabaseDelegate">
@@ -2440,7 +2440,7 @@
                                 <AttributeInfo Id="SourceCollection" Type="Reference" ExportId="CatalogImportLicenses">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
-                                <AttributeInfo Id="SourceEnabler" Type="Reference" ExportId="CatalogImport">
+                                <AttributeInfo Id="SourceDatabase" Type="Reference" ExportId="CatalogImportDatabase">
                                     <Data IsEnabled="false"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="TargetDelegate" Type="Reference" ExportId="HardwareConfigurationDatabaseDelegate">
