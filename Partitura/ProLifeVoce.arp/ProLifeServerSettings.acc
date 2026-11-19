@@ -366,7 +366,6 @@
                                             <Value>ProLifeDatabaseAccessSettings</Value>
                                             <Value>PumaDatabaseAccessSettings</Value>
                                             <Value>CatalogImportDatabaseAccessSettings</Value>
-                                            <Value>CatalogImport</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -376,7 +375,6 @@
                                             <Value></Value>
                                             <Value></Value>
                                             <Value>Database of the former licensing server the catalog is imported from</Value>
-                                            <Value>Import the products, licenses, features and hardware configurations when the database is updated</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -386,7 +384,6 @@
                                             <Value>ProLifeDatabaseSettings</Value>
                                             <Value>PumaDatabaseSettings</Value>
                                             <Value>CatalogImportDatabaseSettings</Value>
-                                            <Value>CatalogImport</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -396,7 +393,6 @@
                                             <Value>ProLife Database Settings</Value>
                                             <Value>Puma Database Settings</Value>
                                             <Value>Catalog Import Database Settings</Value>
-                                            <Value>Catalog Import</Value>
                                         </Values>
                                     </Data>
                                 </AttributeInfo>
@@ -414,15 +410,6 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="Pasword" Type="Id" ExportId="">
                                     <Data IsEnabled="true" Value="root"/>
-                                </AttributeInfo>
-                            </AttributeInfoMap>
-                        </Data>
-                    </Element>
-                    <Element Id="CatalogImport" PackageId="BasePck" ComponentId="EnableableParam">
-                        <Data IsEnabled="true" Flags="0">
-                            <AttributeInfoMap>
-                                <AttributeInfo Id="DefaultEnabled" Type="Boolean" ExportId="">
-                                    <Data IsEnabled="true" Value="false"/>
                                 </AttributeInfo>
                             </AttributeInfoMap>
                         </Data>
@@ -482,7 +469,6 @@
                 <ExportedComponents>
                     <Component ExportedId="ProLifeDatabaseAccessSettings" ComponentId="ProLifeDatabaseAccessSettings"/>
                     <Component ExportedId="PumaDatabaseAccessSettings" ComponentId="PumaDatabaseAccessSettings"/>
-                    <Component ExportedId="CatalogImport" ComponentId="CatalogImport"/>
                     <Component ExportedId="CatalogImportDatabaseAccessSettings" ComponentId="CatalogImportDatabaseAccessSettings"/>
                 </ExportedComponents>
             </Data>
@@ -617,7 +603,6 @@
         <Component ExportedId="ProLifeDatabaseAccessSettings" ComponentId="DatabaseParams/ProLifeDatabaseAccessSettings"/>
         <Component ExportedId="PumaConnectionInterface" ComponentId="ServerParams/PumaConnectionInterface"/>
         <Component ExportedId="PumaDatabaseAccessSettings" ComponentId="DatabaseParams/PumaDatabaseAccessSettings"/>
-        <Component ExportedId="CatalogImport" ComponentId="DatabaseParams/CatalogImport"/>
         <Component ExportedId="CatalogImportDatabaseAccessSettings" ComponentId="DatabaseParams/CatalogImportDatabaseAccessSettings"/>
         <Component ExportedId="ServerConnectionInterface" ComponentId="ServerParams/ServerConnectionInterface"/>
         <Component ExportedId="SmtpPasswordParam" ComponentId="SmtpServerParams/SmtpPasswordParam"/>
