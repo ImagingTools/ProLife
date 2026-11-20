@@ -159,16 +159,29 @@ param(
     [string]$NotificationCenterJUnitReportPath = (Join-Path $ScriptDir "junit-report-notification-center.xml"),
     [string]$NotificationCenterJsonReportPath = (Join-Path $ScriptDir "run-report-notification-center.json"),
     [int]$WebSocketPort = 18778,
-    [int]$StartupTimeoutSeconds = 60
+    [int]$StartupTimeoutSeconds = 60,
+
+    # The token expiry suites run last, on both servers started again: Puma with short sessions in its settings
+    # (restored afterwards), ProLife once with its server token and once without one
+    [string]$PumaSettingsPath = (Join-Path $env:PUBLIC "ImagingTools\Puma\Puma Server\PumaServerPgTestSettings.xml"),
+    [int]$JwtLifetime = 20,
+    [int]$SessionLifetime = 75,
+    [string]$WsTokenExpiryJUnitReportPath = (Join-Path $ScriptDir "junit-report-ws-token-expiry-{0}.xml"),
+    [string]$WsSessionSecurityJUnitReportPath = (Join-Path $ScriptDir "junit-report-ws-session-security-{0}.xml"),
+    [string]$WsAccessChangeJUnitReportPath = (Join-Path $ScriptDir "junit-report-ws-access-change.xml")
 )
 
 $ErrorActionPreference = "Stop"
 $serverProcess = $null
 $pumaProcess = $null
 $exitCode = 1
+$serverLogs = @()
+$pumaSettingsBackup = $null
+$isPumaSettingsChanged = $false
 
 . (Join-Path $ScriptDir "ServerLogCheck.ps1")
 . (Join-Path $ScriptDir "ServerTokens.ps1")
+. (Join-Path $PumaRepoRoot "Tests\TenantApiPostman\ServerSettings.ps1")
 
 if ([string]::IsNullOrWhiteSpace($ServerExePath)) {
     $ServerExePath = Join-Path $RepoRoot "Bin\$BuildConfig\ProLifeServerTest.exe"
@@ -342,28 +355,30 @@ function Wait-ForPort([string]$serverLabel, [System.Diagnostics.Process]$process
     throw "$serverLabel did not open port $port within $StartupTimeoutSeconds seconds"
 }
 
-function Start-PumaTestServer {
+function Start-PumaTestServer([string]$LogSuffix = "") {
     Write-Step "Starting PumaServerPgTest.exe"
     if (-not (Test-Path $PumaServerExePath)) {
         throw "Server executable not found: $PumaServerExePath"
     }
     $workDir = Split-Path -Parent $PumaServerExePath
-    $script:pumaStdout = Join-Path $env:TEMP "puma_stdout_$PID.log"
-    $script:pumaStderr = Join-Path $env:TEMP "puma_stderr_$PID.log"
+    $script:pumaStdout = Join-Path $env:TEMP "puma_stdout_$PID$LogSuffix.log"
+    $script:pumaStderr = Join-Path $env:TEMP "puma_stderr_$PID$LogSuffix.log"
+    $script:serverLogs += @($script:pumaStdout, $script:pumaStderr)
     $script:pumaProcess = Start-Process -FilePath $PumaServerExePath -WorkingDirectory $workDir -PassThru -WindowStyle Hidden -RedirectStandardOutput $script:pumaStdout -RedirectStandardError $script:pumaStderr
     Write-Host "Started PID $($script:pumaProcess.Id)"
     Wait-ForPort "PumaServerPgTest.exe" $script:pumaProcess $PumaHttpPort $script:pumaStdout $script:pumaStderr
     Write-Host "Puma test server is accepting connections on port $PumaHttpPort"
 }
 
-function Start-TestServer {
+function Start-TestServer([string]$LogSuffix = "") {
     Write-Step "Starting ProLifeServerTest.exe"
     if (-not (Test-Path $ServerExePath)) {
         throw "Server executable not found: $ServerExePath"
     }
     $workDir = Split-Path -Parent $ServerExePath
-    $script:serverStdout = Join-Path $env:TEMP "prolife_stdout_$PID.log"
-    $script:serverStderr = Join-Path $env:TEMP "prolife_stderr_$PID.log"
+    $script:serverStdout = Join-Path $env:TEMP "prolife_stdout_$PID$LogSuffix.log"
+    $script:serverStderr = Join-Path $env:TEMP "prolife_stderr_$PID$LogSuffix.log"
+    $script:serverLogs += @($script:serverStdout, $script:serverStderr)
     $script:serverProcess = Start-Process -FilePath $ServerExePath -WorkingDirectory $workDir -PassThru -WindowStyle Hidden -RedirectStandardOutput $script:serverStdout -RedirectStandardError $script:serverStderr
     Write-Host "Started PID $($script:serverProcess.Id)"
     Wait-ForPort "ProLifeServerTest.exe" $script:serverProcess $HttpPort $script:serverStdout $script:serverStderr
@@ -452,6 +467,76 @@ function Invoke-WsSuite {
     return $LASTEXITCODE
 }
 
+function Get-SuPassword {
+    return (Get-Content $EnvironmentPath -Raw | ConvertFrom-Json).values | Where-Object { $_.key -eq 'suPassword' } | Select-Object -ExpandProperty value
+}
+
+function Invoke-NodeSuite([string]$ScriptPath, [string]$Title, [string[]]$Arguments) {
+    if (-not (Test-Path $ScriptPath)) {
+        # A missing suite is lost coverage, not a pass
+        throw "Suite not found at $ScriptPath"
+    }
+
+    Write-Step "Running $Title"
+
+    # The harness of the Puma suites finds its modules here
+    $previousNodePath = $env:NODE_PATH
+    $env:NODE_PATH = Join-Path $ScriptDir "node_modules"
+    try {
+        & node $ScriptPath @Arguments | Out-Host
+        return $LASTEXITCODE
+    }
+    finally {
+        $env:NODE_PATH = $previousNodePath
+    }
+}
+
+# ProLife in one mode against Puma with short sessions: "token" with its server token, "notoken" without one
+function Invoke-TokenExpiryRun([string]$Mode, [string]$Credential) {
+    Stop-ServerProcess "ProLifeServerTest"
+    Stop-ServerProcess "PumaServerPgTest"
+
+    $groups = Get-ShortSessionSettings $JwtLifetime $SessionLifetime
+    $groups.ServerTokens = @{ ServerTokensEnabled = @{ IsEnabled = $(if ($Mode -eq "token") { "true" } else { "false" }) } }
+    $backup = Set-ServerSettings $PumaSettingsPath $groups
+    if (-not $script:isPumaSettingsChanged) {
+        $script:pumaSettingsBackup = $backup
+        $script:isPumaSettingsChanged = $true
+    }
+
+    Start-PumaTestServer "_$Mode"
+    if ($Mode -eq "token") {
+        $env:IMT_PUMA_SERVER_CREDENTIAL = $Credential
+    }
+    try {
+        Start-TestServer "_$Mode"
+    }
+    finally {
+        Remove-Item Env:\IMT_PUMA_SERVER_CREDENTIAL -ErrorAction SilentlyContinue
+    }
+
+    $suPassword = Get-SuPassword
+    $restartedPumaLog = Join-Path $env:TEMP "puma_restarted_$PID`_$Mode.log"
+    $expiryCode = Invoke-NodeSuite (Join-Path $ScriptDir "ws\ws-token-expiry.js") "WebSocket token expiry suite ($Mode)" @(
+        "--http", "http://localhost:$HttpPort/ProLife/graphql", "--ws", "ws://localhost:$WebSocketPort",
+        "--product-id", "ProLife", "--su-password", $suPassword, "--mode", $Mode,
+        "--jwt-lifetime", "$JwtLifetime", "--session-lifetime", "$SessionLifetime",
+        "--puma-dir", $PumaRepoRoot, "--puma-exe", $PumaServerExePath, "--puma", "http://localhost:$PumaHttpPort/Puma",
+        "--puma-log", $restartedPumaLog, "--junit", ($WsTokenExpiryJUnitReportPath -f $Mode))
+    # A case restarts Puma: its log is checked too
+    if (Test-Path $restartedPumaLog) {
+        $script:serverLogs += $restartedPumaLog
+    }
+
+    $securityCode = Invoke-NodeSuite (Join-Path $PumaRepoRoot "Tests\TenantApiPostman\ws\ws-session-security.js") "Session security suite ($Mode)" @(
+        "--http", "http://localhost:$PumaHttpPort/Puma/graphql", "--ws", "ws://localhost:$($PumaHttpPort + 1000)",
+        "--product-http", "http://localhost:$HttpPort/ProLife/graphql", "--product", "ProLife",
+        "--su-password", $suPassword, "--junit", ($WsSessionSecurityJUnitReportPath -f $Mode))
+
+    if ($expiryCode -ne 0) { return $expiryCode }
+    return $securityCode
+}
+
 $repoRootSource = if ($PSBoundParameters.ContainsKey('RepoRoot')) { 'explicit -RepoRoot' }
     elseif ($env:PROLIFEDIR -eq $RepoRoot) { 'PROLIFEDIR env var' }
     elseif ((Get-Location).Path -eq $RepoRoot) { 'working directory' }
@@ -497,6 +582,21 @@ try {
     # The notification center seen from ProLife: forwarded inbox, catalog of the product, ticket notifications
     $centerExitCode = Invoke-NewmanSuite $NotificationCenterCollectionPath $NotificationCenterJUnitReportPath $NotificationCenterJsonReportPath "notification center suite"
     if ($exitCode -eq 0) { $exitCode = $centerExitCode }
+
+    # Changed permissions apply at once at Puma and through ProLife, told to the session too
+    $accessCode = Invoke-NodeSuite (Join-Path $PumaRepoRoot "Tests\TenantApiPostman\ws\ws-access-change.js") "Access change suite" @(
+        "--http", "http://localhost:$PumaHttpPort/Puma/graphql", "--ws", "ws://localhost:$($PumaHttpPort + 1000)",
+        "--product-http", "http://localhost:$HttpPort/ProLife/graphql", "--product-ws", "ws://localhost:$WebSocketPort", "--product", "ProLife",
+        "--product-right", "/AccountManagement/View", "--product-check-command", "AccountsList",
+        "--product-check", "query AccountsList { AccountsList(input: { viewParams: { count: 1, offset: 0 } }) { items { id } } }",
+        "--su-password", (Get-SuPassword), "--junit", $WsAccessChangeJUnitReportPath)
+    if ($exitCode -eq 0) { $exitCode = $accessCode }
+
+    # The token of a session expires while it is subscribed, with and without the server token of ProLife
+    foreach ($mode in @("token", "notoken")) {
+        $expiryExitCode = Invoke-TokenExpiryRun $mode $pumaTokens.ProLifeForPuma
+        if ($exitCode -eq 0) { $exitCode = $expiryExitCode }
+    }
 }
 finally {
     # Tear down in reverse start order: ProLife depends on Puma being up,
@@ -510,9 +610,15 @@ finally {
         Write-Step "Stopping PumaServerPgTest.exe (PID $($pumaProcess.Id))"
         Stop-Process -Id $pumaProcess.Id -Force -ErrorAction SilentlyContinue
     }
+    # The token expiry suite starts a Puma of its own
+    Get-Process -Name "PumaServerPgTest" -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+    if ($isPumaSettingsChanged) {
+        Start-Sleep -Seconds 1
+        Restore-ServerSettings $PumaSettingsPath $pumaSettingsBackup
+    }
 }
 
-if (-not (Test-ServerLogs @($serverStdout, $serverStderr, $pumaStdout, $pumaStderr)) -and $exitCode -eq 0) { $exitCode = 1 }
+if (-not (Test-ServerLogs $serverLogs) -and $exitCode -eq 0) { $exitCode = 1 }
 
 if ($exitCode -eq 0) {
     Write-Host "`nAll tests passed." -ForegroundColor Green
