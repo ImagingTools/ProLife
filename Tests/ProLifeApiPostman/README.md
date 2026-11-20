@@ -156,6 +156,25 @@ answers itself and the ticket notifications of `CTicketNotificationProducerComp`
 ProLife sends the ticket notifications to Puma with the session of the user who made the change; nothing has to be
 configured. A product server has no identity of its own yet (ImagingTools/ImtCore#1059).
 
+## Token expiry (`ws/ws-token-expiry.js`)
+
+The last steps of `Run-CiTests.ps1` start Puma again with short sessions (20 s token, 75 s session, through
+`Puma/Tests/TenantApiPostman/ServerSettings.ps1` and the settings file of `PumaServerPgTest`, restored afterwards)
+and run the suite twice, against ProLife started with its server token (`--mode token`) and without one
+(`--mode notoken`, Puma with server tokens disabled). Each run is followed by `ws-session-security.js` of Puma,
+checked at Puma and through ProLife. The suite reuses the harness of Puma (`--puma-dir`) and restarts Puma once.
+
+Covered for a local (`Devices`) and a forwarded (`Tenants`) subscription: 401 and code `Unauthorized` for an
+expired token; refresh, stop and start with the new token; a Puma restart with an expired token ends the forwarded
+subscription as `Unauthorized` (the client refreshes on it) and a refresh restores the delivery; a sign-out at ProLife
+closes the session at Puma at once, also for the tokens ProLife keeps; the end of the session ends the subscriptions.
+With a server token, ProLife reports its token as valid again within seconds after the Puma restart (ImtCore#1166).
+
+Before the expiry runs, `ws-access-change.js` of Puma checks at Puma and through ProLife that a changed role applies to the next request of a session and is told to it (`OnAccessChanged`); ProLife checks it with `/AccountManagement/View` and `AccountsList`.
+
+With a server token, an established subscription lives on its expired token until its session ends; without one,
+nothing confirms an expired token, so the subscriptions end as `Unauthorized` at the next check.
+
 ## WebSocket subscriptions (`ws/ws-subscriptions.js`)
 
 Newman does not execute Postman WebSocket requests — it runs HTTP requests only —
