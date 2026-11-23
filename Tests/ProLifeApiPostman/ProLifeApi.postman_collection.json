@@ -23012,7 +23012,7 @@
     },
     {
       "name": "15 Personal Space - Isolation Between Users",
-      "description": "Outside of organizations every user is the tenant of the own data: a document is bound to its creator, lists and reads by ID show only the own documents, organizations do not see them. The superuser reads any document by ID outside of organizations. A role created outside of organizations is personal, yet it grants its permissions to the users it is assigned to.",
+      "description": "Outside of organizations every user is the tenant of the own data: a document is bound to its creator, lists and reads by ID show only the own documents, organizations do not see them. The superuser outside of organizations lists every document not bound to an organization and reads any document by ID. A role created outside of organizations is personal, yet it grants its permissions to the users it is assigned to.",
       "item": [
         {
           "name": "PS: Auth SU and start the run",
@@ -24510,7 +24510,7 @@
           "response": []
         },
         {
-          "name": "PS: AccountsList as the superuser - own accounts only",
+          "name": "PS: AccountsList as the superuser - every personal account, none of O",
           "event": [
             {
               "listen": "test",
@@ -24528,10 +24528,10 @@
                   "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
                   "  const env = (key) => pm.environment.get(key);",
                   "  pm.test('Sees psAccS1', () => pm.expect(has('AccountsList', env('psAccS1')), JSON.stringify(json)).to.eql(true));",
-                  "  pm.test('Does not see psAccX1', () => pm.expect(has('AccountsList', env('psAccX1')), JSON.stringify(json)).to.eql(false));",
-                  "  pm.test('Does not see psAccY1', () => pm.expect(has('AccountsList', env('psAccY1')), JSON.stringify(json)).to.eql(false));",
+                  "  pm.test('Sees psAccX1', () => pm.expect(has('AccountsList', env('psAccX1')), JSON.stringify(json)).to.eql(true));",
+                  "  pm.test('Sees psAccY1', () => pm.expect(has('AccountsList', env('psAccY1')), JSON.stringify(json)).to.eql(true));",
+                  "  pm.test('Sees psAccP1', () => pm.expect(has('AccountsList', env('psAccP1')), JSON.stringify(json)).to.eql(true));",
                   "  pm.test('Does not see psAccO1', () => pm.expect(has('AccountsList', env('psAccO1')), JSON.stringify(json)).to.eql(false));",
-                  "  pm.test('Does not see psAccP1', () => pm.expect(has('AccountsList', env('psAccP1')), JSON.stringify(json)).to.eql(false));",
                   "})();"
                 ]
               }
