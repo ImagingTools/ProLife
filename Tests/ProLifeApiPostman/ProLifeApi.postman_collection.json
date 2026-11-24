@@ -3908,12 +3908,13 @@
                   "function uuid() { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) { const r = Math.random() * 16 | 0; return (c === 'x' ? r : ((r & 0x3) | 0x8)).toString(16); }); }",
                   "const n = String(Date.now() % 1000000000);",
                   "pm.environment.set('qaN', n);",
-                  "['qaDescRoleId', 'qaDescUserId', 'qaOrderRoleId', 'qaOrderUserId', 'qaDeviceId', 'qaRejectedSoftwareLineId', 'qaRejectedHardwareLineId', 'qaOrderId', 'qaAccountId'].forEach(function (k) { pm.environment.set(k, uuid()); });",
+                  "['qaDescRoleId', 'qaDescUserId', 'qaOrderRoleId', 'qaOrderUserId', 'qaDeviceId', 'qaSuDeviceId', 'qaTmpRoleId', 'qaRejectedSoftwareLineId', 'qaRejectedHardwareLineId', 'qaOrderId', 'qaAccountId'].forEach(function (k) { pm.environment.set(k, uuid()); });",
                   "pm.environment.set('qaDescRoleCode', 'QaRegDescOnly' + n);",
                   "pm.environment.set('qaDescLogin', 'qa_reg_desc_' + n);",
                   "pm.environment.set('qaOrderRoleCode', 'QaRegOrderOnly' + n);",
                   "pm.environment.set('qaOrderLogin', 'qa_reg_order_' + n);",
-                  "pm.environment.set('qaMacAddress', 'AA:BB:CC:' + ('0' + (Number(n) % 100)).slice(-2) + ':' + ('0' + (Number(n.slice(-4, -2)) % 100)).slice(-2) + ':' + ('0' + (Number(n.slice(-2)) % 100)).slice(-2));"
+                  "pm.environment.set('qaMacAddress', 'AA:BB:CC:' + ('0' + (Number(n) % 100)).slice(-2) + ':' + ('0' + (Number(n.slice(-4, -2)) % 100)).slice(-2) + ':' + ('0' + (Number(n.slice(-2)) % 100)).slice(-2));",
+                  "pm.environment.set('qaSuMacAddress', pm.environment.get('qaMacAddress').replace('AA:BB:CC', 'AA:BB:CD'));"
                 ]
               }
             },
@@ -4056,20 +4057,7 @@
           ]
         },
         {
-          "name": "QA: AccountAdd customer for the order scenario",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "graphql",
-              "graphql": {
-                "query": "mutation AccountAdd { AccountAdd(input: { typeId: \"Account\", id: \"{{qaAccountId}}\", item: { id: \"{{qaAccountId}}\", name: \"QA Regression Customer {{qaN}}\", customerId: \"QA-REG-CUST-{{qaN}}\", description: \"\", email: \"qa-reg-{{qaN}}@prolifeapi.test\", companyName: \"QA Regression Co\", country: \"Testland\", city: \"Testville\", postalCode: \"00000\", street: \"Test street 1\", groups: [] } }) { id } }",
-                "variables": ""
-              }
-            },
-            "url": "{{baseUrl}}/graphql",
-            "description": ""
-          },
+          "name": "QA: RoleAdd temporary creator of devices and customers",
           "event": [
             {
               "listen": "test",
@@ -4077,13 +4065,34 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "pm.test('Customer created', function () {",
+                  "pm.test('Temporary creator role created', function () {",
                   "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
                   "});"
                 ]
               }
             }
-          ]
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{qaTmpRoleId}}\", item: { id: \"{{qaTmpRoleId}}\", name: \"QaRegCreator{{qaN}}\", description: \"QA regression role\", roleId: \"QaRegCreator{{qaN}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/SensorManagement/Edit/Add\", direct: true}, {id: \"/AccountManagement/Edit/Add\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
         },
         {
           "name": "D-09: GetTotalSummaryInfo this year (before)",
@@ -4127,7 +4136,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation DeviceAdd { DeviceAdd(input: { typeId: \"Device\", id: \"{{qaDeviceId}}\", item: { id: \"{{qaDeviceId}}\", name: \"QA Regression Device\", description: \"qa original description\", macAddress: \"{{qaMacAddress}}\", serialNumber: \"QA-REG-SN-{{qaN}}\", deviceType: \"{{deviceTypeId}}\", orderId: \"\", licenseName: \"{{deviceConfigurationId}}\", project: \"\", productionStatus: \"Finished\" } }) { id } }",
+                "query": "mutation DeviceAdd { DeviceAdd(input: { typeId: \"Device\", id: \"{{qaSuDeviceId}}\", item: { id: \"{{qaSuDeviceId}}\", name: \"QA Regression Device\", description: \"qa original description\", macAddress: \"{{qaSuMacAddress}}\", serialNumber: \"QA-REG-SU-SN-{{qaN}}\", deviceType: \"{{deviceTypeId}}\", orderId: \"\", licenseName: \"{{deviceConfigurationId}}\", project: \"\", productionStatus: \"Finished\" } }) { id } }",
                 "variables": ""
               }
             },
@@ -4181,6 +4190,201 @@
               }
             }
           ]
+        },
+        {
+          "name": "QA: The editor may create devices for a moment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Roles of the user updated', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserUpdate { UserUpdate(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{qaDescUserId}}\", item: { id: \"{{qaDescUserId}}\", productId: \"{{productId}}\", name: \"QA Regression Description Editor\", username: \"{{qaDescLogin}}\", email: \"{{qaDescLogin}}@prolifeapi.test\", groups: [], roles: [{id: \"{{qaDescRoleId}}\", direct: true}, {id: \"{{qaTmpRoleId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            },
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{suToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "QA: Auth description-only editor as a creator",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('Authorized', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(auth && auth.token).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('token', auth.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{qaDescLogin}}\", password: \"QaRegression_2026!\", productId: \"{{productId}}\" }) { token } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "QA: DeviceAdd the own device of the editor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('The editor created the own device', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation DeviceAdd { DeviceAdd(input: { typeId: \"Device\", id: \"{{qaDeviceId}}\", item: { id: \"{{qaDeviceId}}\", name: \"QA Regression Device\", description: \"qa original description\", macAddress: \"{{qaMacAddress}}\", serialNumber: \"QA-REG-SN-{{qaN}}\", deviceType: \"{{deviceTypeId}}\", orderId: \"\", licenseName: \"{{deviceConfigurationId}}\", project: \"\", productionStatus: \"Finished\" } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "QA: The editor may no longer create devices",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Roles of the user updated', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserUpdate { UserUpdate(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{qaDescUserId}}\", item: { id: \"{{qaDescUserId}}\", productId: \"{{productId}}\", name: \"QA Regression Description Editor\", username: \"{{qaDescLogin}}\", email: \"{{qaDescLogin}}@prolifeapi.test\", groups: [], roles: [{id: \"{{qaDescRoleId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            },
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{suToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "response": []
         },
         {
           "name": "QA: Auth description-only hardware editor",
@@ -4904,6 +5108,193 @@
               }
             }
           ]
+        },
+        {
+          "name": "QA: The operator may create customers for a moment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Roles of the user updated', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserUpdate { UserUpdate(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{qaOrderUserId}}\", item: { id: \"{{qaOrderUserId}}\", productId: \"{{productId}}\", name: \"QA Regression Order Operator\", username: \"{{qaOrderLogin}}\", email: \"{{qaOrderLogin}}@prolifeapi.test\", groups: [], roles: [{id: \"{{qaOrderRoleId}}\", direct: true}, {id: \"{{qaTmpRoleId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            },
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{suToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "QA: Auth order-only operator as a creator",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('Authorized', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(auth && auth.token).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('token', auth.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{qaOrderLogin}}\", password: \"QaRegression_2026!\", productId: \"{{productId}}\" }) { token } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "QA: AccountAdd customer of the order-only operator",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation AccountAdd { AccountAdd(input: { typeId: \"Account\", id: \"{{qaAccountId}}\", item: { id: \"{{qaAccountId}}\", name: \"QA Regression Customer {{qaN}}\", customerId: \"QA-REG-CUST-{{qaN}}\", description: \"\", email: \"qa-reg-{{qaN}}@prolifeapi.test\", companyName: \"QA Regression Co\", country: \"Testland\", city: \"Testville\", postalCode: \"00000\", street: \"Test street 1\", groups: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Customer created', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "QA: The operator may no longer create customers",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Roles of the user updated', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserUpdate { UserUpdate(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{qaOrderUserId}}\", item: { id: \"{{qaOrderUserId}}\", productId: \"{{productId}}\", name: \"QA Regression Order Operator\", username: \"{{qaOrderLogin}}\", email: \"{{qaOrderLogin}}@prolifeapi.test\", groups: [], roles: [{id: \"{{qaOrderRoleId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            },
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{suToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "response": []
         },
         {
           "name": "QA: Auth order-only operator",
@@ -22616,6 +23007,2648 @@
               }
             }
           ]
+        }
+      ]
+    },
+    {
+      "name": "15 Personal Space - Isolation Between Users",
+      "description": "Outside of organizations every user is the tenant of the own data: a document is bound to its creator, lists and reads by ID show only the own documents, organizations do not see them. The superuser outside of organizations lists every document not bound to an organization and reads any document by ID. A role created outside of organizations is personal, yet it grants its permissions to the users it is assigned to.",
+      "item": [
+        {
+          "name": "PS: Auth SU and start the run",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('psRun', Date.now().toString(36));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('SU authorized', () => pm.expect(payload('Authorization') && payload('Authorization').token, JSON.stringify(json)).to.be.a('string').and.not.empty);",
+                  "  pm.environment.set('psSuToken', payload('Authorization').token);",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{token}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{suLogin}}\", password: \"{{suPassword}}\", productId: \"{{productId}}\" }) { token userId } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: RoleAdd account role outside of organizations",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('psRoleId', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Role created', () => pm.expect(ok('RoleAdd'), JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{psRoleId}}\", item: { id: \"{{psRoleId}}\", name: \"Personal Api {{psRun}}\", description: \"Created by ProLifeApiPostman\", roleId: \"PersonalApi{{psRun}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/AccountManagement/ViewPage\", direct: true}, {id: \"/AccountManagement/View\", direct: true}, {id: \"/AccountManagement/ViewAll\", direct: true}, {id: \"/AccountManagement/Edit\", direct: true}, {id: \"/AccountManagement/Edit/Add\", direct: true}, {id: \"/AccountManagement/Edit/Remove\", direct: true}, {id: \"/AccountManagement/Edit/Change\", direct: true}, {id: \"/AccountManagement/Edit/Change/CustomerId\", direct: true}, {id: \"/AccountManagement/Edit/Change/Description\", direct: true}, {id: \"/AccountManagement/Edit/Change/Name\", direct: true}, {id: \"/AccountManagement/Edit/Change/Email\", direct: true}, {id: \"/AccountManagement/Edit/Change/CompanyAddress\", direct: true}, {id: \"/AccountManagement/Edit/Change/Groups\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: UserAdd X",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('psXUserId', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('User created', () => pm.expect(ok('UserAdd'), JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{psXUserId}}\", item: { id: \"{{psXUserId}}\", productId: \"{{productId}}\", name: \"Personal ps_x\", username: \"ps_x_{{psRun}}\", password: \"Personal_2026!\", email: \"ps_x_{{psRun}}@prolifeapi.test\", groups: [], roles: [{id: \"{{psRoleId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: UserAdd Y",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('psYUserId', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('User created', () => pm.expect(ok('UserAdd'), JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{psYUserId}}\", item: { id: \"{{psYUserId}}\", productId: \"{{productId}}\", name: \"Personal ps_y\", username: \"ps_y_{{psRun}}\", password: \"Personal_2026!\", email: \"ps_y_{{psRun}}@prolifeapi.test\", groups: [], roles: [{id: \"{{psRoleId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: UserAdd owner of organization O",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('psOUserId', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('User created', () => pm.expect(ok('UserAdd'), JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{psOUserId}}\", item: { id: \"{{psOUserId}}\", productId: \"{{productId}}\", name: \"Personal ps_o\", username: \"ps_o_{{psRun}}\", password: \"Personal_2026!\", email: \"ps_o_{{psRun}}@prolifeapi.test\", groups: [], roles: [{id: \"{{psRoleId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: Auth X",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Authorized', () => pm.expect(payload('Authorization') && payload('Authorization').token, JSON.stringify(json)).to.be.a('string').and.not.empty);",
+                  "  pm.environment.set('psXToken', payload('Authorization').token);",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{token}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"ps_x_{{psRun}}\", password: \"Personal_2026!\", productId: \"{{productId}}\" }) { token userId } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: Auth Y",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Authorized', () => pm.expect(payload('Authorization') && payload('Authorization').token, JSON.stringify(json)).to.be.a('string').and.not.empty);",
+                  "  pm.environment.set('psYToken', payload('Authorization').token);",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{token}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"ps_y_{{psRun}}\", password: \"Personal_2026!\", productId: \"{{productId}}\" }) { token userId } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: The personal role of the superuser grants X its permissions",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  const permissions = (payload('GetPermissions') && payload('GetPermissions').permissions) || [];",
+                  "  pm.test('X holds the account permissions of the role', () => ['/AccountManagement/View', '/AccountManagement/Edit/Add', '/AccountManagement/Edit/Remove'].forEach((p) => pm.expect(permissions, JSON.stringify(json)).to.include(p)));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psXToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetPermissions { GetPermissions(input: { accessToken: \"{{psXToken}}\" }) { permissions } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: CreateTenant O",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Organization O created', () => pm.expect(ok('CreateTenant') && payload('CreateTenant').tenantId, JSON.stringify(json)).to.be.a('string').and.not.empty);",
+                  "  pm.environment.set('psOTenantId', payload('CreateTenant').tenantId);",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateTenant { CreateTenant(input: { name: \"Personal Org O {{psRun}}\", ownerId: \"{{psOUserId}}\" }) { tenantId errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: The product permissions for the scope of O",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  const ids = [].concat(...((payload('GetProductPermissions') && payload('GetProductPermissions').groups) || []).map((g) => (g.entries || []).map((e) => e.permissionId)));",
+                  "  pm.test('The product declares the account permissions', () => pm.expect(ids, JSON.stringify(json)).to.include('/AccountManagement/Edit/Add'));",
+                  "  pm.environment.set('psProductScope', JSON.stringify(ids));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetProductPermissions { GetProductPermissions(input: { productId: \"{{productId}}\" }) { groups { entries { permissionId } } errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: The creator gives O the whole product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('The scope of O is the whole product', () => pm.expect(ok('UpdateTenant') && payload('UpdateTenant').success, JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateTenant { UpdateTenant(input: { tenantId: \"{{psOTenantId}}\", name: \"Personal Org O {{psRun}}\", tenantPermissions: {{psProductScope}} }) { success errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: Auth owner of O",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Authorized', () => pm.expect(payload('Authorization') && payload('Authorization').token, JSON.stringify(json)).to.be.a('string').and.not.empty);",
+                  "  pm.environment.set('psOLoginToken', payload('Authorization').token);",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{token}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"ps_o_{{psRun}}\", password: \"Personal_2026!\", productId: \"{{productId}}\" }) { token userId } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: SelectTenant O",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  const session = payload('SelectTenant') && payload('SelectTenant').userSession;",
+                  "  pm.test('The owner works in O', () => pm.expect(ok('SelectTenant') && session && session.tenantId, JSON.stringify(json)).to.eql(env('psOTenantId')));",
+                  "  pm.environment.set('psOToken', session.accessToken);",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psOLoginToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SelectTenant { SelectTenant(input: { tenantId: \"{{psOTenantId}}\" }) { ok errorMessage userSession { accessToken tenantId } } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: Auth owner of O outside of O",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Authorized', () => pm.expect(payload('Authorization') && payload('Authorization').token, JSON.stringify(json)).to.be.a('string').and.not.empty);",
+                  "  pm.environment.set('psOPersonalToken', payload('Authorization').token);",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{token}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"ps_o_{{psRun}}\", password: \"Personal_2026!\", productId: \"{{productId}}\" }) { token userId } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: AccountAdd X1 as X",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('psAccX1', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Account X1 created', () => pm.expect(ok('AccountAdd') && payload('AccountAdd').id, JSON.stringify(json)).to.eql(env('psAccX1')));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psXToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation AccountAdd { AccountAdd(input: { typeId: \"Account\", id: \"{{psAccX1}}\", item: { id: \"{{psAccX1}}\", name: \"Personal X1 {{psRun}}\", customerId: \"PS-X1-{{psRun}}\", description: \"\", email: \"x1@prolifeapi.test\", companyName: \"\", country: \"\", city: \"\", postalCode: \"\", street: \"\", groups: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: AccountAdd Y1 as Y",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('psAccY1', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Account Y1 created', () => pm.expect(ok('AccountAdd') && payload('AccountAdd').id, JSON.stringify(json)).to.eql(env('psAccY1')));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psYToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation AccountAdd { AccountAdd(input: { typeId: \"Account\", id: \"{{psAccY1}}\", item: { id: \"{{psAccY1}}\", name: \"Personal Y1 {{psRun}}\", customerId: \"PS-Y1-{{psRun}}\", description: \"\", email: \"y1@prolifeapi.test\", companyName: \"\", country: \"\", city: \"\", postalCode: \"\", street: \"\", groups: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: AccountAdd S1 as the superuser",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('psAccS1', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Account S1 created', () => pm.expect(ok('AccountAdd') && payload('AccountAdd').id, JSON.stringify(json)).to.eql(env('psAccS1')));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation AccountAdd { AccountAdd(input: { typeId: \"Account\", id: \"{{psAccS1}}\", item: { id: \"{{psAccS1}}\", name: \"Personal S1 {{psRun}}\", customerId: \"PS-S1-{{psRun}}\", description: \"\", email: \"s1@prolifeapi.test\", companyName: \"\", country: \"\", city: \"\", postalCode: \"\", street: \"\", groups: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: AccountAdd O1 in organization O",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('psAccO1', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Account O1 created', () => pm.expect(ok('AccountAdd') && payload('AccountAdd').id, JSON.stringify(json)).to.eql(env('psAccO1')));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psOToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation AccountAdd { AccountAdd(input: { typeId: \"Account\", id: \"{{psAccO1}}\", item: { id: \"{{psAccO1}}\", name: \"Personal O1 {{psRun}}\", customerId: \"PS-O1-{{psRun}}\", description: \"\", email: \"o1@prolifeapi.test\", companyName: \"\", country: \"\", city: \"\", postalCode: \"\", street: \"\", groups: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: AccountAdd P1 as the owner of O outside of O",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('psAccP1', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Account P1 created', () => pm.expect(ok('AccountAdd') && payload('AccountAdd').id, JSON.stringify(json)).to.eql(env('psAccP1')));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psOPersonalToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation AccountAdd { AccountAdd(input: { typeId: \"Account\", id: \"{{psAccP1}}\", item: { id: \"{{psAccP1}}\", name: \"Personal P1 {{psRun}}\", customerId: \"PS-P1-{{psRun}}\", description: \"\", email: \"p1@prolifeapi.test\", companyName: \"\", country: \"\", city: \"\", postalCode: \"\", street: \"\", groups: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: AccountsList as X - own accounts only",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Sees psAccX1', () => pm.expect(has('AccountsList', env('psAccX1')), JSON.stringify(json)).to.eql(true));",
+                  "  pm.test('Does not see psAccY1', () => pm.expect(has('AccountsList', env('psAccY1')), JSON.stringify(json)).to.eql(false));",
+                  "  pm.test('Does not see psAccS1', () => pm.expect(has('AccountsList', env('psAccS1')), JSON.stringify(json)).to.eql(false));",
+                  "  pm.test('Does not see psAccO1', () => pm.expect(has('AccountsList', env('psAccO1')), JSON.stringify(json)).to.eql(false));",
+                  "  pm.test('Does not see psAccP1', () => pm.expect(has('AccountsList', env('psAccP1')), JSON.stringify(json)).to.eql(false));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psXToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query AccountsList { AccountsList(input: { viewParams: { count: 1000, offset: 0 } }) { items { id } } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: AccountsList as Y - own accounts only",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Sees psAccY1', () => pm.expect(has('AccountsList', env('psAccY1')), JSON.stringify(json)).to.eql(true));",
+                  "  pm.test('Does not see psAccX1', () => pm.expect(has('AccountsList', env('psAccX1')), JSON.stringify(json)).to.eql(false));",
+                  "  pm.test('Does not see psAccS1', () => pm.expect(has('AccountsList', env('psAccS1')), JSON.stringify(json)).to.eql(false));",
+                  "  pm.test('Does not see psAccO1', () => pm.expect(has('AccountsList', env('psAccO1')), JSON.stringify(json)).to.eql(false));",
+                  "  pm.test('Does not see psAccP1', () => pm.expect(has('AccountsList', env('psAccP1')), JSON.stringify(json)).to.eql(false));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psYToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query AccountsList { AccountsList(input: { viewParams: { count: 1000, offset: 0 } }) { items { id } } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: AccountsList as the superuser - every personal account, none of O",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Sees psAccS1', () => pm.expect(has('AccountsList', env('psAccS1')), JSON.stringify(json)).to.eql(true));",
+                  "  pm.test('Sees psAccX1', () => pm.expect(has('AccountsList', env('psAccX1')), JSON.stringify(json)).to.eql(true));",
+                  "  pm.test('Sees psAccY1', () => pm.expect(has('AccountsList', env('psAccY1')), JSON.stringify(json)).to.eql(true));",
+                  "  pm.test('Sees psAccP1', () => pm.expect(has('AccountsList', env('psAccP1')), JSON.stringify(json)).to.eql(true));",
+                  "  pm.test('Does not see psAccO1', () => pm.expect(has('AccountsList', env('psAccO1')), JSON.stringify(json)).to.eql(false));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query AccountsList { AccountsList(input: { viewParams: { count: 1000, offset: 0 } }) { items { id } } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: AccountsList in O - accounts of O only",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Sees psAccO1', () => pm.expect(has('AccountsList', env('psAccO1')), JSON.stringify(json)).to.eql(true));",
+                  "  pm.test('Does not see psAccX1', () => pm.expect(has('AccountsList', env('psAccX1')), JSON.stringify(json)).to.eql(false));",
+                  "  pm.test('Does not see psAccY1', () => pm.expect(has('AccountsList', env('psAccY1')), JSON.stringify(json)).to.eql(false));",
+                  "  pm.test('Does not see psAccS1', () => pm.expect(has('AccountsList', env('psAccS1')), JSON.stringify(json)).to.eql(false));",
+                  "  pm.test('Does not see psAccP1', () => pm.expect(has('AccountsList', env('psAccP1')), JSON.stringify(json)).to.eql(false));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psOToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query AccountsList { AccountsList(input: { viewParams: { count: 1000, offset: 0 } }) { items { id } } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: AccountsList as the owner of O outside of O - own personal accounts only",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Sees psAccP1', () => pm.expect(has('AccountsList', env('psAccP1')), JSON.stringify(json)).to.eql(true));",
+                  "  pm.test('Does not see psAccO1', () => pm.expect(has('AccountsList', env('psAccO1')), JSON.stringify(json)).to.eql(false));",
+                  "  pm.test('Does not see psAccX1', () => pm.expect(has('AccountsList', env('psAccX1')), JSON.stringify(json)).to.eql(false));",
+                  "  pm.test('Does not see psAccY1', () => pm.expect(has('AccountsList', env('psAccY1')), JSON.stringify(json)).to.eql(false));",
+                  "  pm.test('Does not see psAccS1', () => pm.expect(has('AccountsList', env('psAccS1')), JSON.stringify(json)).to.eql(false));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psOPersonalToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query AccountsList { AccountsList(input: { viewParams: { count: 1000, offset: 0 } }) { items { id } } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: X reads X1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('The account is returned', () => pm.expect(ok('AccountItem') && payload('AccountItem').id, JSON.stringify(json)).to.eql(env('psAccX1')));",
+                  "  pm.test('The account keeps its name', () => pm.expect(payload('AccountItem').name).to.eql('Personal X1 ' + env('psRun')));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psXToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query AccountItem { AccountItem(input: { typeId: \"Account\", id: \"{{psAccX1}}\" }) { id name } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: Y cannot read X1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('The account is reported as missing', () => pm.expect(errorText(), JSON.stringify(json)).to.match(/Object does not exist/));",
+                  "  pm.test('No account data is returned', () => pm.expect(payload('AccountItem') ? payload('AccountItem').id : null, JSON.stringify(json)).to.not.eql(env('psAccX1')));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psYToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query AccountItem { AccountItem(input: { typeId: \"Account\", id: \"{{psAccX1}}\" }) { id name } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: Organization O cannot read X1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('The account is reported as missing', () => pm.expect(errorText(), JSON.stringify(json)).to.match(/Object does not exist/));",
+                  "  pm.test('No account data is returned', () => pm.expect(payload('AccountItem') ? payload('AccountItem').id : null, JSON.stringify(json)).to.not.eql(env('psAccX1')));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psOToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query AccountItem { AccountItem(input: { typeId: \"Account\", id: \"{{psAccX1}}\" }) { id name } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: X cannot read O1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('The account is reported as missing', () => pm.expect(errorText(), JSON.stringify(json)).to.match(/Object does not exist/));",
+                  "  pm.test('No account data is returned', () => pm.expect(payload('AccountItem') ? payload('AccountItem').id : null, JSON.stringify(json)).to.not.eql(env('psAccO1')));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psXToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query AccountItem { AccountItem(input: { typeId: \"Account\", id: \"{{psAccO1}}\" }) { id name } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: The owner of O outside of O cannot read O1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('The account is reported as missing', () => pm.expect(errorText(), JSON.stringify(json)).to.match(/Object does not exist/));",
+                  "  pm.test('No account data is returned', () => pm.expect(payload('AccountItem') ? payload('AccountItem').id : null, JSON.stringify(json)).to.not.eql(env('psAccO1')));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psOPersonalToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query AccountItem { AccountItem(input: { typeId: \"Account\", id: \"{{psAccO1}}\" }) { id name } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: The superuser outside of organizations reads X1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('The account is returned', () => pm.expect(ok('AccountItem') && payload('AccountItem').id, JSON.stringify(json)).to.eql(env('psAccX1')));",
+                  "  pm.test('The account keeps its name', () => pm.expect(payload('AccountItem').name).to.eql('Personal X1 ' + env('psRun')));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query AccountItem { AccountItem(input: { typeId: \"Account\", id: \"{{psAccX1}}\" }) { id name } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: Y cannot change X1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('The change is refused as a missing account', () => pm.expect(errorText(), JSON.stringify(json)).to.match(/Object does not exist or the organization may not change it/));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psYToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation AccountUpdate { AccountUpdate(input: { typeId: \"Account\", id: \"{{psAccX1}}\", item: { id: \"{{psAccX1}}\", name: \"Changed by Y\", customerId: \"PS-X1-{{psRun}}\", description: \"\", email: \"x1@prolifeapi.test\", companyName: \"\", country: \"\", city: \"\", postalCode: \"\", street: \"\", groups: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: Y cannot remove X1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('The removal is refused as a missing account', () => pm.expect(errorText(), JSON.stringify(json)).to.match(/Object does not exist or the organization may not change it/));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psYToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"Accounts\", elementIds: [\"{{psAccX1}}\"] }) { success } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: X1 is unchanged and still there",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('The account is returned', () => pm.expect(ok('AccountItem') && payload('AccountItem').id, JSON.stringify(json)).to.eql(env('psAccX1')));",
+                  "  pm.test('The account keeps its name', () => pm.expect(payload('AccountItem').name).to.eql('Personal X1 ' + env('psRun')));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psXToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query AccountItem { AccountItem(input: { typeId: \"Account\", id: \"{{psAccX1}}\" }) { id name } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: X removes X1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Removed', () => pm.expect(ok('RemoveElements') && payload('RemoveElements').success, JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psXToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"Accounts\", elementIds: [\"{{psAccX1}}\"] }) { success } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: Y removes Y1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Removed', () => pm.expect(ok('RemoveElements') && payload('RemoveElements').success, JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psYToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"Accounts\", elementIds: [\"{{psAccY1}}\"] }) { success } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: The superuser removes S1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Removed', () => pm.expect(ok('RemoveElements') && payload('RemoveElements').success, JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"Accounts\", elementIds: [\"{{psAccS1}}\"] }) { success } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: O removes O1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Removed', () => pm.expect(ok('RemoveElements') && payload('RemoveElements').success, JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psOToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"Accounts\", elementIds: [\"{{psAccO1}}\"] }) { success } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PS: The owner of O removes P1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function has(name, id) { return items(name).some((i) => i.id === id); }",
+                  "  function errorText() { return errors.map((e) => e.message || '').join(' | '); }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Removed', () => pm.expect(ok('RemoveElements') && payload('RemoveElements').success, JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{psOPersonalToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveElements { RemoveElements(input: { collectionId: \"Accounts\", elementIds: [\"{{psAccP1}}\"] }) { success } }",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
