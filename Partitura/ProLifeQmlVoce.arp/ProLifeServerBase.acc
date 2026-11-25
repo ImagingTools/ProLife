@@ -773,7 +773,7 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RelationshipProvider" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AuthorizableServerFramework/RemoteTenantController"/>
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/RemoteContractController"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
