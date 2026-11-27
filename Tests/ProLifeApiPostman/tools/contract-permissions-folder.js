@@ -31,7 +31,26 @@ const PRELUDE = [
 	"  const accounts = { [env('npAccA')]: 'A', [env('npAccB')]: 'B', [env('npAccC')]: 'C', [env('npAccD')]: 'D' };"
 ];
 
-const js = (value) => JSON.stringify(value);
+const UNSAFE_JS_CHAR_MAP = {
+	'<': '\\u003C',
+	'>': '\\u003E',
+	'/': '\\u002F',
+	'\\': '\\\\',
+	'\b': '\\b',
+	'\f': '\\f',
+	'\n': '\\n',
+	'\r': '\\r',
+	'\t': '\\t',
+	'\0': '\\0',
+	'\u2028': '\\u2028',
+	'\u2029': '\\u2029'
+};
+
+function escapeUnsafeChars(str) {
+	return str.replace(/[<>\/\\\b\f\n\r\t\0\u2028\u2029]/g, (ch) => UNSAFE_JS_CHAR_MAP[ch]);
+}
+
+const js = (value) => escapeUnsafeChars(JSON.stringify(value));
 
 function item(name, query, token, tests, prerequest){
 	const event = [];
