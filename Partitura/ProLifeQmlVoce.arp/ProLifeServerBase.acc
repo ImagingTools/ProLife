@@ -773,7 +773,7 @@
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
                     <AttributeInfo Id="RelationshipProvider" Type="Reference" ExportId="">
-                        <Data IsEnabled="true" Value="AuthorizableServerFramework/RemoteTenantController"/>
+                        <Data IsEnabled="true" Value="AuthorizableServerFramework/RemoteContractController"/>
                     </AttributeInfo>
                 </AttributeInfoMap>
             </Data>
@@ -2775,6 +2775,9 @@
                                 </AttributeInfo>
                                 <AttributeInfo Id="Log" Type="Reference" ExportId="Log">
                                     <Data IsEnabled="false"/>
+                                </AttributeInfo>
+                                <AttributeInfo Id="ProductId" Type="Id" ExportId="">
+                                    <Data IsEnabled="true" Value="ProLife"/>
                                 </AttributeInfo>
                                 <AttributeInfo Id="RelationshipProvider" Type="Reference" ExportId="RelationshipProvider">
                                     <Data IsEnabled="false"/>
