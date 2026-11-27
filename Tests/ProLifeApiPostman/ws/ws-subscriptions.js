@@ -588,12 +588,11 @@ const clientSubscriptions = [
 	'OnMembershipNotification',
 	'OnTenantsCollectionChanged',
 	'OnCrossTenantMessageNotification',
-	'OnConnectionCodesNotification',
+	'OnOrganizationConnectionsChanged',
+	'OnContractNotification',
 	'OnRolesCollectionChanged',
 	'OnGroupsCollectionChanged',
 	'OnUsersForInvitationCollectionChanged',
-	'OnTenantRelationshipsCollectionChanged',
-	'OnCrossOrgGrantsCollectionChanged',
 	// Notification center, forwarded to Puma.
 	'OnNotificationEvent',
 	// Desk, forwarded.
@@ -614,7 +613,7 @@ const clientSubscriptions = [
 const connectionProbes = ['PumaWsConnection'];
 
 // Served by Puma and forwarded by the ProLife server's document-service bridge.
-const remoteCollections = ['Users', 'Groups', 'Roles', 'Tenants', 'TenantRelationships', 'CrossOrgGrants'];
+const remoteCollections = ['Users', 'Groups', 'Roles', 'Tenants'];
 // The only collection ProLife serves through a document service of its own:
 // ProLifeQmlVoce.arp/ProLifeServerBase.acc registers exactly one
 // CollectionDocumentServicePublisher, with CollectionId "Devices". A forwarder

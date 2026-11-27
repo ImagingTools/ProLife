@@ -8758,82 +8758,14 @@
           ]
         },
         {
-          "name": "SH: CreateRelationshipProposal B to A",
+          "name": "SH: A offers B a contract",
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation CreateRelationshipProposal { CreateRelationshipProposal(input: { proposal: { id: \"{{shProposalId}}\", connectionId: \"{{shConnectionId}}\", proposalType: Create, initiatorTenantId: \"{{shBTenantId}}\", counterpartyTenantId: \"{{shATenantId}}\", proposedSourceRole: Partner, proposedTargetRole: Partner, status: Pending } }) { proposalId errorMessage } }",
-                "variables": ""
-              }
-            },
-            "url": "{{baseUrl}}/graphql",
-            "auth": {
-              "type": "apikey",
-              "apikey": [
-                {
-                  "key": "key",
-                  "value": "x-authentication-token",
-                  "type": "string"
-                },
-                {
-                  "key": "value",
-                  "value": "{{shBToken}}",
-                  "type": "string"
-                },
-                {
-                  "key": "in",
-                  "value": "header",
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "prerequest",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.environment.set('shProposalId', pm.variables.replaceIn('{{$guid}}'));"
-                ]
-              }
-            },
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "(function () {",
-                  "  const json = pm.response.json();",
-                  "  const data = json.data || {};",
-                  "  const errors = json.errors || [];",
-                  "  function payload(name) { return data[name]; }",
-                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
-                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
-                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
-                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
-                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
-                  "  const env = (key) => pm.environment.get(key);",
-                  "  pm.test('B proposed a relationship', () => pm.expect(ok('CreateRelationshipProposal'), JSON.stringify(json)).to.eql(true));",
-                  "  pm.environment.set('shProposalId', payload('CreateRelationshipProposal').proposalId);",
-                  "})();"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "SH: ApproveRelationshipProposal A-B",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "graphql",
-              "graphql": {
-                "query": "mutation ApproveRelationshipProposal { ApproveRelationshipProposal(input: { proposalId: \"{{shProposalId}}\", tenantId: \"{{shATenantId}}\" }) { success relationshipId errorMessage } }",
+                "query": "mutation CreateContract { CreateContract(input: { tenantId: \"{{shATenantId}}\", draft: { name: \"Sharing A-B {{shRun}}\", typeId: \"Services\", parties: [{ tenantId: \"{{shATenantId}}\", roleId: \"Customer\" }, { tenantId: \"{{shBTenantId}}\", roleId: \"ServiceProvider\" }], links: [{ tenantAId: \"{{shATenantId}}\", tenantBId: \"{{shBTenantId}}\", roleAId: \"Customer\", roleBId: \"ServiceProvider\" }] } }) { success contractId revision errorMessage } }",
                 "variables": ""
               }
             },
@@ -8876,8 +8808,183 @@
                   "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
                   "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
                   "  const env = (key) => pm.environment.get(key);",
-                  "  pm.test('A and B are related', () => pm.expect(ok('ApproveRelationshipProposal') && payload('ApproveRelationshipProposal').relationshipId, JSON.stringify(json)).to.be.a('string').and.not.empty);",
-                  "  pm.environment.set('shRelationshipAB', payload('ApproveRelationshipProposal').relationshipId);",
+                  "  pm.test(\"The contract is drafted\", () => pm.expect(ok('CreateContract') && payload('CreateContract').success, JSON.stringify(json)).to.eql(true));",
+                  "  pm.environment.set('shContractAB', payload('CreateContract').contractId);",
+                  "  pm.environment.set('shContractABRev', payload('CreateContract').revision);",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SH: A sends the contract to B",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SubmitContract { SubmitContract(input: { tenantId: \"{{shATenantId}}\", contractId: \"{{shContractAB}}\", revision: {{shContractABRev}} }) { success contractId revision errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{shAToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test(\"The contract is sent\", () => pm.expect(ok('SubmitContract') && payload('SubmitContract').success, JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SH: B signs the contract with A",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SignContract { SignContract(input: { tenantId: \"{{shBTenantId}}\", contractId: \"{{shContractAB}}\", revision: {{shContractABRev}} }) { success contractId revision errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{shBToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test(\"Signed\", () => pm.expect(ok('SignContract') && payload('SignContract').success, JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SH: A signs: A and B are related",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SignContract { SignContract(input: { tenantId: \"{{shATenantId}}\", contractId: \"{{shContractAB}}\", revision: {{shContractABRev}} }) { success contractId revision errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{shAToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test(\"Signed\", () => pm.expect(ok('SignContract') && payload('SignContract').success, JSON.stringify(json)).to.eql(true));",
                   "})();"
                 ]
               }
@@ -9062,82 +9169,14 @@
           ]
         },
         {
-          "name": "SH: CreateRelationshipProposal C to A",
+          "name": "SH: A offers C a contract",
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation CreateRelationshipProposal { CreateRelationshipProposal(input: { proposal: { id: \"{{shProposalId}}\", connectionId: \"{{shConnectionId}}\", proposalType: Create, initiatorTenantId: \"{{shCTenantId}}\", counterpartyTenantId: \"{{shATenantId}}\", proposedSourceRole: Partner, proposedTargetRole: Partner, status: Pending } }) { proposalId errorMessage } }",
-                "variables": ""
-              }
-            },
-            "url": "{{baseUrl}}/graphql",
-            "auth": {
-              "type": "apikey",
-              "apikey": [
-                {
-                  "key": "key",
-                  "value": "x-authentication-token",
-                  "type": "string"
-                },
-                {
-                  "key": "value",
-                  "value": "{{shCToken}}",
-                  "type": "string"
-                },
-                {
-                  "key": "in",
-                  "value": "header",
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "prerequest",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.environment.set('shProposalId', pm.variables.replaceIn('{{$guid}}'));"
-                ]
-              }
-            },
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "(function () {",
-                  "  const json = pm.response.json();",
-                  "  const data = json.data || {};",
-                  "  const errors = json.errors || [];",
-                  "  function payload(name) { return data[name]; }",
-                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
-                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
-                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
-                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
-                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
-                  "  const env = (key) => pm.environment.get(key);",
-                  "  pm.test('C proposed a relationship', () => pm.expect(ok('CreateRelationshipProposal'), JSON.stringify(json)).to.eql(true));",
-                  "  pm.environment.set('shProposalId', payload('CreateRelationshipProposal').proposalId);",
-                  "})();"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "SH: ApproveRelationshipProposal A-C",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "graphql",
-              "graphql": {
-                "query": "mutation ApproveRelationshipProposal { ApproveRelationshipProposal(input: { proposalId: \"{{shProposalId}}\", tenantId: \"{{shATenantId}}\" }) { success relationshipId errorMessage } }",
+                "query": "mutation CreateContract { CreateContract(input: { tenantId: \"{{shATenantId}}\", draft: { name: \"Sharing A-C {{shRun}}\", typeId: \"Services\", parties: [{ tenantId: \"{{shATenantId}}\", roleId: \"Customer\" }, { tenantId: \"{{shCTenantId}}\", roleId: \"ServiceProvider\" }], links: [{ tenantAId: \"{{shATenantId}}\", tenantBId: \"{{shCTenantId}}\", roleAId: \"Customer\", roleBId: \"ServiceProvider\" }] } }) { success contractId revision errorMessage } }",
                 "variables": ""
               }
             },
@@ -9180,8 +9219,183 @@
                   "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
                   "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
                   "  const env = (key) => pm.environment.get(key);",
-                  "  pm.test('A and C are related', () => pm.expect(ok('ApproveRelationshipProposal') && payload('ApproveRelationshipProposal').relationshipId, JSON.stringify(json)).to.be.a('string').and.not.empty);",
-                  "  pm.environment.set('shRelationshipAC', payload('ApproveRelationshipProposal').relationshipId);",
+                  "  pm.test(\"The contract is drafted\", () => pm.expect(ok('CreateContract') && payload('CreateContract').success, JSON.stringify(json)).to.eql(true));",
+                  "  pm.environment.set('shContractAC', payload('CreateContract').contractId);",
+                  "  pm.environment.set('shContractACRev', payload('CreateContract').revision);",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SH: A sends the contract to C",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SubmitContract { SubmitContract(input: { tenantId: \"{{shATenantId}}\", contractId: \"{{shContractAC}}\", revision: {{shContractACRev}} }) { success contractId revision errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{shAToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test(\"The contract is sent\", () => pm.expect(ok('SubmitContract') && payload('SubmitContract').success, JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SH: C signs the contract with A",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SignContract { SignContract(input: { tenantId: \"{{shCTenantId}}\", contractId: \"{{shContractAC}}\", revision: {{shContractACRev}} }) { success contractId revision errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{shCToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test(\"Signed\", () => pm.expect(ok('SignContract') && payload('SignContract').success, JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SH: A signs: A and C are related",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SignContract { SignContract(input: { tenantId: \"{{shATenantId}}\", contractId: \"{{shContractAC}}\", revision: {{shContractACRev}} }) { success contractId revision errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{shAToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test(\"Signed\", () => pm.expect(ok('SignContract') && payload('SignContract').success, JSON.stringify(json)).to.eql(true));",
                   "})();"
                 ]
               }
@@ -13264,14 +13478,14 @@
           ]
         },
         {
-          "name": "SH: The member reads the active relationships of B",
+          "name": "SH: The member reads the organizations B is related with",
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "query GetTenantRelationships { GetTenantRelationships(input: { tenantId: \"{{shBTenantId}}\" }) { relationships { id sourceTenantId targetTenantId status scope description createdAt relatedSince } errorMessage } }",
+                "query": "query GetRelatedTenants { GetRelatedTenants(input: { tenantId: \"{{shBTenantId}}\" }) { relatedTenants { tenantId isEffective relatedSince } errorMessage } }",
                 "variables": ""
               }
             },
@@ -13314,16 +13528,11 @@
                   "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
                   "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
                   "  const env = (key) => pm.environment.get(key);",
-                  "  const relationships = (payload('GetTenantRelationships') || {}).relationships || [];",
-                  "  pm.test('The relationship with A is listed', () => pm.expect(relationships.some((r) => r.sourceTenantId === env('shATenantId') || r.targetTenantId === env('shATenantId')), JSON.stringify(json)).to.eql(true));",
-                  "  pm.test('Only active relationships', () => relationships.forEach((r) => pm.expect(r.status).to.eql('Active')));",
-                  "  pm.test('The terms stay with the managers', () => relationships.forEach((r) => {",
-                  "  \tpm.expect(r.scope || '').to.eql('');",
-                  "  \tpm.expect(r.description || '').to.eql('');",
-                  "  \tpm.expect(r.createdAt || '').to.eql('');",
-                  "  }));",
+                  "  const related = (payload('GetRelatedTenants') || {}).relatedTenants || [];",
+                  "  pm.test('A is listed', () => pm.expect(related.map((r) => r.tenantId), JSON.stringify(json)).to.eql([env('shATenantId')]));",
+                  "  pm.test('The relation is in force', () => related.forEach((r) => pm.expect(r.isEffective, JSON.stringify(r)).to.eql(true)));",
                   "  // The shares with a partner belong to the period the organizations have been related, so every member learns its start",
-                  "  pm.test('The members see since when the organizations are related', () => relationships.forEach((r) => pm.expect(isNaN(Date.parse(r.relatedSince || '')), JSON.stringify(r)).to.eql(false)));",
+                  "  pm.test('The members see since when the organizations are related', () => related.forEach((r) => pm.expect(isNaN(Date.parse(r.relatedSince || '')), JSON.stringify(r)).to.eql(false)));",
                   "})();"
                 ]
               }
@@ -13331,14 +13540,14 @@
           ]
         },
         {
-          "name": "SH: The member cannot read the relationships of A",
+          "name": "SH: The member cannot read the organizations A is related with",
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "query GetTenantRelationships { GetTenantRelationships(input: { tenantId: \"{{shATenantId}}\" }) { relationships { id } errorMessage } }",
+                "query": "query GetRelatedTenants { GetRelatedTenants(input: { tenantId: \"{{shATenantId}}\" }) { relatedTenants { tenantId } errorMessage } }",
                 "variables": ""
               }
             },
@@ -13381,7 +13590,7 @@
                   "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
                   "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
                   "  const env = (key) => pm.environment.get(key);",
-                  "  pm.test('Refused', () => pm.expect(refused('GetTenantRelationships') && (((payload('GetTenantRelationships') || {}).relationships) || []).length === 0, JSON.stringify(json)).to.eql(true));",
+                  "  pm.test('Refused', () => pm.expect(refused('GetRelatedTenants') && (((payload('GetRelatedTenants') || {}).relatedTenants) || []).length === 0, JSON.stringify(json)).to.eql(true));",
                   "})();"
                 ]
               }
@@ -19720,14 +19929,14 @@
           ]
         },
         {
-          "name": "SH: A ends the relationship with C",
+          "name": "SH: A leaves the contract with C at once",
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation RemoveTenantRelationship { RemoveTenantRelationship(input: { tenantId: \"{{shATenantId}}\", relationshipId: \"{{shRelationshipAC}}\" }) { success errorMessage } }",
+                "query": "mutation GiveContractNotice { GiveContractNotice(input: { tenantId: \"{{shATenantId}}\", contractId: \"{{shContractAC}}\", reason: \"The sharing test ends the relation\", isImmediate: true }) { success contractId revision errorMessage } }",
                 "variables": ""
               }
             },
@@ -19770,7 +19979,7 @@
                   "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
                   "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
                   "  const env = (key) => pm.environment.get(key);",
-                  "  pm.test('Relationship removed', () => pm.expect(ok('RemoveTenantRelationship'), JSON.stringify(json)).to.eql(true));",
+                  "  pm.test(\"A left the contract\", () => pm.expect(ok('GiveContractNotice') && payload('GiveContractNotice').success, JSON.stringify(json)).to.eql(true));",
                   "})();"
                 ]
               }
@@ -21598,14 +21807,14 @@
           ]
         },
         {
-          "name": "DA: Owner of A grants B delegated access",
+          "name": "DA: A offers B a contract",
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation CreateCrossOrgGrant { CreateCrossOrgGrant(input: { sourceTenantId: \"{{daATenantId}}\", targetTenantId: \"{{daBTenantId}}\", roleIds: [], description: \"ProLifeApiPostman delegated access\" }) { grantId errorMessage } }",
+                "query": "mutation CreateContract { CreateContract(input: { tenantId: \"{{daATenantId}}\", draft: { name: \"Delegation A-B {{daRun}}\", typeId: \"Services\", parties: [{ tenantId: \"{{daATenantId}}\", roleId: \"Customer\" }, { tenantId: \"{{daBTenantId}}\", roleId: \"ServiceProvider\" }], links: [{ tenantAId: \"{{daATenantId}}\", tenantBId: \"{{daBTenantId}}\", roleAId: \"Customer\", roleBId: \"ServiceProvider\" }] } }) { success contractId revision errorMessage } }",
                 "variables": ""
               }
             },
@@ -21648,8 +21857,9 @@
                   "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
                   "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
                   "  const env = (key) => pm.environment.get(key);",
-                  "  pm.test('The grant is created', () => pm.expect(ok('CreateCrossOrgGrant') && payload('CreateCrossOrgGrant').grantId, JSON.stringify(json)).to.be.a('string').and.not.empty);",
-                  "  pm.environment.set('daGrantId', payload('CreateCrossOrgGrant').grantId);",
+                  "  pm.test(\"The contract is drafted\", () => pm.expect(ok('CreateContract') && payload('CreateContract').success, JSON.stringify(json)).to.eql(true));",
+                  "  pm.environment.set('daContractId', payload('CreateContract').contractId);",
+                  "  pm.environment.set('daContractIdRev', payload('CreateContract').revision);",
                   "})();"
                 ]
               }
@@ -21657,14 +21867,130 @@
           ]
         },
         {
-          "name": "DA: Owner of B sees A as delegated",
+          "name": "DA: A sends the contract to B",
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "query GetUserOrganizations { GetUserOrganizations(input: { id: \"{{daBUserId}}\", productId: \"{{productId}}\" }) { organizations { id isDelegated isActive } } }",
+                "query": "mutation SubmitContract { SubmitContract(input: { tenantId: \"{{daATenantId}}\", contractId: \"{{daContractId}}\", revision: {{daContractIdRev}} }) { success contractId revision errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daAToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test(\"The contract is sent\", () => pm.expect(ok('SubmitContract') && payload('SubmitContract').success, JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: Owner of A gives B the account view",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation GiveContractPermissions { GiveContractPermissions(input: { tenantId: \"{{daATenantId}}\", contractId: \"{{daContractId}}\", granteeTenantId: \"{{daBTenantId}}\", productId: \"{{productId}}\", permissionIds: [\"/AccountManagement/ViewPage\", \"/AccountManagement/View\"] }) { success contractId revision errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daAToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test(\"The permissions are given\", () => pm.expect(ok('GiveContractPermissions') && payload('GiveContractPermissions').success, JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: Owner of B signs",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SignContract { SignContract(input: { tenantId: \"{{daBTenantId}}\", contractId: \"{{daContractId}}\", revision: {{daContractIdRev}} }) { success contractId revision errorMessage } }",
                 "variables": ""
               }
             },
@@ -21680,6 +22006,493 @@
                 {
                   "key": "value",
                   "value": "{{daBToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test(\"Signed\", () => pm.expect(ok('SignContract') && payload('SignContract').success, JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: Owner of A signs: the contract is in force",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SignContract { SignContract(input: { tenantId: \"{{daATenantId}}\", contractId: \"{{daContractId}}\", revision: {{daContractIdRev}} }) { success contractId revision errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daAToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test(\"Signed\", () => pm.expect(ok('SignContract') && payload('SignContract').success, JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: Owner of B makes a group of delegates",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation GroupAdd { GroupAdd(input: { typeId: \"Group\", productId: \"{{productId}}\", id: \"{{daGroupId}}\", item: { id: \"{{daGroupId}}\", productId: \"{{productId}}\", name: \"Delegates of B {{daRun}}\", description: \"\", roles: [], users: [], parentGroups: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daBToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('daGroupId', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Group of B created', () => pm.expect(ok('GroupAdd'), JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: Owner of B finds the permissions it received",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetContract { GetContract(input: { tenantId: \"{{daBTenantId}}\", contractId: \"{{daContractId}}\" }) { contract { state allocations { allocationId grantorTenantId granteeTenantId isInForce } } errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daBToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  const contract = (payload('GetContract') || {}).contract || {};",
+                  "  const allocations = contract.allocations || [];",
+                  "  pm.test('The contract is in force', () => pm.expect(contract.state, JSON.stringify(json)).to.eql('Active'));",
+                  "  pm.test('One allocation of A to B, in force', () => pm.expect(allocations.map((a) => [a.grantorTenantId, a.granteeTenantId, a.isInForce]), JSON.stringify(allocations)).to.eql([[env('daATenantId'), env('daBTenantId'), true]]));",
+                  "  pm.environment.set('daAllocationId', allocations.length ? allocations[0].allocationId : '');",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: Owner of B gives them to the group",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SetContractAllocationGroups { SetContractAllocationGroups(input: { tenantId: \"{{daBTenantId}}\", contractId: \"{{daContractId}}\", allocationId: \"{{daAllocationId}}\", groupIds: [\"{{daGroupId}}\"] }) { success contractId revision errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daBToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test(\"The group receives the permissions\", () => pm.expect(ok('SetContractAllocationGroups') && payload('SetContractAllocationGroups').success, JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: UserAdd delegate of B in the group",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{daDUserId}}\", item: { id: \"{{daDUserId}}\", productId: \"{{productId}}\", name: \"Delegation Delegate B\", username: \"da_d_{{daRun}}\", password: \"ShareApi_2026!\", email: \"da_d_{{daRun}}@prolifeapi.test\", groups: [{id: \"{{daGroupId}}\", direct: true}], roles: [], permissions: [], systemInfos: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('daDUserId', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Delegate created', () => pm.expect(ok('UserAdd'), JSON.stringify(json)).to.eql(true));",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: The delegate is a member of B",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation AddMembership { AddMembership(input: { userId: \"{{daDUserId}}\", tenantId: \"{{daBTenantId}}\" }) { membershipId errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Member of B', () => pm.expect(ok('AddMembership') && payload('AddMembership').membershipId, JSON.stringify(json)).to.be.a('string').and.not.empty);",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: Auth delegate of B",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"da_d_{{daRun}}\", password: \"ShareApi_2026!\", productId: \"{{productId}}\" }) { token userId } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daSuToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "(function () {",
+                  "  const json = pm.response.json();",
+                  "  const data = json.data || {};",
+                  "  const errors = json.errors || [];",
+                  "  function payload(name) { return data[name]; }",
+                  "  function refused(name) { const p = data[name]; return errors.length > 0 || !p || !!p.errorMessage; }",
+                  "  function ok(name) { const p = data[name]; return errors.length === 0 && !!p && !p.errorMessage; }",
+                  "  function items(name) { const p = data[name]; return p && p.items ? p.items : []; }",
+                  "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
+                  "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
+                  "  const env = (key) => pm.environment.get(key);",
+                  "  pm.test('Delegate authorized', () => pm.expect(payload('Authorization') && payload('Authorization').token, JSON.stringify(json)).to.be.a('string').and.not.empty);",
+                  "  pm.environment.set('daDToken', payload('Authorization').token);",
+                  "})();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DA: The delegate of B sees A as delegated",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetUserOrganizations { GetUserOrganizations(input: { id: \"{{daDUserId}}\", productId: \"{{productId}}\" }) { organizations { id isDelegated isActive } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daDToken}}",
                   "type": "string"
                 },
                 {
@@ -21717,7 +22530,7 @@
           ]
         },
         {
-          "name": "DA: Owner of B switches to the delegated A",
+          "name": "DA: The delegate of B switches to the delegated A",
           "request": {
             "method": "POST",
             "header": [],
@@ -21739,7 +22552,7 @@
                 },
                 {
                   "key": "value",
-                  "value": "{{daBToken}}",
+                  "value": "{{daDToken}}",
                   "type": "string"
                 },
                 {
@@ -21768,7 +22581,7 @@
                   "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
                   "  const env = (key) => pm.environment.get(key);",
                   "  const session = payload('SelectTenant') && payload('SelectTenant').userSession;",
-                  "  pm.test('Owner of B works in A', () => {",
+                  "  pm.test('The delegate of B works in A', () => {",
                   "  \tpm.expect(payload('SelectTenant') && payload('SelectTenant').ok, JSON.stringify(json)).to.eql(true);",
                   "  \tpm.expect(session.tenantId).to.eql(env('daATenantId'));",
                   "  });",
@@ -21832,6 +22645,9 @@
                   "  const env = (key) => pm.environment.get(key);",
                   "  pm.test('The session of the delegated organization is accepted', () => pm.expect(errors, JSON.stringify(json)).to.eql([]));",
                   "  pm.test('The permissions are a list', () => pm.expect((payload('GetPermissions') || {}).permissions).to.be.an('array'));",
+                  "  const held = (payload('GetPermissions') || {}).permissions || [];",
+                  "  pm.test('The permissions A gave are held', () => ['/AccountManagement/ViewPage', '/AccountManagement/View'].forEach((id) => pm.expect(held, JSON.stringify(held)).to.include(id)));",
+                  "  pm.test('Nothing A did not give', () => pm.expect(held, JSON.stringify(held)).to.not.include('/AccountManagement/Edit'));",
                   "})();"
                 ]
               }
@@ -21904,7 +22720,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "query UserItem { UserItem(input: { id: \"{{daBUserId}}\", productId: \"{{productId}}\" }) { id username } }",
+                "query": "query UserItem { UserItem(input: { id: \"{{daDUserId}}\", productId: \"{{productId}}\" }) { id username } }",
                 "variables": ""
               }
             },
@@ -21947,7 +22763,7 @@
                   "  function access(name, id) { const it = items(name).find((i) => i.id === id); return it ? (it.sharingAccess || '') : null; }",
                   "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
                   "  const env = (key) => pm.environment.get(key);",
-                  "  pm.test('The own account', () => pm.expect(errors.length === 0 && payload('UserItem') && payload('UserItem').id, JSON.stringify(json)).to.eql(env('daBUserId')));",
+                  "  pm.test('The own account', () => pm.expect(errors.length === 0 && payload('UserItem') && payload('UserItem').id, JSON.stringify(json)).to.eql(env('daDUserId')));",
                   "})();"
                 ]
               }
@@ -22013,7 +22829,7 @@
           ]
         },
         {
-          "name": "DA: Owner of B returns to B",
+          "name": "DA: The delegate of B returns to B",
           "request": {
             "method": "POST",
             "header": [],
@@ -22064,7 +22880,7 @@
                   "  function params(name) { const p = data[name]; return p && p.elementMetaInfo && p.elementMetaInfo.infoParams ? p.elementMetaInfo.infoParams : []; }",
                   "  const env = (key) => pm.environment.get(key);",
                   "  const session = payload('SelectTenant') && payload('SelectTenant').userSession;",
-                  "  pm.test('Owner of B works in B again', () => {",
+                  "  pm.test('The delegate of B works in B again', () => {",
                   "  \tpm.expect(payload('SelectTenant') && payload('SelectTenant').ok, JSON.stringify(json)).to.eql(true);",
                   "  \tpm.expect(session.tenantId).to.eql(env('daBTenantId'));",
                   "  });",

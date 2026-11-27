@@ -21,6 +21,7 @@ ApplicationMain {
 	Component.onCompleted: {
 		NotificationTypeRegistry.registerRoute("SupportTicket", "Tickets/Ticket/{id}")
 		NotificationTypeRegistry.registerRoute("Tenant", "Tenants/Tenant/{id}")
+		NotificationTypeRegistry.registerRoute("TenantContract", "Tenants/Contract/{id}")
 		NotificationCenter.pageRoute = "Notifications"
 		NotificationCenter.apiClient = window.notificationApiClient
 	}

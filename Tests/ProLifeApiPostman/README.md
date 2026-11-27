@@ -35,8 +35,8 @@ Everything else (`accountId`, `orderId`, `deviceId`, `roleFullAccessId`, `fullAc
 3. `07 Multi-role Scenario - Pages, Commands, Profile` - creates 3 roles + 3 users from scratch (Full Access / Accounts Viewer / No Access, see below), switches the active `token` between them, and asserts `PagesData`/`GetCommands`/`GetProfile` visibility differs correctly per permission set. Re-authenticates as `su` at the end and covers the remaining app-level infra fields (`GetSettings`, `SetSettings`, `GetStyleData`, `GetWebSocketUrl`, `Search`, `GetProductPermissions`).
 4. `08 Meta Info Propagation - Account & Order Field Sync` - verifies that renaming an Account, or changing an Order's delivery/purchase id, is immediately reflected in `DevicesList`/`SoftwareProductsList`/`OrdersList` for everything linked to them (see below).
 5. `11 Permission Model - Product, Scopes, Client Permissions` - creates its own role + user + PAT and removes them again (see below).
-6. `12 Document Sharing - Isolation Between Organizations` - creates four organizations with their owners, relationships and documents and checks what each organization may see and do with the shared documents (see below). Needs only `00 Bootstrap` before it.
-7. `13 Delegated Access - Working in a Delegated Organization` - connects two organizations, gives B delegated access to A, switches the owner of B into A and checks that ProLife serves that session (`GetPermissions`, `NotificationsSync`, the own account) while an account outside of A stays hidden. ProLife reads the account of the token from Puma on every request; when that read was refused, every request of the delegated organization was a 403 and the client signed out. Needs only `00 Bootstrap` before it.
+6. `12 Document Sharing - Isolation Between Organizations` - creates four organizations with their owners, contracts and documents and checks what each organization may see and do with the shared documents (see below). Run `00 Bootstrap` and `00A Catalog` first so the device fixture has a type and a configuration.
+7. `13 Delegated Access - Working in a Delegated Organization` - connects two organizations by a contract in which A gives B the account view; B gives it to a group, and a member of that group sees A as delegated, switches into A and holds exactly what A gave; the folder checks that ProLife serves that session (`GetPermissions`, `NotificationsSync`, the own account) while an account outside of A stays hidden. ProLife reads the account of the token from Puma on every request; when that read was refused, every request of the delegated organization was a 403 and the client signed out. Needs only `00 Bootstrap` before it.
 8. `99 Cleanup` - best-effort removal of everything created (including the roles/users from folder `07` and the fixtures from folder `08`); CI mainly relies on the full DB reset instead.
 
 ## Order/Product Lifecycle Scenario (folder `02 Orders`)
@@ -82,7 +82,7 @@ Each of these assertions was confirmed to fail against the previous behaviour (p
 
 ## Document Sharing (folder `12`)
 
-The folder builds its own world: four organizations A, B, C, D, each with one owner, created by `su` with `CreateTenant(ownerId)`. A is related to B and to C through the real flow (connection code, connection request, relationship proposal approved by the counterparty); D is related to nobody. The owners work in their organization through `SelectTenant`, and every request names its actor with request-level auth (`shAToken`, `shBToken`, ...).
+The folder builds its own world: four organizations A, B, C, D, each with one owner, created by `su` with `CreateTenant(ownerId)`. A is related to B and to C through the real flow (connection code, connection request, a contract A sends and both sign); D is related to nobody. The owners work in their organization through `SelectTenant`, and every request names its actor with request-level auth (`shAToken`, `shBToken`, ...).
 
 Every check of what an organization may see or do is paired with the organizations that must not:
 
@@ -94,11 +94,11 @@ Every check of what an organization may see or do is paired with the organizatio
 - **Writes** - a view share and no share refuse `AccountUpdate`; a target cannot remove the documents of the owner.
 - **Meta info** - the target sees "Shared by", the owner "Shared with" all targets, a target never learns the other targets.
 - **Revoke, decline, expiry, deletion** - each stops access in the list and by ID; only the owner revokes, only the target declines or accepts.
-- **End of the relationship** - after `RemoveTenantRelationship` the shares of C stop granting access and A cannot share with C again. The related organizations are cached for 10 s, so the request waits 11 s.
+- **End of the relation** - after A leaves its contract with C at once (`GiveContractNotice` with `isImmediate`) the shares of C stop granting access and A cannot share with C again. The related organizations are cached for 10 s, so the request waits 11 s.
 - **An editing organization does not become an owner** - B edits A5 (shared for editing) and must still not own it: not in its Own scope, no view of the other targets, no further sharing, no removal; neither can C, the other editing target. Only A removes A5, which ends the shares.
 - **The owner of an organization holds the whole product in it** - the owner of D, who has no role in D, gets every area from `GetPermissions` and the Accounts, Devices and SoftwareProducts pages from `PagesData`. A plain member keeps the permissions of its role only.
 - **Names** - `GetObjectVisualStatus` names an account after its content for the owner and a target, and tells D nothing; a device stored without a name gets one from its content when it is opened (`GetOpenedDocumentList`), for the owner and for a target. `objectNames` of `ShareDocuments` is the name the target sees.
-- **A plain member of B** - B allows the account permissions to its members (Tenants document service), creates a role and a group, adds a member and gives it the role (Users document service with `tenantId`). Without `/OrganizationManagement/Connections/View` the member reads the active relationships of B without their terms (no scope, description, dates), not those of A, and sees the documents shared with B. Only the owner of B restricts a share to a group: the member outside the group loses A7 in the list and by ID, gets it back once in the group, and the owner of B is never restricted.
+- **A plain member of B** - B allows the account permissions to its members (Tenants document service), creates a role and a group, adds a member and gives it the role (Users document service with `tenantId`). Without `/OrganizationManagement/Connections/View` the member reads the organizations B is related with (`GetRelatedTenants`: in force, since when), not those of A, and sees the documents shared with B. Only the owner of B restricts a share to a group: the member outside the group loses A7 in the list and by ID, gets it back once in the group, and the owner of B is never restricted.
 - **The application announces sharing** - `GetApplicationInfo.documentSharingEnabled`.
 - **Operations of ProLife on devices and licenses** - the binding of a device is read by the owner and a viewing target, changed by the owner only; license files, transfer counters, license transfers and transfer requests, child licenses, split and revoke are refused to a viewing target and to D as a missing object.
 - **Orders refer to the own organization** - D cannot make an order for a customer of A, put a device of A into its order, or add a device or software into an order of A; a viewing target cannot put the shared device into an order either.
@@ -208,7 +208,7 @@ with silence, so the absence of a refusal is the only acceptance signal on the w
 
 A ProLife client subscribes to the ProLife server, which serves some collections
 itself (`Devices`, `Orders`, the catalog) and forwards the rest to Puma (`Users`,
-`Groups`, `Roles`, `Tenants`, `TenantRelationships`, `CrossOrgGrants`) or to Desk
+`Groups`, `Roles`, `Tenants`) or to Desk
 (`Tickets`). Both halves of that routing decision are exercised here; the Puma
 suite only ever sees requests that already arrived. A forwarder that passed the
 command on **without** its input arguments, or that decided on the command alone
