@@ -107,7 +107,7 @@ const draft = `{ name: "Four organizations {{npRun}}", typeId: "Services", parti
 	+ ` links: [${link('A', 'B', 'Customer', 'ServiceProvider')}, ${link('A', 'C', 'Customer', 'ServiceProvider')}, ${link('A', 'D', 'Customer', 'ServiceProvider')}, ${link('B', 'C', 'ServiceProvider', 'ServiceProvider')}] }`;
 
 const give = (from, to, permissions) =>
-	`mutation GiveContractPermissions { GiveContractPermissions(input: { tenantId: "{{npT${from}}}", contractId: "{{npContract}}", granteeTenantId: "{{npT${to}}}", productId: "{{productId}}", permissionIds: ${js(permissions)} }) ${COMMAND} }`;
+	`mutation GiveContractPermissions { GiveContractPermissions(input: { tenantId: "{{npT${from}}}", contractId: "{{npContract}}", granteeTenantId: "{{npT${to}}}", permissionIds: ${js(permissions)} }) ${COMMAND} }`;
 
 function sign(L){
 	return item(`${L} signs`,
@@ -232,7 +232,7 @@ const items = [
 	item('C gives A the account view', give('C', 'A', VIEW), 'npOCToken', [accepted('GiveContractPermissions', 'Given')]),
 	item('B gives C the account view', give('B', 'C', VIEW), 'npOBToken', [accepted('GiveContractPermissions', 'Given')]),
 	item('D cannot give B anything: they are not linked', give('D', 'B', VIEW), 'npODToken', refusedFor('GiveContractPermissions', 'linked with')),
-	item('A cannot give what it does not hold', give('A', 'B', ['/No/Such/Permission']), 'npOAToken', refusedFor('GiveContractPermissions', 'not available to your organization')),
+	item('A cannot give a right outside the product tree', give('A', 'B', ['/No/Such/Permission']), 'npOAToken', refusedFor('GiveContractPermissions', 'not part of the contract product')),
 	item('A cannot give in the name of B', give('B', 'A', VIEW), 'npOAToken', refusedFor('GiveContractPermissions', 'Access denied')),
 
 	// Every receiver distributes what it received

@@ -211,7 +211,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation ProductAdd { ProductAdd(input: { id: \"{{softwareCatalogProductId}}\", item: { id: \"{{softwareCatalogProductId}}\", productId: \"API_SW_{{randomInt}}\", name: \"ProLifeApi Software\", productName: \"ProLifeApi Software\", categoryId: \"Software\", features: \"\" } }) { id } }",
+                "query": "mutation ProductAdd { ProductAdd(input: { id: \"{{softwareCatalogProductId}}\", item: { id: \"{{softwareCatalogProductId}}\", productId: \"API_SW_{{randomInt}}\", name: \"ProLifeApi Software {{randomInt}}\", productName: \"ProLifeApi Software {{randomInt}}\", categoryId: \"Software\", features: \"\" } }) { id } }",
                 "variables": ""
               }
             },
@@ -295,7 +295,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation ProductAdd { ProductAdd(input: { id: \"{{deviceTypeId}}\", item: { id: \"{{deviceTypeId}}\", productId: \"API_HW_{{randomInt}}\", name: \"ProLifeApi Hardware\", productName: \"ProLifeApi Hardware\", categoryId: \"Hardware\", features: \"\" } }) { id } }",
+                "query": "mutation ProductAdd { ProductAdd(input: { id: \"{{deviceTypeId}}\", item: { id: \"{{deviceTypeId}}\", productId: \"API_HW_{{randomInt}}\", name: \"ProLifeApi Hardware {{randomInt}}\", productName: \"ProLifeApi Hardware {{randomInt}}\", categoryId: \"Hardware\", features: \"\" } }) { id } }",
                 "variables": ""
               }
             },
@@ -21932,7 +21932,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation GiveContractPermissions { GiveContractPermissions(input: { tenantId: \"{{daATenantId}}\", contractId: \"{{daContractId}}\", granteeTenantId: \"{{daBTenantId}}\", productId: \"{{productId}}\", permissionIds: [\"/AccountManagement/ViewPage\", \"/AccountManagement/View\"] }) { success contractId revision errorMessage } }",
+                "query": "mutation GiveContractPermissions { GiveContractPermissions(input: { tenantId: \"{{daATenantId}}\", contractId: \"{{daContractId}}\", granteeTenantId: \"{{daBTenantId}}\", permissionIds: [\"/AccountManagement/ViewPage\", \"/AccountManagement/View\"] }) { success contractId revision errorMessage } }",
                 "variables": ""
               }
             },
@@ -22528,6 +22528,178 @@
               }
             }
           ]
+        },
+        {
+          "name": "DA isolation: open a separate Puma session for the delegate",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query { Authorization(input: { login: \"da_d_{{daRun}}\", password: \"ShareApi_2026!\", productId: \"Puma\" }) { token } }",
+                "variables": ""
+              }
+            },
+            "url": "{{pumaUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Puma' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Puma session opened\", function () { pm.expect(json.errors).to.eql(undefined); pm.expect(json.data.Authorization.token).to.be.a(\"string\").and.not.empty; });",
+                  "pm.environment.set(\"daDPumaToken\", json.data.Authorization.token);"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "DA isolation: the ProLife contract gives no delegated organization in Puma",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query { GetUserOrganizations(input: { id: \"{{daDUserId}}\", productId: \"Puma\" }) { organizations { id isDelegated } } }",
+                "variables": ""
+              }
+            },
+            "url": "{{pumaUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daDPumaToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Puma' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"delegated organization belongs to ProLife only\", function () { pm.expect(json.errors).to.eql(undefined); const target = pm.environment.get(\"daATenantId\"); pm.expect(json.data.GetUserOrganizations.organizations.some(function (x) { return x.id === target; })).to.eql(false); });"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "DA isolation: the ProLife contract gives no tenant session in Puma",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation { SelectTenant(input: { tenantId: \"{{daATenantId}}\" }) { ok errorMessage } }",
+                "variables": ""
+              }
+            },
+            "url": "{{pumaUrl}}/graphql",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-authentication-token",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{daDPumaToken}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.request.headers.upsert({ key: 'productid', value: 'Puma' });"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Puma refuses entry through a ProLife contract\", function () { pm.expect(json.errors).to.eql(undefined); pm.expect(json.data.SelectTenant.ok).to.eql(false); pm.expect(json.data.SelectTenant.errorMessage).to.be.a(\"string\").and.not.empty; });"
+                ]
+              }
+            }
+          ],
+          "response": []
         },
         {
           "name": "DA: The delegate of B switches to the delegated A",
@@ -28843,7 +29015,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation GiveContractPermissions { GiveContractPermissions(input: { tenantId: \"{{npTA}}\", contractId: \"{{npContract}}\", granteeTenantId: \"{{npTB}}\", productId: \"{{productId}}\", permissionIds: [\"/AccountManagement/ViewPage\",\"/AccountManagement/View\"] }) { success contractId revision errorMessage } }",
+                "query": "mutation GiveContractPermissions { GiveContractPermissions(input: { tenantId: \"{{npTA}}\", contractId: \"{{npContract}}\", granteeTenantId: \"{{npTB}}\", permissionIds: [\"/AccountManagement/ViewPage\",\"/AccountManagement/View\"] }) { success contractId revision errorMessage } }",
                 "variables": ""
               }
             },
@@ -28901,7 +29073,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation GiveContractPermissions { GiveContractPermissions(input: { tenantId: \"{{npTB}}\", contractId: \"{{npContract}}\", granteeTenantId: \"{{npTA}}\", productId: \"{{productId}}\", permissionIds: [\"/AccountManagement/ViewPage\",\"/AccountManagement/View\",\"/AccountManagement/Edit/Change/CustomerId\",\"/AccountManagement/Edit/Change/Description\",\"/AccountManagement/Edit/Change/Name\",\"/AccountManagement/Edit/Change/Email\",\"/AccountManagement/Edit/Change/CompanyAddress\",\"/AccountManagement/Edit/Change/Groups\"] }) { success contractId revision errorMessage } }",
+                "query": "mutation GiveContractPermissions { GiveContractPermissions(input: { tenantId: \"{{npTB}}\", contractId: \"{{npContract}}\", granteeTenantId: \"{{npTA}}\", permissionIds: [\"/AccountManagement/ViewPage\",\"/AccountManagement/View\",\"/AccountManagement/Edit/Change/CustomerId\",\"/AccountManagement/Edit/Change/Description\",\"/AccountManagement/Edit/Change/Name\",\"/AccountManagement/Edit/Change/Email\",\"/AccountManagement/Edit/Change/CompanyAddress\",\"/AccountManagement/Edit/Change/Groups\"] }) { success contractId revision errorMessage } }",
                 "variables": ""
               }
             },
@@ -28959,7 +29131,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation GiveContractPermissions { GiveContractPermissions(input: { tenantId: \"{{npTC}}\", contractId: \"{{npContract}}\", granteeTenantId: \"{{npTA}}\", productId: \"{{productId}}\", permissionIds: [\"/AccountManagement/ViewPage\",\"/AccountManagement/View\"] }) { success contractId revision errorMessage } }",
+                "query": "mutation GiveContractPermissions { GiveContractPermissions(input: { tenantId: \"{{npTC}}\", contractId: \"{{npContract}}\", granteeTenantId: \"{{npTA}}\", permissionIds: [\"/AccountManagement/ViewPage\",\"/AccountManagement/View\"] }) { success contractId revision errorMessage } }",
                 "variables": ""
               }
             },
@@ -29017,7 +29189,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation GiveContractPermissions { GiveContractPermissions(input: { tenantId: \"{{npTB}}\", contractId: \"{{npContract}}\", granteeTenantId: \"{{npTC}}\", productId: \"{{productId}}\", permissionIds: [\"/AccountManagement/ViewPage\",\"/AccountManagement/View\"] }) { success contractId revision errorMessage } }",
+                "query": "mutation GiveContractPermissions { GiveContractPermissions(input: { tenantId: \"{{npTB}}\", contractId: \"{{npContract}}\", granteeTenantId: \"{{npTC}}\", permissionIds: [\"/AccountManagement/ViewPage\",\"/AccountManagement/View\"] }) { success contractId revision errorMessage } }",
                 "variables": ""
               }
             },
@@ -29076,7 +29248,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation GiveContractPermissions { GiveContractPermissions(input: { tenantId: \"{{npTD}}\", contractId: \"{{npContract}}\", granteeTenantId: \"{{npTB}}\", productId: \"{{productId}}\", permissionIds: [\"/AccountManagement/ViewPage\",\"/AccountManagement/View\"] }) { success contractId revision errorMessage } }",
+                "query": "mutation GiveContractPermissions { GiveContractPermissions(input: { tenantId: \"{{npTD}}\", contractId: \"{{npContract}}\", granteeTenantId: \"{{npTB}}\", permissionIds: [\"/AccountManagement/ViewPage\",\"/AccountManagement/View\"] }) { success contractId revision errorMessage } }",
                 "variables": ""
               }
             },
@@ -29105,7 +29277,7 @@
           "response": []
         },
         {
-          "name": "NP: A cannot give what it does not hold",
+          "name": "NP: A cannot give a right outside the product tree",
           "event": [
             {
               "listen": "test",
@@ -29123,7 +29295,7 @@
                   "  const letters = { [env('npTA')]: 'A', [env('npTB')]: 'B', [env('npTC')]: 'C', [env('npTD')]: 'D' };",
                   "  const accounts = { [env('npAccA')]: 'A', [env('npAccB')]: 'B', [env('npAccC')]: 'C', [env('npAccD')]: 'D' };",
                   "  const reason = errors.map((e) => e.message || '').concat(payload('GiveContractPermissions') && payload('GiveContractPermissions').errorMessage ? [payload('GiveContractPermissions').errorMessage] : []).join(' | ');",
-                  "  pm.test(\"Refused: not available to your organization\", () => { pm.expect(refused('GiveContractPermissions'), JSON.stringify(json)).to.eql(true); pm.expect(reason).to.match(new RegExp(\"not available to your organization\")); });",
+                  "  pm.test(\"Refused: not part of the contract product\", () => { pm.expect(refused('GiveContractPermissions'), JSON.stringify(json)).to.eql(true); pm.expect(reason).to.match(new RegExp(\"not part of the contract product\")); });",
                   "})();"
                 ]
               }
@@ -29135,7 +29307,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation GiveContractPermissions { GiveContractPermissions(input: { tenantId: \"{{npTA}}\", contractId: \"{{npContract}}\", granteeTenantId: \"{{npTB}}\", productId: \"{{productId}}\", permissionIds: [\"/No/Such/Permission\"] }) { success contractId revision errorMessage } }",
+                "query": "mutation GiveContractPermissions { GiveContractPermissions(input: { tenantId: \"{{npTA}}\", contractId: \"{{npContract}}\", granteeTenantId: \"{{npTB}}\", permissionIds: [\"/No/Such/Permission\"] }) { success contractId revision errorMessage } }",
                 "variables": ""
               }
             },
@@ -29194,7 +29366,7 @@
             "body": {
               "mode": "graphql",
               "graphql": {
-                "query": "mutation GiveContractPermissions { GiveContractPermissions(input: { tenantId: \"{{npTB}}\", contractId: \"{{npContract}}\", granteeTenantId: \"{{npTA}}\", productId: \"{{productId}}\", permissionIds: [\"/AccountManagement/ViewPage\",\"/AccountManagement/View\"] }) { success contractId revision errorMessage } }",
+                "query": "mutation GiveContractPermissions { GiveContractPermissions(input: { tenantId: \"{{npTB}}\", contractId: \"{{npContract}}\", granteeTenantId: \"{{npTA}}\", permissionIds: [\"/AccountManagement/ViewPage\",\"/AccountManagement/View\"] }) { success contractId revision errorMessage } }",
                 "variables": ""
               }
             },
