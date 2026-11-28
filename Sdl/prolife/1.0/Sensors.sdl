@@ -40,13 +40,18 @@ type DeviceItem {
 	id: ID!
 	name: String!
 	description: String
+	## Read only: the Delivery-ID of the order, resolved at every request.
 	deliveryIdLink: ObjectLink
+	## Read only: the Purchase Order-ID of the order, resolved at every request.
 	purchaseIdLink: ObjectLink
 	licenseId: ID
 	productUuid: ID
 	licenseUuid: ID
+	## Read only: the customer of the order, resolved at every request.
 	customerLink: ObjectLink
+	## Name of the production status, see statusId.
 	status: String
+	## Production status: None, Accepted, InProgress, Canceled, OnHold, Finished, Defected, InRepair, Decommissioned. The list filter "Status" takes its number 0..8 in this order.
 	statusId: String
 	deviceType: String
 	productName: String
@@ -54,6 +59,7 @@ type DeviceItem {
 	macAddress: String
 	serialNumber: String
 	project: String
+	## Read only: the device has bound licenses.
 	inUse: Bool
 	added: String
 	timeStamp: String
@@ -68,18 +74,30 @@ type DeviceData {
 	id: ID
 	name: String
 	description: String
+	## MAC address aa:bb:cc:dd:ee:ff, unique; needed for the license file.
 	macAddress: String
+	## Serial number, unique.
 	serialNumber: String
+	## ID of the hardware model (a catalog product of the category Hardware). Required.
 	deviceType: String
+	## Read only: name of the hardware model.
 	productName: String
+	## ID of the order document (not the Delivery-ID); empty without an order.
 	orderId: String
+	## Read only: Delivery-ID of the order.
 	orderName: String
+	## ID of the hardware configuration, despite the name. Required; must belong to the hardware model in deviceType.
 	licenseName: String
+	## Read only: name of the configuration.
 	configurationName: String
+	## Read only: article number of the configuration.
 	configurationArticle: String
 	project: String
+	## Production status: None, Accepted, InProgress, Canceled, OnHold, Finished, Defected, InRepair, Decommissioned. License files and transfers need Finished.
 	productionStatus: String
+	## Read only: the bound licenses; change them with UpdateDeviceBinding.
 	softwareBindingInfos: [SoftwareBindingInfo]
+	## Device of the own company; left out of the statistics.
 	internalUse: Bool
 }
 
@@ -88,6 +106,7 @@ type DeviceBindingData {
 	productUuid: ID
 	productName: String
 	project: String
+	## IDs of all licenses bound to the device: the whole new list, missing licenses are unbound. All of the same software product.
 	softwareIds: [ID]
 }
 
@@ -99,6 +118,7 @@ input DeviceDataInput {
 input DeviceBindingInput {
 	deviceId: ID!
 	item: DeviceBindingData!
+	## Project taken over by the newly bound licenses.
 	project: String
 }
 
@@ -144,12 +164,15 @@ input GetDeviceBindingInput {
 }
 
 input TransferLicensesInput {
+	## Device whose licenses move; must be Finished and is set to Defected after the transfer.
 	fromDeviceId: ID!
+	## Device receiving the licenses; must have no licenses.
 	toDeviceId: ID!
 }
 
 input CreateLicenseFileInput {
 	deviceId: ID!
+	## Encrypt the license file.
 	encrypt: Bool
 }
 
@@ -159,6 +182,7 @@ input DecryptLicenseFileInput {
 }
 
 input ResetTransferCounterInput {
+	## Device whose licenses get their transfer counters reset.
 	hardwareId: ID!
 }
 
@@ -169,7 +193,9 @@ type ResetTransferCounterPayload {
 
 type TransferLicensesPayload {
 	ok: Boolean
+	## A license reached its transfer limit (3 by default); nothing was transferred.
 	limit: Boolean
+	## Address of the support for a transfer request beyond the limit.
 	supportEmail: String
 }
 

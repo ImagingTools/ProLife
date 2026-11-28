@@ -3,6 +3,7 @@
 
 
 // Qt includes
+#include <QtCore/QSet>
 #include <QtCore/QUuid>
 
 // ImtCore includes
@@ -17,6 +18,7 @@
 #include <imtgql/IGqlContext.h>
 
 // ProLife includes
+#include <prolifegql/prolifegql.h>
 #include <prolifedata/prolifedata.h>
 #include <prolifedata/COrderInfo.h>
 #include <prolifedata/CDeviceInfo.h>
@@ -719,12 +721,30 @@ bool COrderCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 	imtbase::ICollectionInfo::Ids currentDeviceIds = GetProductIdsForOrder(m_deviceCollectionCompPtr.GetPtr(), objectId);
 
 	QByteArrayList representationProductIds;
+	QSet<QByteArray> linkedProductIds;
+	bool createsProducts = false;
 	if (orderData.orderProducts){
 		for (const istd::TNullableValue<sdl::V1_0::prolife::COrderedProduct>& product : *orderData.orderProducts){
 			if (product->id){
 				representationProductIds << *product->id;
 			}
+
+			if (product->isNew && *product->isNew){
+				createsProducts = true;
+			}
+			else if (product->id){
+				linkedProductIds.insert(*product->id);
+			}
 		}
+	}
+
+	// The product list is complete: every product missing from it is taken out of the order.
+	// Nothing may be changed before every changed field is known to be permitted.
+	QSet<QByteArray> currentProductIds(currentSoftwareIds.cbegin(), currentSoftwareIds.cend());
+	currentProductIds.unite(QSet<QByteArray>(currentDeviceIds.cbegin(), currentDeviceIds.cend()));
+	const bool productsChanged = createsProducts || linkedProductIds != currentProductIds;
+	if (!CheckOrderChangePermissions(*oldOrderInfoPtr, *orderInfoPtr, productsChanged, rawGqlRequest, errorMessage)){
+		return false;
 	}
 
 	for (const QByteArray& softwareId : currentSoftwareIds){
@@ -789,6 +809,37 @@ void COrderCollectionControllerComp::SetAdditionalFilters(
 			SendWarningMessage(0, QString("Unable to join group filter param"), "COrderCollectionControllerComp");
 		}
 	}
+}
+
+
+bool COrderCollectionControllerComp::CheckObjectData(
+	const imtgql::CGqlRequest& gqlRequest,
+	const QByteArray& objectId,
+	const istd::IChangeable& object,
+	QString& errorMessage) const
+{
+	// A new document is checked by the permission to add documents
+	if (objectId.isEmpty() || !m_objectCollectionCompPtr.IsValid()){
+		return true;
+	}
+
+	const prolifedata::IOrderInfo* newObjectPtr = dynamic_cast<const prolifedata::IOrderInfo*>(&object);
+	imtbase::IObjectCollection::DataPtr storedDataPtr;
+	if (newObjectPtr == nullptr || !m_objectCollectionCompPtr->GetObjectData(objectId, storedDataPtr)){
+		errorMessage = QString("Object is invalid");
+
+		return false;
+	}
+
+	const prolifedata::IOrderInfo* storedObjectPtr = dynamic_cast<const prolifedata::IOrderInfo*>(storedDataPtr.GetPtr());
+	if (storedObjectPtr == nullptr){
+		errorMessage = QString("Object is invalid");
+
+		return false;
+	}
+
+	// The products refer to their order, so a document of the order alone does not change them
+	return CheckOrderChangePermissions(*storedObjectPtr, *newObjectPtr, false, gqlRequest, errorMessage);
 }
 
 
@@ -894,19 +945,18 @@ bool COrderCollectionControllerComp::CheckNewProductPermissions(
 		return true;
 	}
 
-	const QByteArrayList permissions = userInfoPtr->GetPermissions();
 	for (const istd::TNullableValue<sdl::V1_0::prolife::COrderedProduct>& product : *orderData.orderProducts){
 		if (!product->isNew || !*product->isNew){
 			continue;
 		}
 
 		const QByteArray categoryId = product->categoryId ? *product->categoryId : QByteArray();
-		if (categoryId == QByteArrayLiteral("Hardware") && !imtauth::HasPermission(permissions, QByteArrayLiteral("/SensorManagement/Edit/Add"))){
+		if (categoryId == QByteArrayLiteral("Hardware") && !HoldsPermission(gqlRequest, QByteArrayLiteral("/SensorManagement/Edit/Add"))){
 			errorMessage = QStringLiteral("No permission to create new hardware");
 			return false;
 		}
 
-		if (categoryId == QByteArrayLiteral("Software") && !imtauth::HasPermission(permissions, QByteArrayLiteral("/LicenseManagement/Edit/Add"))){
+		if (categoryId == QByteArrayLiteral("Software") && !HoldsPermission(gqlRequest, QByteArrayLiteral("/LicenseManagement/Edit/Add"))){
 			errorMessage = QStringLiteral("No permission to create new software");
 			return false;
 		}

@@ -359,6 +359,9 @@
                             </Values>
                         </Data>
                     </AttributeInfo>
+                    <AttributeInfo Id="CommandPermissions" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="Permissions"/>
+                    </AttributeInfo>
                     <AttributeInfo Id="DeviceBindingCollection" Type="Reference" ExportId="HardwareProductBindingRepository">
                         <Data IsEnabled="false"/>
                     </AttributeInfo>
@@ -391,6 +394,9 @@
                     </AttributeInfo>
                     <AttributeInfo Id="MaxTransferCount" Type="Integer" ExportId="">
                         <Data IsEnabled="true" Value="3"/>
+                    </AttributeInfo>
+                    <AttributeInfo Id="PermissionChecker" Type="Reference" ExportId="">
+                        <Data IsEnabled="true" Value="CheckPermissionOr"/>
                     </AttributeInfo>
                     <AttributeInfo Id="ProductCollection" Type="Reference" ExportId="ProductCollection">
                         <Data IsEnabled="false"/>

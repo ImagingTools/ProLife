@@ -17,6 +17,7 @@ input OrdersListInput {
 type OrderCustomerRole {
 	customerId: ID!
 	customerName: String
+	## OrderingParty, EndCustomer, InvoiceRecipient, DeliveryRecipient, Reseller or Referrer.
 	roleType: ID
 }
 
@@ -40,21 +41,30 @@ type OrdersListPayload {
 }
 
 type OrderedProduct {
+	## ID of the device or license of the line.
 	id: ID!
+	## Hardware: ID of the hardware model. Software: ID of the software product.
 	productUuid: ID
+	## Hardware: ID of the hardware configuration. Software: ID of the license type.
 	licenseUuid: ID
+	## Hardware or Software.
 	categoryId: ID
 	licenseId: ID
 	productName: String
 	licenseName: String
+	## Serial number of the device or license number; unique.
 	serialNumber: ID
 	inUse: Bool
+	## true: the server creates the device or license with this ID; false: an existing one is linked.
 	isNew: Bool
+	## Hardware only: MAC address; a new device with MAC address and serial number starts as Finished.
 	macAddress: ID
 
-	# Only for software
+	## Software only: expiration date yyyy-MM-dd (unlike SoftwareProductData); empty for unlimited.
 	expiration: String
+	## Software only: a license for several seats.
 	isMultiple: Bool
+	## Software only: number of seats of a license for several seats.
 	productCount: Integer
 }
 
@@ -62,12 +72,18 @@ type OrderData {
 	id: ID
 	name: String
 	description: String
+	## Delivery-ID, the number of the order. Required, unique.
 	orderId: ID
+	## Purchase Order-ID of the customer.
 	purchaseId: ID
+	## Account of the ordering party. Required.
 	customerId: ID
 	customerName: String
+	## Created, InProgress, Canceled or Closed.
 	orderStatus: ID
+	## All products linked to the order. OrderUpdate unlinks every product missing from the list: always send the full list.
 	orderProducts: [OrderedProduct]
+	## Parties with roles; the OrderingParty is kept equal to customerId.
 	customerRoles: [OrderCustomerRole]
 }
 

@@ -725,7 +725,8 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 		return false;
 	}
 	
-	QString expiration = *representation.expiration;
+	// A license without expiration may leave the field out
+	const QString expiration = representation.expiration ? QString(*representation.expiration) : QString();
 	
 	softwareInfoPtr->AddLicense(licenseUuid, QDateTime::fromString(expiration, "dd.MM.yyyy"));
 
@@ -737,29 +738,9 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 		softwareInfoPtr->SetInternalUse(*representation.internalUse);
 	}
 
-	// Check if license has children or parent - if so, isMultiple and productCount cannot be changed
-	bool hasChildren = false;
-	bool hasParent = false;
-
-	QByteArray parentInstanceId = softwareInfoPtr->GetParentInstanceId();
-	hasParent = !parentInstanceId.isEmpty();
-
-	if (m_objectCollectionCompPtr.IsValid()){
-		imtbase::IComplexCollectionFilter::FieldFilter childFilter;
-		childFilter.fieldId = "ParentInstanceId";
-		childFilter.filterValue = objectId;
-
-		imtbase::CComplexCollectionFilter childComplexFilter;
-		childComplexFilter.AddFieldFilter(childFilter);
-
-		iprm::CParamsSet childFilterParam;
-		childFilterParam.SetEditableParameter("ComplexFilter", &childComplexFilter);
-
-		int childCount = m_objectCollectionCompPtr->GetElementsCount(&childFilterParam);
-		hasChildren = (childCount > 0);
-	}
-
-	bool canModifyProductSettings = !hasChildren && !hasParent;
+	// The kind and the count of a license with parts are changed only by splitting and revoking;
+	// an update also keeps them for a part (UpdateObjectFromRepresentationRequest)
+	const bool canModifyProductSettings = !HasChildLicenses(objectId);
 
 	if (canModifyProductSettings){
 		if (representation.isMultiple){
@@ -776,7 +757,6 @@ bool CSoftwareProductCollectionControllerComp::FillObjectFromRepresentation(
 
 		softwareInfoPtr->SetProductCount(productCount);
 	}
-	// If hasChildren or hasParent is true, we silently ignore changes to isMultiple and productCount
 
 	if (representation.parentInstanceId){
 		softwareInfoPtr->SetParentInstanceId(*representation.parentInstanceId);
@@ -852,6 +832,15 @@ bool CSoftwareProductCollectionControllerComp::UpdateObjectFromRepresentationReq
 		return false;
 	}
 
+	istd::IChangeableUniquePtr oldObjectPtr = object.CloneMe();
+	const imtlic::IProductInstanceInfo* oldLicensePtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(oldObjectPtr.GetPtr());
+	if (oldLicensePtr == nullptr){
+		errorMessage = QString("Object is invalid");
+		SendErrorMessage(0, errorMessage, "CSoftwareProductCollectionControllerComp");
+
+		return false;
+	}
+
 	softwareInfoPtr->ResetData();
 	
 	// ResetData clear UUID 
@@ -861,8 +850,67 @@ bool CSoftwareProductCollectionControllerComp::UpdateObjectFromRepresentationReq
 		errorMessage = QString("Unable to update software. Error: '%1'").arg(errorMessage);
 		return false;
 	}
-	
-	return true;
+
+	// The relation to the license it was split from is kept by splitting and revoking, the client does not send it
+	softwareInfoPtr->SetParentInstanceId(oldLicensePtr->GetParentInstanceId());
+	if (!softwareInfoPtr->GetParentInstanceId().isEmpty() || HasChildLicenses(objectId)){
+		softwareInfoPtr->SetMultiProduct(oldLicensePtr->IsMultiProduct());
+		softwareInfoPtr->SetProductCount(oldLicensePtr->GetProductCount());
+	}
+
+	return CheckSoftwareChangePermissions(*oldLicensePtr, *softwareInfoPtr, rawGqlRequest, errorMessage);
+}
+
+
+bool CSoftwareProductCollectionControllerComp::CheckObjectData(
+	const imtgql::CGqlRequest& gqlRequest,
+	const QByteArray& objectId,
+	const istd::IChangeable& object,
+	QString& errorMessage) const
+{
+	// A new license is checked by the permission to add licenses
+	if (objectId.isEmpty() || !m_objectCollectionCompPtr.IsValid()){
+		return true;
+	}
+
+	const imtlic::IProductInstanceInfo* newLicensePtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(&object);
+	imtbase::IObjectCollection::DataPtr storedDataPtr;
+	if (newLicensePtr == nullptr || !m_objectCollectionCompPtr->GetObjectData(objectId, storedDataPtr)){
+		errorMessage = QString("Object is invalid");
+
+		return false;
+	}
+
+	const imtlic::IProductInstanceInfo* storedLicensePtr = dynamic_cast<const imtlic::IProductInstanceInfo*>(storedDataPtr.GetPtr());
+	if (storedLicensePtr == nullptr){
+		errorMessage = QString("Object is invalid");
+
+		return false;
+	}
+
+	return CheckSoftwareChangePermissions(*storedLicensePtr, *newLicensePtr, gqlRequest, errorMessage);
+}
+
+
+// private methods
+
+bool CSoftwareProductCollectionControllerComp::HasChildLicenses(const QByteArray& objectId) const
+{
+	if (objectId.isEmpty() || !m_objectCollectionCompPtr.IsValid()){
+		return false;
+	}
+
+	imtbase::IComplexCollectionFilter::FieldFilter childFilter;
+	childFilter.fieldId = "ParentInstanceId";
+	childFilter.filterValue = objectId;
+
+	imtbase::CComplexCollectionFilter childComplexFilter;
+	childComplexFilter.AddFieldFilter(childFilter);
+
+	iprm::CParamsSet childFilterParam;
+	childFilterParam.SetEditableParameter("ComplexFilter", &childComplexFilter);
+
+	return m_objectCollectionCompPtr->GetElementsCount(&childFilterParam) > 0;
 }
 
 

@@ -8,6 +8,7 @@
 #include <istd/TDelPtr.h>
 
 // ProLife includes
+#include <prolifegql/prolifegql.h>
 #include <prolifedata/CCustomerInfo.h>
 #include <prolifedata/prolifedata.h>
 #include <prolifedata/CGroupFilter.h>
@@ -411,7 +412,7 @@ void CCustomerCollectionControllerComp::SetAdditionalFilters(
 
 
 bool CCustomerCollectionControllerComp::UpdateObjectFromRepresentationRequest(
-			const imtgql::CGqlRequest& /*rawGqlRequest*/,
+			const imtgql::CGqlRequest& rawGqlRequest,
 			const sdl::V1_0::prolife::CAccountUpdateGqlRequest& accountUpdateRequest,
 			istd::IChangeable& object,
 			QString& errorMessage) const
@@ -430,13 +431,28 @@ bool CCustomerCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 	}
 
 	const sdl::V1_0::prolife::CAccountData& accountData = *requestArguments.input->item;
-	QByteArray objectId = *accountData.id;
+	QByteArray objectId;
+	if (accountData.id){
+		objectId = *accountData.id;
+	}
+	else if (requestArguments.input->id){
+		objectId = *requestArguments.input->id;
+	}
 
 	prolifedata::CCustomerInfo *customerInfoPtr =
 		dynamic_cast<prolifedata::CCustomerInfo *>(&object);
 	if (customerInfoPtr == nullptr){
 		errorMessage = QString(
 			"Unable to cast company info to customer info. Error: Invalid object");
+		SendErrorMessage(0, errorMessage, "CCustomerCollectionControllerComp");
+
+		return false;
+	}
+
+	istd::IChangeableUniquePtr oldObjectPtr = object.CloneMe();
+	const prolifedata::ICustomerInfo* oldCustomerInfoPtr = dynamic_cast<const prolifedata::ICustomerInfo*>(oldObjectPtr.GetPtr());
+	if (oldCustomerInfoPtr == nullptr){
+		errorMessage = QString("Unable to update customer. Error: Invalid object");
 		SendErrorMessage(0, errorMessage, "CCustomerCollectionControllerComp");
 
 		return false;
@@ -449,7 +465,42 @@ bool CCustomerCollectionControllerComp::UpdateObjectFromRepresentationRequest(
 		return false;
 	}
 
-	return true;
+	// The vendor page is permitted as a whole by the hardware management
+	if (IsVendorCollection()){
+		return true;
+	}
+
+	return CheckAccountChangePermissions(*oldCustomerInfoPtr, *customerInfoPtr, rawGqlRequest, errorMessage);
+}
+
+
+bool CCustomerCollectionControllerComp::CheckObjectData(
+			const imtgql::CGqlRequest& gqlRequest,
+			const QByteArray& objectId,
+			const istd::IChangeable& object,
+			QString& errorMessage) const
+{
+	// A new company is checked by the permission to add companies, a vendor by the hardware management
+	if (objectId.isEmpty() || IsVendorCollection() || !m_objectCollectionCompPtr.IsValid()){
+		return true;
+	}
+
+	const prolifedata::ICustomerInfo* newCustomerInfoPtr = dynamic_cast<const prolifedata::ICustomerInfo*>(&object);
+	imtbase::IObjectCollection::DataPtr storedDataPtr;
+	if (newCustomerInfoPtr == nullptr || !m_objectCollectionCompPtr->GetObjectData(objectId, storedDataPtr)){
+		errorMessage = QString("Object is invalid");
+
+		return false;
+	}
+
+	const prolifedata::ICustomerInfo* storedCustomerInfoPtr = dynamic_cast<const prolifedata::ICustomerInfo*>(storedDataPtr.GetPtr());
+	if (storedCustomerInfoPtr == nullptr){
+		errorMessage = QString("Object is invalid");
+
+		return false;
+	}
+
+	return CheckAccountChangePermissions(*storedCustomerInfoPtr, *newCustomerInfoPtr, gqlRequest, errorMessage);
 }
 
 
