@@ -22,13 +22,17 @@ type SoftwareProductItem {
 	deliveryIdLink: ObjectLink
 	purchaseIdLink: ObjectLink
 	customerLink: ObjectLink
+	## Read only: the device the license is bound to.
 	hardwareLink: ObjectLink
 	productId: String
 	productName: String
 	productUuid: String
 	serialNumber: String
+	## Expiration date dd.MM.yyyy; empty for unlimited.
 	expiration: String
+	## Read only: bound to a device with a MAC address.
 	isPaired: Bool
+	## Read only: a license file was created for its device; it can no longer be removed.
 	inUse: Bool
 	licenseName: String
 	licenseId: String
@@ -38,6 +42,7 @@ type SoftwareProductItem {
 	added: String
 	timeStamp: String
 	isMultiple: Bool
+	## Free seats of a license for several seats.
 	productCount: Integer
 }
 
@@ -70,23 +75,37 @@ type LicenseTreeNode {
 
 type SoftwareProductData {
 	id: ID
+	## ID of the software product (a catalog product of the category Software). Required.
 	productId: ID
 	productName: String
 	categoryId: ID
+	## License number ("Software-ID"). Required, unique.
 	serialNumber: ID
 	project: String
+	## A license file was created for its device; set by the server.
 	inUse: Bool
+	## ID of the order; the license then belongs to the customer of the order.
 	orderUuid: ID
+	## Read only: Delivery-ID of the order.
 	orderName: String
+	## ID of the license type. Required.
 	licenseUuid: ID
+	## Read only: name of the license type.
 	licenseName: String
 	licenseId: String
+	## Expiration date dd.MM.yyyy; empty for unlimited. Always send it.
 	expiration: String
+	## License of the own company; left out of the statistics.
 	internalUse: Bool
+	## License for several seats; cannot be changed for a license with parent or children.
 	isMultiple: Bool
+	## Free seats of a license for several seats; binding a license takes one.
 	productCount: Integer
+	## The license this one was split from.
 	parentInstanceId: ID
+	## Read only: the tree of the split license.
 	licenseTree: LicenseTreeNode
+	## Customer of a license without order.
 	customerId: ID
 	hasChildren: Bool
 	hasParent: Bool
@@ -98,8 +117,11 @@ input SoftwareProductDataInput {
 }
 
 input SplitLicenseInput {
+	## License for several seats of the own organization to split.
 	licenseId: ID!
+	## Seats to give; greater than 0 and at most the free seats.
 	licenseCount: Integer!
+	## Account receiving the seats.
 	accountId: ID!
 	targetLicenseId: ID  # Optional: if provided, transfers licenses to existing child instead of creating new
 }
@@ -130,7 +152,9 @@ type ChildLicensesListPayload {
 }
 
 input RevokeLicenseInput {
+	## Part of a split license whose seats go back to its parent.
 	childLicenseId: ID!
+	## Seats to give back; at most those not bound to devices.
 	revokeCount: Integer!
 }
 

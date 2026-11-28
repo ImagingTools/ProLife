@@ -66,7 +66,9 @@ type TotalSummaryInfo {
 }
 
 input ChartInput {
+	## Period: timeUnit Day, Week, Month, Year with interpretationMode Current, Last or For, or Custom with timeRange. Licenses are dated by their first license file.
 	timeFilter: TimeFilter
+	## Only the products of this account.
 	customerId: ID
 }
 

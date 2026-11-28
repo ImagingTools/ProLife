@@ -39,7 +39,9 @@ type AccountsListPayload {
 
 type AccountData {
 	id: ID
+	## Name of the account. Required, unique.
 	name: String
+	## Customer number ("Customer-ID"), unique if given.
 	customerId: ID
 	description: String
 	email: String
@@ -48,6 +50,7 @@ type AccountData {
 	city: String
 	postalCode: String
 	street: String
+	## User groups that see the account and its orders, devices and licenses without the ViewAll permission.
 	groups: String
 	website: String
 	isCustomer: Bool
