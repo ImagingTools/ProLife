@@ -37,21 +37,23 @@ Each of the areas Devices, Orders, Issued licenses and Accounts has the same str
 |---|---|
 | `AccountsList`, `AccountItem` | `/AccountManagement/View` (the list also with `/OrderManagement/Edit/Change/Customer`) |
 | `AccountAdd` | `/AccountManagement/Edit/Add` |
-| `AccountUpdate` | one of `/AccountManagement/Edit/Change/{Name, Description, Email, CompanyAddress, CustomerId, Groups}` |
+| `AccountUpdate` | one of `/AccountManagement/Edit/Change/{Name, Description, Email, CompanyAddress, CustomerId, Groups}`; each changed field its own (below) |
 | `OrdersList`, `OrderItem` | `/OrderManagement/View` |
 | `OrderAdd` | `/OrderManagement/Edit/Add`; new product lines also `/SensorManagement/Edit/Add` or `/LicenseManagement/Edit/Add` |
-| `OrderUpdate` | one of `/OrderManagement/Edit/Change/{DeliveryId, PurchaseOrderId, Description, Customer, Status, Products}` |
+| `OrderUpdate` | one of `/OrderManagement/Edit/Change/{DeliveryId, PurchaseOrderId, Description, Customer, Status, Products}`; each changed field its own (below) |
 | `DevicesList`, `DeviceItem` | `/SensorManagement/View` |
 | `DeviceAdd` | `/SensorManagement/Edit/Add` |
-| `DeviceUpdate` | one of `/SensorManagement/Edit/Change/{SerialNumber, MacAddress, DeviceType, HardwareConfiguration, ProductionStatus, Order, Description, Project}` |
-| `GetDeviceBinding`, `UpdateDeviceBinding` | `/SensorManagement/Bind` (adding), `/SensorManagement/Unbind` (removing) * |
-| `CreateLicenseFile` | `/SensorManagement/CreateLicenseFile` * |
-| `TransferLicenses` | `/SensorManagement/TransferLicenses` * |
+| `DeviceUpdate` | one of `/SensorManagement/Edit/Change/{SerialNumber, MacAddress, DeviceType, HardwareConfiguration, ProductionStatus, Order, Description, Project}`; each changed field its own (below) |
+| `GetDeviceBinding` | `/SensorManagement/View` |
+| `UpdateDeviceBinding` | `/SensorManagement/Bind` or `/SensorManagement/Unbind`; adding licenses needs `Bind`, removing them `Unbind` |
+| `CreateLicenseFile` | `/SensorManagement/CreateLicenseFile` |
+| `TransferLicenses`, `RequestTransferLicenses` | `/SensorManagement/TransferLicenses` |
+| `DecryptLicenseFile` | `/SensorManagement/DecryptLicenseFile`, and only an administrator |
 | `ResetTransferCounter` | `/SensorManagement/ResetTransferCounter` |
 | `SoftwareProductsList` | `/LicenseManagement/View` (or `/SensorManagement/Bind`/`Unbind`, to choose licenses for a device) |
 | `SoftwareProductItem`, `ChildLicensesList` | `/LicenseManagement/View` |
 | `SoftwareProductAdd` | `/LicenseManagement/Edit/Add` |
-| `SoftwareProductUpdate` | one of `/LicenseManagement/Edit/Change/{Number, Expiration, ProductLicenses, Product, Order, Project}` |
+| `SoftwareProductUpdate` | one of `/LicenseManagement/Edit/Change/{Number, Expiration, ProductLicenses, Product, Order, Project}`; each changed field its own (below) |
 | `SplitLicense`, `RevokeLicense` | `/LicenseManagement/Edit/Split`, `/LicenseManagement/Edit/Revoke` |
 | `ProductsList`, `ProductItem`, `LicensesList`, `LicenseItem`, `FeaturesList`, `GetFeatureItem` | the `View` permission of any area |
 | `HardwareComponentsList`, `GetHardwareComponentItem`, `HardwareConfigurationsList`, `GetHardwareConfigurationItem` | `/HardwareManagement/View` or `/SensorManagement/View` |
@@ -61,15 +63,22 @@ Each of the areas Devices, Orders, Issued licenses and Accounts has the same str
 | Charts of licenses (`GetSoftware...`, `GetLicenseCreationInfo`) | `/LicenseManagement/View` |
 | `GetOrderCreationLineChart` | `/OrderManagement/View` |
 
-\* These permissions are applied by the commands of the client (the buttons of the page Hardware). The assistant
-checks them itself before such an operation and refuses it without the permission.
-
 ## Permissions of single fields
 
-The update commands accept a user who holds **one** of the field permissions of the area; which fields he may
-change is applied by the editor of the client. The assistant must apply it the same way: before an update, compare
-the old and the new document and change only fields whose permission the user holds (`Edit/Change/<field>`). If a
-field the user wants to change needs a permission he lacks, say so instead of sending the update.
+The server compares the stored document with the new one and refuses an update that changes a field without its
+permission (`Edit/Change/<field>`), with the error `No permission to change: <fields>`. Nothing is saved then. This
+holds for the update commands, for `SetObjectData` and for restoring a revision. The fields and their permissions:
+
+| Area | Field (permission) |
+|---|---|
+| Orders | `orderId` (`DeliveryId`), `purchaseId` (`PurchaseOrderId`), `description` (`Description`), `customerId` and `customerRoles` (`Customer`), `orderStatus` (`Status`), the product list `orderProducts` (`Products`) |
+| Licenses | `serialNumber` (`Number`), `expiration` (`Expiration`), `licenseUuid`, `isMultiple`, `productCount` (`ProductLicenses`), `productId` (`Product`), `orderUuid` and the customer (`Order`), `project` (`Project`); `internalUse` needs none |
+| Accounts | `name`, `website`, `isManufacturer`, `isSupplier` (`Name`), `description` (`Description`), `email` (`Email`), the address (`CompanyAddress`), `customerId` (`CustomerId`), `groups` (`Groups`) |
+| Devices | `serialNumber`, `macAddress`, `deviceType`, `licenseName` (`HardwareConfiguration`), `productionStatus`, `orderId` (`Order`), `description`, `project` |
+
+An update sends the whole document, so the assistant reads the document first and sends every field unchanged except
+the ones the user wants to change. Before sending, it checks that the user holds the permission of each changed field
+and says so instead of sending a request the server would refuse.
 
 ## Visibility by groups
 

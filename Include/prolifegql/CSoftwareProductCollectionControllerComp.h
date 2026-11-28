@@ -68,6 +68,11 @@ protected:
 				istd::IChangeable& object,
 				QString& errorMessage) const override;
 	virtual void SetAdditionalFilters(const imtgql::CGqlRequest& gqlRequest,const imtgql::CGqlParamObject& viewParamsGql, iprm::CParamsSet* filterParams) const override;
+	virtual bool CheckObjectData(
+				const imtgql::CGqlRequest& gqlRequest,
+				const QByteArray& objectId,
+				const istd::IChangeable& object,
+				QString& errorMessage) const override;
 
 	// reimplemented (icomp::CComponentBase)
 	virtual void OnComponentCreated() override;
@@ -79,6 +84,7 @@ private:
 				QByteArray& objectId,
 				QString& errorMessage) const;
 	void PopulateBoundCountInTree(sdl::V1_0::prolife::CLicenseTreeNode& node) const;
+	bool HasChildLicenses(const QByteArray& objectId) const;
 
 private:
 	imtbase::CTimeFilterParam m_licenseCreationTimeParam;

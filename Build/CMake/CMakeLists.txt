@@ -115,6 +115,10 @@ add_subdirectory("${INCLUDE_DIR}/prolifestyle/CMake" "${AUX_INCLUDE_DIR}/prolife
 
 # Tests
 #add_subdirectory("${INCLUDE_DIR}/prolifetest/CMake" "${AUX_INCLUDE_DIR}/prolifetest")
+if(BUILD_TESTING)
+	add_subdirectory("${INCLUDE_DIR}/prolifegql/Test/CMake" "${AUX_INCLUDE_DIR}/prolifegqlTest")
+	add_dependencies(prolifegqlTest prolifegql)
+endif()
 
 # Plug-ins
 add_subdirectory("${IMPL_DIR}/Plugins/ProLifeSettingsPlugin/CMake" "${AUX_INCLUDE_DIR}/ProLifeSettingsPlugin")

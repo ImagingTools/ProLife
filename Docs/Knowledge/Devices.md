@@ -87,5 +87,6 @@ A transfer cannot be undone; it is only done in the client, by a user who confir
 - Devices are usually created by an order (`Orders.md`); `DeviceAdd` creates one directly.
 - Without `/SensorManagement/ViewAll` a user sees only the devices of the customers of his groups
   (`Permissions.md`).
-- The editor of the client applies the permissions of single fields (serial number, device type,
-  configuration, ...); the assistant must respect them as well: change only the fields the user may change.
+- Every changed field needs its own permission (serial number, device type, configuration, ...); the server
+  refuses an update with a field the user may not change (`Permissions.md`).
+- Binding needs `/SensorManagement/Bind` for added licenses and `/SensorManagement/Unbind` for removed ones.

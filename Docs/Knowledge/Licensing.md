@@ -25,7 +25,7 @@ customer.
 | `serialNumber` | License number ("Software-ID"). Required, unique |
 | `productId` | The software product of the catalog. Required; must be of the category `Software` |
 | `licenseUuid` | The license type. Required |
-| `expiration` | Expiration date as `dd.MM.yyyy`; empty for unlimited. Always send the field |
+| `expiration` | Expiration date as `dd.MM.yyyy`; empty or left out for unlimited. A value in another format is stored as unlimited |
 | `orderUuid` | ID of the order; the license then belongs to the customer of the order |
 | `customerId` | Customer of a license without order |
 | `project` | Project, taken over from the binding to a device |
@@ -40,7 +40,7 @@ The list (`SoftwareProductsList`, type `SoftwareProductItem`) adds `customerLink
 
 Writing: `SoftwareProductAdd` and `SoftwareProductUpdate` take `{"id": ..., "item": {...}}` and replace the license. Licenses
 are usually created by an order (`Orders.md`). `isMultiple` and `productCount` cannot be changed for a license that has a
-parent or children.
+parent or children: an update keeps the stored values and the link to the parent.
 
 ## Life cycle of a license
 

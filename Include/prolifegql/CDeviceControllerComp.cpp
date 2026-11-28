@@ -22,6 +22,7 @@
 #include <imtservergql/DocumentSharing.h>
 
 // ProLife includes
+#include <prolifegql/prolifegql.h>
 #include <prolifedata/CHardwareProductBinding.h>
 #include <prolifedata/IDeviceInfo.h>
 #include <prolifedata/COrderedIdentifiableSoftwareInstanceInfo.h>
@@ -154,22 +155,13 @@ sdl::V1_0::imtbase::CUpdatedNotificationPayload CDeviceControllerComp::OnUpdateD
 		deviceBindingInfoPtr.SetCastedOrRemove(deviceBindingDataPtr.GetPtr(), false);
 	}
 
-	if (!deviceBindingInfoPtr.IsValid()){
+	// A device bound for the first time gets its binding once the request is known to be permitted
+	const bool isNewBinding = !deviceBindingInfoPtr.IsValid();
+	if (isNewBinding){
 		prolifedata::CHardwareProductBinding* deviceBindingPtr = new prolifedata::CHardwareProductBinding();
 		deviceBindingPtr->SetHardwareId(deviceId);
 
 		deviceBindingInfoPtr.SetPtr(deviceBindingPtr, true);
-
-		QByteArray result = m_deviceBindingCollectionCompPtr->InsertNewObject("HardwareBinding", "", "", deviceBindingPtr, deviceId);
-		if (result.isEmpty()){
-			SendWarningMessage(0, QString("Unable to insert hardware binding object to collection"), "CDeviceControllerComp");
-		}
-	}
-
-	if (!deviceBindingInfoPtr.IsValid()){
-		errorMessage = QString("Unable to update device binding. Error: Device is invalid");
-
-		return retVal;
 	}
 
 	response.id = deviceId;
@@ -194,6 +186,22 @@ sdl::V1_0::imtbase::CUpdatedNotificationPayload CDeviceControllerComp::OnUpdateD
 		if (!newHardwareBindingSoftwareIds.contains(softwareId)){
 			removedSoftwareIds << softwareId;
 		}
+	}
+
+	// The command is open to binding and to unbinding, each direction needs its own permission
+	QStringList deniedActions;
+	if (!addedSoftwareIds.isEmpty() && !HoldsPermission(gqlRequest, QByteArrayLiteral("/SensorManagement/Bind"))){
+		deniedActions << QStringLiteral("bind licenses");
+	}
+
+	if (!removedSoftwareIds.isEmpty() && !HoldsPermission(gqlRequest, QByteArrayLiteral("/SensorManagement/Unbind"))){
+		deniedActions << QStringLiteral("unbind licenses");
+	}
+
+	if (!deniedActions.isEmpty()){
+		errorMessage = QStringLiteral("No permission to %1").arg(deniedActions.join(QStringLiteral(" or ")));
+
+		return retVal;
 	}
 
 	// Check product-ID
@@ -246,6 +254,13 @@ sdl::V1_0::imtbase::CUpdatedNotificationPayload CDeviceControllerComp::OnUpdateD
 					}
 				}
 			}
+		}
+	}
+
+	if (isNewBinding){
+		QByteArray result = m_deviceBindingCollectionCompPtr->InsertNewObject("HardwareBinding", "", "", deviceBindingInfoPtr.GetPtr(), deviceId);
+		if (result.isEmpty()){
+			SendWarningMessage(0, QString("Unable to insert hardware binding object to collection"), "CDeviceControllerComp");
 		}
 	}
 

@@ -3908,13 +3908,15 @@
                   "function uuid() { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) { const r = Math.random() * 16 | 0; return (c === 'x' ? r : ((r & 0x3) | 0x8)).toString(16); }); }",
                   "const n = String(Date.now() % 1000000000);",
                   "pm.environment.set('qaN', n);",
-                  "['qaDescRoleId', 'qaDescUserId', 'qaOrderRoleId', 'qaOrderUserId', 'qaDeviceId', 'qaSuDeviceId', 'qaTmpRoleId', 'qaRejectedSoftwareLineId', 'qaRejectedHardwareLineId', 'qaOrderId', 'qaAccountId'].forEach(function (k) { pm.environment.set(k, uuid()); });",
+                  "['qaDescRoleId', 'qaDescUserId', 'qaOrderRoleId', 'qaOrderUserId', 'qaDeviceId', 'qaSuDeviceId', 'qaTmpRoleId', 'qaRejectedSoftwareLineId', 'qaRejectedHardwareLineId', 'qaOrderId', 'qaAccountId', 'qaFieldRoleId', 'qaFieldUserId', 'qaLicenseId'].forEach(function (k) { pm.environment.set(k, uuid()); });",
                   "pm.environment.set('qaDescRoleCode', 'QaRegDescOnly' + n);",
                   "pm.environment.set('qaDescLogin', 'qa_reg_desc_' + n);",
                   "pm.environment.set('qaOrderRoleCode', 'QaRegOrderOnly' + n);",
                   "pm.environment.set('qaOrderLogin', 'qa_reg_order_' + n);",
                   "pm.environment.set('qaMacAddress', 'AA:BB:CC:' + ('0' + (Number(n) % 100)).slice(-2) + ':' + ('0' + (Number(n.slice(-4, -2)) % 100)).slice(-2) + ':' + ('0' + (Number(n.slice(-2)) % 100)).slice(-2));",
-                  "pm.environment.set('qaSuMacAddress', pm.environment.get('qaMacAddress').replace('AA:BB:CC', 'AA:BB:CD'));"
+                  "pm.environment.set('qaSuMacAddress', pm.environment.get('qaMacAddress').replace('AA:BB:CC', 'AA:BB:CD'));",
+                  "pm.environment.set('qaFieldRoleCode', 'QaRegFields' + n);",
+                  "pm.environment.set('qaFieldLogin', 'qa_reg_fields_' + n);"
                 ]
               }
             },
@@ -4778,6 +4780,160 @@
           ]
         },
         {
+          "name": "FP: GetDeviceBinding is permitted with View",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetDeviceBinding { GetDeviceBinding(input: { id: \"{{qaDeviceId}}\" }) { id softwareIds } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Reading the binding needs only View', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "FP: UpdateDeviceBinding without Bind or Unbind is refused",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateDeviceBinding { UpdateDeviceBinding(input: { deviceId: \"{{qaDeviceId}}\", item: { id: \"{{qaDeviceId}}\", productUuid: \"\", project: \"\", softwareIds: [] }, project: \"\" }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Regression: the device controller had no command permissions, any user who reached it could bind and unbind licenses."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Binding without Bind or Unbind is refused', function () {",
+                  "  pm.expect(json.errors, 'expected a GraphQL error, got ' + JSON.stringify(json)).to.be.an('array').that.is.not.empty;",
+                  "  pm.expect(json.errors.map(function (e) { return e.message; }).join(' | ')).to.include('Invalid permissions');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "FP: CreateLicenseFile without the permission is refused",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateLicenseFile { CreateLicenseFile(input: { deviceId: \"{{qaDeviceId}}\", encrypt: false }) { name } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('License file without CreateLicenseFile is refused', function () {",
+                  "  pm.expect(json.errors, 'expected a GraphQL error, got ' + JSON.stringify(json)).to.be.an('array').that.is.not.empty;",
+                  "  pm.expect(json.errors.map(function (e) { return e.message; }).join(' | ')).to.include('Invalid permissions');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "FP: TransferLicenses without the permission is refused",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation TransferLicenses { TransferLicenses(input: { fromDeviceId: \"{{qaDeviceId}}\", toDeviceId: \"{{qaSuDeviceId}}\" }) { ok } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Transfer without TransferLicenses is refused', function () {",
+                  "  pm.expect(json.errors, 'expected a GraphQL error, got ' + JSON.stringify(json)).to.be.an('array').that.is.not.empty;",
+                  "  pm.expect(json.errors.map(function (e) { return e.message; }).join(' | ')).to.include('Invalid permissions');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "FP: RequestTransferLicenses without the permission is refused",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RequestTransferLicenses { RequestTransferLicenses(input: { fromDeviceId: \"{{qaDeviceId}}\", toDeviceId: \"{{qaSuDeviceId}}\" }) { result } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Transfer request without TransferLicenses is refused', function () {",
+                  "  pm.expect(json.errors, 'expected a GraphQL error, got ' + JSON.stringify(json)).to.be.an('array').that.is.not.empty;",
+                  "  pm.expect(json.errors.map(function (e) { return e.message; }).join(' | ')).to.include('Invalid permissions');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
           "name": "QA: Auth SU again (device checks)",
           "request": {
             "method": "POST",
@@ -5453,6 +5609,98 @@
           ]
         },
         {
+          "name": "FP: OrderUpdate changing the description without the permission is rejected",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation OrderUpdate { OrderUpdate(input: { typeId: \"Order\", id: \"{{qaOrderId}}\", item: { id: \"{{qaOrderId}}\", name: \"QA-REG-PO-{{qaN}}\", description: \"changed by the operator\", orderId: \"QA-REG-PO-{{qaN}}\", purchaseId: \"QA-REG-PO-{{qaN}}\", customerId: \"{{qaAccountId}}\", orderStatus: \"Created\", orderProducts: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Regression: OrderUpdate passed with any one field permission and could rewrite every field."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Description change without the permission is refused', function () {",
+                  "  pm.expect(json.errors, 'expected a GraphQL error, got ' + JSON.stringify(json)).to.be.an('array').that.is.not.empty;",
+                  "  pm.expect(json.errors.map(function (e) { return e.message; }).join(' | ')).to.include('Description');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "FP: OrderUpdate changing the status without the permission is rejected",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation OrderUpdate { OrderUpdate(input: { typeId: \"Order\", id: \"{{qaOrderId}}\", item: { id: \"{{qaOrderId}}\", name: \"QA-REG-PO-{{qaN}}\", description: \"\", orderId: \"QA-REG-PO-{{qaN}}\", purchaseId: \"QA-REG-PO-{{qaN}}\", customerId: \"{{qaAccountId}}\", orderStatus: \"Closed\", orderProducts: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Status change without the permission is refused', function () {",
+                  "  pm.expect(json.errors, 'expected a GraphQL error, got ' + JSON.stringify(json)).to.be.an('array').that.is.not.empty;",
+                  "  pm.expect(json.errors.map(function (e) { return e.message; }).join(' | ')).to.include('Status');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "FP: OrderUpdate without changes is accepted",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation OrderUpdate { OrderUpdate(input: { typeId: \"Order\", id: \"{{qaOrderId}}\", item: { id: \"{{qaOrderId}}\", name: \"QA-REG-PO-{{qaN}}\", description: \"\", orderId: \"QA-REG-PO-{{qaN}}\", purchaseId: \"QA-REG-PO-{{qaN}}\", customerId: \"{{qaAccountId}}\", orderStatus: \"Created\", orderProducts: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Saving the unchanged order is permitted', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
           "name": "QA: Auth SU again (order checks)",
           "request": {
             "method": "POST",
@@ -5578,6 +5826,39 @@
           ]
         },
         {
+          "name": "FP: OrderItem keeps the description and the status",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query OrderItem { OrderItem(input: { id: \"{{qaOrderId}}\" }) { id description orderStatus } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const order = json.data && json.data.OrderItem;",
+                  "pm.test('The refused changes were not stored', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(order.description || '').to.eql('');",
+                  "  pm.expect(order.orderStatus).to.eql('Created');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
           "name": "D-08: CreateNewDocument ticket",
           "request": {
             "method": "POST",
@@ -5664,6 +5945,383 @@
                   "const json = pm.response.json();",
                   "pm.test('Ticket document closed', function () {",
                   "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "QA: Auth SU again (account and license checks)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{suLogin}}\", password: \"{{suPassword}}\", productId: \"{{productId}}\" }) { token } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('Auth SU (account and license checks) returns a token', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(auth && auth.token).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('token', auth.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "QA: RoleAdd description-only account and project-only license editor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RoleAdd { RoleAdd(input: { typeId: \"Role\", productId: \"{{productId}}\", id: \"{{qaFieldRoleId}}\", item: { id: \"{{qaFieldRoleId}}\", name: \"{{qaFieldRoleCode}}\", description: \"QA regression role\", roleId: \"{{qaFieldRoleCode}}\", productId: \"{{productId}}\", parentRoles: [], permissions: [{id: \"/AccountManagement/View\", direct: true}, {id: \"/AccountManagement/Edit/Change/Description\", direct: true}, {id: \"/LicenseManagement/View\", direct: true}, {id: \"/LicenseManagement/Edit/Change/Project\", direct: true}], isDefault: false, isGuest: false } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Field editor role created', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "QA: UserAdd description-only account and project-only license editor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UserAdd { UserAdd(input: { typeId: \"User\", productId: \"{{productId}}\", id: \"{{qaFieldUserId}}\", item: { id: \"{{qaFieldUserId}}\", productId: \"{{productId}}\", name: \"QA Regression Field Editor\", username: \"{{qaFieldLogin}}\", password: \"QaRegression_2026!\", email: \"{{qaFieldLogin}}@prolifeapi.test\", groups: [], roles: [{id: \"{{qaFieldRoleId}}\", direct: true}], permissions: [], systemInfos: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Field editor user created', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "QA: SoftwareProductAdd license for the field checks",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SoftwareProductAdd { SoftwareProductAdd(input: { typeId: \"SoftwareProduct\", id: \"{{qaLicenseId}}\", item: { id: \"{{qaLicenseId}}\", productId: \"{{softwareCatalogProductId}}\", categoryId: \"\", serialNumber: \"QA-REG-LIC-{{qaN}}\", project: \"QaProject\", inUse: false, orderUuid: \"\", licenseUuid: \"{{licenseDefinitionId}}\", expiration: \"\" } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('License for the field checks created', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "QA: Auth field editor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{qaFieldLogin}}\", password: \"QaRegression_2026!\", productId: \"{{productId}}\" }) { token } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('Auth field editor returns a token', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(auth && auth.token).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('token', auth.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "FP: AccountUpdate changing the name without the permission is rejected",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation AccountUpdate { AccountUpdate(input: { typeId: \"Account\", id: \"{{qaAccountId}}\", item: { id: \"{{qaAccountId}}\", name: \"QA Regression Renamed {{qaN}}\", customerId: \"QA-REG-CUST-{{qaN}}\", description: \"\", email: \"qa-reg-{{qaN}}@prolifeapi.test\", companyName: \"QA Regression Co\", country: \"Testland\", city: \"Testville\", postalCode: \"00000\", street: \"Test street 1\", groups: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Regression: AccountUpdate passed with any one field permission and could rewrite every field."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Name change without the permission is refused', function () {",
+                  "  pm.expect(json.errors, 'expected a GraphQL error, got ' + JSON.stringify(json)).to.be.an('array').that.is.not.empty;",
+                  "  pm.expect(json.errors.map(function (e) { return e.message; }).join(' | ')).to.include('Name');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "FP: AccountUpdate changing only the description is accepted",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation AccountUpdate { AccountUpdate(input: { typeId: \"Account\", id: \"{{qaAccountId}}\", item: { id: \"{{qaAccountId}}\", name: \"QA Regression Customer {{qaN}}\", customerId: \"QA-REG-CUST-{{qaN}}\", description: \"qa account description\", email: \"qa-reg-{{qaN}}@prolifeapi.test\", companyName: \"QA Regression Co\", country: \"Testland\", city: \"Testville\", postalCode: \"00000\", street: \"Test street 1\", groups: [] } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Permitted description change is saved', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "FP: SoftwareProductUpdate changing the number without the permission is rejected",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SoftwareProductUpdate { SoftwareProductUpdate(input: { typeId: \"SoftwareProduct\", id: \"{{qaLicenseId}}\", item: { id: \"{{qaLicenseId}}\", productId: \"{{softwareCatalogProductId}}\", categoryId: \"\", serialNumber: \"QA-REG-LIC-HACKED-{{qaN}}\", project: \"QaProject\", inUse: false, orderUuid: \"\", licenseUuid: \"{{licenseDefinitionId}}\", expiration: \"\" } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": "Regression: SoftwareProductUpdate passed with any one field permission and could rewrite every field."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Number change without the permission is refused', function () {",
+                  "  pm.expect(json.errors, 'expected a GraphQL error, got ' + JSON.stringify(json)).to.be.an('array').that.is.not.empty;",
+                  "  pm.expect(json.errors.map(function (e) { return e.message; }).join(' | ')).to.include('Number');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "FP: SoftwareProductUpdate changing only the project is accepted",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation SoftwareProductUpdate { SoftwareProductUpdate(input: { typeId: \"SoftwareProduct\", id: \"{{qaLicenseId}}\", item: { id: \"{{qaLicenseId}}\", productId: \"{{softwareCatalogProductId}}\", categoryId: \"\", serialNumber: \"QA-REG-LIC-{{qaN}}\", project: \"QaProject2\", inUse: false, orderUuid: \"\", licenseUuid: \"{{licenseDefinitionId}}\", expiration: \"\" } }) { id } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test('Permitted project change is saved', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "QA: Auth SU again (account and license results)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Authorization { Authorization(input: { login: \"{{suLogin}}\", password: \"{{suPassword}}\", productId: \"{{productId}}\" }) { token } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const auth = json.data && json.data.Authorization;",
+                  "pm.test('Auth SU (account and license results) returns a token', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(auth && auth.token).to.be.a('string').and.not.empty;",
+                  "});",
+                  "pm.environment.set('token', auth.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "FP: AccountItem keeps the name and stores the description",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query AccountItem { AccountItem(input: { typeId: \"Account\", id: \"{{qaAccountId}}\" }) { id name description } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const account = json.data && json.data.AccountItem;",
+                  "pm.test('Only the permitted field was stored', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(account.name).to.eql('QA Regression Customer ' + pm.environment.get('qaN'));",
+                  "  pm.expect(account.description).to.eql('qa account description');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "FP: SoftwareProductItem keeps the number and stores the project",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query SoftwareProductItem { SoftwareProductItem(input: { typeId: \"SoftwareProduct\", id: \"{{qaLicenseId}}\" }) { id serialNumber project } }",
+                "variables": ""
+              }
+            },
+            "url": "{{baseUrl}}/graphql",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const license = json.data && json.data.SoftwareProductItem;",
+                  "pm.test('Only the permitted field was stored', function () {",
+                  "  pm.expect(json.errors || [], JSON.stringify(json.errors)).to.have.length(0);",
+                  "  pm.expect(license.serialNumber).to.eql('QA-REG-LIC-' + pm.environment.get('qaN'));",
+                  "  pm.expect(license.project).to.eql('QaProject2');",
                   "});"
                 ]
               }

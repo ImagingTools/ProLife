@@ -584,6 +584,36 @@ void CDeviceCollectionControllerComp::SetAdditionalFilters(
 }
 
 
+bool CDeviceCollectionControllerComp::CheckObjectData(
+	const imtgql::CGqlRequest& gqlRequest,
+	const QByteArray& objectId,
+	const istd::IChangeable& object,
+	QString& errorMessage) const
+{
+	// A new document is checked by the permission to add documents
+	if (objectId.isEmpty() || !m_objectCollectionCompPtr.IsValid()){
+		return true;
+	}
+
+	const prolifedata::IDeviceInfo* newObjectPtr = dynamic_cast<const prolifedata::IDeviceInfo*>(&object);
+	imtbase::IObjectCollection::DataPtr storedDataPtr;
+	if (newObjectPtr == nullptr || !m_objectCollectionCompPtr->GetObjectData(objectId, storedDataPtr)){
+		errorMessage = QString("Object is invalid");
+
+		return false;
+	}
+
+	const prolifedata::IDeviceInfo* storedObjectPtr = dynamic_cast<const prolifedata::IDeviceInfo*>(storedDataPtr.GetPtr());
+	if (storedObjectPtr == nullptr){
+		errorMessage = QString("Object is invalid");
+
+		return false;
+	}
+
+	return CheckDeviceObjectChangePermissions(*storedObjectPtr, *newObjectPtr, gqlRequest, errorMessage);
+}
+
+
 // reimplemented (icomp::CComponentBase)
 
 void CDeviceCollectionControllerComp::OnComponentCreated()
